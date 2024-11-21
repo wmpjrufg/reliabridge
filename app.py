@@ -36,22 +36,36 @@ with col2:
 
 f_ck = st.number_input('f_ck (MPa)', 0.0)
 p_load = st.number_input('permanent load (kN/m)', 0.0)
+bw = st.number_input('bw (cm)', 0.0)
+h = st.number_input('h (cm)', 0.0)
 
 uploaded_file = st.file_uploader("Uploaded reinforcement data:")
 if uploaded_file is not None:
     df = pd.read_excel(uploaded_file)
     st.table(df)
 
-def calculate(df):
-    lista = df['Asl (cm2)'].tolist()
-    for item in lista:
+def calc_data(df, bw, h, f_ck):
+    f_y = 500e3
+    d = 0.9 * h
+    alpha_c = 0.85
+    lamb = 0.8
+    
+    asli_values = []
+    mr_values = []
+    for item in df['Asl (cm2)']:
         diam = float(item.split(",")[1])
-        df['Asli'] = (((pi * diam)**2) / 4) #/ 1e6 
+        asli = (((pi * diam)**2) / 4) / 1e6
+        asli_values.append(asli)
+        
+        x = (asli * f_y) / (f_ck * bw * alpha_c * lamb)
+        mr = asli * f_y * (d - 0.5 * lamb * x)
+        mr_values.append(mr)
 
+    df['Asli'] = asli_values
+    df['M_r'] = mr_values
 
     return df
-        
 
 if st.button('Calculate'):
-    teste = calculate(df)
+    teste = calc_data(df, bw, h, f_ck)
     st.table(teste)
