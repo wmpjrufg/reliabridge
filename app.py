@@ -29,35 +29,45 @@ p_load = st.number_input('$g$ = Permanent load (kN/m)', None)
 uploaded_file = st.file_uploader("Uploaded reinforcement data: \n\n Reinforcement data wait to table with a values to diameter and number of steel bars")
 if uploaded_file is not None:
     df = pd.read_excel(uploaded_file)
-    # st.table(df)
+
+    if st.button('Convert my data in Steel Area'):
+        st.title('Reliability Analysis')
+
+        # Dataset
+        f = {'type': 'normal', 'loc': 1.06 * f_c, 'scale': 1.06 * f_c * 0.12, 'seed': None}
+        p = {'type': 'gumbel max', 'loc': 0.93 * p_load, 'scale': 0.93 * p_load * 0.35, 'seed': None}
+        a_s = {'type': 'normal', 'loc': 1, 'scale': 1 * 0.5/100, 'seed': None}
+        var = [f, p, a_s]
+
+        # PAREpy setup
+        setup = {
+                    'number of samples': 70000, 
+                    'number of dimensions': len(var), 
+                    'numerical model': {'model sampling': 'mcs'}, 
+                    'variables settings': var, 
+                    'number of state limit functions or constraints': len(df), 
+                    'none variable': {'dataset': df, 'l (cm)': l, 'bw (cm)': bw, 'h (cm)': h},
+                    'objective function': pontes,
+                    'name simulation': 'nowak_collins_example',
+                }
+
+        # Call algorithm
+        results, pf, beta = sampling_algorithm_structural_analysis(setup)
+
+        df['Pf'] = pf.iloc[0,:].values
+        df['Beta'] = beta.iloc[0,:].values
+        st.table(df)
+        
 else:
     st.warning('Please, upload a file')
 
-if st.button('Convert my data in Steel Area'):
-    st.title('Reliability Analysis')
+with open("teste.xlsx", "rb") as file:
+    st.download_button(
+        label="Download example data",
+        data=file,
+        file_name="example_reinforcement_data.xlsx",
+        mime="text/csv"
+    )
 
-    # Dataset
-    f = {'type': 'normal', 'loc': 1.06 * f_c, 'scale': 1.06 * f_c * 0.12, 'seed': None}
-    p = {'type': 'gumbel max', 'loc': 0.93 * p_load, 'scale': 0.93 * p_load * 0.35, 'seed': None}
-    a_s = {'type': 'normal', 'loc': 1, 'scale': 1 * 0.5/100, 'seed': None}
-    var = [f, p, a_s]
 
-    # PAREpy setup
-    setup = {
-                'number of samples': 70000, 
-                'number of dimensions': len(var), 
-                'numerical model': {'model sampling': 'mcs'}, 
-                'variables settings': var, 
-                'number of state limit functions or constraints': len(df), 
-                'none variable': {'dataset': df, 'l (cm)': l, 'bw (cm)': bw, 'h (cm)': h},
-                'objective function': pontes,
-                'name simulation': 'nowak_collins_example',
-            }
-
-    # Call algorithm
-    results, pf, beta = sampling_algorithm_structural_analysis(setup)
-
-    df['Pf'] = pf.iloc[0,:].values
-    df['Beta'] = beta.iloc[0,:].values
-    st.table(df)
     
