@@ -1,9 +1,8 @@
 import streamlit as st 
 import pandas as pd
-from math import pi
 
 from parepy_toolbox import sampling_algorithm_structural_analysis
-from obj_function import nowak_collins_example
+from obj_function import pontes
 
 st.title('Sistema Estrutural Longarina')
 
@@ -38,8 +37,8 @@ if st.button('Convert my data in Steel Area'):
     st.title('Reliability Analysis')
 
     # Dataset
-    f = {'type': 'normal', 'loc': f_c, 'scale': 0.12*f_c, 'seed': None}
-    p = {'type': 'gumbel max', 'loc': 0.93 * p_load, 'scale': 1.12, 'seed': None}
+    f = {'type': 'normal', 'loc': 1.06 * f_c, 'scale': 1.06 * f_c * 0.12, 'seed': None}
+    p = {'type': 'gumbel max', 'loc': 0.93 * p_load, 'scale': 0.93 * p_load * 0.35, 'seed': None}
     a_s = {'type': 'normal', 'loc': 1, 'scale': 1 * 0.5/100, 'seed': None}
     var = [f, p, a_s]
 
@@ -51,7 +50,7 @@ if st.button('Convert my data in Steel Area'):
                 'variables settings': var, 
                 'number of state limit functions or constraints': len(df), 
                 'none variable': {'dataset': df, 'l (cm)': l, 'bw (cm)': bw, 'h (cm)': h},
-                'objective function': nowak_collins_example,
+                'objective function': pontes,
                 'name simulation': 'nowak_collins_example',
             }
 

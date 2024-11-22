@@ -42,7 +42,7 @@ def momento_resistente_sem_corrosao(d_barras, n_barras, f_ck, f_yk, b_w, d, gamm
     return m_rd
 
 
-def nowak_collins_example(x, none_variable):
+def pontes(x, none_variable):
     """Objective function for the Nowak example (tutorial).
     """
 
