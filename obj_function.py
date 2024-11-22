@@ -62,8 +62,8 @@ def pontes(x, none_variable):
     m_w = (w * l ** 2) / 8
     for i, row in df.iterrows():
         load.append(m_w)
-        n_barras = row['number of bars']
-        d_barras = row['diameter (mm)'] * 1E-3
+        n_barras = row['number of longitudinal bars']
+        d_barras = row['diameter longitudinal bars (mm)'] * 1E-3
         f_yk = 500 * 1E3
         gamma_c = 1.00
         gamma_s = 1.00
