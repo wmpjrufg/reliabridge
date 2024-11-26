@@ -65,7 +65,10 @@ def pontes(x, none_variable):
         load.append(m_w)
         n_barras = row['positive bending moment - number of longitudinal bars']
         d_barras = row['positive bending moment - diameter longitudinal bars (mm)'] * 1E-3
-        f_yk = 500 * 1E3 * f_y_aux #####
+        if d_barras == 5:
+            f_yk = 600 * 1E3 * f_y_aux
+        else:
+            f_yk = 500 * 1E3 * f_y_aux #####
         gamma_c = 1.00
         gamma_s = 1.00
         res.append(momento_resistente_sem_corrosao(d_barras, n_barras * pho_a_s, f_ck, f_yk, b_w, d, gamma_c, gamma_s))
