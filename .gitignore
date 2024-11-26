@@ -1,4 +1,3 @@
-*.txt
-/__pycache__/
-/ambiente_reliabridge/
+__pycache__/
+env_reliabridge/
 !requirements.txt

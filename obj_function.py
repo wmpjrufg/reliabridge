@@ -50,10 +50,11 @@ def pontes(x, none_variable):
     f_ck = x[0]
     w = x[1]
     pho_a_s = x[2]
+    b_w = x[3]
+    h = x[4]
+    f_y_aux = x[5]
     df = none_variable['dataset']
-    l = none_variable['l (cm)'] * 1E-2
-    b_w = none_variable['bw (cm)'] * 1E-2
-    h = none_variable['h (cm)'] * 1E-2
+    l = none_variable['l (cm)']
     d = 0.90 * h
     res = []
     load = []
@@ -62,12 +63,22 @@ def pontes(x, none_variable):
     m_w = (w * l ** 2) / 8
     for i, row in df.iterrows():
         load.append(m_w)
-        n_barras = row['number of longitudinal bars']
-        d_barras = row['diameter longitudinal bars (mm)'] * 1E-3
-        f_yk = 500 * 1E3
+        n_barras = row['positive bending moment - number of longitudinal bars']
+        d_barras = row['positive bending moment - diameter longitudinal bars (mm)'] * 1E-3
+        f_yk = 500 * 1E3 * f_y_aux #####
         gamma_c = 1.00
         gamma_s = 1.00
         res.append(momento_resistente_sem_corrosao(d_barras, n_barras * pho_a_s, f_ck, f_yk, b_w, d, gamma_c, gamma_s))
         g.append(res[-1] - load[-1])
 
     return res, load, g
+
+
+if __name__ == '__main__':
+    # Test
+    x = [50E3, 20, 0.01, 30, 50, 500]
+    none_variable = {'dataset': pd.DataFrame({'positive bending moment - number of longitudinal bars': [4, 4], 'positive bending moment - diameter longitudinal bars (mm)': [16, 16]}), 'l (cm)': 500}
+    res, load, g = pontes(x, none_variable)
+    print(res)
+    print(load)
+    print(g)
