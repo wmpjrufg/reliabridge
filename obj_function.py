@@ -68,7 +68,11 @@ def pontes(x, none_variable):
         if d_barras == 5:
             f_yk = 600 * 1E3 * f_y_aux
         else:
+<<<<<<< HEAD
             f_yk = 500 * 1E3 * f_y_aux #####
+=======
+            f_yk = 500 * 1E3 * f_y_aux
+>>>>>>> b89bace355026c4a8339637c703fa88dbd016a5d
         gamma_c = 1.00
         gamma_s = 1.00
         res.append(momento_resistente_sem_corrosao(d_barras, n_barras * pho_a_s, f_ck, f_yk, b_w, d, gamma_c, gamma_s))
