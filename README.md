@@ -39,6 +39,8 @@ pip install your_package
 pip-chill > requirements.txt
 ```
 
-# Notes
+## 3. Run Streamlit
 
--
+```bash
+streamlit run app.py
+```
