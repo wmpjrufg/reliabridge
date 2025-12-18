@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from parepy_toolbox import sampling_algorithm_structural_analysis
-from obj_function import pontes
+from old.obj_function import pontes
 
 st.title('ReliaBRIDGE')
 
