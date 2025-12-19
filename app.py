@@ -1,7 +1,7 @@
 import streamlit as st
 
-st.set_page_config(page_title="Minha Calculadora", layout="wide")
-
-st.title("Bem-vindo!")
-st.write("👈 Escolha uma ferramenta no menu ao lado.")
-st.write("Cada aba é independente e seus dados são privados.")
+st.set_page_config(page_title="ReliaBridge", layout="wide")
+home_page = st.Page("pages/home.py", title="Início", icon="🏠", default=True)
+longarina_page = st.Page("pages/longarina_projeto.py", title="Projeto Longarina", icon="🏗️")
+pg = st.navigation([home_page, longarina_page])
+pg.run()
