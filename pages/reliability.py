@@ -1,9 +1,14 @@
 import streamlit as st
 
-st.title("Página 2 — Multiplicação")
+st.header("Calculadora de Multiplicação")
 
-x = st.number_input("X", value=0.0, step=1.0)
-y = st.number_input("Y", value=0.0, step=1.0)
+# Estes inputs são únicos para quem está com a página aberta
+col1, col2 = st.columns(2)
+with col1:
+    n1 = st.number_input("Valor A", value=0.0)
+with col2:
+    n2 = st.number_input("Valor B", value=0.0)
 
-if st.button("Calcular", type="primary"):
-    st.success(f"{x} × {y} = {x * y}")
+if st.button("Calcular"):
+    resultado = n1 * n2
+    st.success(f"O resultado é: {resultado}")
