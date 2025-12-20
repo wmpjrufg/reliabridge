@@ -1,6 +1,4 @@
-import streamlit as st
-# from madeiras import *
-
+"""Contém funções para cálculo e verificação de estruturas de madeira."""
 import numpy as np
 
 
@@ -9,7 +7,6 @@ def prop_madeiras(geo: dict) -> tuple[float, float, float, float, float, float, 
     
     :param geo: Parâmetros geométricos da seção transversal. Se chaves = 'b_w': Largura da seção transversal [m] e 'h': Altura da seção transversal [m] = retangular, se chave = 'd': Diâmetro da seção transversal [m] = circular
 
-    :return: [0] 
     """
 
     # Propriedades da seção transversal
@@ -70,7 +67,6 @@ def flexao_obliqua(area: float, w_x: float, w_y: float, p: float, m_x: float, m_
     :param m_x: Momento fletor em relação ao eixo x [kN.m]
     :param m_y: Momento fletor em relação ao eixo y [kN.m]
 
-    :ret
     """
 
     f_p = p / area
@@ -103,11 +99,12 @@ def checagem_tensoes(k_m: float, sigma_x: float, sigma_y: float, f_md: float) ->
     return fator, analise
 
 
-def checagem_flexao_simples_ponte(geo: dict, m_gkx: float, m_qkx: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k:float, p_k: float, m_gky: float, m_qky: float)  -> str:
+def checagem_flexao_simples_ponte(geo: dict, m_gkx: float, m_qkx: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k:float, p_k: float = 0.0, m_gky: float = 0.0, m_qky: float = 0.0)  -> str:
     """Verifica a resistência à flexão oblíqua da madeira conforme NBR 7190:1997.
     """
 
     area, w_x, w_y, i_x, i_y, r_x, r_y, k_m = prop_madeiras(geo)
+    # props
     # Combinação das cargas
     m_sd_x = m_gkx * gamma_g + m_qkx * gamma_q
     m_sd_y = m_gky * gamma_g + m_qky * gamma_q
@@ -123,37 +120,5 @@ def checagem_flexao_simples_ponte(geo: dict, m_gkx: float, m_qkx: float, classe_
     return analise_final
 
 
-# Tela ############################################################
-# Recupera o idioma que foi definido lá no app.py
-lang = st.session_state.get("lang", "pt")
-
-# Cria o dicionário com os textos DESSA página específica
-textos = {
-            "pt": {
-                    "titulo": "Cálculo de Longarina",
-                    "entrada_comprimento": "Comprimento da viga (m)",
-                    "entrada_carga": "Carga aplicada (kN)",
-                    "botao": "Calcular Resistência",
-                    "resultado": "A resistência calculada é: "
-                  },
-            "en": {
-                    "titulo": "Stringer Calculation",
-                    "entrada_comprimento": "Beam length (m)",
-                    "entrada_carga": "Applied load (kN)",
-                    "botao": "Calculate Resistance",
-                    "resultado": "The calculated resistance is: "
-                  }
-         }   
-t = textos[lang]
-
-# Calculadora da página
-st.header(t["titulo"])
-col1, col2 = st.columns(2)
-with col1:
-    comprimento = st.number_input(t["entrada_comprimento"], value=10.0)
-with col2:
-    carga = st.number_input(t["entrada_carga"], value=50.0)
-
-if st.button(t["botao"]):
-    res = checagem_flexao_simples_ponte()
-    st.success(f"{t['resultado']} {res} kNm")
+if __name__ == "__main__":
+    pass
