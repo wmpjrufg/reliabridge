@@ -44,3 +44,11 @@ pip-chill > requirements.txt
 ```bash
 streamlit run app.py
 ```
+
+
+## pedro ##
+
+cd pages
+dir
+streamlit run longarina_projeto_copy.py
+
