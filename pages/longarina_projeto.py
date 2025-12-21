@@ -147,13 +147,49 @@ textos = {
 t = textos[lang]
 
 # Calculadora da página
-st.header(t["titulo"])
-col1, col2 = st.columns(2)
-with col1:
-    comprimento = st.number_input(t["entrada_comprimento"], value=10.0)
-with col2:
-    carga = st.number_input(t["entrada_carga"], value=50.0)
+st.header("Cálculo de Longarina – Flexão Oblíqua (NBR 7190)")
+tipo_secao = st.selectbox("Tipo de seção", ["Retangular", "Circular"])
+if tipo_secao == "Retangular":
+    b = st.number_input("Base b (m)", min_value=0.05, value=0.20)
+    h = st.number_input("Altura h (m)", min_value=0.05, value=0.50)
+    geo = {"b_w": b, "h": h}
+else:
+    d = st.number_input("Diâmetro d (m)", min_value=0.05, value=0.30)
+    geo = {"d": d}
 
-if st.button(t["botao"]):
-    res = checagem_flexao_simples_ponte()
-    st.success(f"{t['resultado']} {res} kNm")
+st.subheader("Carregamentos")
+p_k = st.number_input("Força axial pₖ (kN)", value=0.0)
+m_gkx = st.number_input("Momento permanente M_gk,x (kN.m)", value=0.0)
+m_qkx = st.number_input("Momento variável M_qk,x (kN.m)", value=0.0)
+m_gky = st.number_input("Momento permanente M_gk,y (kN.m)", value=0.0)
+m_qky = st.number_input("Momento variável M_qk,y (kN.m)", value=0.0)
+
+st.subheader("Classes da Madeira")
+classe_carregamento = st.selectbox(
+    "Classe de carregamento",
+    ["Permanente", "Longa duração", "Média duração", "Curta duração", "Instantânea"]
+)
+classe_madeira = st.selectbox(
+    "Tipo de madeira",
+    ["madeira_natural", "madeira_recomposta"]
+)
+classe_umidade = st.selectbox(
+    "Classe de umidade",
+    [1, 2, 3, 4]
+)
+gamma_g = st.number_input("γg", value=1.4)
+gamma_q = st.number_input("γq", value=1.4)
+gamma_w = st.number_input("γw", value=1.4)
+
+f_c0k = st.number_input("f_c0k (MPa)", value=30.0)
+
+if st.button("Calcular"):
+    res = checagem_flexao_simples_ponte(
+        geo, m_gkx, m_qkx, m_gky, m_qky,
+        p_k, classe_carregamento, classe_madeira, classe_umidade,
+        gamma_g, gamma_q, gamma_w, f_c0k
+    )
+
+    st.subheader("Resultado")
+    st.write(f"Fator de utilização: **{res['fator']:.2f}**")
+    st.write(res["analise"])
