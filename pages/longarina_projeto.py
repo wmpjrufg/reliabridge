@@ -56,7 +56,6 @@ def prop_madeiras(geo: dict) -> tuple[float, float, float, float, float, float, 
 
 
 def k_mod_madeira(classe_carregamento: str, classe_madeira: str, classe_umidade: int) -> tuple[float, float, float]:
-
     """Retorna o coeficiente de modificação kmod para madeira conforme NBR 7190:1997.
 
     :param classe_carregamento: Permanente, Longa Duração, Média Duração, Curta Duração ou Instantânea
@@ -108,11 +107,12 @@ def flexao_obliqua(area: float, w_x: float, w_y: float, p: float, m_x: float, m_
 
 def resistencia_calculo(f_k: float, gamma_w: float, k_mod: float) -> float:
     """Calcula a resistência de cálculo da madeira conforme NBR 7190.
+
     :param f_k: resistência característica da madeira [kN/m²]
     :param gamma_w: coeficiente de segurança para madeira
     :param k_mod: coeficiente de modificação da resistência da madeira
-    :return: resistência de cálculo da madeira [kN/m²]
 
+    :return: resistência de cálculo da madeira [kN/m²]
     """
 
     f_d = (f_k / gamma_w) * k_mod
@@ -120,13 +120,15 @@ def resistencia_calculo(f_k: float, gamma_w: float, k_mod: float) -> float:
     return f_d
 
 
-def checagem_tensoes(k_m: float, sigma_x: float, sigma_y: float, f_md: float) -> float:
+def checagem_tensoes(k_m: float, sigma_x: float, sigma_y: float, f_md: float) -> tuple[float, str]:
     """Verifica as tensões na madeira conforme NBR 7190.
     
     :param k_m: Coeficiente de correção do tipo da seção transversal
     :param sigma_x: Tensão normal em relação ao eixo x [kN/m²]
     :param sigma_y: Tensão normal em relação ao eixo y [kN/m²]
     :param f_md: Resistência de cálculo da madeira [kN/m²]
+
+    :return: [0] fator de utilização, [1] Descrição do Fator de utilização
     """
 
     verif_1 = (sigma_x / f_md) + k_m * (sigma_y / f_md)
@@ -139,15 +141,18 @@ def checagem_tensoes(k_m: float, sigma_x: float, sigma_y: float, f_md: float) ->
 
 def checagem_flexao_simples_ponte(geo: dict, m_gkx: float, m_qkx: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k:float, p_k: float, m_gky: float, m_qky: float)  -> str:
     """Verifica a resistência à flexão oblíqua da madeira conforme NBR 7190:1997.
+
     :param geo: Parâmetros geométricos da seção transversal. Se chaves = 'b_w': Largura da seção transversal [m] e 'h': Altura da seção transversal [m] = retangular, se chave = 'd': Diâmetro da seção transversal [m] = circular
     :param m_gkx: Momento fletor devido à carga permanente em relação ao eixo x [kN.m]
     :param m_qkx: Momento fletor devido à carga variável em relação ao eixo x [kN.m]
     :param classe_carregamento: Permanente, Longa Duração, Média Duração, Curta Duração ou Instantânea
-    :param classe_madeira: madeira_natural ou madeira_recomposta    
+    :param classe_madeira: madeira_natural ou madeira_recomposta 
+
+    return:  Analise da verificação de tensões: {"fator_utilização":fator de utilização, "analise": descrição do fator de utilização, "r_min": raio de giração mínimo [m]}     
     """
 
     # Geometria, Propriedades da seção transversal
-    area, w_x, w_y, *_ , r_x, r_y, k_m = prop_madeiras(geo)
+    area, w_x, w_y, i_x, i_y, r_x, r_y, k_m = prop_madeiras(geo)
     
 
     # Ações de cálculo
@@ -176,9 +181,17 @@ def checagem_flexao_simples_ponte(geo: dict, m_gkx: float, m_qkx: float, classe_
 )
 
     return {
+        "area": area,
+        "inercia": i_y,
+        "inercia": i_x,
+        "raio_giração": r_x,
+        "raio_giração": r_y,
+        "k_mod": k_mod,
+        "sigma_x": f_x + f_p,
+        "sigma_y": f_y,
+        "f_md": f_md,
         "fator_utilizacao": fator,
         "analise": analise,
-        "r_min": min(r_x, r_y)
     }
     
 

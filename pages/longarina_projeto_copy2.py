@@ -187,10 +187,6 @@ def checagem_flexao_simples_ponte(geo: dict, m_gkx: float, m_qkx: float, classe_
 
 # Tela ###############################################################################################################################################
 
-
-
-
-
 # Obtém o idioma da sessão (já configurado na página principal)
 lang = st.session_state.get("lang", "pt")
 
