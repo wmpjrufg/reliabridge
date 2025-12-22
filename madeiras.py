@@ -120,5 +120,37 @@ def checagem_flexao_simples_ponte(geo: dict, m_gkx: float, m_qkx: float, classe_
     return analise_final
 
 
+def converte_p_mk_vk_deltak(p_gk: float, p_qk: float = 0.0, l: float):
+    """Converte cargas distribuídas em momentos fletores, esforços cortantes e deformações máximas.
+    """
+
+    # Momentos fletores máximos
+    m_gkx = (p_gk * l) / 4
+    m_qkx = (p_qk * l) / 4
+
+    # Esforços cortantes máximos
+    v_gk = p_gk / 2
+    v_qk = p_qk / 2
+
+    # Deformações máximas
+    delta_gk = (p_gk * (comprimento ** 3)) / 48e6
+    delta_qk = (p_qk * (comprimento ** 3)) / 48e6
+
+    return m_gkx, m_qkx, v_gk, v_qk, delta_gk, delta_qk
+
+
+def converte_tb_em_carga(p_qk: str) -> float:
+    """Converte o tipo de trem em carga distribuída.
+    """
+    if p_qk == "TB-240":
+        p_qkint = 24.0  # kN/m
+        p_qkext = 16.0  # kN/m
+        p_roda = 130.0  # kN
+    else:  # TB-450
+        p_qkint = 45.0  # kN/m
+        p_qkext = 30.0  # kN/m
+        p_roda = 220.0  # kN
+    return p_qkint, p_qkext, p_roda
+
 if __name__ == "__main__":
     pass
