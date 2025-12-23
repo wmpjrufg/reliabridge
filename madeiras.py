@@ -118,7 +118,7 @@ def checagem_tensoes(k_m: float, sigma_x: float, sigma_y: float, f_md: float) ->
     return fator, analise
 
 
-def checagem_flexao_simples_ponte(area, w_x: float, i_x: float, r_x: float, k_m: float, m_gk: float, m_qk: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k:float) -> dict:
+def checagem_flexao_simples_viga(area, w_x: float, i_x: float, r_x: float, k_m: float, m_gk: float, m_qk: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k:float) -> dict:
     """Verifica a resistência à flexão oblíqua da madeira conforme NBR 7190.
 
     :param area: Área da seção transversal [m²]
@@ -181,7 +181,7 @@ def checagem_longarina_madeira(geo: dict, p_gk: float, trem_tipo: str, l: float)
     m_gk, m_qk, v_gk, v_qk, delta_gk, delta_qk = converte_carga_linear_esforco_maximo(p_gk, trem_tipo, l)
 
     # Verificação da flexão simples
-    res_flex = checagem_flexao_simples_ponte(area, w_x, i_x, r_x, k_m, m_gk, m_qk, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_c0k, f_t0k)
+    res_flex = checagem_flexao_simples_viga(area, w_x, i_x, r_x, k_m, m_gk, m_qk, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_c0k, f_t0k)
 
     # Verificação do cisalhamento (a implementar)
 
