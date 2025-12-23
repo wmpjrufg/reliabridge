@@ -114,7 +114,159 @@ def definir_trem_tipo (tipo_tb: str) -> float:
         p_tyre = 75
         p_q = 5
 
+def momento_max_carga_permanente(p_gk: float, l: float) -> float:
+    """
+    Esta função calcula o momento fletor máximo devido à carga permanente.
+    
+    :param p_gk: carga permanente distribuída (kN/m)
+    :param l: vão teórico da viga (m)
+
+    :return: momento fletor máximo devido à carga permanente (kN·m)
+    """
+    return p_gk * l**2 / 8
+
+def momento_max_classe_30_45_curto(p_tyre: float, p_q: float, L: float, dist: float = 1.5) -> float:
+    """
+    Esta função calcula o momento fletor máximo para longarinas das Classes estruturais 30 e 45, para vãos entre 3 m e 6 m.
+    
+    :param p_tyre: carga concentrada do veículo-tipo (kN)
+    :param p_q: carga acidental distribuída (kN/m)
+    :param l: vão teórico da longarina (m)
+    :param dist: distância do eixo da roda ao ponto de aplicação (m)
+
+    :return: momento fletor máximo (kN·m)
+    """
+    return (p_tyre * dist / 4) * (l - 3 * dist) + p_q * l**2 / 8
+
+def momento_max_classe_30_45_longo(p_tyre: float, p_q: float, g: float, l: float, dist: float = 1.5) -> float:
+    """
+    Esta função calcula o momento fletor máximo para longarinas das Classes
+    estruturais 30 e 45, para vãos maiores que 6 m.
+    
+    :param p_tyre: carga concentrada do veículo-tipo (kN)
+    :param p_q: carga acidental distribuída (kN/m)
+    :param p_gk: carga permanente distribuída (kN/m)
+    :param l: vão teórico da longarina (m)
+    :param dist: distância do eixo da roda (m)
+
+    :return: momento fletor máximo (kN·m)
+    """
+    c = (l - 4 * dist) / 2
+    return (p_tyre * dist / 4) * (l - 3 * dist) + p_q * c**2 / 2 + p_gk * l**2 / 8
+
+def flecha_max_carga_permanente(p_gk: float, l: float, E: float, i_x: float) -> float:
+    """
+    Esta função calcula a flecha máxima devido à carga permanente.
+    
+    :param p_gk: carga permanente distribuída (kN/m)
+    :param l: vão teórico da viga (m)
+    :param E: módulo de elasticidade da madeira (kN/m²)
+    :param i_x: momento de inércia da seção transversal (m⁴)
+
+    :return: flecha máxima devido à carga permanente (m)
+    """
+    return 5 * p_gk * l**4 / (384 * E * i_x)
+
+def flecha_max_classe_30_45(p_tyre: float, l: float, b: float, E: float, i_x: float) -> float:
+    """
+    Esta função calcula a flecha máxima para longarinas das Classes estruturais
+    30 e 45, desprezando o efeito da carga acidental distribuída próxima aos apoios.
+    
+    :param p_tyre: carga concentrada do veículo-tipo (kN)
+    :param l: vão teórico da longarina (m)
+    :param b: parâmetro geométrico definido por (L - 2a) / 2 (m)
+    :param E: módulo de elasticidade da madeira (kN/m²)
+    :param i_x: momento de inércia da seção transversal (m⁴)
+
+    :return: flecha máxima (m)
+    """
+    return (p_tyre * (l**3 * b - 2 * l * b**3)) / (48 * E * i_x)
+
+def reacao_apoio_carga_permanente(p_gk: float, l: float) -> float:
+    """
+    Esta função calcula a reação de apoio devido à carga permanente.
+    
+    :param p_gk: carga permanente distribuída (kN/m)
+    :param l: vão teórico da viga (m)
+
+    :return: reação de apoio devido à carga permanente (kN)
+    """
+    return p_gk * l / 2
+
+def reacao_apoio_classe_30_45(p_tyre: float, p_q: float, l: float, dist: float = 1.5) -> float:
+    """
+    Esta função calcula a reação de apoio para longarinas das Classes
+    estruturais 30 e 45, considerando o veículo-tipo.
+    
+    :param p_tyre: carga concentrada do veículo-tipo (kN)
+    :param p_q: carga acidental distribuída (kN/m)
+    :param l: vão teórico da longarina (m)
+    :param dist: distância do eixo da roda (m)
+
+    :return: reação de apoio (kN)
+    """
+    d = l - 3 * dist
+    return (p_tyre / l) * (3 * dist + 2 * d) + p_q * l / 2
+
+def cortante_max_carga_permanente(p_gk: float, l: float) -> float:
+    """
+    Esta função calcula a cortante máxima devido à carga permanente.
+    
+    :param p_gk: carga permanente distribuída (kN/m)
+    :param l: vão teórico da viga (m)
+
+    :return: cortante máxima devido à carga permanente (kN)
+    """
+    return p_gk * l / 2
+
+def cortante_max_reduzida(p_tyre: float, p_q: float, l: float, dist: float, h: float) -> float:
+    """
+    Esta função calcula a cortante máxima reduzida para longarinas das
+    Classes estruturais 30 e 45.
+    
+    :param p_tyre: carga concentrada do veículo-tipo (kN)
+    :param p_q: carga acidental distribuída (kN/m)
+    :param l: vão teórico da longarina (m)
+    :param dist: distância do eixo da roda (m)
+    :param h: diâmetro médio da longarina (m)
+
+    :return: cortante máxima reduzida (kN)
+    """
+    e = l - 3 * dist - 2 * h
+    return (p_tyre / l) * (6 * dist + 3 * e) + p_q * l / 2
+
+def momento_max_tabuleiro(P: float, ar: float, Lr: float) -> float:
+    """
+    Esta função calcula o momento fletor máximo no tabuleiro devido à carga acidental aplicada por uma roda.
+    
+    :param p_tyre: carga da roda do veículo-tipo (kN)
+    :param ar: largura de influência da roda (m)
+    :param Lr: vão do tabuleiro (distância entre longarinas) (m)
+
+    :return: momento fletor máximo no tabuleiro (kN·m)
+    """
+    qr = P / ar
+    return qr * (Lr - ar) / 4
+
 def load_train(a, l, p_tyre, p_q, l_GC, l_TT, dist_GCR1, dist_eixos):
+
+    """
+    Esta função calcula os efeitos da carga de multidão e da carga do trem-tipo
+    utilizando o método da linha de influência.
+
+    :param a: posição do veículo em relação ao apoio (m)
+    :param l: vão da estrutura (m)
+    :param p_tyre: carga por eixo do veículo (kN)
+    :param p_q: carga distribuída de multidão (kN/m)
+    :param l_GC: comprimento do guarda-corpo (m)
+    :param l_TT: comprimento total do trem-tipo (m)
+    :param dist_GCR1: distância do guarda-corpo até o primeiro eixo (m)
+    :param dist_eixos: distância entre os eixos do veículo (m)
+
+    :return: [0] = P  → efeito da carga concentrada (veículo)
+             [1] = Qi → efeito interno da carga de multidão
+             [2] = Qe → efeito externo da carga de multidão
+    """
 
     # Pontos da linha de influência
     x0, y0 = 0, 0
