@@ -59,29 +59,30 @@ t = textos[lang]
 # Calculadora da página
 st.header(t["titulo"])
 tipo_secao = st.selectbox(t["entrada_tipo_secao"], t["tipo_secao"])
-if tipo_secao == "Retangular" or tipo_secao == "Rectangular":
-    b = st.number_input("Base (m)", min_value=0.05, value=0.20)
-    h = st.number_input("Altura (m)", min_value=0.05, value=0.50)
+
+if tipo_secao in ["Retangular", "Rectangular"]:
+    b = st.number_input(t["base"], min_value=0.05, value=0.20)
+    h = st.number_input(t["altura"], min_value=0.05, value=0.50)
     geo = {"b_w": b, "h": h}
 else:
-    d = st.number_input("Diâmetro (m)", min_value=0.05, value=0.30)
+    d = st.number_input(t["diametro"], min_value=0.05, value=0.30)
     geo = {"d": d}
+
 l = st.number_input(t["entrada_comprimento"], value=10.0)
 
 col1, col2 = st.columns(2)
 with col1:
-    p_gk = st.number_input("Carga permanente (kN/m)", value=8.0)    
+    p_gk = st.number_input(t["carga_permanente"], value=8.0)    
 with col2:
     p_qk = st.selectbox(t["trem_tipo"], t["tipo_tb"])
-classe_carregamento = st.selectbox("Classe de carregamento", ["Permanente", "Longa duração", "Média duração", "Curta duração", "Instantânea"])
-classe_carregamento = str(classe_carregamento).lower()
-classe_madeira = st.selectbox("Classe de madeira", ["madeira natural", "madeira recomposta"])
+
+classe_carregamento = st.selectbox(t["classe_carregamento"], t["classe_carregamento_opcoes"]).lower()
+classe_madeira = st.selectbox(t["classe_madeira"], t["classe_madeira_opcoes"]).lower()
 classe_madeira = str(classe_madeira).lower()
-classe_umidade = st.selectbox("Classe de umidade", [1, 2, 3, 4])
-classe_umidade = str(classe_umidade).lower()
-gamma_g = st.number_input("γg", value=1.40, step=0.1)
-gamma_q = st.number_input("γq", value=1.40, step=0.1)
-gamma_w = st.number_input("γw", value=1.40, step=0.1)
+classe_umidade = st.selectboxst.selectbox(t["classe_umidade"], [1, 2, 3, 4])
+gamma_g = st.number_input(t["gamma_g"], value=1.40, step=0.1)
+gamma_q = st.number_input(t["gamma_q"], value=1.40, step=0.1)
+gamma_w = st.number_input(t["gamma_w"], value=1.40, step=0.1)
 
 if st.button(t["botao"]):
     res = checagem_flexao_simples_ponte()
