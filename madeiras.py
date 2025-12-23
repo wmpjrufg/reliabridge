@@ -118,13 +118,11 @@ def checagem_tensoes(k_m: float, sigma_x: float, sigma_y: float, f_md: float) ->
     return fator, analise
 
 
-def checagem_flexao_simples_viga(area, w_x: float, i_x: float, r_x: float, k_m: float, m_gk: float, m_qk: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k:float) -> dict:
+def checagem_flexao_simples_viga(area, w_x: float, k_m: float, m_gk: float, m_qk: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k:float) -> dict:
     """Verifica a resistência à flexão oblíqua da madeira conforme NBR 7190.
 
     :param area: Área da seção transversal [m²]
-    :param w_x: Módulo de resistência em relação ao eixo x [m³]
-    :param i_x: Momento de inércia em relação ao eixo x [m4]
-    :param r_x: Raio de giração em relação ao eixo x [m]    
+    :param w_x: Módulo de resistência em relação ao eixo x [m³] 
     :param m_gk: Momento fletor devido à carga permanente [kN.m]
     :param m_qk: Momento fletor devido à carga variável [kN.m]
     :param classe_carregamento: 'permanente', 'longa duração', 'média duração', 'curta duração' ou 'instantânea'
