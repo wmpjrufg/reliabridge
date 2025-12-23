@@ -105,7 +105,45 @@ def checagem_tensoes(k_m: float, sigma_x: float, sigma_y: float, f_md: float) ->
 
     return fator, analise
 
+def definir_trem_tipo (tipo_tb: str) -> float:
 
+    if tipo_tb == "TB-240":
+        p_tyre = 40
+        p_q = 4
+    else:
+        p_tyre = 75
+        p_q = 5
+
+def load_train(a, l, p_tyre, p_q, l_GC, l_TT, dist_GCR1, dist_eixos):
+
+    # Pontos da linha de influência
+    x0, y0 = 0, 0
+    x1, y1 = l, 1
+
+    # Coeficiente angular
+    m = (y1 - y0) / (x1 - x0)
+
+    # Intercepto
+    b = y0 - m * x0
+
+    x_Qe = l + a - l_GC
+    x_Qi = l + a - l_GC - l_TT
+    x_P1 = l + a - l_GC - dist_GCR1
+    x_P2 = l + a - l_GC - dist_GCR1 - dist_eixos
+
+    y_Qe = m * x_Qe + b
+    y_Qi = m * x_Qi + b
+    y_P1 = m * x_P1 + b
+    y_P2 = m * x_P2 + b
+
+    # Primeiro caso, considera apenas multidão
+    Qe = p_q * ((y_Qe * x_Qe)/2)
+
+    # Segundo caso, considera carga e multidão
+    Qi = p_q * ((y_Qi * x_Qi)/2)
+    P = p_tyre * y_P1 + p_tyre * y_P2 
+
+    return P, Qi, Qe
 
 
 def checagem_flexao_simples_ponte(geo: dict, m_gkx: float, m_qkx: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k:float, p_k: float, m_gky: float, m_qky: float)  -> str:
