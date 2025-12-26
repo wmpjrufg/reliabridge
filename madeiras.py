@@ -34,6 +34,118 @@ def prop_madeiras(geo: dict) -> tuple[float, float, float, float, float, float, 
     return area, w_x, w_y, i_x, i_y, r_x, r_y, k_m
 
 
+def momento_max_carga_permanente(p_gk: float, l: float) -> float:
+    """Calcula o momento fletor máximo devido à carga permanente.
+    
+    :param p_gk: carga permanente distribuída [kN/m]
+    :param l: vão teórico da viga [m]
+
+    :return: momento fletor máximo devido à carga permanente [kN·m]
+    """
+    return p_gk * l**2 / 8
+
+
+def flecha_max_carga_permanente(p_gk: float, l: float, e_modflex: float, i_x: float) -> float:
+    """Calcula a flecha máxima devido à carga permanente.
+    
+    :param p_gk: carga permanente distribuída [kN/m]
+    :param l: vão teórico da viga [m]
+    :param e_modflex: módulo de elasticidade da madeira [kN/m²]
+    :param i_x: momento de inércia da seção transversal [m⁴]
+
+    :return: flecha máxima devido à carga permanente [m]
+    """
+    return 5 * p_gk * l**4 / (384 * e_modflex * i_x)
+
+
+def reacao_apoio_carga_permanente(p_gk: float, l: float) -> float:
+    """Calcula a reação de apoio máxima devido à carga permanente.
+    
+    :param p_gk: carga permanente distribuída [kN/m]
+    :param l: vão teórico da viga [m]
+
+    :return: reação de apoio devido à carga permanente [kN]
+    """
+    return p_gk * l / 2
+
+
+def definir_trem_tipo (tipo_tb: str) -> tuple[float, float]:
+    """Define a carga variável característica de multidão, carga por roda do trem tipo especificado e a distância entre eixos.
+
+    :param tipo_tb: Tipo de trem, ex: 'TB-240' ou 'TB-450'
+
+    :return: [0] Carga variável característica por roda [kN], [1] Carga variável característica de multidão [kN/m], e [2] Distância entre eixos [m]
+    """
+
+    if tipo_tb == "TB-240":
+        p_roda = 40
+        p_q = 4
+        a = 1.5
+    else:
+        p_roda = 75
+        p_q = 5
+        a = 1.5
+
+    return p_roda, p_q, a
+
+
+def coef_impactovertical() -> float:
+
+    return
+
+
+def momento_max_carga_variavel(l: float, tipo_tb: str) -> float:
+    """Calcula o momento fletor máximo devido à carga variável.
+    
+    :param l: vão teórico da viga [m]
+    :param tipo_tb: Tipo de trem, ex: 'TB-240' ou 'TB-450'
+
+    :return: momento fletor máximo devido à carga variável [kN·m]
+    """
+
+    p_roda, p_q, a = definir_trem_tipo (tipo_tb)
+    if l > 6:
+        m_gk = 
+    else:
+        m_gk =
+
+    return m_gk
+
+
+def flecha_max_carga_variável(p_qk: float, l: float, e_modflex: float, i_x: float, tipo_tb: str) -> float:
+    """Calcula a flecha máxima devido à carga variável.
+    
+    :param p_qk: carga variável distribuída [kN/m]
+    :param l: vão teórico da viga [m]
+    :param e_modflex: módulo de elasticidade da madeira [kN/m²]
+    :param i_x: momento de inércia da seção transversal [m⁴]
+    :param tipo_tb: Tipo de trem, ex: 'TB-240' ou 'TB-450'
+
+    :return: flecha máxima devido à carga variável [m]
+    """
+
+    p_roda, p_q, a = definir_trem_tipo (tipo_tb)
+    delta_qk =
+
+    return delta_qk 
+
+
+def reacao_apoio_carga_variavel(p_qk: float, l: float, tipo_tb: str) -> float:
+    """Calcula a reação de apoio máxima devido à carga variável.
+    
+    :param p_qk: carga variável distribuída [kN/m]
+    :param l: vão teórico da viga [m]
+    :param tipo_tb: Tipo de trem, ex: 'TB-240' ou 'TB-450'
+
+    :return: reação de apoio devido à carga variável [kN]
+    """
+
+    p_roda, p_q, a = definir_trem_tipo (tipo_tb)
+    r_qk =
+
+    return r_qk
+
+
 def k_mod_madeira(classe_carregamento: str, classe_madeira: str, classe_umidade: int) -> tuple[float, float, float]:
     """Retorna o coeficiente de modificação kmod para madeira conforme NBR 7190:1997.
 
@@ -64,31 +176,31 @@ def k_mod_madeira(classe_carregamento: str, classe_madeira: str, classe_umidade:
     return k_mod1, k_mod2, k_mod
 
 
-def flexao_obliqua(area: float, w_x: float, w_y: float, p: float, m_x: float, m_y: float) -> tuple[float, float, float]:
+def flexao_obliqua(w_x: float, m_x: float, w_y: float = 1E-12, m_y: float = 0.0, area: float = 1E-12, p: float = 0.0) -> tuple[float, float, float]:
     """Calcula a resistência à flexão oblíqua da madeira.
 
-    :param area: Área da seção transversal [m²]
     :param w_x: Módulo de resistência em relação ao eixo x [m³]
-    :param w_y: Módulo de resistência em relação ao eixo y [m³]
-    :param p: Força axial [kN]
     :param m_x: Momento fletor em relação ao eixo x [kN.m]
-    :param m_y: Momento fletor em relação ao eixo y [kN.m]
+    :param w_y: Módulo de resistência em relação ao eixo y [m³]. Padroniza-se w_y = 1E-12 para flexão simples
+    :param m_y: Momento fletor em relação ao eixo y [kN.m]. Padroniza-se m_y = 0.0 para flexão simples
+    :param area: Área da seção transversal [m²]. Padroniza-se area = 1E-12 para flexão simples
+    :param p: Força axial [kN]. Padroniza-se p = 0.0 para flexão simples
 
-    :return: [0] Tensão normal devido à força axial [kN/m²], [1] Tensão de flexão em relação ao eixo x [kN/m²], [2] Tensão de flexão em relação ao eixo y [kN/m²]  
+    :return: [0] Tensão de flexão em relação ao eixo x [kN/m²], [1] Tensão de flexão em relação ao eixo y [kN/m²], [2] Tensão normal devido à força axial [kN/m²]
     """
 
     f_p = p / area
     f_md_x = m_x / w_x
     f_md_y = m_y / w_y
 
-    return f_p, f_md_x, f_md_y
+    return f_md_x, f_md_y, f_p 
 
 
 def resistencia_calculo(f_k: float, gamma_w: float, k_mod: float) -> float:
     """Calcula a resistência de cálculo da madeira conforme NBR 7190.
 
     :param f_k: Resistência característica da madeira [kN/m²]
-    :param gamma_w: Coeficiente de segurança para madeira
+    :param gamma_w: Coeficiente parcial de segurança para madeira
     :param k_mod: Coeficiente de modificação da resistência da madeira
 
     :return: Resistência de cálculo da madeira [kN/m²]
@@ -113,24 +225,24 @@ def checagem_tensoes(k_m: float, sigma_x: float, sigma_y: float, f_md: float) ->
     verif_1 = (sigma_x / f_md) + k_m * (sigma_y / f_md)
     verif_2 = k_m * (sigma_x / f_md) + (sigma_y / f_md)
     fator = max(verif_1, verif_2)
-    analise = 'Passou na verificação' if fator <= 1 else 'Não passou na verificação'
+    analise = 'OK' if fator <= 1 else 'N OK'
 
     return fator, analise
 
 
-def checagem_flexao_simples_viga(area, w_x: float, k_m: float, m_gk: float, m_qk: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k:float) -> dict:
+def checagem_flexao_simples_viga(w_x: float, k_m: float, m_gk: float, m_qk: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k:float) -> dict:
     """Verifica a resistência à flexão oblíqua da madeira conforme NBR 7190.
 
-    :param area: Área da seção transversal [m²]
     :param w_x: Módulo de resistência em relação ao eixo x [m³] 
+    :param k_m: Coeficiente de correção do tipo da seção transversal
     :param m_gk: Momento fletor devido à carga permanente [kN.m]
     :param m_qk: Momento fletor devido à carga variável [kN.m]
     :param classe_carregamento: 'permanente', 'longa duração', 'média duração', 'curta duração' ou 'instantânea'
     :param classe_madeira: 'madeira natural' ou 'madeira recomposta'
     :param classe_umidade: 1, 2, 3, 4
-    :param gamma_g: Coeficiente de segurança para carga permanente
-    :param gamma_q: Coeficiente de segurança para carga variável
-    :param gamma_w: Coeficiente de segurança para madeira
+    :param gamma_g: Coeficiente parcial de segurança para carga permanente
+    :param gamma_q: Coeficiente parcial de segurança para carga variável
+    :param gamma_w: Coeficiente parcial de segurança para madeira
     :param f_c0k: Resistência característica à compressão paralela às fibras [kN/m²]
     :param f_t0k: Resistência característica à tração paralela às fibras [kN/m²]
 
@@ -144,15 +256,16 @@ def checagem_flexao_simples_viga(area, w_x: float, k_m: float, m_gk: float, m_qk
     k_mod1, k_mod2, k_mod = k_mod_madeira(classe_carregamento, classe_madeira, classe_umidade)
 
     # Tensões
-    _, f_x, f_y = flexao_obliqua(area, w_x, 1E-12, 0.0, m_sd, 0.0)
+    f_x, _, _ = flexao_obliqua(w_x, m_sd)
 
     # Resistência de cálculo (caso mais desfavorável)
     f_md = min(resistencia_calculo(f_c0k, gamma_w, k_mod), resistencia_calculo(f_t0k, gamma_w, k_mod))                
     
     # Verificação
-    fator, analise = checagem_tensoes(k_m, f_x, f_y, f_md)
+    fator, analise = checagem_tensoes(k_m, f_x, _, f_md)
 
     return {
+                "m_sd [kN.m]": m_sd,
                 "k_mod1": k_mod1,
                 "k_mod2": k_mod2,
                 "k_mod": k_mod,
@@ -163,82 +276,45 @@ def checagem_flexao_simples_viga(area, w_x: float, k_m: float, m_gk: float, m_qk
             }
 
 
-def checagem_longarina_madeira(geo: dict, p_gk: float, trem_tipo: str, l: float) -> tuple[dict, dict, dict]:
-    """Verifica a resistência à flexão oblíqua da madeira conforme NBR 7190.
+def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, trem_tipo: str, l: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k: float, e_modflex: float) -> tuple[dict, dict, dict]:
+    """Verifica a longarina de madeira submetida à flexão simples conforme NBR 7190.
 
     :param geo: Parâmetros geométricos da seção transversal. Se retangular: Chaves: 'b_w': Largura da seção transversal [m] e 'h': Altura da seção transversal [m]. Se circular: Chaves: 'd': Diâmetro da seção transversal [m]
     :param p_gk: Carga permanente característica, uniformemente distribuída [kN/m]
     :param trem_tipo: Tipo de trem, ex: 'TB-240' ou 'TB-450'
     :param l: Comprimento do vão [m]
+    :param classe_carregamento: 'permanente', 'longa duração', 'média duração', 'curta duração' ou 'instantânea'
+    :param classe_madeira: 'madeira natural' ou 'madeira recomposta'
+    :param classe_umidade: 1, 2, 3, 4
+    :param gamma_g: Coeficiente parcial de segurança para carga permanente
+    :param gamma_q: Coeficiente parcial de segurança para carga variável
+    :param gamma_w: Coeficiente parcial de segurança para madeira
+    :param f_c0k: Resistência característica à compressão paralela às fibras [kN/m²]
+    :param f_t0k: Resistência característica à tração paralela às fibras [kN/m²]
+    :param e_modflex: Módulo de elasticidade à flexão [kN/m²]
+
     """
 
     # Geometria, Propriedades da seção transversal
-    area, w_x, _, i_x, _, r_x, _, k_m = prop_madeiras(geo)
+    _, w_x, _, _, _, _, _, k_m = prop_madeiras(geo)
 
     # Momentos fletores de cálculo carga permanente e variável
-    m_gk, m_qk, v_gk, v_qk, delta_gk, delta_qk = converte_carga_linear_esforco_maximo(p_gk, trem_tipo, l)
+    m_gk = momento_max_carga_permanente(p_gk, l)
+    m_qk = momento_max_carga_variavel(l, trem_tipo)
+
+    # Coeficiente de Impacto Vertical
+    ci = coef_impactovertical()
+
+    # Combinação de ações
+    m_sd = m_gk * gamma_g + gamma_q * (m_qk + 0.75 * (ci - 1) * m_qk)
+
 
     # Verificação da flexão simples
-    res_flex = checagem_flexao_simples_viga(area, w_x, i_x, r_x, k_m, m_gk, m_qk, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_c0k, f_t0k)
+    res_flex = checagem_flexao_simples_viga(w_x, k_m, m_gk, m_qk, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_c0k, f_t0k)
 
     # Verificação do cisalhamento (a implementar)
 
     # Verificação de deslocamento (a implementar)
 
-    return res_flex, res_cis, res_des
+    return res_flex
 
-
-def converte_carga_linear_esforco_maximo(p_gk: float, trem_tipo: str, l: float) -> tuple[float, float, float, float, float, float]:
-    """Converte cargas distribuídas em momentos fletores, esforços cortantes e deformações máximas.
-    """
-
-    # Carga variável característica
-    p_qkint, p_qkext, p_roda = converte_tb_em_carga(trem_tipo)
-    
-    
-    # Momentos fletores máximos
-    m_gk = 
-    m_qk = 
-
-    # Esforços cortantes máximos
-    v_gk = 
-    v_qk = 
-
-    # Deslocamento máximo
-    delta_gk = 
-    delta_qk = 
-
-    return m_gk, m_qk, v_gk, v_qk, delta_gk, delta_qk
-
-
-def converte_p_mk_vk_deltak(p_gk: float, p_qk: float = 0.0, l: float):
-    """Converte cargas distribuídas em momentos fletores, esforços cortantes e deformações máximas.
-    """
-
-    # Momentos fletores máximos
-    m_gkx = (p_gk * l) / 4
-    m_qkx = (p_qk * l) / 4
-
-    # Esforços cortantes máximos
-    v_gk = p_gk / 2
-    v_qk = p_qk / 2
-
-    # Deformações máximas
-    delta_gk = (p_gk * (comprimento ** 3)) / 48e6
-    delta_qk = (p_qk * (comprimento ** 3)) / 48e6
-
-    return m_gkx, m_qkx, v_gk, v_qk, delta_gk, delta_qk
-
-
-def converte_tb_em_carga(p_qk: str) -> float:
-    """Converte o tipo de trem em carga distribuída.
-    """
-    if p_qk == "TB-240":
-        p_qkint = 24.0  # kN/m
-        p_qkext = 16.0  # kN/m
-        p_roda = 130.0  # kN
-    else:  # TB-450
-        p_qkint = 45.0  # kN/m
-        p_qkext = 30.0  # kN/m
-        p_roda = 220.0  # kN
-    return p_qkint, p_qkext, p_roda
