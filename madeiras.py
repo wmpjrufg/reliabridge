@@ -211,11 +211,29 @@ def converte_carga_linear_esforco_maximo(p_gk: float, trem_tipo: str, l: float) 
     return m_gk, m_qk, v_gk, v_qk, delta_gk, delta_qk
 
 
-def converte_tb_em_carga(trem_tipo: str) -> tuple[float, float, float]:
-    """Converte o tipo de trem em carga distribuída e carga de roda.
+def converte_p_mk_vk_deltak(p_gk: float, p_qk: float = 0.0, l: float):
+    """Converte cargas distribuídas em momentos fletores, esforços cortantes e deformações máximas.
     """
 
-    if trem_tipo == "TB-240":
+    # Momentos fletores máximos
+    m_gkx = (p_gk * l) / 4
+    m_qkx = (p_qk * l) / 4
+
+    # Esforços cortantes máximos
+    v_gk = p_gk / 2
+    v_qk = p_qk / 2
+
+    # Deformações máximas
+    delta_gk = (p_gk * (comprimento ** 3)) / 48e6
+    delta_qk = (p_qk * (comprimento ** 3)) / 48e6
+
+    return m_gkx, m_qkx, v_gk, v_qk, delta_gk, delta_qk
+
+
+def converte_tb_em_carga(p_qk: str) -> float:
+    """Converte o tipo de trem em carga distribuída.
+    """
+    if p_qk == "TB-240":
         p_qkint = 24.0  # kN/m
         p_qkext = 16.0  # kN/m
         p_roda = 130.0  # kN
@@ -223,5 +241,4 @@ def converte_tb_em_carga(trem_tipo: str) -> tuple[float, float, float]:
         p_qkint = 45.0  # kN/m
         p_qkext = 30.0  # kN/m
         p_roda = 220.0  # kN
-
     return p_qkint, p_qkext, p_roda
