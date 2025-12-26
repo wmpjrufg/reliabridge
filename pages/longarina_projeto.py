@@ -317,11 +317,7 @@ with col2:
 classe_carregamento = st.selectbox(t["classe_carregamento"], t["classe_carregamento_opcoes"]).lower()
 classe_madeira = st.selectbox(t["classe_madeira"], t["classe_madeira_opcoes"]).lower()
 classe_madeira = str(classe_madeira).lower()
-<<<<<<< HEAD
-classe_umidade = st.selectboxst.selectbox(t["classe_umidade"], [1, 2, 3, 4])
-=======
 classe_umidade = st.selectbox(t["classe_umidade"], [1, 2, 3, 4])
->>>>>>> origin/dev
 gamma_g = st.number_input(t["gamma_g"], value=1.40, step=0.1)
 gamma_q = st.number_input(t["gamma_q"], value=1.40, step=0.1)
 gamma_w = st.number_input(t["gamma_w"], value=1.40, step=0.1)
