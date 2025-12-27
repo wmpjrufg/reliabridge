@@ -43,6 +43,37 @@ def momento_max_carga_permanente(p_gk: float, l: float) -> float:
     :return: momento fletor máximo devido à carga permanente [kN·m]
     """
     return p_gk * l**2 / 8
+##
+def reacao_apoio_carga_permanente(p_gk: float, l: float) -> float:
+    """Calcula a reação de apoio máxima devido à carga permanente distribuída.
+
+    :param p_gk: Carga permanente característica distribuída [kN/m]
+    :param l: Vão teórico da viga [m]
+
+    :return: [0] Reação de apoio máxima devido à carga variável [kN]
+    """
+
+    q_qk = p_gk * l / 2
+
+    return q_qk
+
+##
+def reacao_apoio_carga_variavel(p_roda: float, q: float, l: float, a: float, e: float) -> float:
+    """Calcula a reação de apoio máxima devido à carga variável conforme esquema de trem-tipo.
+    
+    :param p_roda: Carga concentrada por roda [kN]
+    :param q: Carga variável distribuída (multidão) [kN/m]
+    :param l: Vão teórico da viga [m]
+    :param a: Distância entre eixos do trem [m]
+    :param e: Distância do eixo mais próximo ao apoio considerado [m]
+    :return: Reação de apoio máxima devido à carga variável [kN]
+    """
+
+    q_qk = (p_roda / l) * (6 * a + 3 * e) + (q * e**2) / (2 * l)
+
+    return q_qk
+
+
 
 
 def flecha_max_carga_permanente(p_gk: float, l: float, e_modflex: float, i_x: float) -> float:
@@ -88,10 +119,26 @@ def definir_trem_tipo (tipo_tb: str) -> tuple[float, float]:
 
     return p_roda, p_q, a
 
+##
+def coef_impactovertical(LIV: float) -> float:
+    """
+    Função para cálculo do coeficiente de impacto vertical (CIV) conforme NBR 7188:2024 item 5.1.3.1. CIV = Coeficiente que majora os esforços para considerar efeitos dinâmicos e vibrações do tráfego.
 
-def coef_impactovertical() -> float:
+    :param LIV: Vão teórico da estrutura [m] - distância entre apoios para cálculo do impacto
+    :param LIV < 10.0 m: coeficiente fixo de 1.35 (maior impacto em vãos curtos)
+    :param 10.0 m ≤ LIV ≤ 200.0 m: fórmula variável com o vão
+    :param LIV > 200.0 m: coeficiente mínimo de 1.0 (menor impacto em vãos longos)
+    
+    :return: Valor do coeficiente de impacto vertical (CIV)
 
-    return
+    """
+
+    if LIV < 10.0:
+        return 1.35  
+    elif 10.0 <= LIV <= 200.0:
+        return 1 + 1.06 * (20 / (LIV + 50))  
+    else:
+        return 1.0   
 
 
 def momento_max_carga_variavel(l: float, tipo_tb: str) -> float:
@@ -313,6 +360,9 @@ def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, trem_tipo: str, l:
     res_flex = checagem_flexao_simples_viga(w_x, k_m, m_gk, m_qk, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_c0k, f_t0k)
 
     # Verificação do cisalhamento (a implementar)
+    
+
+
 
     # Verificação de deslocamento (a implementar)
 
