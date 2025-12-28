@@ -94,21 +94,21 @@ def coef_impactovertical() -> float:
     return
 
 
-def momento_max_variavel(p_tyre: float, p_q: float, l: float, a: float = 1.5) -> float:
+def momento_max_variavel(l: float, tipo_tb: str) -> float:
     """
     Calcula o momento fletor máximo M_q,k conforme expressão normativa para longarinas das Classes 30 e 45.
 
-    :param p_tyre: carga concentrada do veículo-tipo (kN)
+    :param p_roda: carga concentrada do veículo-tipo (kN)
     :param p_q: carga distribuída (kN/m)
     :param l: vão teórico da longarina (m)
     :param a: distância do eixo da roda (m)
 
     :return: momento fletor máximo M_q,k (kN·m)
     """
-    p_tyre, p_q, a = definir_trem_tipo (tipo_tb)
-    m_qk = (3 * p_tyre * l) / 4 - p_tyre * a
+    p_roda, p_q, a = definir_trem_tipo(tipo_tb)
+    m_qk = (3 * p_roda * l) / 4 - p_roda * a
 
-    if L > 6:
+    if l > 6:
         c = (l - 4 * a) / 2
         m_qk += p_q * c**2 / 2
 
@@ -126,7 +126,7 @@ def flecha_max_carga_variável(l: float, e_modflex: float, i_x: float, tipo_tb: 
     :return: flecha máxima devido à carga variável [m]
     """
 
-    p_roda, a = definir_trem_tipo(tipo_tb)
+    p_roda, _, a = definir_trem_tipo(tipo_tb)
     delta_qk = (p_roda / (48 * e_modflex * i_x) * (l**3 + 2 * a * (3 * l**2 - 4 * a**2)))
 
     return delta_qk
@@ -301,7 +301,7 @@ def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, trem_tipo: str, l:
 
     # Momentos fletores de cálculo carga permanente e variável
     m_gk = momento_max_carga_permanente(p_gk, l)
-    m_qk = momento_max_carga_variavel(l, trem_tipo)
+    m_qk = momento_max_variavel(l, trem_tipo)
 
     # Coeficiente de Impacto Vertical
     ci = coef_impactovertical()
