@@ -233,9 +233,9 @@ textos = {
                     "titulo": "Verificação de uma Longarina – Flexão Pura (NBR 7190)",
                     "entrada_tipo_secao": "Tipo de seção",
                     "tipo_secao": ["Retangular", "Circular"],
-                    "base": "Base (m)",
-                    "altura": "Altura (m)",
-                    "diametro": "Diâmetro (m)",
+                    "base": "Base (cm)",
+                    "altura": "Altura (cm)",
+                    "diametro": "Diâmetro (cm)",
                     "entrada_comprimento": "Comprimento da viga (m)",
                     "carga_permanente": "Carga permanente (kN/m)",
                     "trem_tipo": "Tipo de trem",
@@ -258,9 +258,9 @@ textos = {
                     "titulo": "Verification of a Stringer – Pure Bending (NBR 7190)",
                     "entrada_tipo_secao": "Section type",
                     "tipo_secao": ["Rectangular", "Circular"],
-                    "base": "Width (m)",
-                    "altura": "Height (m)",
-                    "diametro": "Diameter (m)",
+                    "base": "Width (cm)",
+                    "altura": "Height (cm)",
+                    "diametro": "Diameter (cm)",
                     "entrada_comprimento": "Beam length (m)",
                     "carga_permanente": "Dead load (kN/m)",
                     "trem_tipo": "Load train type",
@@ -286,11 +286,14 @@ t = textos[lang]
 st.header(t["titulo"])
 tipo_secao = st.selectbox(t["entrada_tipo_secao"], t["tipo_secao"])
 if tipo_secao in ["Retangular", "Rectangular"]:
-    b = st.number_input(t["base"], min_value=0.05, value=0.20)
-    h = st.number_input(t["altura"], min_value=0.05, value=0.50)
+    b_cm = st.number_input(t["base"], min_value=0.05, value=0.20)
+    h_cm = st.number_input(t["altura"], min_value=0.05, value=0.50)
+    b = b_cm / 100
+    h = h_cm / 100
     geo = {"b_w": b, "h": h}
 else:
-    d = st.number_input(t["diametro"], min_value=0.05, value=0.30)
+    d_cm = st.number_input(t["diametro"], min_value=0.05, value=0.30)
+    d = d_cm / 100
     geo = {"d": d}
 l = st.number_input(t["entrada_comprimento"], min_value=3.0, value=10.0)
 col1, col2 = st.columns(2)
