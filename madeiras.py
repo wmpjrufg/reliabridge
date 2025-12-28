@@ -94,28 +94,30 @@ def coef_impactovertical() -> float:
     return
 
 
-def momento_max_carga_variavel(l: float, tipo_tb: str) -> float:
-    """Calcula o momento fletor máximo devido à carga variável.
-    
-    :param l: vão teórico da viga [m]
-    :param tipo_tb: Tipo de trem, ex: 'TB-240' ou 'TB-450'
-
-    :return: momento fletor máximo devido à carga variável [kN·m]
+def momento_max_variavel(p_tyre: float, p_q: float, l: float, a: float = 1.5) -> float:
     """
+    Calcula o momento fletor máximo M_q,k conforme expressão normativa para longarinas das Classes 30 e 45.
 
-    p_roda, p_q, a = definir_trem_tipo (tipo_tb)
-    if l > 6:
-        m_gk = 
-    else:
-        m_gk =
+    :param p_tyre: carga concentrada do veículo-tipo (kN)
+    :param p_q: carga distribuída (kN/m)
+    :param l: vão teórico da longarina (m)
+    :param a: distância do eixo da roda (m)
 
-    return m_gk
+    :return: momento fletor máximo M_q,k (kN·m)
+    """
+    p_tyre, p_q, a = definir_trem_tipo (tipo_tb)
+    m_qk = (3 * p_tyre * l) / 4 - p_tyre * a
 
+    if L > 6:
+        c = (l - 4 * a) / 2
+        m_qk += p_q * c**2 / 2
 
-def flecha_max_carga_variável(p_qk: float, l: float, e_modflex: float, i_x: float, tipo_tb: str) -> float:
+    return m_qk
+
+def flecha_max_carga_variável(l: float, e_modflex: float, i_x: float, tipo_tb: str) -> float:
     """Calcula a flecha máxima devido à carga variável.
     
-    :param p_qk: carga variável distribuída [kN/m]
+    :param p_qk: carga variável distribuída [kN/m] (não usada nesta expressão)
     :param l: vão teórico da viga [m]
     :param e_modflex: módulo de elasticidade da madeira [kN/m²]
     :param i_x: momento de inércia da seção transversal [m⁴]
@@ -124,27 +126,26 @@ def flecha_max_carga_variável(p_qk: float, l: float, e_modflex: float, i_x: flo
     :return: flecha máxima devido à carga variável [m]
     """
 
-    p_roda, p_q, a = definir_trem_tipo (tipo_tb)
-    delta_qk =
+    p_roda, a = definir_trem_tipo(tipo_tb)
+    delta_qk = (p_roda / (48 * e_modflex * i_x) * (l**3 + 2 * a * (3 * l**2 - 4 * a**2)))
 
-    return delta_qk 
+    return delta_qk
 
-
-def reacao_apoio_carga_variavel(p_qk: float, l: float, tipo_tb: str) -> float:
+def reacao_apoio_carga_variavel(p_q: float, l: float, tipo_tb: str) -> float:
     """Calcula a reação de apoio máxima devido à carga variável.
     
-    :param p_qk: carga variável distribuída [kN/m]
+    :param p_q: carga variável distribuída [kN/m]
     :param l: vão teórico da viga [m]
     :param tipo_tb: Tipo de trem, ex: 'TB-240' ou 'TB-450'
 
     :return: reação de apoio devido à carga variável [kN]
     """
 
-    p_roda, p_q, a = definir_trem_tipo (tipo_tb)
-    r_qk =
+    p_roda, p_q, a = definir_trem_tipo(tipo_tb)
+    d = l - 4 * a
+    r_qk = ((p_roda / l) * (l + 3 * a + 2 * d) + (p_q * d**2) / (2 * l))
 
     return r_qk
-
 
 def k_mod_madeira(classe_carregamento: str, classe_madeira: str, classe_umidade: int) -> tuple[float, float, float]:
     """Retorna o coeficiente de modificação kmod para madeira conforme NBR 7190:1997.
