@@ -34,7 +34,7 @@ def prop_madeiras(geo: dict) -> tuple[float, float, float, float, float, float, 
     return area, w_x, w_y, i_x, i_y, r_x, r_y, k_m
 
 
-def definir_trem_tipo (tipo_tb: str) -> tuple[float, float]:
+def definir_trem_tipo (tipo_tb: str) -> tuple[float, float, float]:
     """Define a carga variável característica de multidão, carga por roda do trem tipo especificado e a distância entre eixos.
 
     :param tipo_tb: Tipo de trem, ex: 'TB-240' ou 'TB-450'
@@ -86,9 +86,20 @@ def momento_max_carga_variavel(l: float, tipo_tb: str) -> float:
     return m_qk
 
 
-def coef_impactovertical() -> float:
+def coef_impacto_vertical(liv: float) -> float:
+    """Cálculo do Coeficiente de Impacto Vertical (CIV) conforme NBR 7188:2024 item 5.1.3.1. CIV = Coeficiente que majora os esforços para considerar efeitos dinâmicos e vibrações do tráfego.
 
-    return
+    :param liv: Vão teórico da estrutura [m] - distância entre apoios para cálculo do impacto
+    
+    :return: Valor do coeficiente de impacto vertical (CIV)
+    """
+
+    if liv < 10.0:
+        return 1.35  
+    elif 10.0 <= liv <= 200.0:
+        return 1 + 1.06 * (20 / (liv + 50))  
+    else:
+        return 1.0   
 
 
 def flecha_max_carga_permanente(p_gk: float, l: float, e_modflex: float, i_x: float) -> float:
@@ -149,6 +160,37 @@ def reacao_apoio_carga_variavel(l: float, tipo_tb: str) -> float:
     r_qk = ((p_rodak / l) * (l + 3 * a + 2 * d) + (p_qk * d**2) / (2 * l))
 
     return r_qk
+
+
+def cortante_max_carga_permanente(p_gk: float, l: float) -> float:
+    """Calcula o cortante máximo devido à carga permanente distribuída.
+
+    :param p_gk: Carga permanente característica distribuída [kN/m]
+    :param l: Vão teórico da viga [m]
+
+    :return: Cortante máximo devido à carga permanente [kN]
+    """
+
+    q_qk = p_gk * l / 2
+
+    return q_qk
+
+
+def cortante_max_carga_variavel(l: float, tipo_tb: str, h: float) -> float:
+    """Calcula a reação de apoio máxima devido à carga variável conforme esquema de trem-tipo.
+    
+    :param l: vão teórico da viga [m]
+    :param tipo_tb: Tipo de trem, ex: 'TB-240' ou 'TB-450'
+    :param h: altura média da viga [m]
+
+    :return: Cortante máximo devido à carga variável [kN]
+    """
+
+    p_rodak, p_qk, a = definir_trem_tipo(tipo_tb)
+    e = l - 3 * a - 2 * h
+    q_qk = (p_rodak / l) * (6 * a + 3 * e) + (p_qk * e**2) / (2 * l)
+
+    return q_qk
 
 
 def k_mod_madeira(classe_carregamento: str, classe_madeira: str, classe_umidade: int) -> tuple[float, float, float]:
@@ -309,7 +351,7 @@ def checagem_flecha_viga(l: float, e_modflex: float, i_x: float, trem_tipo: str)
             }
 
 
-def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, trem_tipo: str, l: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k: float, e_modflex: float) -> tuple[dict, dict, dict]:
+def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, trem_tipo: str, l: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k: float, e_modflex: float) -> tuple[dict, dict]:
     """Verifica a longarina de madeira submetida à flexão simples conforme NBR 7190.
 
     :param geo: Parâmetros geométricos da seção transversal. Se retangular: Chaves: 'b_w': Largura da seção transversal [m] e 'h': Altura da seção transversal [m]. Se circular: Chaves: 'd': Diâmetro da seção transversal [m]
@@ -336,8 +378,7 @@ def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, trem_tipo: str, l:
     m_qkaux = momento_max_carga_variavel(l, trem_tipo)
 
     # Coeficiente de Impacto Vertical
-    # ci = coef_impactovertical()
-    ci = 1.0  # Valor provisório
+    ci = coef_impacto_vertical(l)
 
     # Combinação de ações
     m_qk =  (m_qkaux + 0.75 * (ci - 1) * m_qkaux)
