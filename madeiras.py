@@ -1,5 +1,9 @@
 """Contém funções para cálculo e verificação de estruturas de madeira."""
 import numpy as np
+from UQpy.distributions import Normal, Gamma, GeneralizedExtreme, JointIndependent
+from UQpy.run_model.model_execution.PythonModel import PythonModel
+from UQpy.run_model import RunModel
+from UQpy.reliability import FORM
 
 
 def prop_madeiras(geo: dict) -> tuple[float, float, float, float, float, float, float, float]:
@@ -34,26 +38,6 @@ def prop_madeiras(geo: dict) -> tuple[float, float, float, float, float, float, 
     return area, w_x, w_y, i_x, i_y, r_x, r_y, k_m
 
 
-def definir_trem_tipo (tipo_tb: str) -> tuple[float, float, float]:
-    """Define a carga variável característica de multidão, carga por roda do trem tipo especificado e a distância entre eixos.
-
-    :param tipo_tb: Tipo de trem, ex: 'TB-240' ou 'TB-450'
-
-    :return: [0] Carga variável característica por roda [kN], [1] Carga variável característica de multidão [kN/m], e [2] Distância entre eixos [m]
-    """
-
-    if tipo_tb == "TB-240":
-        p_rodak = 40
-        p_qk = 4
-        a = 1.5
-    else:
-        p_rodak = 75
-        p_qk = 5
-        a = 1.5
-
-    return p_rodak, p_qk, a
-
-
 def momento_max_carga_permanente(p_gk: float, l: float) -> float:
     """Calcula o momento fletor máximo devido à carga permanente.
     
@@ -66,19 +50,18 @@ def momento_max_carga_permanente(p_gk: float, l: float) -> float:
     return p_gk * l**2 / 8
 
 
-def momento_max_carga_variavel(l: float, tipo_tb: str) -> float:
-    """
-    Calcula o momento fletor máximo M_q,k conforme expressão normativa para longarinas das Classes 30 e 45.
+def momento_max_carga_variavel(l: float, p_rodak: float, p_qk: float, a: float) -> float:
+    """Calcula o momento fletor máximo M_q,k conforme expressão normativa para longarinas das Classes 30 e 45.
 
     :param l: vão teórico da longarina [m]
-    :param tipo_tb: Tipo de trem, ex: 'TB-240' ou 'TB-450'
+    :param p_rodak: carga variável característica por roda [kN]
+    :param p_qk: carga variável característica de multidão [kN/m]
+    :param a: distância entre eixos [m]
 
     :return: momento fletor máximo devido à carga variável [kN·m]
     """
     
-    p_rodak, p_qk, a = definir_trem_tipo(tipo_tb)
     m_qk = (3 * p_rodak * l) / 4 - p_rodak * a
-
     if l > 6:
         c = (l - 4 * a) / 2
         m_qk += p_qk * c**2 / 2
@@ -116,18 +99,19 @@ def flecha_max_carga_permanente(p_gk: float, l: float, e_modflex: float, i_x: fl
     return (5 * p_gk * l**4) / (384 * e_modflex * i_x)
 
 
-def flecha_max_carga_variavel(l: float, e_modflex: float, i_x: float, tipo_tb: str) -> float:
+def flecha_max_carga_variavel(l: float, e_modflex: float, i_x: float, p_rodak: float, a: float) -> float:
     """Calcula a flecha máxima devido à carga variável.
     
     :param l: vão teórico da viga [m]
     :param e_modflex: módulo de elasticidade da madeira [kN/m²]
     :param i_x: momento de inércia da seção transversal [m⁴]
-    :param tipo_tb: Tipo de trem, ex: 'TB-240' ou 'TB-450'
+    :param p_rodak: carga variável característica por roda [kN]
+    :param a: distância entre eixos [m]
 
     :return: flecha máxima devido à carga variável [m]
     """
 
-    p_rodak, _, a = definir_trem_tipo(tipo_tb)
+    
     b = (l - 2 * a) / 2
     aux = (l**3 + 2 * b * (3 * l**2 - 4 * b**2))
 
@@ -146,16 +130,17 @@ def reacao_apoio_carga_permanente(p_gk: float, l: float) -> float:
     return p_gk * l / 2
 
 
-def reacao_apoio_carga_variavel(l: float, tipo_tb: str) -> float:
+def reacao_apoio_carga_variavel(l: float, p_rodak: float, p_qk: float, a: float) -> float:
     """Calcula a reação de apoio máxima devido à carga variável.
     
     :param l: vão teórico da viga [m]
-    :param tipo_tb: Tipo de trem, ex: 'TB-240' ou 'TB-450'
+    :param p_rodak: carga variável característica por roda [kN]
+    :param p_qk: carga variável característica de multidão [kN/m²]
+    :param a: distância entre eixos [m]
 
     :return: reação de apoio devido à carga variável [kN]
     """
 
-    p_rodak, p_qk, a = definir_trem_tipo(tipo_tb)
     d = l - 3 * a
     r_qk = ((p_rodak / l) * (l + 3 * a + 2 * d) + (p_qk * d**2) / (2 * l))
 
@@ -171,26 +156,27 @@ def cortante_max_carga_permanente(p_gk: float, l: float) -> float:
     :return: Cortante máximo devido à carga permanente [kN]
     """
 
-    q_qk = p_gk * l / 2
+    v_gk = p_gk * l / 2
 
-    return q_qk
+    return v_gk
 
 
-def cortante_max_carga_variavel(l: float, tipo_tb: str, h: float) -> float:
+def cortante_max_carga_variavel(l: float, p_rodak: float, p_qk: float, a: float, h: float) -> float:
     """Calcula a reação de apoio máxima devido à carga variável conforme esquema de trem-tipo.
     
     :param l: vão teórico da viga [m]
-    :param tipo_tb: Tipo de trem, ex: 'TB-240' ou 'TB-450'
+    :param p_rodak: carga variável característica por roda [kN]
+    :param p_qk: carga variável característica de multidão [kN/m²]
+    :param a: distância entre eixos [m]
     :param h: altura média da viga [m]
 
     :return: Cortante máximo devido à carga variável [kN]
     """
 
-    p_rodak, p_qk, a = definir_trem_tipo(tipo_tb)
     e = l - 3 * a - 2 * h
-    q_qk = (p_rodak / l) * (6 * a + 3 * e) + (p_qk * e**2) / (2 * l)
+    v_qk = (p_rodak / l) * (6 * a + 3 * e) + (p_qk * e**2) / (2 * l)
 
-    return q_qk
+    return v_qk
 
 
 def k_mod_madeira(classe_carregamento: str, classe_madeira: str, classe_umidade: int) -> tuple[float, float, float]:
@@ -323,13 +309,14 @@ def checagem_flexao_pura_viga(w_x: float, k_m: float, m_gk: float, m_qk: float, 
             }
 
 
-def checagem_flecha_viga(l: float, e_modflex: float, i_x: float, trem_tipo: str) -> dict:
+def checagem_flecha_viga(l: float, e_modflex: float, i_x: float, p_rodak: float, a: float) -> dict:
     """Verifica a resistência à flexão oblíqua da madeira conforme NBR 7190.
 
     :param l: vão teórico da viga [m]
     :param e_modflex: módulo de elasticidade da madeira [kN/m²]
     :param i_x: momento de inércia da seção transversal [m⁴]
-    :param trem_tipo: Tipo de trem, ex: 'TB-240' ou 'TB-450'
+    :param p_rodak: carga variável característica por roda [kN]
+    :param a: distância entre eixos [m]
 
     return:  Analise da verificação de flecha: {"delta_lim [m]": limite de flecha, "delta_qk [m]": flecha máxima devido à carga variável, "g [m]": Equação Estado Limite, "analise": descrição se a viga passa ou não passa na verificação de flecha}     
     """
@@ -338,7 +325,7 @@ def checagem_flecha_viga(l: float, e_modflex: float, i_x: float, trem_tipo: str)
     delta_lim = l / 360
 
     # k_mod
-    delta_qk = flecha_max_carga_variavel(l, e_modflex, i_x, trem_tipo)
+    delta_qk = flecha_max_carga_variavel(l, e_modflex, i_x, p_rodak, a)
 
     # Função Estado Limite
     g = delta_lim - delta_qk
@@ -351,12 +338,14 @@ def checagem_flecha_viga(l: float, e_modflex: float, i_x: float, trem_tipo: str)
             }
 
 
-def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, trem_tipo: str, l: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k: float, e_modflex: float) -> tuple[dict, dict]:
+def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: float, p_rodak: float, a: float, l: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k: float, e_modflex: float) -> tuple[dict, dict, dict]:
     """Verifica a longarina de madeira submetida à flexão simples conforme NBR 7190.
 
     :param geo: Parâmetros geométricos da seção transversal. Se retangular: Chaves: 'b_w': Largura da seção transversal [m] e 'h': Altura da seção transversal [m]. Se circular: Chaves: 'd': Diâmetro da seção transversal [m]
     :param p_gk: Carga permanente característica, uniformemente distribuída [kN/m]
-    :param trem_tipo: Tipo de trem, ex: 'TB-240' ou 'TB-450'
+    :param p_qk: Carga variável característica de multidão [kN/m²]
+    :param p_rodak: carga variável característica por roda [kN]
+    :param a: distância entre eixos [m]
     :param l: Comprimento do vão [m]
     :param classe_carregamento: 'permanente', 'longa duração', 'média duração', 'curta duração' ou 'instantânea'
     :param classe_madeira: 'madeira natural' ou 'madeira recomposta'
@@ -375,7 +364,7 @@ def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, trem_tipo: str, l:
 
     # Momentos fletores de cálculo carga permanente e variável
     m_gk = momento_max_carga_permanente(p_gk, l)
-    m_qkaux = momento_max_carga_variavel(l, trem_tipo)
+    m_qkaux = momento_max_carga_variavel(l, p_rodak, p_qk, a)
 
     # Coeficiente de Impacto Vertical
     ci = coef_impacto_vertical(l)
@@ -386,30 +375,96 @@ def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, trem_tipo: str, l:
     # Verificação da flexão pura
     res_flex = checagem_flexao_pura_viga(w_x, k_m, m_gk, m_qk, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_c0k, f_t0k)
 
-    # Verificação do cisalhamento
-
     # Verificação de deslocamento (a implementar)
-    res_flecha = checagem_flecha_viga(l, e_modflex, i_x, trem_tipo)
+    res_flecha = checagem_flecha_viga(l, e_modflex, i_x, p_rodak, a)
 
-    res_flex_aux = {''}
+    # Verificação do cisalhamento
+    res_cis = {}
 
-    return res_flex, res_flecha
+    return res_flex, res_flecha, res_cis
+
+
+def obj_confia(samples, params):
+    
+    # Extrair amostras
+    g = np.zeros((samples.shape[0]))
+    p_gk = samples[:, 0]
+    p_rodak = samples[:, 1]
+    p_qk  = samples[:, 2]
+    f_ck = samples[:, 3]
+    f_tk = samples[:, 4]
+    e_modflex = samples[:, 5]
+
+    # Parâmetros fixos
+    geo = params[0]
+    a = params[1]
+    l = params[2]
+    classe_carregamento = params[3]
+    classe_madeira = params[4]
+    classe_umidade = params[5]
+    gamma_g = params[6]
+    gamma_q = params[7]
+    gamma_w = params[8]
+
+    # Função Estado Limite
+    res_m, _, _ = checagem_longarina_madeira_flexao(geo, p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_ck, f_tk, e_modflex)
+    g[0] = res_m["g [kN/m²]"]
+
+    return g
+
+
+def confia_flexao_pura(geo: dict, p_gk: float, p_rodak: float, p_qk: float, a: float, l: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_ck: float, f_tk: float, e_modflex: float) -> tuple[float, float]:
+
+    # Distribuições
+    p_gk_aux = Normal(loc=p_gk, scale=p_gk*0.1)
+    p_rodak_aux = Normal(loc=p_rodak, scale=p_rodak*0.1)
+    p_qk_aux = Normal(loc=p_qk, scale=p_qk*0.1)
+    f_tk_aux = Normal(loc=f_tk, scale=f_tk*0.1)
+    f_ck_aux = Normal(loc=f_ck, scale=f_ck*0.1)     
+    e_modflex_aux = Normal(loc=e_modflex, scale=e_modflex*0.1)
+    varss = [p_gk_aux, p_rodak_aux, p_qk_aux, f_ck_aux, f_tk_aux, e_modflex_aux]
+
+    # Variáveis fixas da viga
+    paramss = [geo, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_ck, f_tk, e_modflex]
+
+    # Reliability analysis Normal Loading Condition
+    model = PythonModel(model_script='madeiras.py', model_object_name='obj_confia', params=paramss)
+    runmodel_nlc = RunModel(model=model)
+    form = FORM(distributions=varss, runmodel_object=runmodel_nlc, tolerance_u=1e-5, tolerance_beta=1e-5)
+    form.run()
+    beta = form.beta[0]
+    pf = form.failure_probability[0]
+
+    return beta, pf
 
 
 if __name__ == "__main__":
+    # Teste das funções
     geo = {'d': 0.3}
-    p_gk = 8.0
-    p_qk = 5.0
+    p_gk = 10.0
+    p_rodak = 40.0
+    p_qk = 4.0
+    a = 1.5
     l = 6.0
-    classe_carregamento = 'média duração'
+    classe_carregamento = 'permanente'
     classe_madeira = 'madeira natural'
     classe_umidade = 2
-    gamma_g = 1.4
-    gamma_q = 1.6
-    gamma_w = 2.5
-    f_ck = 20E3  # kN/m²
-    f_tk = 15E3  # kN/m²
-    e_modflex = 12E9  # kN/m²
-    res_m, res_delta = checagem_longarina_madeira_flexao(geo, p_gk, p_qk, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_ck, f_tk, e_modflex)
+    gamma_g = 1.0
+    gamma_q = 1.0
+    gamma_w = 1.0
+    f_c0k = 20E3
+    f_t0k = 20E3
+    e_modflex = 12E6
 
+    # samples = np.array([[10.0, 40.0, 4.0, 20E3, 15E3, 12E6]])
+    # params = [geo, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w]
+    # g = obj_confia(samples, params)
+    # res_flex, res_flecha, res_cis = checagem_longarina_madeira_flexao(geo, p_gk, p_qk, p_rodak, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_c0k, f_t0k, e_modflex)
+    # print("g: ", g)
+    # print("Flexão: ", res_flex)
+    # print("Flecha: ", res_flecha)
+    # print("Cisalhamento: ", res_cis)
 
+    beta, pf = confia_flexao_pura(geo, p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_c0k, f_t0k, e_modflex)
+    print("Beta: ", beta)
+    print("Pf: ", pf)
