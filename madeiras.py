@@ -365,29 +365,36 @@ def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: float, p_rod
     # Momentos fletores de cálculo carga permanente e variável
     m_gk = momento_max_carga_permanente(p_gk, l)
     m_qkaux = momento_max_carga_variavel(l, p_rodak, p_qk, a)
-
+   
     # Coeficiente de Impacto Vertical
     ci = coef_impacto_vertical(l)
 
     # Combinação de ações
-    m_qk =  (m_qkaux + 0.75 * (ci - 1) * m_qkaux)
+    #m_qk =  (m_qkaux + 0.75 * (ci - 1) * m_qkaux)
+    m_qk = m_qkaux * (1 + 0.75 * (ci - 1))
 
     # Verificação da flexão pura
     res_flex = checagem_flexao_pura_viga(w_x, k_m, m_gk, m_qk, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_c0k, f_t0k)
-
+    
     # Verificação de deslocamento (a implementar)
     res_flecha = checagem_flecha_viga(l, e_modflex, i_x, p_rodak, a)
 
     # Verificação do cisalhamento
     res_cis = {}
+    
 
     return res_flex, res_flecha, res_cis
+    
 
 
 def obj_confia(samples, params):
+
     
-    # Extrair amostras
-    g = np.zeros((samples.shape[0]))
+
+    # Extrair amostras  
+    n = samples.shape[0] #cada linha de samples gera um valor próprio de g, o vetor g passa a representar corretamente o estado limite, o FORM passa a enxergar a superfície de falha correta
+    g = np.zeros(n)
+    #g = np.zeros((samples.shape[0]))  g tinha tamanho n,apenas a posição g[0] era preenchida, todas as outras ficavam em zero, só a primeira amostra era avaliada, as demais eram tratadas como g = 0 (estado limite ativo), o resultado de β e pf ficava fisicamente errado
     p_gk = samples[:, 0]
     p_rodak = samples[:, 1]
     p_qk  = samples[:, 2]
@@ -395,6 +402,7 @@ def obj_confia(samples, params):
     f_tk = samples[:, 4]
     e_modflex = samples[:, 5]
 
+    
     # Parâmetros fixos
     geo = params[0]
     a = params[1]
@@ -407,8 +415,9 @@ def obj_confia(samples, params):
     gamma_w = params[8]
 
     # Função Estado Limite
-    res_m, _, _ = checagem_longarina_madeira_flexao(geo, p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_ck, f_tk, e_modflex)
-    g[0] = res_m["g [kN/m²]"]
+    for i in range(n): res_m, _, _ = checagem_longarina_madeira_flexao(geo, p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_ck, f_tk, e_modflex)
+    #g[0] = res_m["g [kN/m²]"]
+    g[i] = res_m["g [kN/m²]"]
 
     return g
 
