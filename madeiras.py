@@ -449,21 +449,21 @@ def confia_flexao_pura(geo: dict, p_gk: float, p_rodak: float, p_qk: float, a: f
 
 if __name__ == "__main__":
     # Teste das funções
-    geo = {'d': 0.3}
-    p_gk = 10.0
+    geo = {'d': 0.49}
+    p_gk = 1.7177
     p_rodak = 40.0
     p_qk = 4.0
     a = 1.5
-    l = 6.0
+    l = 13.4
     classe_carregamento = 'permanente'
     classe_madeira = 'madeira natural'
-    classe_umidade = 2
-    gamma_g = 1.0
-    gamma_q = 1.0
-    gamma_w = 1.0
-    f_c0k = 20E3
-    f_t0k = 20E3
-    e_modflex = 12E6
+    classe_umidade = 1
+    gamma_g = 1.3
+    gamma_q = 1.5
+    gamma_w = 1.4
+    f_c0k = 40E3
+    f_t0k = 40E3
+    e_modflex = 14.5E6
 
     # samples = np.array([[10.0, 40.0, 4.0, 20E3, 15E3, 12E6]])
     # params = [geo, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w]
