@@ -337,8 +337,52 @@ def checagem_flecha_viga(l: float, e_modflex: float, i_x: float, p_rodak: float,
                 "analise": 'OK' if g >= 0 else 'N OK',
             }
 
+def checagem_cisalhamento_viga(v_gk: float, v_qk: float, m_sd: float, d: float, i_x: float, area: float, f_md: float, tipo_secao: str) -> dict:
+    """
+    Verifica a tensão de cisalhamento solicitante e resistente em uma viga de madeira conforme a NBR 7190.
 
-def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: float, p_rodak: float, a: float, l: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k: float, e_modflex: float) -> tuple[dict, dict, dict]:
+    :param v_gk: Esforço cortante característico devido às cargas permanentes [kN]
+    :param v_qk: Esforço cortante característico devido às cargas variáveis [kN]
+    :param area: Área da seção transversal da viga [m²]
+    :param f_md: Resistência de cálculo da madeira (paralela às fibras) [kN/m²]
+    :param gamma_g: Coeficiente parcial de segurança para cargas permanentes
+    :param gamma_q: Coeficiente parcial de segurança para cargas variáveis
+    :param tipo_secao: 'Retangular' ou 'Circular'
+
+    :return: Dicionário com resultados da verificação:
+        {
+            "tetha_d [kN/m²]": tensão de cisalhamento solicitante de cálculo,
+            "fv0d [kN/m²]": resistência de cálculo ao cisalhamento,
+            "g [kN/m²]": diferença entre resistência e solicitação,
+            "analise": 'OK' se a verificação passa, caso contrário 'N OK'
+        }
+    """
+
+    # Ações de cálculo
+    v_sd = v_gk * gamma_g + v_qk * gamma_q
+
+    # Solicitação
+    if tipo_secao == "Circular":
+        tetha_d = (v_sd * m_sd) / (d * i_x)
+    else:
+        tetha_d = (1.5 * v_sd) / area
+
+    # Resistência
+    fv0d = 0.10 * f_md
+
+    # Verificação
+    g = fv0d - tetha_d
+
+
+    return {
+                "tetha_d [kN/m²]": tetha_d,
+                "fv0d [kN/m²]": fv0d,
+                "g [m]": g,
+                "analise": 'OK' if g >= 0 else 'N OK',
+            }
+
+
+def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: float, p_rodak: float, a: float, l: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k: float, e_modflex: float, d: float, f_md: float) -> tuple[dict, dict, dict]:
     """Verifica a longarina de madeira submetida à flexão simples conforme NBR 7190.
 
     :param geo: Parâmetros geométricos da seção transversal. Se retangular: Chaves: 'b_w': Largura da seção transversal [m] e 'h': Altura da seção transversal [m]. Se circular: Chaves: 'd': Diâmetro da seção transversal [m]
@@ -356,6 +400,8 @@ def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: float, p_rod
     :param f_c0k: Resistência característica à compressão paralela às fibras [kN/m²]
     :param f_t0k: Resistência característica à tração paralela às fibras [kN/m²]
     :param e_modflex: Módulo de elasticidade à flexão [kN/m²]
+    :param d: Diâmetro da viga [m]
+    :param f_md: Resistência de cálculo a flexão [kN/m²]
 
     """
 
@@ -365,11 +411,14 @@ def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: float, p_rod
     # Momentos fletores de cálculo carga permanente e variável
     m_gk = momento_max_carga_permanente(p_gk, l)
     m_qkaux = momento_max_carga_variavel(l, p_rodak, p_qk, a)
+    v_gk = cortante_max_carga_permanente(p_gk, l)
+    v_qk = cortante_max_carga_variavel(l, p_rodak, p_qk, a, h)
    
     # Coeficiente de Impacto Vertical
     ci = coef_impacto_vertical(l)
 
     # Combinação de ações
+    m_sd = m_gk * gamma_g + m_qk * gamma_q
     #m_qk =  (m_qkaux + 0.75 * (ci - 1) * m_qkaux)
     m_qk = m_qkaux * (1 + 0.75 * (ci - 1))
 
@@ -380,16 +429,11 @@ def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: float, p_rod
     res_flecha = checagem_flecha_viga(l, e_modflex, i_x, p_rodak, a)
 
     # Verificação do cisalhamento
-    res_cis = {}
-    
+    res_cis = checagem_cisalhamento_viga(v_gk, v_qk, m_sd, d, i_x, area, f_md)
 
     return res_flex, res_flecha, res_cis
     
-
-
 def obj_confia(samples, params):
-
-    
 
     # Extrair amostras  
     n = samples.shape[0] #cada linha de samples gera um valor próprio de g, o vetor g passa a representar corretamente o estado limite, o FORM passa a enxergar a superfície de falha correta
