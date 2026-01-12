@@ -383,7 +383,7 @@ def checagem_cisalhamento_viga(v_gk: float, v_qk: float, m_sd: float, d: float, 
             }
 
 
-def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: float, p_rodak: float, a: float, l: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k: float, e_modflex: float, d: float, f_md: float) -> tuple[dict, dict, dict]:
+def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: float, p_rodak: float, a: float, l: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k: float,  f_mk: float, e_modflex: float) -> tuple[dict, dict, dict]:
     """Verifica a longarina de madeira submetida à flexão simples conforme NBR 7190.
 
     :param geo: Parâmetros geométricos da seção transversal. Se retangular: Chaves: 'b_w': Largura da seção transversal [m] e 'h': Altura da seção transversal [m]. Se circular: Chaves: 'd': Diâmetro da seção transversal [m]
@@ -401,8 +401,7 @@ def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: float, p_rod
     :param f_c0k: Resistência característica à compressão paralela às fibras [kN/m²]
     :param f_t0k: Resistência característica à tração paralela às fibras [kN/m²]
     :param e_modflex: Módulo de elasticidade à flexão [kN/m²]
-    :param d: Diâmetro da viga [m]
-    :param f_md: Resistência de cálculo a flexão [kN/m²]
+    :param f_mk: Resistência característica à flexão [kN/m²]
 
     """
 
@@ -420,7 +419,6 @@ def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: float, p_rod
 
     # Combinação de ações
     m_sd = m_gk * gamma_g + m_qk * gamma_q
-    #m_qk =  (m_qkaux + 0.75 * (ci - 1) * m_qkaux)
     m_qk = m_qkaux * (1 + 0.75 * (ci - 1))
 
     # Verificação da flexão pura
@@ -430,11 +428,11 @@ def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: float, p_rod
     res_flecha = checagem_flecha_viga(l, e_modflex, i_x, p_rodak, a)
 
     # Verificação do cisalhamento
-    res_cis = checagem_cisalhamento_viga(v_gk, v_qk, m_sd, d, i_x, area, f_md)
+    res_cis = checagem_cisalhamento_viga(v_gk, v_qk, m_sd, d, i_x, area, f_mk)
 
     return res_flex, res_flecha, res_cis
 
-    
+
 def obj_confia(samples, params):
 
     # Extrair amostras  
