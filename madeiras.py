@@ -41,6 +41,11 @@ def prop_madeiras(geo: dict) -> tuple[float, float, float, float, float, float, 
 
     return area, w_x, w_y, i_x, i_y, s_x, s_y r_x, r_y, k_m
 
+def calcular_diametro_eq(d_min, d_max):
+
+    d_eq = d_min + (d_max - d_min) / 3
+    return d_eq
+
 
 def momento_max_carga_permanente(p_gk: float, l: float) -> float:
     """Calcula o momento fletor máximo devido à carga permanente.
@@ -233,11 +238,11 @@ def flexao_obliqua(w_x: float, m_x: float, w_y: float = 1E-12, m_y: float = 0.0,
     return f_md_x, f_md_y, f_p 
 
 
-def resistencia_calculo(f_k: float, gamma_w: float, k_mod: float) -> float:
+def resistencia_calculo(f_k: float, gamma_wc: float, k_mod: float) -> float:
     """Calcula a resistência de cálculo da madeira conforme NBR 7190.
 
     :param f_k: Resistência característica da madeira [kN/m²]
-    :param gamma_w: Coeficiente parcial de segurança para madeira
+    :param gamma_wc: Coeficiente parcial de segurança para madeira
     :param k_mod: Coeficiente de modificação da resistência da madeira
 
     :return: Resistência de cálculo da madeira [kN/m²]
@@ -279,7 +284,7 @@ def checagem_flexao_pura_viga(w_x: float, k_m: float, m_gk: float, m_qk: float, 
     :param classe_umidade: 1, 2, 3, 4
     :param gamma_g: Coeficiente parcial de segurança para carga permanente
     :param gamma_q: Coeficiente parcial de segurança para carga variável
-    :param gamma_w: Coeficiente parcial de segurança para madeira
+    :param gamma_wc: Coeficiente parcial de segurança para madeira
     :param f_c0k: Resistência característica à compressão paralela às fibras [kN/m²]
     :param f_t0k: Resistência característica à tração paralela às fibras [kN/m²]
 
@@ -296,7 +301,7 @@ def checagem_flexao_pura_viga(w_x: float, k_m: float, m_gk: float, m_qk: float, 
     s_x, _, _ = flexao_obliqua(w_x, m_sd)
 
     # Resistência de cálculo (caso mais desfavorável)
-    f_md = min(resistencia_calculo(f_c0k, gamma_w, k_mod), resistencia_calculo(f_t0k, gamma_w, k_mod))                
+    f_md = min(resistencia_calculo(f_c0k, gamma_wc, k_mod), resistencia_calculo(f_t0k, gamma_wc, k_mod))                
     
     # Verificação
     g, analise = checagem_tensoes(k_m, s_x, _, f_md)
@@ -402,7 +407,7 @@ def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: float, p_rod
     :param classe_umidade: 1, 2, 3, 4
     :param gamma_g: Coeficiente parcial de segurança para carga permanente
     :param gamma_q: Coeficiente parcial de segurança para carga variável
-    :param gamma_w: Coeficiente parcial de segurança para madeira
+    :param gamma_wc: Coeficiente parcial de segurança para madeira
     :param f_c0k: Resistência característica à compressão paralela às fibras [kN/m²]
     :param f_t0k: Resistência característica à tração paralela às fibras [kN/m²]
     :param e_modflex: Módulo de elasticidade à flexão [kN/m²]
@@ -429,7 +434,7 @@ def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: float, p_rod
     m_qk = m_qkaux * (1 + 0.75 * (ci - 1))
 
     # Verificação da flexão pura
-    res_flex = checagem_flexao_pura_viga(w_x, k_m, m_gk, m_qk, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_c0k, f_t0k)
+    res_flex = checagem_flexao_pura_viga(w_x, k_m, m_gk, m_qk, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_wc, f_c0k, f_t0k)
     
     # Verificação de deslocamento (a implementar)
     res_flecha = checagem_flecha_viga(l, e_modflex, i_x, p_rodak, a)
@@ -463,10 +468,10 @@ def obj_confia(samples, params):
     classe_umidade = params[5]
     gamma_g = params[6]
     gamma_q = params[7]
-    gamma_w = params[8]
+    gamma_wc = params[8]
 
     # Função Estado Limite
-    for i in range(n): res_m, _, _ = checagem_longarina_madeira_flexao(geo, p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_ck, f_tk, e_modflex)
+    for i in range(n): res_m, _, _ = checagem_longarina_madeira_flexao(geo, p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_wc, f_ck, f_tk, e_modflex)
     #g[0] = res_m["g [kN/m²]"]
     g[i] = res_m["g [kN/m²]"]
 
@@ -485,7 +490,7 @@ def confia_flexao_pura(geo: dict, p_gk: float, p_rodak: float, p_qk: float, a: f
     varss = [p_gk_aux, p_rodak_aux, p_qk_aux, f_ck_aux, f_tk_aux, e_modflex_aux]
 
     # Variáveis fixas da viga
-    paramss = [geo, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_ck, f_tk, e_modflex]
+    paramss = [geo, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_wc, f_ck, f_tk, e_modflex]
 
     # Reliability analysis Normal Loading Condition
     model = PythonModel(model_script='madeiras.py', model_object_name='obj_confia', params=paramss)
@@ -525,6 +530,6 @@ if __name__ == "__main__":
     # print("Flecha: ", res_flecha)
     # print("Cisalhamento: ", res_cis)
 
-    beta, pf = confia_flexao_pura(geo, p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_c0k, f_t0k, e_modflex)
+    beta, pf = confia_flexao_pura(geo, p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_wc, f_c0k, f_t0k, e_modflex)
     print("Beta: ", beta)
     print("Pf: ", pf)

@@ -12,10 +12,13 @@ textos = {
             "pt": {
                     "titulo": "Confiabilidade – Vigas (NBR 7190)",
                     "entrada_tipo_secao": "Tipo de seção",
-                    "tipo_secao": ["Retangular", "Circular"],
+                    "tipo_secao": ["Retangular", "Circular", "Circular variável"],
                     "base": "Base (cm)",
                     "altura": "Altura (cm)",
                     "diametro": "Diâmetro (cm)",
+                    "diametro_": "Diâmetro (cm)",
+                    "diam_min": "Diâmetro mínimo (cm)",
+                    "diam_max": "Diâmetro máximo (cm)",
                     "entrada_comprimento": "Comprimento da viga (m)",
                     "carga_permanente": "Carga permanente (kN/m)",
                     "carga_roda": "Carga por roda (kN)",
@@ -35,10 +38,12 @@ textos = {
             "en": {
                     "titulo": "Reliability – Beams (NBR 7190)",
                     "entrada_tipo_secao": "Section type",
-                    "tipo_secao": ["Rectangular", "Circular"],
+                    "tipo_secao": ["Rectangular", "Circular", "Variable circular section"],
                     "base": "Width (cm)",
                     "altura": "Height (cm)",
                     "diametro": "Diameter (cm)",
+                    "diam_min": "Minimum diameter (cm)",
+                    "diam_max": "Maximum diameter (cm)",
                     "entrada_comprimento": "Beam length (m)",
                     "carga_permanente": "Dead load (kN/m)",
                     "carga_roda": "Load per wheel (kN)",
@@ -67,6 +72,11 @@ if tipo_secao in ["Retangular", "Rectangular"]:
     b = b_cm / 100
     h = h_cm / 100
     geo = {"b_w": b, "h": h}
+elif tipo_secao in ["Circular variável", "Variable circular section"]:
+    d_min_cm = st.number_input(t["diam_min"], min_value=0.05, value=20.)
+    d_max_cm = st.number_input(t["diam_max"], min_value=0.05, value=50.) 
+    d_min = d_min_cm / 100
+    d_max = d_max_cm / 100
 else:
     d_cm = st.number_input(t["diametro"], min_value=0.05, value=30.)
     d = d_cm / 100

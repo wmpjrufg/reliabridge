@@ -28,7 +28,8 @@ textos = {
                     "classe_umidade": "Classe de umidade",
                     "gamma_g": "γg – Coeficiente parcial de segurança da carga permanente",
                     "gamma_q": "γq – Coeficiente parcial de segurança da carga variável",
-                    "gamma_w": "γw – Coeficiente parcial de segurança do material",
+                    "gamma_wc": "γw – Coeficiente parcial de segurança do material decorrente de tensões normais",
+                    "gamma_wv": "γw – Coeficiente parcial de segurança do material decorrente de tensões de cisalhamento",
                     "f_ck": "Resistência característica à compressão paralela às fibras (MPa)",
                     "f_tk": "Resistência característica à tração paralela às fibras (MPa)",
                     "e_modflex": "Módulo de elasticidade à flexão (GPa)",
@@ -54,7 +55,8 @@ textos = {
                     "classe_umidade": "Moisture class",
                     "gamma_g": "γg – Partial safety factor for dead load",
                     "gamma_q": "γq – Partial safety factor for variable load",
-                    "gamma_w": "γw – Partial safety factor for material",
+                    "gamma_wc": "γw – Partial safety factor for the material related to normal stresses",
+                    "gamma_wv": "γw – Partial safety factor for the material related to shear stresses",
                     "f_ck": "Characteristic compressive strength parallel to grain (MPa)",
                     "f_tk": "Characteristic tensile strength parallel to grain (MPa)",
                     "e_modflex": "Modulus of elasticity in bending (GPa)",
@@ -102,7 +104,8 @@ else:
 classe_umidade = st.selectbox(t["classe_umidade"], [1, 2, 3, 4])
 gamma_g = st.number_input(t["gamma_g"], value=1.40, step=0.1)
 gamma_q = st.number_input(t["gamma_q"], value=1.40, step=0.1)
-gamma_w = st.number_input(t["gamma_w"], value=1.40, step=0.1)
+gamma_wc = st.number_input(t["gamma_wc"], value=1.40, step=0.1)
+gamma_wv = st.number_input(t["gamma_wc"], value=1.40, step=0.1)
 f_ck = st.number_input(t["f_ck"], value=20.0)
 f_tk = st.number_input(t["f_tk"], value=15.0)
 e_modflex = st.number_input(t["e_modflex"], value=12.0)
