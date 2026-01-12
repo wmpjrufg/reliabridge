@@ -412,7 +412,7 @@ def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: float, p_rod
     """
 
     # Geometria, Propriedades da seção transversal
-    area, w_x, w_y, i_x, i_y, r_x, r_y, k_m = prop_madeiras(geo)
+    area, w_x, w_y, i_x, i_y, s_x, s_y r_x, r_y, k_m = prop_madeiras(geo)
 
     # Momentos fletores de cálculo carga permanente e variável
     m_gk = momento_max_carga_permanente(p_gk, l)
