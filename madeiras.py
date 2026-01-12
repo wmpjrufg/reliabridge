@@ -6,12 +6,12 @@ from UQpy.run_model import RunModel
 from UQpy.reliability import FORM
 
 
-def prop_madeiras(geo: dict) -> tuple[float, float, float, float, float, float, float, float]:
+def prop_madeiras(geo: dict) -> tuple[float, float, float, float, float, float, float, float, float, float]:
     """Calcula propriedades geométricas de seções retangulares e circulares de madeira.
     
     :param geo: Parâmetros geométricos da seção transversal. Se retangular: Chaves: 'b_w': Largura da seção transversal [m] e 'h': Altura da seção transversal [m]. Se circular: Chaves: 'd': Diâmetro da seção transversal [m]
 
-    :return: [0] Área da seção transversal [m²], [1] Módulo de resistência em relação ao eixo x [m³], [2] Módulo de resistência em relação ao eixo y [m³], [3] Momento de inércia em relação ao eixo x [m4], [4] Momento de inércia em relação ao eixo y [m4], [5] Raio de giração em relação ao eixo x [m], [6] Raio de giração em relação ao eixo y [m], [7] Coeficiente de correção do tipo da seção transversal
+    :return: [0] Área da seção transversal [m²], [1] Módulo de resistência em relação ao eixo x [m³], [2] Módulo de resistência em relação ao eixo y [m³], [3] Momento de inércia em relação ao eixo x [m4], [4] Momento de inércia em relação ao eixo y [m4], [5] Raio de giração em relação ao eixo x [m], [6] Momento estático da seção em relação a x [m³], [7] Momento estático da seção em relação a y [m³], [8] Raio de giração em relação ao eixo y [m], [9] Coeficiente de correção do tipo da seção transversal
     """
 
     # Propriedades da seção transversal
@@ -20,6 +20,8 @@ def prop_madeiras(geo: dict) -> tuple[float, float, float, float, float, float, 
         inercia = (np.pi * (geo['d'] ** 4)) / 64
         i_x = inercia
         i_y = inercia
+        s_x = area * (geo['d'] / 2)
+        s_y = area * (geo['d'] / 2)
         w_x = inercia / (geo['d'] / 2)
         w_y = w_x
         r_x = np.sqrt(i_x / area)
@@ -29,13 +31,15 @@ def prop_madeiras(geo: dict) -> tuple[float, float, float, float, float, float, 
         area = geo['b_w'] * geo['h']
         i_x = (geo['b_w'] * (geo['h'] ** 3)) / 12
         i_y = (geo['h'] * (geo['b_w'] ** 3)) / 12
+        s_x = area * (geo['h'] / 2)
+        s_y = area * (geo['b_w'] / 2)
         w_x = i_x / (geo['h'] / 2)
         w_y = i_y / (geo['b_w'] / 2)
         r_x = np.sqrt(i_x / area)
         r_y = np.sqrt(i_y / area)
         k_m = 0.70
 
-    return area, w_x, w_y, i_x, i_y, r_x, r_y, k_m
+    return area, w_x, w_y, i_x, i_y, s_x, s_y r_x, r_y, k_m
 
 
 def momento_max_carga_permanente(p_gk: float, l: float) -> float:
@@ -338,16 +342,17 @@ def checagem_flecha_viga(l: float, e_modflex: float, i_x: float, p_rodak: float,
             }
 
 
-def checagem_cisalhamento_viga(v_gk: float, v_qk: float, m_sd: float, d: float, i_x: float, area: float, f_md: float, tipo_secao: str) -> dict:
+def checagem_cisalhamento_viga(v_gk: float, v_qk: float, s_x: float, d: float, i_x: float, area: float, f_md: float, tipo_secao: str) -> dict:
     """
     Verifica a tensão de cisalhamento solicitante e resistente em uma viga de madeira conforme a NBR 7190.
 
     :param v_gk: Esforço cortante característico devido às cargas permanentes [kN]
     :param v_qk: Esforço cortante característico devido às cargas variáveis [kN]
+    :param s_x: Momento estático da seção em relação a x [m³]
+    :param d: Diâmetro da seção transversal [m]
+    :param i_x: Momento de inércia em relação ao eixo x [m4]
     :param area: Área da seção transversal da viga [m²]
     :param f_md: Resistência de cálculo da madeira (paralela às fibras) [kN/m²]
-    :param gamma_g: Coeficiente parcial de segurança para cargas permanentes
-    :param gamma_q: Coeficiente parcial de segurança para cargas variáveis
     :param tipo_secao: 'Retangular' ou 'Circular'
 
     :return: Dicionário com resultados da verificação:
@@ -364,7 +369,7 @@ def checagem_cisalhamento_viga(v_gk: float, v_qk: float, m_sd: float, d: float, 
 
     # Solicitação
     if tipo_secao == "Circular":
-        tetha_d = (v_sd * m_sd) / (d * i_x)
+        tetha_d = (v_sd * s_x) / (d * i_x)
     else:
         tetha_d = (1.5 * v_sd) / area
 
@@ -407,7 +412,7 @@ def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: float, p_rod
     """
 
     # Geometria, Propriedades da seção transversal
-    area, w_x, w_y, i_x, i_y, r_x, r_y, k_m = prop_madeiras(geo)
+    area, w_x, w_y, i_x, i_y, s_x, s_y r_x, r_y, k_m = prop_madeiras(geo)
 
     # Momentos fletores de cálculo carga permanente e variável
     m_gk = momento_max_carga_permanente(p_gk, l)
