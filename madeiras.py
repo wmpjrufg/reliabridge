@@ -337,6 +337,7 @@ def checagem_flecha_viga(l: float, e_modflex: float, i_x: float, p_rodak: float,
                 "analise": 'OK' if g >= 0 else 'N OK',
             }
 
+
 def checagem_cisalhamento_viga(v_gk: float, v_qk: float, m_sd: float, d: float, i_x: float, area: float, f_md: float, tipo_secao: str) -> dict:
     """
     Verifica a tensão de cisalhamento solicitante e resistente em uma viga de madeira conforme a NBR 7190.
@@ -432,6 +433,7 @@ def checagem_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: float, p_rod
     res_cis = checagem_cisalhamento_viga(v_gk, v_qk, m_sd, d, i_x, area, f_md)
 
     return res_flex, res_flecha, res_cis
+
     
 def obj_confia(samples, params):
 
