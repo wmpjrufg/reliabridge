@@ -71,9 +71,8 @@ else:
     d_cm = st.number_input(t["diametro"], min_value=0.05, value=30.)
     d = d_cm / 100
     geo = {"d": d}
-carga_pp = 8.0
 l = st.number_input(t["entrada_comprimento"], min_value=3.0, value=6.0)
-p_gk = st.number_input(t["carga_permanente"], value=carga_pp)    
+p_gk = st.number_input(t["carga_permanente"], value=8.0)    
 p_rodak = st.number_input(t["carga_roda"], value=40.0)
 p_qk = st.number_input(t["carga_multidao"], value=4.0)
 a = st.number_input(t["distancia_eixos"], value=1.5)
