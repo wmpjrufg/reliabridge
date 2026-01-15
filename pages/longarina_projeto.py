@@ -67,22 +67,47 @@ t = textos[lang]
 # Calculadora da página
 st.header(t["titulo"])
 tipo_secao = st.selectbox(t["entrada_tipo_secao"], t["tipo_secao"])
+
+# Função auxiliar para criar inputs vazios
+def num_input_vazio(label, placeholder="–"):
+    valor_str = st.text_input(label, placeholder=placeholder)
+
+    # Campo vazio → retorna None
+    if valor_str.strip() == "":
+        return None
+
+    # Converte para float
+    try:
+        return float(valor_str.replace(",", "."))
+    except:
+        st.error(f"Valor inválido em '{label}'. Digite um número.")
+        return None
+
+
 if tipo_secao in ["Retangular", "Rectangular"]:
-    b_cm = st.number_input(t["base"], value=0)
-    h_cm = st.number_input(t["altura"], value=0)
-    b = b_cm / 100
-    h = h_cm / 100
+    b_cm = num_input_vazio(t["base"])
+    h_cm = num_input_vazio(t["altura"])
+    b = (b_cm or 0) / 100
+    h = (h_cm or 0) / 100
     geo = {"b_w": b, "h": h}
 else:
-    d_cm = st.number_input(t["diametro"], value=0)
-    d = d_cm / 100
+    d_cm = num_input_vazio(t["diametro"])
+    d = (d_cm or 0) / 100
     geo = {"d": d}
-l = st.number_input(t["entrada_comprimento"], value=0)
-p_gk = st.number_input(t["carga_permanente"], value=0)    
-p_rodak = st.number_input(t["carga_roda"], value=0)
-p_qk = st.number_input(t["carga_multidao"], value=0)
-a = st.number_input(t["distancia_eixos"], value=0)
-classe_carregamento = st.selectbox(t["classe_carregamento"], t["classe_carregamento_opcoes"]).lower()
+
+carga_pp = 8.0
+
+l = num_input_vazio(t["entrada_comprimento"])
+p_gk = num_input_vazio(t["carga_permanente"])
+p_rodak = num_input_vazio(t["carga_roda"])
+p_qk = num_input_vazio(t["carga_multidao"])
+a = num_input_vazio(t["distancia_eixos"])
+
+classe_carregamento = st.selectbox(
+    t["classe_carregamento"],
+    t["classe_carregamento_opcoes"]
+).lower()
+
 if classe_carregamento == "permanent":
     classe_carregamento = "Permanente"
 elif classe_carregamento == "long-term":
@@ -93,21 +118,24 @@ elif classe_carregamento == "short-term":
     classe_carregamento = "Curta duração"
 elif classe_carregamento == "instantaneous":
     classe_carregamento = "Instantânea"
+
 classe_madeira = st.selectbox(t["classe_madeira"], t["classe_madeira_opcoes"]).lower()
-if classe_madeira == "natural wood":
-    classe_madeira = "madeira natural"
-else: 
-    classe_madeira = "madeira recomposta"
+classe_madeira = "madeira natural" if classe_madeira == "natural wood" else "madeira recomposta"
+
 classe_umidade = st.selectbox(t["classe_umidade"], [1, 2, 3, 4])
-gamma_g = st.number_input(t["gamma_g"], value=0, step=0.1)
-gamma_q = st.number_input(t["gamma_q"], value=0, step=0.1)
-gamma_w = st.number_input(t["gamma_w"], value=0, step=0.1)
-f_ck = st.number_input(t["f_ck"], value=0)
-f_tk = st.number_input(t["f_tk"], value=0)
-e_modflex = st.number_input(t["e_modflex"], value=0)
-f_ck *=  1E3  # Converte MPa para kN/m²
-f_tk *= 1E3  # Converte MPa para kN/m²
-e_modflex *= 1E6  # Converte GPa para kN/m²
+
+gamma_g = num_input_vazio(t["gamma_g"])
+gamma_q = num_input_vazio(t["gamma_q"])
+gamma_w = num_input_vazio(t["gamma_w"])
+
+f_ck = num_input_vazio(t["f_ck"])
+f_tk = num_input_vazio(t["f_tk"])
+e_modflex = num_input_vazio(t["e_modflex"])
+
+# Conversões
+if f_ck: f_ck *= 1E3
+if f_tk: f_tk *= 1E3
+if e_modflex: e_modflex *= 1E6
 
 if st.button(t["botao"]):
     
