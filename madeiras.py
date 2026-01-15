@@ -1,5 +1,7 @@
 """Contém funções para cálculo e verificação de estruturas de madeira."""
 import numpy as np
+import pandas as pd
+import io
 from UQpy.distributions import Normal, Gamma, GeneralizedExtreme, JointIndependent
 from UQpy.run_model.model_execution.PythonModel import PythonModel
 from UQpy.run_model import RunModel
@@ -32,6 +34,19 @@ def plot_longarinas_circulares(n_longarinas: int, diametro_cm: float, espacament
     ax.set_ylim(0, diametro_cm * 1.2)
 
     return fig
+
+
+def montar_excel(dados: dict) -> bytes:
+    """Serializa os dados do projeto para XLSX em memória.
+    """
+    
+    df = pd.DataFrame([dados])  # 1 linha
+    buffer = io.BytesIO()
+    with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False, sheet_name="Dados")
+    buffer.seek(0)
+    
+    return buffer.getvalue()
 
 
 def prop_madeiras(

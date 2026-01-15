@@ -7,8 +7,8 @@ from madeiras import checagem_completa_longarina_madeira_flexao, plot_longarinas
 
 
 lang = st.session_state.get("lang", "pt")
-if "df_filter" not in st.session_state:
-    st.session_state["df_filter"] = None
+if "df_filter_longarina" not in st.session_state:
+    st.session_state["df_filter_longarina"] = None
 if "dados_projeto" not in st.session_state:
     st.session_state["dados_projeto"] = None
 
@@ -23,6 +23,12 @@ textos = {
                 "tipo_secao": ["Circular"],
                 "diametro_minimo": "Diâmetro mínimo (cm)",
                 "diametro_maximo": "Diâmetro máximo (cm)",
+                "espaçamento_entre_longarinas_min": "Espaçamento mínimo entre longarinas (m)",
+                "espaçamento_entre_longarinas_max": "Espaçamento máximo entre longarinas (m)",
+                "largura_min_tabuado": "Largura mínima seção do tabuleiro (m)",
+                "largura_max_tabuado": "Largura máxima seção do tabuleiro (m)",
+                "altura_min_tabuado": "Altura mínima seção do tabuleiro (m)",
+                "altura_max_tabuado": "Altura máxima seção do tabuleiro (m)",
                 "carga_permanente": "Carga permanente (kN/m)",
                 "carga_roda": "Carga por roda (kN)",
                 "carga_multidao": "Carga de multidão (kN/m²)",
@@ -54,6 +60,12 @@ textos = {
                 "tipo_secao": ["Circular"],
                 "diametro_minimo": "Minimum diameter (cm)",
                 "diametro_maximo": "Maximum diameter (cm)",
+                "espaçamento_entre_longarinas_min": "Minimum spacing between stringers (m)",
+                "espaçamento_entre_longarinas_max": "Maximum spacing between stringers (m)",
+                "largura_min_tabuado": "Minimum deck section width (m)",
+                "largura_max_tabuado": "Maximum deck section width (m)",
+                "altura_min_tabuado": "Minimum deck section height (m)",
+                "altura_max_tabuado": "Maximum deck section height (m)",
                 "carga_permanente": "Dead load (kN/m)",
                 "carga_roda": "Load per wheel (kN)",
                 "carga_multidao": "Crowd load (kN/m²)",
@@ -79,16 +91,7 @@ textos = {
         }
 
 t = textos.get(lang, textos["pt"])
-def build_excel_bytes(dados: dict) -> bytes:
-    """
-    Serializa os dados do projeto para XLSX em memória.
-    """
-    df = pd.DataFrame([dados])  # 1 linha
-    buffer = io.BytesIO()
-    with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
-        df.to_excel(writer, index=False, sheet_name="Dados")
-    buffer.seek(0)
-    return buffer.getvalue()
+
 
 # UI
 st.header(t["titulo"])
@@ -103,6 +106,8 @@ with st.form("form_geometria", clear_on_submit=False):
     if tipo_secao == "Circular":
         d_cm_min = st.number_input(t["diametro_minimo"], value=30.0)
         d_cm_max = st.number_input(t["diametro_maximo"], value=100.0)
+    espaco_min = st.number_input(t["espaçamento_entre_longarinas_min"])
+    espaco_max = st.number_input(t["espaçamento_entre_longarinas_max"])
 
     p_gk = st.number_input(t["carga_permanente"], value=10.0)
     p_rodak = st.number_input(t["carga_roda"], value=40.0)
@@ -159,11 +164,11 @@ st.session_state["dados_projeto"] = dados_projeto
 # Download (sempre disponível; não apaga tabela, pois resultados ficam no state)
 excel_bytes = build_excel_bytes(st.session_state["dados_projeto"])
 st.download_button(
-                    label=t["botao_dados_down"],
-                    data=excel_bytes,
-                    file_name="dados_projeto.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                )
+                        label=t["botao_dados_down"],
+                        data=excel_bytes,
+                        file_name="dados_projeto.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    )
 
 
 # Cálculo (somente no submit) + persistência do resultado
@@ -182,9 +187,9 @@ if submitted_design:
     out = {"d_cm": [], "g_m": [], "g_v": [], "g_f": []}
 
     for d in d_cm_vals:
-        geo = {"d": d / 100.0}  # cm -> m
+        geo_long = {"d": d / 100.0}  # cm -> m
         res_m, res_v, res_f_var, res_f_total, relat = checagem_completa_longarina_madeira_flexao(
-                                                                                                    geo,
+                                                                                                    geo_long,
                                                                                                     p_gk,
                                                                                                     p_qk,
                                                                                                     p_rodak,
@@ -208,15 +213,15 @@ if submitted_design:
         out["g_f"].append(res_f_var["g [m]"])
 
     df_resultados = pd.DataFrame(out)
-    df_filter = df_resultados[
-                                (df_resultados["g_m"] >= 0.0)
-                                & (df_resultados["g_v"] >= 0.0)
-                                & (df_resultados["g_f"] >= 0.0)
-                            ].copy()
+    df_filter_longarina = df_resultados[
+                                            (df_resultados["g_m"] >= 0.0)
+                                            & (df_resultados["g_v"] >= 0.0)
+                                            & (df_resultados["g_f"] >= 0.0)
+                                        ].copy()
 
-    st.session_state["df_filter"] = df_filter
+    st.session_state["df_filter_longarina"] = df_filter_longarina
 
 # Renderização (sempre que existir no session_state)
-if st.session_state.get("df_filter") is not None:
+if st.session_state.get("df_filter_longarina") is not None:
     st.subheader(t["tabela_desempenho"])
-    st.dataframe(st.session_state["df_filter"])
+    st.dataframe(st.session_state["df_filter_longarina"])
