@@ -68,16 +68,16 @@ t = textos[lang]
 st.header(t["titulo"])
 tipo_secao = st.selectbox(t["entrada_tipo_secao"], t["tipo_secao"])
 if tipo_secao in ["Retangular", "Rectangular"]:
-    b_cm = st.number_input(t["base"], min_value=0.05, value=0)
-    h_cm = st.number_input(t["altura"], min_value=0.05, value=0)
+    b_cm = st.number_input(t["base"], value=0)
+    h_cm = st.number_input(t["altura"], value=0)
     b = b_cm / 100
     h = h_cm / 100
     geo = {"b_w": b, "h": h}
 else:
-    d_cm = st.number_input(t["diametro"], min_value=0.05, value=0.)
+    d_cm = st.number_input(t["diametro"], value=0)
     d = d_cm / 100
     geo = {"d": d}
-l = st.number_input(t["entrada_comprimento"], min_value=3.0, value=0)
+l = st.number_input(t["entrada_comprimento"], value=0)
 p_gk = st.number_input(t["carga_permanente"], value=0)    
 p_rodak = st.number_input(t["carga_roda"], value=0)
 p_qk = st.number_input(t["carga_multidao"], value=0)
