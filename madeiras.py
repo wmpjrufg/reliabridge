@@ -2,6 +2,8 @@
 import numpy as np
 import pandas as pd
 import io
+import hashlib
+import json
 from UQpy.distributions import Normal, Gamma, GeneralizedExtreme, JointIndependent
 from UQpy.run_model.model_execution.PythonModel import PythonModel
 from UQpy.run_model import RunModel
@@ -34,6 +36,16 @@ def plot_longarinas_circulares(n_longarinas: int, diametro_cm: float, espacament
     ax.set_ylim(0, diametro_cm * 1.2)
 
     return fig
+
+
+def make_signature(dados: dict) -> str:
+    """
+    Gera uma assinatura estável (hash) do dicionário de inputs.
+    Isso permite invalidar resultados se QUALQUER input mudar,
+    sem usar callbacks dentro do form.
+    """
+    payload = json.dumps(dados, sort_keys=True, ensure_ascii=False, default=str).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
 
 
 def montar_excel(dados: dict) -> bytes:
@@ -263,6 +275,21 @@ def k_mod_madeira(classe_carregamento: str, classe_madeira: str, classe_umidade:
              [2] Coeficiente de modificação total (kmod)
     """
 
+    # Conversão para língua pt
+    if classe_carregamento == "dead":
+        classe_carregamento = "permanente"
+    elif classe_carregamento == "long-therm":
+        classe_carregamento = "longa duração"
+    elif classe_carregamento == "medium-therm":
+        classe_carregamento = "média duração"
+    elif classe_carregamento == "short-therm":
+        classe_carregamento = "curta duração"
+    elif classe_carregamento == "instantaneous":
+        classe_carregamento = "instantânea"
+    if classe_madeira == "natural wood":
+        classe_madeira = "madeira natural"
+    elif classe_madeira == "engineered wood":
+        classe_madeira = "madeira recomposta"
     kmod1_tabela = {
                         'permanente': {'madeira natural': 0.60, 'madeira recomposta': 0.30},
                         'longa duração': {'madeira natural': 0.70, 'madeira recomposta': 0.45},
@@ -535,8 +562,6 @@ def checagem_completa_longarina_madeira_flexao(
                                                 gamma_g: float, 
                                                 gamma_q: float, 
                                                 gamma_w: float, 
-                                                f_c0k: float, 
-                                                f_t0k: float, 
                                                 f_mk: float,
                                                 f_vk: float,
                                                 e_modflex: float, 
@@ -609,6 +634,164 @@ def checagem_completa_longarina_madeira_flexao(
     # relat = relatorio()
 
     return res_flex, res_cis, res_flecha_var, {}, "relat"
+
+
+def textos_pre_sizing():
+    textos = {
+                "pt": {
+                        "titulo": "Projeto paramétrico de uma Longarina de madeira",
+                        "pre": "Pré-dimensionamento da seção transversal",
+                        "entrada_comprimento": "Comprimento da viga (m)",
+                        "entrada_tipo_secao": "Tipo de seção",
+                        "tipo_secao": ["Circular"],
+                        "diametro_minimo": "Diâmetro mínimo (cm)",
+                        "diametro_maximo": "Diâmetro máximo (cm)",
+                        "espaçamento_entre_longarinas_min": "Espaçamento mínimo entre longarinas (m)",
+                        "espaçamento_entre_longarinas_max": "Espaçamento máximo entre longarinas (m)",
+                        "largura_minima_tab": "Largura mínima (m) seção do tabuleiro",
+                        "largura_maxima_tab": "Largura máxima (m) seção do tabuleiro",
+                        "altura_minima_tab": "Altura mínima (m) seção do tabuleiro",
+                        "altura_maxima_tab": "Altura máxima (m) seção do tabuleiro",
+                        "carga_permanente": "Carga permanente (kN/m)",
+                        "carga_roda": "Carga por roda (kN)",
+                        "carga_multidao": "Carga de multidão (kN/m²)",
+                        "distancia_eixos": "Distância entre eixos (m)",
+                        "classe_carregamento": "Classe de carregamento",
+                        "classe_carregamento_opcoes": ["Permanente", "Longa duração", "Média duração", "Curta duração", "Instantânea"],
+                        "classe_madeira": "Classe de madeira",
+                        "classe_madeira_opcoes": ["Madeira natural", "Madeira recomposta"],
+                        "classe_umidade": "Classe de umidade",
+                        "gamma_g": "γg",
+                        "gamma_q": "γq",
+                        "gamma_w": "γw",
+                        "f_mk": "Resistência característica à flexão (MPa)",
+                        "f_vk": "Resistência característica ao cisalhamento (MPa)",
+                        "e_modflex": "Módulo de elasticidade à flexão (GPa)",
+                        "gerador_desempenho": "Gerar desempenho estrutural para pré-dimensionamento",
+                    },
+                "en": {
+                        "titulo": "Parametric design of a wooden stringer",
+                        "pre": "Pre-sizing of the cross-section",
+                        "entrada_comprimento": "Beam length (m)",
+                        "pista": "Track width (m)",
+                        "entrada_tipo_secao": "Section type",
+                        "tipo_secao": ["Circular"],
+                        "diametro_minimo": "Minimum diameter (cm)",
+                        "diametro_maximo": "Maximum diameter (cm)",
+                        "espaçamento_entre_longarinas_min": "Minimum spacing between stringers (m)",
+                        "espaçamento_entre_longarinas_max": "Maximum spacing between stringers (m)",
+                        "largura_minima_tab": "Minimum width (m) of the deck section",
+                        "largura_maxima_tab": "Maximum width (m) of the deck section",
+                        "altura_minima_tab": "Minimum height (m) of the deck section",
+                        "altura_maxima_tab": "Maximum height (m) of the deck section",
+                        "carga_permanente": "Dead load (kN/m)",
+                        "carga_roda": "Load per wheel (kN)",
+                        "carga_multidao": "Crowd load (kN/m²)",
+                        "distancia_eixos": "Distance between axles (m)",
+                        "classe_carregamento": "Load duration class",
+                        "classe_carregamento_opcoes": ["Dead", "Long-term", "Medium-term", "Short-term", "Instantaneous"],
+                        "classe_madeira": "Wood class",
+                        "classe_madeira_opcoes": ["Natural wood", "Engineered wood"],
+                        "classe_umidade": "Moisture class",
+                        "gamma_g": "γg",
+                        "gamma_q": "γq",
+                        "gamma_w": "γw",
+                        "f_mk": "Characteristic bending strength (MPa)",
+                        "f_vk": "Characteristic shear strength (MPa)",
+                        "e_modflex": "Modulus of elasticity in bending (GPa)",
+                        "gerador_desempenho": "Generate structural performance for pre-sizing",
+                    },
+            }
+    return textos
+
+
+# def momento_max_carga_permanente(g: float, S: float) -> float:
+#     """
+#     Momento fletor máximo devido à carga permanente uniformemente distribuída no tabuleiro.
+#     Equação: M = g * S^2 / 8
+
+#     Parâmetros
+#     ----------
+#     g : float
+#         Carga permanente do tabuleiro + pavimentação (ex.: kN/m).
+#     S : float
+#         Vão do tabuleiro (distância entre longarinas) (ex.: m).
+
+#     Retorna
+#     -------
+#     float
+#         Momento máximo (ex.: kN·m).
+#     """
+#     if S <= 0:
+#         raise ValueError("S deve ser positivo.")
+#     return g * (S ** 2) / 8.0
+
+
+# def momento_max_carga_roda(P: float, S: float, a_r: float) -> float:
+#     """
+#     Momento fletor máximo devido à carga acidental concentrada (por roda) no tabuleiro.
+#     Equação: M = (P/4) * (S - a_r)
+
+#     Parâmetros
+#     ----------
+#     P : float
+#         Carga por roda (ex.: kN).
+#     S : float
+#         Vão do tabuleiro (distância entre longarinas) (ex.: m).
+#     a_r : float
+#         Comprimento efetivo associado à roda/classe (ex.: 0,5 m para Classe 45; 0,4 m para Classe 30).
+
+#     Retorna
+#     -------
+#     float
+#         Momento máximo (ex.: kN·m).
+#     """
+#     if S <= 0:
+#         raise ValueError("S deve ser positivo.")
+#     if a_r <= 0:
+#         raise ValueError("a_r deve ser positivo.")
+#     if a_r >= S:
+#         raise ValueError("Condição inválida: a_r deve ser menor que S.")
+#     return (P / 4.0) * (S - a_r)
+
+
+# def flecha_max_carga_roda(P: float, E_mef: float, I_r: float, a_r: float, S: float) -> float:
+#     """
+#     Flecha máxima devido à carga acidental (por roda) no tabuleiro.
+#     Equação: δ = [P / (16 * E_mef * I_r * a_r)] * [ (1/2)*a_r*S^3 - a_r^2*S^2 + (a_r^4)/24 ]
+
+#     Parâmetros
+#     ----------
+#     P : float
+#         Carga por roda (ex.: kN, ou N — mantenha consistência com E e I).
+#     E_mef : float
+#         Módulo de elasticidade efetivo (ex.: kN/m², ou N/m²).
+#     I_r : float
+#         Momento de inércia efetivo da seção resistente do tabuleiro (ex.: m^4).
+#     a_r : float
+#         Parâmetro do modelo (ex.: m).
+#     S : float
+#         Vão do tabuleiro (ex.: m).
+
+#     Retorna
+#     -------
+#     float
+#         Flecha máxima (ex.: m).
+#     """
+#     if S <= 0:
+#         raise ValueError("S deve ser positivo.")
+#     if a_r <= 0:
+#         raise ValueError("a_r deve ser positivo.")
+#     if a_r >= S:
+#         raise ValueError("Condição inválida: a_r deve ser menor que S.")
+#     if E_mef <= 0:
+#         raise ValueError("E_mef deve ser positivo.")
+#     if I_r <= 0:
+#         raise ValueError("I_r deve ser positivo.")
+
+#     termo = 0.5 * a_r * (S ** 3) - (a_r ** 2) * (S ** 2) + (a_r ** 4) / 24.0
+#     return (P / (16.0 * E_mef * I_r * a_r)) * termo
+
 
 
 # def relatorio():
