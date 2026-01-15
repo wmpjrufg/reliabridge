@@ -5,9 +5,11 @@ from UQpy.run_model.model_execution.PythonModel import PythonModel
 from UQpy.run_model import RunModel
 from UQpy.reliability import FORM
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 from matplotlib.patches import Circle
 
-def plot_longarinas_circulares(n_longarinas: int, diametro_cm: float, espacamento_cm: float) -> plt.Figure:
+
+def plot_longarinas_circulares(n_longarinas: int, diametro_cm: float, espacamento_cm: float) -> Figure:
     fig, ax = plt.subplots(figsize=(8, 3))
     raio = diametro_cm / 2
     for i in range(n_longarinas):
@@ -32,12 +34,29 @@ def plot_longarinas_circulares(n_longarinas: int, diametro_cm: float, espacament
     return fig
 
 
-def prop_madeiras(geo: dict) -> tuple[float, float, float, float, float, float, float, float, float, float]:
+def prop_madeiras(
+                    geo: dict
+                 ) -> tuple[float, float, float, 
+                            float, float, float, 
+                            float, float, float, 
+                            float]:
     """Calcula propriedades geométricas de seções retangulares e circulares de madeira.
     
-    :param geo: Parâmetros geométricos da seção transversal. Se retangular: Chaves: 'b_w': Largura da seção transversal [m] e 'h': Altura da seção transversal [m]. Se circular: Chaves: 'd': Diâmetro da seção transversal [m]
+    :param geo: Parâmetros geométricos da seção transversal. 
+                Se retangular: Chaves: 'b_w': Largura da seção transversal [m] 
+                e 'h': Altura da seção transversal [m]. 
+                Se circular: Chaves: 'd': Diâmetro da seção transversal [m]
 
-    :return: [0] Área da seção transversal [m²], [1] Módulo de resistência em relação ao eixo x [m³], [2] Módulo de resistência em relação ao eixo y [m³], [3] Momento de inércia em relação ao eixo x [m4], [4] Momento de inércia em relação ao eixo y [m4], [5] Raio de giração em relação ao eixo x [m], [6] Momento estático da seção em relação a x [m³], [7] Momento estático da seção em relação a y [m³], [8] Raio de giração em relação ao eixo y [m], [9] Coeficiente de correção do tipo da seção transversal
+    :return: [0] Área da seção transversal [m²], 
+             [1] Módulo de resistência em relação ao eixo x [m³], 
+             [2] Módulo de resistência em relação ao eixo y [m³], 
+             [3] Momento de inércia em relação ao eixo x [m4], 
+             [4] Momento de inércia em relação ao eixo y [m4], 
+             [5] Momento estático da seção em relação a x [m³], 
+             [6] Momento estático da seção em relação a y [m³], 
+             [7] Raio de giração em relação ao eixo x [m], 
+             [8] Raio de giração em relação ao eixo y [m], 
+             [9] Coeficiente de correção do tipo da seção transversal
     """
 
     # Propriedades da seção transversal
@@ -66,6 +85,23 @@ def prop_madeiras(geo: dict) -> tuple[float, float, float, float, float, float, 
         k_m = 0.70
 
     return area, w_x, w_y, i_x, i_y, s_x, s_y, r_x, r_y, k_m
+
+
+def coef_impacto_vertical(liv: float) -> float:
+    """Cálculo do Coeficiente de Impacto Vertical (CIV) conforme NBR 7188:2024 item 5.1.3.1. 
+        CIV = Coeficiente que majora os esforços para considerar efeitos dinâmicos e vibrações do tráfego.
+
+    :param liv: Vão teórico da estrutura [m] - distância entre apoios para cálculo do impacto
+    
+    :return: Valor do coeficiente de impacto vertical (CIV)
+    """
+
+    if liv < 10.0:
+        return 1.35  
+    elif 10.0 <= liv <= 200.0:
+        return 1 + 1.06 * (20 / (liv + 50))  
+    else:
+        return 1.0   
 
 
 def momento_max_carga_permanente(p_gk: float, l: float) -> float:
@@ -97,83 +133,6 @@ def momento_max_carga_variavel(l: float, p_rodak: float, p_qk: float, a: float) 
         m_qk += p_qk * c**2 / 2
         
     return m_qk
-
-
-def coef_impacto_vertical(liv: float) -> float:
-    """Cálculo do Coeficiente de Impacto Vertical (CIV) conforme NBR 7188:2024 item 5.1.3.1. CIV = Coeficiente que majora os esforços para considerar efeitos dinâmicos e vibrações do tráfego.
-
-    :param liv: Vão teórico da estrutura [m] - distância entre apoios para cálculo do impacto
-    
-    :return: Valor do coeficiente de impacto vertical (CIV)
-    """
-
-    if liv < 10.0:
-        return 1.35  
-    elif 10.0 <= liv <= 200.0:
-        return 1 + 1.06 * (20 / (liv + 50))  
-    else:
-        return 1.0   
-
-
-def flecha_max_carga_permanente(p_gk: float, l: float, e_modflex: float, i_x: float) -> float:
-    """Calcula a flecha máxima devido à carga permanente.
-    
-    :param p_gk: carga permanente distribuída [kN/m]
-    :param l: vão teórico da viga [m]
-    :param e_modflex: módulo de elasticidade da madeira [kN/m²]
-    :param i_x: momento de inércia da seção transversal [m⁴]
-
-    :return: flecha máxima devido à carga permanente [m]
-    """
-
-    return (5 * p_gk * l**4) / (384 * e_modflex * i_x)
-
-
-def flecha_max_carga_variavel(l: float, e_modflex: float, i_x: float, p_rodak: float, a: float) -> float:
-    """Calcula a flecha máxima devido à carga variável.
-    
-    :param l: vão teórico da viga [m]
-    :param e_modflex: módulo de elasticidade da madeira [kN/m²]
-    :param i_x: momento de inércia da seção transversal [m⁴]
-    :param p_rodak: carga variável característica por roda [kN]
-    :param a: distância entre eixos [m]
-
-    :return: flecha máxima devido à carga variável [m]
-    """
-
-    b = (l - 2 * a) / 2
-    aux = (l**3 + 2 * b * (3 * l**2 - 4 * b**2))
-
-    return (p_rodak * aux) / (48 * e_modflex * i_x) 
-
-
-def reacao_apoio_carga_permanente(p_gk: float, l: float) -> float:
-    """Calcula a reação de apoio máxima devido à carga permanente.
-    
-    :param p_gk: carga permanente distribuída [kN/m]
-    :param l: vão teórico da viga [m]
-
-    :return: reação de apoio devido à carga permanente [kN]
-    """
-
-    return p_gk * l / 2
-
-
-def reacao_apoio_carga_variavel(l: float, p_rodak: float, p_qk: float, a: float) -> float:
-    """Calcula a reação de apoio máxima devido à carga variável.
-    
-    :param l: vão teórico da viga [m]
-    :param p_rodak: carga variável característica por roda [kN]
-    :param p_qk: carga variável característica de multidão [kN/m²]
-    :param a: distância entre eixos [m]
-
-    :return: reação de apoio devido à carga variável [kN]
-    """
-
-    d = l - 3 * a
-    r_qk = ((p_rodak / l) * (l + 3 * a + 2 * d) + (p_qk * d**2) / (2 * l))
-
-    return r_qk
 
 
 def cortante_max_carga_permanente(p_gk: float, l: float) -> float:
@@ -208,6 +167,75 @@ def cortante_max_carga_variavel(l: float, p_rodak: float, p_qk: float, a: float,
     return v_qk
 
 
+def flecha_max_carga_permanente(p_gk: float, l: float, e_modflex: float, i_x: float) -> float:
+    """Calcula a flecha máxima devido à carga permanente.
+    
+    :param p_gk: carga permanente distribuída [kN/m]
+    :param l: vão teórico da viga [m]
+    :param e_modflex: módulo de elasticidade da madeira [kN/m²]
+    :param i_x: momento de inércia da seção transversal [m⁴]
+
+    :return: flecha máxima devido à carga permanente [m]
+    """
+
+    return (5 * p_gk * l**4) / (384 * e_modflex * i_x)
+
+
+def flecha_max_carga_variavel(l: float, e_modflex: float, i_x: float, p_rodak: float, a: float) -> float:
+    """Calcula a flecha máxima devido à carga variável.
+    
+    :param l: vão teórico da viga [m]
+    :param e_modflex: módulo de elasticidade da madeira [kN/m²]
+    :param i_x: momento de inércia da seção transversal [m⁴]
+    :param p_rodak: carga variável característica por roda [kN]
+    :param a: distância entre eixos [m]
+
+    :return: flecha máxima devido à carga variável [m]
+    """
+
+    b = (l - 2 * a) / 2
+    aux = (l**3 + 2 * b * (3 * l**2 - 4 * b**2))
+
+    return (p_rodak * aux) / (48 * e_modflex * i_x) 
+
+
+# def fluencia():
+#     return
+
+
+# def flecha_total():
+#     return
+
+
+def reacao_apoio_carga_permanente(p_gk: float, l: float) -> float:
+    """Calcula a reação de apoio máxima devido à carga permanente.
+    
+    :param p_gk: carga permanente distribuída [kN/m]
+    :param l: vão teórico da viga [m]
+
+    :return: reação de apoio devido à carga permanente [kN]
+    """
+
+    return p_gk * l / 2
+
+
+def reacao_apoio_carga_variavel(l: float, p_rodak: float, p_qk: float, a: float) -> float:
+    """Calcula a reação de apoio máxima devido à carga variável.
+    
+    :param l: vão teórico da viga [m]
+    :param p_rodak: carga variável característica por roda [kN]
+    :param p_qk: carga variável característica de multidão [kN/m²]
+    :param a: distância entre eixos [m]
+
+    :return: reação de apoio devido à carga variável [kN]
+    """
+
+    d = l - 3 * a
+    r_qk = ((p_rodak / l) * (l + 3 * a + 2 * d) + (p_qk * d**2) / (2 * l))
+
+    return r_qk
+
+
 def k_mod_madeira(classe_carregamento: str, classe_madeira: str, classe_umidade: int) -> tuple[float, float, float]:
     """Retorna o coeficiente de modificação kmod para madeira conforme NBR 7190:1997.
 
@@ -215,7 +243,9 @@ def k_mod_madeira(classe_carregamento: str, classe_madeira: str, classe_umidade:
     :param classe_madeira: 'madeira natural' ou 'madeira recomposta'
     :param classe_umidade: 1, 2, 3, 4
 
-    :return: [0] Tipo de produto de madeira e a duração da carga (kmod1), [1] Tipo do produto e a classe de umidade (kmod2), [2] Coeficiente de modificação total (kmod)
+    :return: [0] Tipo de produto de madeira e a duração da carga (kmod1), 
+             [1] Tipo do produto e a classe de umidade (kmod2), 
+             [2] Coeficiente de modificação total (kmod)
     """
 
     kmod1_tabela = {
@@ -238,7 +268,14 @@ def k_mod_madeira(classe_carregamento: str, classe_madeira: str, classe_umidade:
     return k_mod1, k_mod2, k_mod
 
 
-def flexao_obliqua(w_x: float, m_x: float, w_y: float = 1E-12, m_y: float = 0.0, area: float = 1E-12, p: float = 0.0) -> tuple[float, float, float]:
+def flexao_obliqua(
+                    w_x: float, 
+                    m_x: float, 
+                    w_y: float = 1E-12, 
+                    m_y: float = 0.0, 
+                    area: float = 1E-12, 
+                    p: float = 0.0
+                  ) -> tuple[float, float, float]:
     """Calcula a resistência à flexão oblíqua da madeira.
 
     :param w_x: Módulo de resistência em relação ao eixo x [m³]
@@ -248,7 +285,9 @@ def flexao_obliqua(w_x: float, m_x: float, w_y: float = 1E-12, m_y: float = 0.0,
     :param area: Área da seção transversal [m²]. Padroniza-se area = 1E-12 para flexão simples
     :param p: Força axial [kN]. Padroniza-se p = 0.0 para flexão simples
 
-    :return: [0] Tensão de flexão em relação ao eixo x [kN/m²], [1] Tensão de flexão em relação ao eixo y [kN/m²], [2] Tensão normal devido à força axial [kN/m²]
+    :return: [0] Tensão de flexão em relação ao eixo x [kN/m²], 
+             [1] Tensão de flexão em relação ao eixo y [kN/m²],  
+             [2] Tensão normal devido à força axial [kN/m²]
     """
 
     f_md_x = m_x / w_x
@@ -287,13 +326,25 @@ def checagem_tensoes_normais(k_m: float, sigma_x: float, sigma_y: float, f_md: f
     verif_1 = f_md - (sigma_x + k_m * sigma_y)
     verif_2 = f_md - (sigma_y + k_m * sigma_x)
     g = max(verif_1, verif_2)
-    analise = 'OK' if g <= 1 else 'N OK'
+    analise = 'OK' if g >= 0 else 'N OK'
 
     return g, analise
 
 
-def checagem_flexao_pura_viga(w_x: float, k_m: float, m_gk: float, m_qk: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_c0k: float, f_t0k:float) -> dict:
-    """Verifica a resistência à flexão oblíqua da madeira conforme NBR 7190.
+def checagem_momento_fletor_viga(
+                                    w_x: float, 
+                                    k_m: float, 
+                                    m_gk: float, 
+                                    m_qk: float, 
+                                    classe_carregamento: str, 
+                                    classe_madeira: str, 
+                                    classe_umidade: int, 
+                                    gamma_g: float, 
+                                    gamma_q: float, 
+                                    gamma_w: float, 
+                                    f_mk: float
+                                ) -> dict:
+    """Verifica a função estado limite para momento fletor de uma viga de madeira conforme NBR 7190.
 
     :param w_x: Módulo de resistência em relação ao eixo x [m³] 
     :param k_m: Coeficiente de correção do tipo da seção transversal
@@ -305,10 +356,18 @@ def checagem_flexao_pura_viga(w_x: float, k_m: float, m_gk: float, m_qk: float, 
     :param gamma_g: Coeficiente parcial de segurança para carga permanente
     :param gamma_q: Coeficiente parcial de segurança para carga variável
     :param gamma_w: Coeficiente parcial de segurança para madeira
-    :param f_c0k: Resistência característica à compressão paralela às fibras [kN/m²]
-    :param f_t0k: Resistência característica à tração paralela às fibras [kN/m²]
+    :param f_mk: Resistência característica à flexão da madeira [kN/m²]
 
-    return:  Analise da verificação de tensões: {"m_sd [kN.m]": Momento fletor de cálculo, "k_mod1": Coeficiente de modificação 1, "k_mod2": Coeficiente de modificação 2, "k_mod": Coeficiente de modificação, "sigma_x [kN/m²]": Tensão normal em relação ao eixo x, "f_md [kN/m²]": Resistência de cálculo da madeira, "g [kN/m²]": Equação Estado Limite, "analise": descrição se a viga passa ou não passa na verificação de tensões}     
+    :return:  Analise da verificação de tensões para momento fletor com as seguintes chaves: 
+             "m_sd [kN.m]": Momento fletor de cálculo, 
+             "k_mod1": Coeficiente de modificação 1, 
+             "k_mod2": Coeficiente de modificação 2, 
+             "k_mod": Coeficiente de modificação, 
+             "sigma_x [kN/m²]": Tensão normal em relação ao eixo x, 
+             "f_md [kN/m²]": Resistência de cálculo da madeira, 
+             "g [kN/m²]": Equação Estado Limite no formato R - S,
+             "sigma_sd/f_md": Fator de utilização da peça, 
+             "analise": descrição se a viga passa ou não passa na verificação de tensões     
     """
 
     # Ações de cálculo
@@ -320,11 +379,11 @@ def checagem_flexao_pura_viga(w_x: float, k_m: float, m_gk: float, m_qk: float, 
     # Tensões
     s_x, _, _ = flexao_obliqua(w_x, m_sd)
 
-    # Resistência de cálculo (caso mais desfavorável)
-    f_md = min(resistencia_calculo(f_c0k, gamma_w, k_mod), resistencia_calculo(f_t0k, gamma_w, k_mod))                
+    # Resistência de cálculo
+    f_md = resistencia_calculo(f_mk, gamma_w, k_mod)                
     
     # Verificação
-    g, analise = checagem_tensoes_normais(k_m, s_x, _, f_md)
+    g, analise = checagem_tensoes_normais(k_m, s_x, 0.00, f_md)
 
     return {
                 "m_sd [kN.m]": m_sd,
@@ -334,11 +393,82 @@ def checagem_flexao_pura_viga(w_x: float, k_m: float, m_gk: float, m_qk: float, 
                 "sigma_x [kN/m²]": s_x,
                 "f_md [kN/m²]": f_md,
                 "g [kN/m²]": g,
+                "sigma_sd/f_md": s_x / f_md,
                 "analise": analise,
             }
 
 
-def checagem_flecha_viga(l: float, e_modflex: float, i_x: float, p_rodak: float, a: float) -> dict:
+def checagem_cisalhamento_viga(
+                                    s_x: float, 
+                                    b_medio: float, 
+                                    i_x: float, 
+                                    area: float, 
+                                    tipo_secao: str,
+                                    v_gk: float, 
+                                    v_qk: float, 
+                                    classe_carregamento: str, 
+                                    classe_madeira: str, 
+                                    classe_umidade: int, 
+                                    gamma_g: float, 
+                                    gamma_q: float, 
+                                    gamma_w: float, 
+                                    f_vk: float
+                                ) -> dict:
+    """Verifica a função estado limite para cisalhamento de uma viga de madeira conforme NBR 7190.
+
+    :param s_x: Momento estático da seção em relação a x [m³]
+    :param b_medio: Largura ou somatória das larguras no ponto da seção em estudo [m]
+    :param i_x: Momento de inércia em relação ao eixo x [m4]
+    :param area: Área da seção transversal da viga [m²]
+    :param tipo_secao: 'Retangular' ou 'Circular'
+    :param v_gk: Esforço cortante característico devido às cargas permanentes [kN]
+    :param v_qk: Esforço cortante característico devido às cargas variáveis [kN]
+    :param classe_carregamento: 'permanente', 'longa duração', 'média duração', 'curta duração' ou 'instantânea'
+    :param classe_madeira: 'madeira natural' ou 'madeira recomposta'
+    :param classe_umidade: 1, 2, 3, 4
+    :param gamma_g: Coeficiente parcial de segurança para carga permanente
+    :param gamma_q: Coeficiente parcial de segurança para carga variável
+    :param gamma_w: Coeficiente parcial de segurança para madeira
+    :param f_vk: Resistência característica ao cisalhamento da madeira [kN/m²]
+
+    :return:  Analise da verificação de tensões para cisalhamento com as seguintes chaves:
+             "v_sd [kN]": Cortante de cálculo,
+             "f_vd [kN/m²]": Resistência de cálculo ao cisalhamento,
+             "tau_sd [kN/m²]": Tensão de cisalhamento solicitante de cálculo,
+             "g [kN]": diferença entre resistência e solicitação,
+             "tau_sd/f_vd": tau_sd / f_vd,
+             "analise": descrição se a viga passa ou não passa na verificação de tensões     
+    """
+
+    # Ações de cálculo
+    v_sd = v_gk * gamma_g + v_qk * gamma_q
+
+    # k_mod
+    _, _, k_mod = k_mod_madeira(classe_carregamento, classe_madeira, classe_umidade)
+
+    # Resistência de cálculo
+    f_vd = resistencia_calculo(f_vk, gamma_w, k_mod)     
+
+    # Tensão de cálculo
+    if tipo_secao == "Circular":
+        tau_sd = (v_sd * s_x) / (b_medio * i_x)
+    else:
+        tau_sd = (1.5 * v_sd) / area
+
+    # Verificação
+    g = f_vd - tau_sd
+
+    return {
+                "v_sd [kN]": v_sd,
+                "f_vd [kN/m²]": f_vd,
+                "tau_sd [kN/m²]": tau_sd,
+                "g [kN]": g,
+                "tau_sd/f_vd": tau_sd / f_vd,
+                "analise": 'OK' if g >= 0 else 'N OK',
+            }
+
+
+def checagem_flecha_carga_var_viga(l: float, e_modflex: float, i_x: float, p_rodak: float, a: float) -> dict:
     """Verifica a resistência à flexão oblíqua da madeira conforme NBR 7190.
 
     :param l: vão teórico da viga [m]
@@ -347,92 +477,56 @@ def checagem_flecha_viga(l: float, e_modflex: float, i_x: float, p_rodak: float,
     :param p_rodak: carga variável característica por roda [kN]
     :param a: distância entre eixos [m]
 
-    return:  Analise da verificação de flecha: {"delta_lim [m]": limite de flecha, "delta_qk [m]": flecha máxima devido à carga variável, "g [m]": Equação Estado Limite, "analise": descrição se a viga passa ou não passa na verificação de flecha}     
+    :return:  Analise da verificação de flecha com as seguintes chaves:
+             "delta_lim [m]": limite de flecha, 
+             "delta_qk [m]": flecha máxima devido à carga variável, 
+             "g [m]": Equação Estado Limite, 
+             "delta_qk/delta_lim": Fator de utilização da peça,
+             "analise": descrição se a viga passa ou não passa na verificação de flecha     
     """
 
     # limite de flecha
     delta_lim = l / 360
 
-    # k_mod
+    # Flecha carga variável
     delta_qk = flecha_max_carga_variavel(l, e_modflex, i_x, p_rodak, a)
 
-    # Função Estado Limite
+    # Verificação
     g = delta_lim - delta_qk
 
     return {
                 "delta_lim [m]": delta_lim,
                 "delta_qk [m]": delta_qk,
                 "g [m]": g,
+                "delta_qk/delta_lim": delta_qk / delta_lim,
                 "analise": 'OK' if g >= 0 else 'N OK',
             }
 
 
-def checagem_cisalhamento_viga(v_gk: float, v_qk: float, s_x: float, d: float, i_x: float, area: float, f_md: float, tipo_secao: str) -> dict:
-    """
-    Verifica a tensão de cisalhamento solicitante e resistente em uma viga de madeira conforme a NBR 7190.
-
-    :param v_gk: Esforço cortante característico devido às cargas permanentes [kN]
-    :param v_qk: Esforço cortante característico devido às cargas variáveis [kN]
-    :param s_x: Momento estático da seção em relação a x [m³]
-    :param d: Diâmetro da seção transversal [m]
-    :param i_x: Momento de inércia em relação ao eixo x [m4]
-    :param area: Área da seção transversal da viga [m²]
-    :param f_md: Resistência de cálculo da madeira (paralela às fibras) [kN/m²]
-    :param tipo_secao: 'Retangular' ou 'Circular'
-
-    :return: Dicionário com resultados da verificação:
-        {
-            "tetha_d [kN/m²]": tensão de cisalhamento solicitante de cálculo,
-            "fv0d [kN/m²]": resistência de cálculo ao cisalhamento,
-            "g [kN/m²]": diferença entre resistência e solicitação,
-            "analise": 'OK' se a verificação passa, caso contrário 'N OK'
-        }
-    """
-
-    # Ações de cálculo
-    v_sd = v_gk * gamma_g + v_qk * gamma_q
-
-    # Solicitação
-    if tipo_secao == "Circular":
-        tal_sd = (v_sd * s_x) / (d * i_x)
-    else:
-        tal_sd = (1.5 * v_sd) / area
-
-    # Resistência
-    fv0d = 0.10 * f_md
-
-    # Verificação
-    g = fv0d - tal_sd
+# def checagem_flecha_carga_total_fluencia_viga():
+#     return
 
 
-    return {
-                "vsd": v_sd,
-                "fv0d [kN/m²]": fv0d,
-                "tal_sd [kN/m²]": tal_sd,
-                "g [kN]": g,
-                "analise": 'OK' if g >= 0 else 'N OK',
-            }
+def checagem_completa_longarina_madeira_flexao(
+                                                geo: dict, 
+                                                p_gk: float, 
+                                                p_qk: float, 
+                                                p_rodak: float, 
+                                                a: float, 
+                                                l: float, 
+                                                classe_carregamento: str, 
+                                                classe_madeira: str, 
+                                                classe_umidade: int, 
+                                                gamma_g: float, 
+                                                gamma_q: float, 
+                                                gamma_w: float, 
+                                                f_c0k: float, 
+                                                f_t0k: float, 
+                                                f_mk: float,
+                                                f_vk: float,
+                                                e_modflex: float, 
 
-
-def checagem_longarina_madeira_flexao(
-                                        geo: dict, 
-                                        p_gk: float, 
-                                        p_qk: float, 
-                                        p_rodak: float, 
-                                        a: float, 
-                                        l: float, 
-                                        classe_carregamento: str, 
-                                        classe_madeira: str, 
-                                        classe_umidade: int, 
-                                        gamma_g: float, 
-                                        gamma_q: float, 
-                                        gamma_w: float, 
-                                        f_c0k: float, 
-                                        f_t0k: float, 
-                                        e_modflex: float, 
-                                        d: float, 
-                                        f_md: float
-                                    ) -> tuple[dict, dict, dict]:
+                                            ) -> tuple[dict, dict, dict, dict, str]:
     """Verifica a longarina de madeira submetida à flexão simples conforme NBR 7190.
 
     :param geo: Parâmetros geométricos da seção transversal. Se retangular: Chaves: 'b_w': Largura da seção transversal [m] e 'h': Altura da seção transversal [m]. Se circular: Chaves: 'd': Diâmetro da seção transversal [m]
@@ -449,94 +543,120 @@ def checagem_longarina_madeira_flexao(
     :param gamma_w: Coeficiente parcial de segurança para madeira
     :param f_c0k: Resistência característica à compressão paralela às fibras [kN/m²]
     :param f_t0k: Resistência característica à tração paralela às fibras [kN/m²]
-    :param e_modflex: Módulo de elasticidade à flexão [kN/m²]
-    :param d: Diâmetro da viga [m]
     :param f_md: Resistência de cálculo a flexão [kN/m²]
-
+    :param f_vk: Resistência de cálculo ao cisalhamento [kN/m²]
+    :param e_modflex: Módulo de elasticidade à flexão [kN/m²]
     """
 
-    # Geometria, Propriedades da seção transversal
+    # Geometria, Propriedades da seção transversal e coeficiente de correção para impacto vertical
     area, w_x, w_y, i_x, i_y, s_x, s_y, r_x, r_y, k_m = prop_madeiras(geo)
     ci = coef_impacto_vertical(l)
+    aux_ci = (1 + 0.75 * (ci - 1))
 
     # Momentos fletores de cálculo carga permanente e variável
     m_gk = momento_max_carga_permanente(p_gk, l)
     m_qk = momento_max_carga_variavel(l, p_rodak, p_qk, a)
-    m_qk *= (1 + 0.75 * (ci - 1))
+    m_qk *= aux_ci
     v_gk = cortante_max_carga_permanente(p_gk, l)
     if 'd' in geo:
         v_qk = cortante_max_carga_variavel(l, p_rodak, p_qk, a, geo['d'])
+        b_medio = geo['d']
+        tipo_secao = "Circular"
     else:
         v_qk = cortante_max_carga_variavel(l, p_rodak, p_qk, a, geo['h'])    
+        b_medio = geo['b_w']
+        tipo_secao = "Retangular"
+    v_qk *= aux_ci
 
     # Verificação da flexão pura
-    res_flex = checagem_flexao_pura_viga(w_x, k_m, m_gk, m_qk, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_c0k, f_t0k)
+    res_flex = checagem_momento_fletor_viga(
+                                                w_x, k_m, 
+                                                m_gk, m_qk, 
+                                                classe_carregamento, 
+                                                classe_madeira, classe_umidade, 
+                                                gamma_g, gamma_q, gamma_w, f_mk
+                                            )
     
-    # Verificação de deslocamento (a implementar)
-    res_flecha = checagem_flecha_viga(l, e_modflex, i_x, p_rodak, a)
-
     # Verificação do cisalhamento
-    res_cis = checagem_cisalhamento_viga(v_gk, v_qk, m_sd, d, i_x, area, f_md)
+    res_cis = checagem_cisalhamento_viga(
+                                            s_x, b_medio, i_x, area, tipo_secao, 
+                                            v_gk, v_qk, 
+                                            classe_carregamento,
+                                            classe_madeira, classe_umidade,
+                                            gamma_g, gamma_q, gamma_w, f_vk
+                                        )
 
-    return res_flex, res_flecha, res_cis
+    # Verificação de deslocamento carga variável e total com fluência
+    res_flecha_var = checagem_flecha_carga_var_viga(l, e_modflex, i_x, p_rodak, a)
+    # res_flecha_total = checagem_flecha_carga_total_fluencia_viga()
+
+    # Relatório
+    # relat = relatorio()
+
+    return res_flex, res_cis, res_flecha_var, {}, "relat"
+
+
+# def relatorio():
+#     var = "# Cabeçalho"
+#     var += "\n"
+#     return var
+    
+# def obj_confia(samples, params):
+
+#     # Extrair amostras  
+#     n = samples.shape[0] #cada linha de samples gera um valor próprio de g, o vetor g passa a representar corretamente o estado limite, o FORM passa a enxergar a superfície de falha correta
+#     g = np.zeros(n)
+#     #g = np.zeros((samples.shape[0]))  g tinha tamanho n,apenas a posição g[0] era preenchida, todas as outras ficavam em zero, só a primeira amostra era avaliada, as demais eram tratadas como g = 0 (estado limite ativo), o resultado de β e pf ficava fisicamente errado
+#     p_gk = samples[:, 0]
+#     p_rodak = samples[:, 1]
+#     p_qk  = samples[:, 2]
+#     f_ck = samples[:, 3]
+#     f_tk = samples[:, 4]
+#     e_modflex = samples[:, 5]
 
     
-def obj_confia(samples, params):
+#     # Parâmetros fixos
+#     geo = params[0]
+#     a = params[1]
+#     l = params[2]
+#     classe_carregamento = params[3]
+#     classe_madeira = params[4]
+#     classe_umidade = params[5]
+#     gamma_g = params[6]
+#     gamma_q = params[7]
+#     gamma_w = params[8]
 
-    # Extrair amostras  
-    n = samples.shape[0] #cada linha de samples gera um valor próprio de g, o vetor g passa a representar corretamente o estado limite, o FORM passa a enxergar a superfície de falha correta
-    g = np.zeros(n)
-    #g = np.zeros((samples.shape[0]))  g tinha tamanho n,apenas a posição g[0] era preenchida, todas as outras ficavam em zero, só a primeira amostra era avaliada, as demais eram tratadas como g = 0 (estado limite ativo), o resultado de β e pf ficava fisicamente errado
-    p_gk = samples[:, 0]
-    p_rodak = samples[:, 1]
-    p_qk  = samples[:, 2]
-    f_ck = samples[:, 3]
-    f_tk = samples[:, 4]
-    e_modflex = samples[:, 5]
+#     # Função Estado Limite
+#     for i in range(n): res_m, _, _ = checagem_longarina_madeira_flexao(geo, p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_ck, f_tk, e_modflex)
+#     #g[0] = res_m["g [kN/m²]"]
+#     g[i] = res_m["g [kN/m²]"]
 
-    
-    # Parâmetros fixos
-    geo = params[0]
-    a = params[1]
-    l = params[2]
-    classe_carregamento = params[3]
-    classe_madeira = params[4]
-    classe_umidade = params[5]
-    gamma_g = params[6]
-    gamma_q = params[7]
-    gamma_w = params[8]
-
-    # Função Estado Limite
-    for i in range(n): res_m, _, _ = checagem_longarina_madeira_flexao(geo, p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_ck, f_tk, e_modflex)
-    #g[0] = res_m["g [kN/m²]"]
-    g[i] = res_m["g [kN/m²]"]
-
-    return g
+#     return g
 
 
-def confia_flexao_pura(geo: dict, p_gk: float, p_rodak: float, p_qk: float, a: float, l: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_ck: float, f_tk: float, e_modflex: float) -> tuple[float, float]:
+# def confia_flexao_pura(geo: dict, p_gk: float, p_rodak: float, p_qk: float, a: float, l: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_ck: float, f_tk: float, e_modflex: float) -> tuple[float, float]:
 
-    # Distribuições
-    p_gk_aux = Normal(loc=p_gk, scale=p_gk*0.1)
-    p_rodak_aux = Normal(loc=p_rodak, scale=p_rodak*0.1)
-    p_qk_aux = Normal(loc=p_qk, scale=p_qk*0.1)
-    f_tk_aux = Normal(loc=f_tk, scale=f_tk*0.1)
-    f_ck_aux = Normal(loc=f_ck, scale=f_ck*0.1)     
-    e_modflex_aux = Normal(loc=e_modflex, scale=e_modflex*0.1)
-    varss = [p_gk_aux, p_rodak_aux, p_qk_aux, f_ck_aux, f_tk_aux, e_modflex_aux]
+#     # Distribuições
+#     p_gk_aux = Normal(loc=p_gk, scale=p_gk*0.1)
+#     p_rodak_aux = Normal(loc=p_rodak, scale=p_rodak*0.1)
+#     p_qk_aux = Normal(loc=p_qk, scale=p_qk*0.1)
+#     f_tk_aux = Normal(loc=f_tk, scale=f_tk*0.1)
+#     f_ck_aux = Normal(loc=f_ck, scale=f_ck*0.1)     
+#     e_modflex_aux = Normal(loc=e_modflex, scale=e_modflex*0.1)
+#     varss = [p_gk_aux, p_rodak_aux, p_qk_aux, f_ck_aux, f_tk_aux, e_modflex_aux]
 
-    # Variáveis fixas da viga
-    paramss = [geo, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_ck, f_tk, e_modflex]
+#     # Variáveis fixas da viga
+#     paramss = [geo, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_ck, f_tk, e_modflex]
 
-    # Reliability analysis Normal Loading Condition
-    model = PythonModel(model_script='madeiras.py', model_object_name='obj_confia', params=paramss)
-    runmodel_nlc = RunModel(model=model)
-    form = FORM(distributions=varss, runmodel_object=runmodel_nlc, tolerance_u=1e-5, tolerance_beta=1e-5)
-    form.run()
-    beta = form.beta[0]
-    pf = form.failure_probability[0]
+#     # Reliability analysis Normal Loading Condition
+#     model = PythonModel(model_script='madeiras.py', model_object_name='obj_confia', params=paramss)
+#     runmodel_nlc = RunModel(model=model)
+#     form = FORM(distributions=varss, runmodel_object=runmodel_nlc, tolerance_u=1e-5, tolerance_beta=1e-5)
+#     form.run()
+#     beta = form.beta[0]
+#     pf = form.failure_probability[0]
 
-    return beta, pf
+#     return beta, pf
 
 
 if __name__ == "__main__":

@@ -19,18 +19,21 @@ lang = st.session_state["lang"]
 titulos_menu = {
                     "pt": {
                             "home": "Início",
-                            "longarina": "Projeto Longarina"
+                            "longarina": "Pré-dimensionamento da Longarina",
+                            "design": "Projeto da Longarina"
                           },
                     "en": {
                             "home": "Home",
-                            "longarina": "Longarina Project"
+                            "longarina": "Pre-sizing of Stringer",
+                            "design": "Stringer Design"
                           }
                 }
 
 # Definição das páginas usando os títulos dinâmicos
 home_page = st.Page("pages/home.py", title=titulos_menu[lang]["home"], icon="🏠", default=True)
-longarina_page = st.Page("pages/parametric_design.py", title=titulos_menu[lang]["longarina"], icon="🏗️")
+longarina_page = st.Page("pages/pre_sizing.py", title=titulos_menu[lang]["longarina"], icon="🏗️")
+design_page = st.Page("pages/design.py", title=titulos_menu[lang]["design"], icon="🛠️")
 
 # Executa a navegação
-pg = st.navigation([home_page, longarina_page])
+pg = st.navigation([home_page, longarina_page, design_page])
 pg.run()
