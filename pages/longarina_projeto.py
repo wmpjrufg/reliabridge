@@ -71,18 +71,21 @@ tipo_secao = st.selectbox(t["entrada_tipo_secao"], t["tipo_secao"])
 # Função auxiliar para criar inputs vazios
 def num_input_vazio(label, placeholder="–"):
     valor_str = st.text_input(label, placeholder=placeholder)
-
-    # Campo vazio → retorna None
     if valor_str.strip() == "":
         return None
-
-    # Converte para float
     try:
         return float(valor_str.replace(",", "."))
     except:
         st.error(f"Valor inválido em '{label}'. Digite um número.")
         return None
 
+def select_vazio(label, opcoes):
+    opcoes_mod = ["–"] + list(opcoes)
+    escolha = st.selectbox(label, opcoes_mod)
+
+    if escolha == "–":
+        return None
+    return escolha
 
 if tipo_secao in ["Retangular", "Rectangular"]:
     b_cm = num_input_vazio(t["base"])
@@ -95,19 +98,12 @@ else:
     d = (d_cm or 0) / 100
     geo = {"d": d}
 
-carga_pp = 8.0
-
 l = num_input_vazio(t["entrada_comprimento"])
 p_gk = num_input_vazio(t["carga_permanente"])
 p_rodak = num_input_vazio(t["carga_roda"])
 p_qk = num_input_vazio(t["carga_multidao"])
 a = num_input_vazio(t["distancia_eixos"])
-
-classe_carregamento = st.selectbox(
-    t["classe_carregamento"],
-    t["classe_carregamento_opcoes"]
-).lower()
-
+classe_carregamento = select_vazio(t["classe_carregamento"], t["classe_carregamento_opcoes"])
 if classe_carregamento == "permanent":
     classe_carregamento = "Permanente"
 elif classe_carregamento == "long-term":
@@ -119,20 +115,15 @@ elif classe_carregamento == "short-term":
 elif classe_carregamento == "instantaneous":
     classe_carregamento = "Instantânea"
 
-classe_madeira = st.selectbox(t["classe_madeira"], t["classe_madeira_opcoes"]).lower()
+classe_madeira = select_vazio(t["classe_madeira"], t["classe_madeira_opcoes"])
 classe_madeira = "madeira natural" if classe_madeira == "natural wood" else "madeira recomposta"
-
-classe_umidade = st.selectbox(t["classe_umidade"], [1, 2, 3, 4])
-
+classe_umidade = select_vazio(t["classe_umidade"], [1, 2, 3, 4])
 gamma_g = num_input_vazio(t["gamma_g"])
 gamma_q = num_input_vazio(t["gamma_q"])
 gamma_w = num_input_vazio(t["gamma_w"])
-
 f_ck = num_input_vazio(t["f_ck"])
 f_tk = num_input_vazio(t["f_tk"])
 e_modflex = num_input_vazio(t["e_modflex"])
-
-# Conversões
 if f_ck: f_ck *= 1E3
 if f_tk: f_tk *= 1E3
 if e_modflex: e_modflex *= 1E6
