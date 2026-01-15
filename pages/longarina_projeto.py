@@ -66,7 +66,8 @@ t = textos[lang]
 
 # Calculadora da página
 st.header(t["titulo"])
-tipo_secao = st.selectbox(t["entrada_tipo_secao"], t["tipo_secao"])
+opcoes_secao = ["–", "Retangular", "Circular"]
+tipo_secao = st.selectbox("Tipo da seção", opcoes_secao)
 
 # Função auxiliar para criar inputs vazios
 def num_input_vazio(label, placeholder="–"):
