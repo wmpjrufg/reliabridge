@@ -2,12 +2,12 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 
-from madeiras import checagem_completa_longarina_madeira_flexao, textos_pre_sizing, montar_excel
+from madeiras import checagem_completa_longarina_madeira_flexao, textos_pre_sizing_d, montar_excel
 
 
 # Idioma: vem da HOME
 lang = st.session_state.get("lang", "pt")
-textos = textos_pre_sizing()
+textos = textos_pre_sizing_d()
 t = textos.get(lang, textos["pt"])
 
 # UI
@@ -52,7 +52,6 @@ with st.form("form_geometria", clear_on_submit=False):
     e_modflex_gpa = st.number_input(t["e_modflex"], value=12.0)
 
     submitted_design = st.form_submit_button(t["gerador_desempenho"])
-
 
 # -------------------------------------------------------
 # Download: sempre disponível (dados atuais do formulário)
@@ -127,11 +126,11 @@ if submitted_design:
     st.subheader(t.get("tabela_desempenho", "Tabela de desempenho estrutural via Análise de Monte Carlo"))
     st.dataframe(df_filter_longarina)
     st.download_button(
-                        label=t.get("botao_dados_down", "Download dos dados do projeto"),
-                        data=excel_bytes,
-                        file_name="dados_projeto.xlsx",
-                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    )
+                            label=t.get("botao_dados_down", "Download dos dados do projeto"),
+                            data=excel_bytes,
+                            file_name="deck_data.xlsx",
+                            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        )
 
 else:
     st.warning(t.get("aviso_gerar_primeiro", "Sem resultados atuais. Clique em “Gerar” para processar."))

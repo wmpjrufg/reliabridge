@@ -11,19 +11,22 @@ lang = st.session_state["lang"]
 titulos_menu = {
                     "pt": {
                         "home": "Início",
+                        "tabuleiro": "Pré-dimensionamento do Tabuleiro",
                         "longarina": "Pré-dimensionamento da Longarina",
                         "design": "Projeto da Longarina",
                     },
                     "en": {
                         "home": "Home",
+                        "tabuleiro": "Pre-sizing of Deck",
                         "longarina": "Pre-sizing of Stringer",
                         "design": "Stringer Design",
                     },
                 }
 
 home_page = st.Page("pages/home.py", title=titulos_menu[lang]["home"], icon="🏠", default=True)
-longarina_page = st.Page("pages/pre_sizing.py", title=titulos_menu[lang]["longarina"], icon="🏗️")
+deck_page = st.Page("pages/pre_sizing_d.py", title=titulos_menu[lang]["tabuleiro"], icon="🏗️")
+longarina_page = st.Page("pages/pre_sizing_l.py", title=titulos_menu[lang]["longarina"], icon="🏗️")
 design_page = st.Page("pages/design.py", title=titulos_menu[lang]["design"], icon="🛠️")
 
-pg = st.navigation([home_page, longarina_page, design_page])
+pg = st.navigation([home_page, deck_page, longarina_page, design_page])
 pg.run()

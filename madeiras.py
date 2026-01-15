@@ -635,17 +635,14 @@ def checagem_completa_longarina_madeira_flexao(
 
     return res_flex, res_cis, res_flecha_var, {}, "relat"
 
-
-def textos_pre_sizing():
+def textos_pre_sizing_d():
     textos = {
                 "pt": {
-                        "titulo": "Projeto paramétrico de uma Longarina de madeira",
-                        "pre": "Pré-dimensionamento da seção transversal",
+                        "titulo": "Projeto paramétrico de uma ponte de madeira",
+                        "pre": "Pré-dimensionamento da longarina",
                         "entrada_comprimento": "Comprimento da viga (m)",
                         "entrada_tipo_secao": "Tipo de seção",
                         "tipo_secao": ["Circular"],
-                        "diametro_minimo": "Diâmetro mínimo (cm)",
-                        "diametro_maximo": "Diâmetro máximo (cm)",
                         "espaçamento_entre_longarinas_min": "Espaçamento mínimo entre longarinas (m)",
                         "espaçamento_entre_longarinas_max": "Espaçamento máximo entre longarinas (m)",
                         "largura_minima_tab": "Largura mínima (m) seção do tabuleiro",
@@ -670,14 +667,12 @@ def textos_pre_sizing():
                         "gerador_desempenho": "Gerar desempenho estrutural para pré-dimensionamento",
                     },
                 "en": {
-                        "titulo": "Parametric design of a wooden stringer",
-                        "pre": "Pre-sizing of the cross-section",
+                        "titulo": "Parametric design of a wooden bridge",
+                        "pre": "Pre-sizing of the stringer",
                         "entrada_comprimento": "Beam length (m)",
                         "pista": "Track width (m)",
                         "entrada_tipo_secao": "Section type",
                         "tipo_secao": ["Circular"],
-                        "diametro_minimo": "Minimum diameter (cm)",
-                        "diametro_maximo": "Maximum diameter (cm)",
                         "espaçamento_entre_longarinas_min": "Minimum spacing between stringers (m)",
                         "espaçamento_entre_longarinas_max": "Maximum spacing between stringers (m)",
                         "largura_minima_tab": "Minimum width (m) of the deck section",
@@ -705,92 +700,100 @@ def textos_pre_sizing():
     return textos
 
 
-# def momento_max_carga_permanente(g: float, S: float) -> float:
-#     """
-#     Momento fletor máximo devido à carga permanente uniformemente distribuída no tabuleiro.
-#     Equação: M = g * S^2 / 8
+def textos_pre_sizing_l():
+    textos = {
+                "pt": {
+                        "titulo": "Projeto paramétrico de uma ponte de madeira",
+                        "pre": "Pré-dimensionamento da longarina",
+                        "entrada_comprimento": "Comprimento da viga (m)",
+                        "entrada_tipo_secao": "Tipo de seção",
+                        "tipo_secao": ["Circular"],
+                        "diametro_minimo": "Diâmetro mínimo (cm)",
+                        "diametro_maximo": "Diâmetro máximo (cm)",
+                        "carga_permanente": "Carga permanente (kN/m)",
+                        "carga_roda": "Carga por roda (kN)",
+                        "carga_multidao": "Carga de multidão (kN/m²)",
+                        "distancia_eixos": "Distância entre eixos (m)",
+                        "classe_carregamento": "Classe de carregamento",
+                        "classe_carregamento_opcoes": ["Permanente", "Longa duração", "Média duração", "Curta duração", "Instantânea"],
+                        "classe_madeira": "Classe de madeira",
+                        "classe_madeira_opcoes": ["Madeira natural", "Madeira recomposta"],
+                        "classe_umidade": "Classe de umidade",
+                        "gamma_g": "γg",
+                        "gamma_q": "γq",
+                        "gamma_w": "γw",
+                        "f_mk": "Resistência característica à flexão (MPa)",
+                        "f_vk": "Resistência característica ao cisalhamento (MPa)",
+                        "e_modflex": "Módulo de elasticidade à flexão (GPa)",
+                        "gerador_desempenho": "Gerar desempenho estrutural para pré-dimensionamento",
+                    },
+                "en": {
+                        "titulo": "Parametric design of a wooden bridge",
+                        "pre": "Pre-sizing of the stringer",
+                        "entrada_comprimento": "Beam length (m)",
+                        "pista": "Track width (m)",
+                        "entrada_tipo_secao": "Section type",
+                        "tipo_secao": ["Circular"],
+                        "diametro_minimo": "Minimum diameter (cm)",
+                        "diametro_maximo": "Maximum diameter (cm)",
+                        "carga_permanente": "Dead load (kN/m)",
+                        "carga_roda": "Load per wheel (kN)",
+                        "carga_multidao": "Crowd load (kN/m²)",
+                        "distancia_eixos": "Distance between axles (m)",
+                        "classe_carregamento": "Load duration class",
+                        "classe_carregamento_opcoes": ["Dead", "Long-term", "Medium-term", "Short-term", "Instantaneous"],
+                        "classe_madeira": "Wood class",
+                        "classe_madeira_opcoes": ["Natural wood", "Engineered wood"],
+                        "classe_umidade": "Moisture class",
+                        "gamma_g": "γg",
+                        "gamma_q": "γq",
+                        "gamma_w": "γw",
+                        "f_mk": "Characteristic bending strength (MPa)",
+                        "f_vk": "Characteristic shear strength (MPa)",
+                        "e_modflex": "Modulus of elasticity in bending (GPa)",
+                        "gerador_desempenho": "Generate structural performance for pre-sizing",
+                    },
+            }
+    return textos
 
-#     Parâmetros
-#     ----------
-#     g : float
-#         Carga permanente do tabuleiro + pavimentação (ex.: kN/m).
-#     S : float
-#         Vão do tabuleiro (distância entre longarinas) (ex.: m).
 
-#     Retorna
-#     -------
-#     float
-#         Momento máximo (ex.: kN·m).
-#     """
-#     if S <= 0:
-#         raise ValueError("S deve ser positivo.")
-#     return g * (S ** 2) / 8.0
+def momento_max_carga_permanente_tabuleiro(p_gk: float, esp: float) -> float:
+    """Momento fletor máximo devido à carga permanente uniformemente distribuída no tabuleiro.
+
+    :param p_gk: Carga permanente do tabuleiro + pavimentação [kN/m]
+    :param esp: Vão do tabuleiro (distância entre longarinas) [m]
+    
+    :return: Momento máximo devido a carga permanente [kN·m]
+    """
+
+    return p_gk * (esp ** 2) / 8.0
 
 
-# def momento_max_carga_roda(P: float, S: float, a_r: float) -> float:
-#     """
-#     Momento fletor máximo devido à carga acidental concentrada (por roda) no tabuleiro.
-#     Equação: M = (P/4) * (S - a_r)
+def momento_max_carga_variavel_tabuleiro(p_rodak: float, esp: float, a_r: float = 0.45) -> float:
+    """Momento fletor máximo devido à carga acidental concentrada (por roda) no tabuleiro.
 
-#     Parâmetros
-#     ----------
-#     P : float
-#         Carga por roda (ex.: kN).
-#     S : float
-#         Vão do tabuleiro (distância entre longarinas) (ex.: m).
-#     a_r : float
-#         Comprimento efetivo associado à roda/classe (ex.: 0,5 m para Classe 45; 0,4 m para Classe 30).
+    :param p_rodak: Carga por roda [kN]
+    :param esp: Vão do tabuleiro (distância entre longarinas) [m]
+    :param a_r: Comprimento efetivo associado à roda/classe [m]
+    """
 
-#     Retorna
-#     -------
-#     float
-#         Momento máximo (ex.: kN·m).
-#     """
-#     if S <= 0:
-#         raise ValueError("S deve ser positivo.")
-#     if a_r <= 0:
-#         raise ValueError("a_r deve ser positivo.")
-#     if a_r >= S:
-#         raise ValueError("Condição inválida: a_r deve ser menor que S.")
-#     return (P / 4.0) * (S - a_r)
+    return (p_rodak / 4.0) * (esp - a_r)
 
 
-# def flecha_max_carga_roda(P: float, E_mef: float, I_r: float, a_r: float, S: float) -> float:
-#     """
-#     Flecha máxima devido à carga acidental (por roda) no tabuleiro.
-#     Equação: δ = [P / (16 * E_mef * I_r * a_r)] * [ (1/2)*a_r*S^3 - a_r^2*S^2 + (a_r^4)/24 ]
+def flecha_max_carga_variavel_tabuleiro(p_rodak: float, e_modflex: float, i_x: float, esp: float, a_r: float = 0.45) -> float:
+    """Flecha máxima devido à carga variável (por roda) no tabuleiro.
 
-#     Parâmetros
-#     ----------
-#     P : float
-#         Carga por roda (ex.: kN, ou N — mantenha consistência com E e I).
-#     E_mef : float
-#         Módulo de elasticidade efetivo (ex.: kN/m², ou N/m²).
-#     I_r : float
-#         Momento de inércia efetivo da seção resistente do tabuleiro (ex.: m^4).
-#     a_r : float
-#         Parâmetro do modelo (ex.: m).
-#     S : float
-#         Vão do tabuleiro (ex.: m).
+    :param p_rodak: Carga por roda [kN]
+    :param e_modflex: Módulo de elasticidade da madeira [kN/m²]
+    :param i_x: Momento de inércia da seção transversal do tabuleiro [m⁴]
+    :param esp: Vão do tabuleiro (distância entre longarinas) [m]
+    :param a_r: Comprimento efetivo associado à roda/classe [m]
 
-#     Retorna
-#     -------
-#     float
-#         Flecha máxima (ex.: m).
-#     """
-#     if S <= 0:
-#         raise ValueError("S deve ser positivo.")
-#     if a_r <= 0:
-#         raise ValueError("a_r deve ser positivo.")
-#     if a_r >= S:
-#         raise ValueError("Condição inválida: a_r deve ser menor que S.")
-#     if E_mef <= 0:
-#         raise ValueError("E_mef deve ser positivo.")
-#     if I_r <= 0:
-#         raise ValueError("I_r deve ser positivo.")
+    :return: Flecha máxima devido à carga variável [m]
+    """
 
-#     termo = 0.5 * a_r * (S ** 3) - (a_r ** 2) * (S ** 2) + (a_r ** 4) / 24.0
-#     return (P / (16.0 * E_mef * I_r * a_r)) * termo
+    termo = 0.5 * a_r * (esp ** 3) - (a_r ** 2) * (esp ** 2) + (a_r ** 4) / 24.0
+    return (p_rodak / (16.0 * e_modflex * i_x * a_r)) * termo
 
 
 
@@ -857,33 +860,33 @@ def textos_pre_sizing():
 #     return beta, pf
 
 
-if __name__ == "__main__":
-    # Teste das funções
-    geo = {'d': 0.49}
-    p_gk = 1.7177
-    p_rodak = 40.0
-    p_qk = 4.0
-    a = 1.5
-    l = 13.4
-    classe_carregamento = 'permanente'
-    classe_madeira = 'madeira natural'
-    classe_umidade = 1
-    gamma_g = 1.3
-    gamma_q = 1.5
-    gamma_w = 1.4
-    f_c0k = 40E3
-    f_t0k = 40E3
-    e_modflex = 14.5E6
+# if __name__ == "__main__":
+#     # Teste das funções
+#     geo = {'d': 0.49}
+#     p_gk = 1.7177
+#     p_rodak = 40.0
+#     p_qk = 4.0
+#     a = 1.5
+#     l = 13.4
+#     classe_carregamento = 'permanente'
+#     classe_madeira = 'madeira natural'
+#     classe_umidade = 1
+#     gamma_g = 1.3
+#     gamma_q = 1.5
+#     gamma_w = 1.4
+#     f_c0k = 40E3
+#     f_t0k = 40E3
+#     e_modflex = 14.5E6
 
-    # samples = np.array([[10.0, 40.0, 4.0, 20E3, 15E3, 12E6]])
-    # params = [geo, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w]
-    # g = obj_confia(samples, params)
-    # res_flex, res_flecha, res_cis = checagem_longarina_madeira_flexao(geo, p_gk, p_qk, p_rodak, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_c0k, f_t0k, e_modflex)
-    # print("g: ", g)
-    # print("Flexão: ", res_flex)
-    # print("Flecha: ", res_flecha)
-    # print("Cisalhamento: ", res_cis)
+#     # samples = np.array([[10.0, 40.0, 4.0, 20E3, 15E3, 12E6]])
+#     # params = [geo, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w]
+#     # g = obj_confia(samples, params)
+#     # res_flex, res_flecha, res_cis = checagem_longarina_madeira_flexao(geo, p_gk, p_qk, p_rodak, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_c0k, f_t0k, e_modflex)
+#     # print("g: ", g)
+#     # print("Flexão: ", res_flex)
+#     # print("Flecha: ", res_flecha)
+#     # print("Cisalhamento: ", res_cis)
 
-    beta, pf = confia_flexao_pura(geo, p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_c0k, f_t0k, e_modflex)
-    print("Beta: ", beta)
-    print("Pf: ", pf)
+#     beta, pf = confia_flexao_pura(geo, p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_c0k, f_t0k, e_modflex)
+#     print("Beta: ", beta)
+#     print("Pf: ", pf)
