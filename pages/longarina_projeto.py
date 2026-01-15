@@ -67,22 +67,33 @@ t = textos[lang]
 # Calculadora da página
 st.header(t["titulo"])
 tipo_secao = st.selectbox(t["entrada_tipo_secao"], t["tipo_secao"])
+
+def num_input_vazio(label, placeholder="–"):
+    valor_str = st.text_input(label, placeholder=placeholder)
+    if valor_str.strip() == "":
+        return None
+    try:
+        return float(valor_str.replace(",", "."))
+    except:
+        st.error(f"Valor inválido em '{label}'. Digite um número.")
+        return None
+
 if tipo_secao in ["Retangular", "Rectangular"]:
-    b_cm = st.number_input(t["base"], placeholder="–", format="%.2f")
-    h_cm = st.number_input(t["altura"], min_value=0.05, value=50.)
+    b_cm = num_input_vazio(t["base"])
+    h_cm = num_input_vazio(t["altura"])
     b = b_cm / 100
     h = h_cm / 100
     geo = {"b_w": b, "h": h}
 else:
-    d_cm = st.number_input(t["diametro"], min_value=0.05, value=30.)
+    d_cm = num_input_vazio(t["diametro"])
     d = d_cm / 100
     geo = {"d": d}
 carga_pp = 8.0
-l = st.number_input(t["entrada_comprimento"], min_value=3.0, value=6.0)
-p_gk = st.number_input(t["carga_permanente"], value=carga_pp)    
-p_rodak = st.number_input(t["carga_roda"], value=40.0)
-p_qk = st.number_input(t["carga_multidao"], value=4.0)
-a = st.number_input(t["distancia_eixos"], value=1.5)
+l = num_input_vazio(t["entrada_comprimento"])
+p_gk = num_input_vazio(t["carga_permanente"])
+p_rodak = num_input_vazio(t["carga_roda"])
+p_qk = num_input_vazio(t["carga_multidao"])
+a = num_input_vazio(t["distancia_eixos"])
 classe_carregamento = st.selectbox(t["classe_carregamento"], t["classe_carregamento_opcoes"]).lower()
 if classe_carregamento == "permanent":
     classe_carregamento = "Permanente"
@@ -100,12 +111,12 @@ if classe_madeira == "natural wood":
 else: 
     classe_madeira = "madeira recomposta"
 classe_umidade = st.selectbox(t["classe_umidade"], [1, 2, 3, 4])
-gamma_g = st.number_input(t["gamma_g"], value=1.40, step=0.1)
-gamma_q = st.number_input(t["gamma_q"], value=1.40, step=0.1)
-gamma_w = st.number_input(t["gamma_w"], value=1.40, step=0.1)
-f_ck = st.number_input(t["f_ck"], value=20.0)
-f_tk = st.number_input(t["f_tk"], value=15.0)
-e_modflex = st.number_input(t["e_modflex"], value=12.0)
+gamma_g = num_input_vazio(t["gamma_g"])
+gamma_q = num_input_vazio(t["gamma_q"])
+gamma_w = num_input_vazio(t["gamma_w"])
+f_ck = num_input_vazio(t["f_ck"])
+f_tk = num_input_vazio(t["f_tk"])
+e_modflex = num_input_vazio(t["e_modflex"])
 f_ck *=  1E3  # Converte MPa para kN/m²
 f_tk *= 1E3  # Converte MPa para kN/m²
 e_modflex *= 1E6  # Converte GPa para kN/m²
