@@ -68,7 +68,7 @@ t = textos[lang]
 st.header(t["titulo"])
 tipo_secao = st.selectbox(t["entrada_tipo_secao"], t["tipo_secao"])
 if tipo_secao in ["Retangular", "Rectangular"]:
-    b_cm = st.number_input(t["base"], format="%.2f")
+    b_cm = st.number_input(t["base"], placeholder="–", format="%.2f")
     h_cm = st.number_input(t["altura"], min_value=0.05, value=50.)
     b = b_cm / 100
     h = h_cm / 100
