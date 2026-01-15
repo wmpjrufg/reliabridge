@@ -69,7 +69,6 @@ st.header(t["titulo"])
 opcoes_secao = ["–", "Retangular", "Circular"]
 tipo_secao = st.selectbox("Tipo da seção", opcoes_secao)
 
-# Função auxiliar para criar inputs vazios
 def num_input_vazio(label, placeholder="–"):
     valor_str = st.text_input(label, placeholder=placeholder)
     if valor_str.strip() == "":
