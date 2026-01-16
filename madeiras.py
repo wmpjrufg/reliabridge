@@ -37,6 +37,18 @@ def prop_madeiras(geo: dict) -> tuple[float, float, float, float, float, float, 
 
     return area, w_x, w_y, i_x, i_y, r_x, r_y, k_m
 
+def peso_proprio_longarina(densidade: float, area_secao: float, g: float = 9.81) -> float:
+    """
+    Calcula o peso próprio (PP) da longarina.
+
+    :param densidade: densidade da madeira a 12% de umidade [kg/m³]
+    :param area_secao: área da seção transversal da longarina [m²]
+    :param g: aceleração da gravidade [m/s²] (padrão = 9.81)
+
+    :return: peso próprio por metro linear [kN/m]
+    """
+    pp_longarina = densidade * area_secao * g / 1000
+    return pp_longarina
 
 def momento_max_carga_permanente(p_gk: float, l: float) -> float:
     """Calcula o momento fletor máximo devido à carga permanente.

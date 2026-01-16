@@ -32,6 +32,7 @@ textos = {
                     "f_ck": "Resistência característica à compressão paralela às fibras (MPa)",
                     "f_tk": "Resistência característica à tração paralela às fibras (MPa)",
                     "e_modflex": "Módulo de elasticidade à flexão (GPa)",
+                    "densidade": "Densidade a 12% (kg/m³)",
                     "botao": "Verificar viga",
                     "resultado": "A resistência calculada é: "
                   },
@@ -58,6 +59,7 @@ textos = {
                     "f_ck": "Characteristic compressive strength parallel to grain (MPa)",
                     "f_tk": "Characteristic tensile strength parallel to grain (MPa)",
                     "e_modflex": "Modulus of elasticity in bending (GPa)",
+                    "densidade": "Density at 12% (kg/m³)",
                     "botao": "Check beam",
                     "resultado": "The calculated resistance is: "
                   }
@@ -124,6 +126,7 @@ gamma_w = num_input_vazio(t["gamma_w"])
 f_ck = num_input_vazio(t["f_ck"])
 f_tk = num_input_vazio(t["f_tk"])
 e_modflex = num_input_vazio(t["e_modflex"])
+densidade = st.number_input("Densidade (kg/m³)", min_value=None, value=None, format="%s")
 if f_ck: f_ck *= 1E3
 if f_tk: f_tk *= 1E3
 if e_modflex: e_modflex *= 1E6
