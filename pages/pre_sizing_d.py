@@ -17,10 +17,6 @@ st.subheader(t["pre"])
 with st.form("form_geometria", clear_on_submit=False):
     l = st.number_input(t["entrada_comprimento"], min_value=3.0, value=6.0)
 
-    tipo_secao = st.selectbox(t["entrada_tipo_secao"], t["tipo_secao"])
-    d_cm_min = st.number_input(t["diametro_minimo"], value=30.0)
-    d_cm_max = st.number_input(t["diametro_maximo"], value=100.0)
-
     espaco_min = st.number_input(t["espaçamento_entre_longarinas_min"], value=0.50)
     espaco_max = st.number_input(t["espaçamento_entre_longarinas_max"], value=2.50)
     bw_min_tab = st.number_input(t["largura_minima_tab"], value=3.0)

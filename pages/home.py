@@ -1,6 +1,5 @@
 import streamlit as st
-
-# Garante default
+    
 if "lang" not in st.session_state:
     st.session_state["lang"] = "pt"
 

@@ -18,8 +18,12 @@ with st.form("form_geometria", clear_on_submit=False):
     l = st.number_input(t["entrada_comprimento"], min_value=3.0, value=6.0)
 
     tipo_secao = st.selectbox(t["entrada_tipo_secao"], t["tipo_secao"])
-    d_cm_min = st.number_input(t["diametro_minimo"], value=30.0)
-    d_cm_max = st.number_input(t["diametro_maximo"], value=100.0)
+    if tipo_secao.lower() == "circular":
+        d_cm_min = st.number_input(t["diametro_minimo"], value=30.0)
+        d_cm_max = st.number_input(t["diametro_maximo"], value=100.0)
+    else:
+        d_cm_min = None
+        d_cm_max = None
 
     p_gk = st.number_input(t["carga_permanente"], value=10.0)
     p_rodak = st.number_input(t["carga_roda"], value=40.0)
