@@ -2,13 +2,18 @@
 import numpy as np
 import pandas as pd
 import io
-import hashlib
-import json
+
 from UQpy.distributions import Normal, Gamma, GeneralizedExtreme, JointIndependent
 from UQpy.run_model.model_execution.PythonModel import PythonModel
 from UQpy.run_model import RunModel
 from UQpy.reliability import FORM
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+mpl.rcParams.update({
+                        'font.family': 'serif',
+                        'mathtext.fontset': 'cm',
+                        'axes.unicode_minus': False
+                    })
 from matplotlib.figure import Figure
 from matplotlib.patches import Circle
 from pymoo.core.problem import ElementwiseProblem
@@ -45,14 +50,52 @@ def plot_longarinas_circulares(n_longarinas: int, diametro_cm: float, espacament
     return fig
 
 
-def make_signature(dados: dict) -> str:
-    """
-    Gera uma assinatura estável (hash) do dicionário de inputs.
-    Isso permite invalidar resultados se QUALQUER input mudar,
-    sem usar callbacks dentro do form.
-    """
-    payload = json.dumps(dados, sort_keys=True, ensure_ascii=False, default=str).encode("utf-8")
-    return hashlib.sha256(payload).hexdigest()
+def fronteira_pareto(x: list, y: list, label_x: str, label_y: str) -> Figure:
+    ### Figure name and DPI
+    dpi = 600                                                   # Change as you wish
+    name = 'scatter'           # Change as you wish
+
+    ### Chart dimensions (in centimeters)
+    b_cm = 10                                                   # Change as you wish
+    h_cm = 10                                                    # Change as you wish
+    inches_to_cm = 1 / 2.54
+    b_input = b_cm * inches_to_cm
+    h_input = h_cm * inches_to_cm
+
+    ### Axis and labels (For LateX font format use the dollar sign $)
+    size_label = 10                                             # Change as you wish
+    color_label = 'black'                                        # or hexadecimal. Change as you wish
+    size_axis = 10                                              # Change as you wish
+    color_axis = 'black'                                          # or hexadecimal. Change as you wish
+
+    ### Scatter
+    alpha_scatter = 1.0                                             # Change as you wish
+    color_scatter = 'blue'                                          # Change as you wish
+    size_scatter = 10                                               # Change as you wish
+
+    ### Grid
+    on_or_off = True
+    line_width_grid = 0.5                                       # Change as you wish
+    alpha_grid = 0.3                                            # Change as you wish
+    style_grid = '-'                                            # Change as you wish
+    color_grid = 'gray'                                         # or hexadecimal. Change as you wish
+
+    ### Figure
+    fig, ax = plt.subplots(figsize=(b_input, h_input))
+    ax.tick_params(axis='both', which='major', labelsize=size_axis, colors=color_axis)
+    ax.set_xlabel(label_x, fontsize=size_label, color=color_label)
+    ax.set_ylabel(label_y, fontsize=size_label, color=color_label)
+
+    ### Title. Do you need a title? Use the cell bellow:
+    # ax.set_title('Sine Wave Plot', fontsize=16)
+
+    ### Config grid
+    plt.grid(on_or_off, which='both', linestyle=style_grid, linewidth=line_width_grid, color=color_grid, alpha=alpha_grid)
+
+    ### Plot data
+    ax.scatter(x, y, alpha=alpha_scatter, color=color_scatter, s=size_scatter)
+
+    return fig
 
 
 def montar_excel(dados: dict) -> bytes:
@@ -65,6 +108,14 @@ def montar_excel(dados: dict) -> bytes:
         df.to_excel(writer, index=False, sheet_name="Dados")
     buffer.seek(0)
     
+    return buffer.getvalue()
+
+
+def montar_excel_df(df: pd.DataFrame) -> bytes:
+    buffer = io.BytesIO()
+    with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False, sheet_name="Resultados")
+    buffer.seek(0)
     return buffer.getvalue()
 
 
@@ -712,39 +763,25 @@ def checagem_completa_tabuleiro_madeira_flexao(
     return res_flex, "relat"
 
 
-def textos_design():
+def textos_design() -> dict:
     textos = {
                 "pt": {
-                        "titulo": "Projeto paramétrico de uma ponte de madeira",
-                        "projeto": "Projeto ótimo do conjunto Tabuleiro / Longarina de madeira",
-                        "upload_label": "Selecione o arquivo Excel",
-                    },
-                "en": {
-
-                    },
-            }
-    return textos
-
-
-def textos_pre_sizing_d() -> dict:
-    textos = {
-                "pt": {
-                        "titulo": "Projeto paramétrico de uma ponte de madeira",
-                        "pre": "Pré-dimensionamento da longarina",
-                        "entrada_comprimento": "Comprimento da viga (m)",
-                        "entrada_tipo_secao": "Tipo de seção",
-                        "tipo_secao": ["Circular"],
-                        "espaçamento_entre_longarinas_min": "Espaçamento mínimo entre longarinas (m)",
-                        "espaçamento_entre_longarinas_max": "Espaçamento máximo entre longarinas (m)",
-                        "largura_minima_tab": "Largura mínima (m) seção do tabuleiro",
-                        "largura_maxima_tab": "Largura máxima (m) seção do tabuleiro",
-                        "altura_minima_tab": "Altura mínima (m) seção do tabuleiro",
-                        "altura_maxima_tab": "Altura máxima (m) seção do tabuleiro",
-                        "carga_permanente": "Carga permanente (kN/m)",
-                        "carga_roda": "Carga por roda (kN)",
-                        "carga_multidao": "Carga de multidão (kN/m²)",
-                        "distancia_eixos": "Distância entre eixos (m)",
-                        "classe_carregamento": "Classe de carregamento",
+                        "titulo": "Projeto estrutural de uma ponte de madeira",
+                        "pre": "Verificação dos elementos estruturais",
+                        "entrada_tipo_secao_longarina": "Tipo de seção",
+                        "tipo_secao_longarina": ["Circular"],
+                        "diametro_longarina": "Diâmetro da longarina (cm)",
+                        "espaçamento_entre_longarinas": "Espaçamento entre longarinas (cm)",
+                        "tipo_secao_tabuleiro": "Tipo de seção do tabuleiro",
+                        "tipo_secao_tabuleiro_opcoes": ["Retangular"],
+                        "largura_viga_tabuleiro": "Largura (m) seção do tabuleiro",
+                        "altura_viga_tabuleiro": "Altura (m) seção do tabuleiro",
+                        "planilha_head": "Upload da planilha de dados",
+                        "texto_up": "Faça upload do arquivo gerado no pré-dimensionamento (.xlsx)",
+                        "aguardando_upload": "Aguardando upload da planilha de pré-dimensionamento.",
+                        "planilha_sucesso": "Planilha carregada com sucesso.",
+                        "planilha_preview": "**Pré-visualização dos dados:**",
+                        "gerador_projeto": "Gerar verificação estrutural do projeto",
                         "classe_carregamento_opcoes": ["Permanente", "Longa duração", "Média duração", "Curta duração", "Instantânea"],
                         "classe_madeira": "Classe de madeira",
                         "classe_madeira_opcoes": ["Madeira natural", "Madeira recomposta"],
@@ -758,34 +795,7 @@ def textos_pre_sizing_d() -> dict:
                         "gerador_desempenho": "Gerar desempenho estrutural para pré-dimensionamento",
                     },
                 "en": {
-                        "titulo": "Parametric design of a wooden bridge",
-                        "pre": "Pre-sizing of the stringer",
-                        "entrada_comprimento": "Beam length (m)",
-                        "entrada_largura_pista": "Track width (m)",
-                        "entrada_tipo_secao": "Section type",
-                        "tipo_secao": ["Circular"],
-                        "espaçamento_entre_longarinas_min": "Minimum spacing between stringers (m)",
-                        "espaçamento_entre_longarinas_max": "Maximum spacing between stringers (m)",
-                        "largura_minima_tab": "Minimum width (m) of the deck section",
-                        "largura_maxima_tab": "Maximum width (m) of the deck section",
-                        "altura_minima_tab": "Minimum height (m) of the deck section",
-                        "altura_maxima_tab": "Maximum height (m) of the deck section",
-                        "carga_permanente": "Dead load (kN/m)",
-                        "carga_roda": "Load per wheel (kN)",
-                        "carga_multidao": "Crowd load (kN/m²)",
-                        "distancia_eixos": "Distance between axles (m)",
-                        "classe_carregamento": "Load duration class",
-                        "classe_carregamento_opcoes": ["Dead", "Long-term", "Medium-term", "Short-term", "Instantaneous"],
-                        "classe_madeira": "Wood class",
-                        "classe_madeira_opcoes": ["Natural wood", "Engineered wood"],
-                        "classe_umidade": "Moisture class",
-                        "gamma_g": "γg",
-                        "gamma_q": "γq",
-                        "gamma_w": "γw",
-                        "f_mk": "Characteristic bending strength (MPa)",
-                        "f_vk": "Characteristic shear strength (MPa)",
-                        "e_modflex": "Modulus of elasticity in bending (GPa)",
-                        "gerador_desempenho": "Generate structural performance for pre-sizing",
+
                     },
             }
     return textos
@@ -830,8 +840,10 @@ def textos_pre_sizing_l() -> dict:
                         "e_modflex": "Módulo de elasticidade à flexão (GPa) da longarina",
                         "densidade_tab": "Densidade da madeira (kg/m³) do tabuleiro",
                         "f_mk_tab": "Resistência característica à flexão (MPa) do tabuleiro",
-
-                        "gerador_desempenho": "Tabela de desempenho estrutural via NSGA-II para pré-dimensionamento",
+                        "gerador_desempenho": "Gerar desempenho estrutural via NSGA-II para pré-dimensionamento",
+                        "botao_dados_down": "Baixar dados do pré-dimensionamento",
+                        "tag_y_fig": "Flecha total ($m$)",
+                        "tag_x_fig": "Área de madeira ($m^2$)",
                     },
                 "en": {
                         "titulo": "Parametric design of a wooden bridge",
@@ -856,11 +868,14 @@ def textos_pre_sizing_l() -> dict:
                         "gamma_w": "γw",
                         "psi2": "ψ2",
                         "considerar_fluencia": "Coefficient for creep Table 20 NBR 7190",
-                        "densidade": "Wood density (kg/m³)",
+                        "densidade_long": "Wood density (kg/m³) of the beam",
                         "f_mk": "Characteristic bending strength (MPa)",
                         "f_vk": "Characteristic shear strength (MPa)",
                         "e_modflex": "Modulus of elasticity in bending (GPa)",
-                        "gerador_desempenho": "Generate table of structural performance via NSGA-II for pre-sizing",
+                        "gerador_desempenho": "Generate structural performance via NSGA-II for pre-sizing",
+                        "botao_dados_down": "Download data from pre-sizing",
+                        "tag_y_fig": "Total deflection ($m$)",
+                        "tag_x_fig": "Wood area ($m^2$)",
                     },
             }
     return textos
@@ -950,7 +965,7 @@ class ProjetoOtimo(ElementwiseProblem):
         e_modflex_long = self.e_modflex_long * 1E6  # [kN/m²]
         f_mk_tab = self.f_mk_tab * 1E3              # [kN/m²]
 
-        # Armazena o geo
+        # Armazena o geometria
         geo_tab = {"b_w": bw, "h": h}
         geo_long = {"d": d}
 
@@ -963,25 +978,25 @@ class ProjetoOtimo(ElementwiseProblem):
 
         # Avaliação da longarina
         res_m, res_v, res_f_total, relat = checagem_completa_longarina_madeira_flexao(
-                                                                                                    geo_long,
-                                                                                                    p_gk_long,
-                                                                                                    self.p_rodak,
-                                                                                                    self.p_qk,
-                                                                                                    self.a,
-                                                                                                    l,
-                                                                                                    self.classe_carregamento.lower(),
-                                                                                                    self.classe_madeira.lower(),
-                                                                                                    self.classe_umidade,
-                                                                                                    self.gamma_g,
-                                                                                                    self.gamma_q,
-                                                                                                    self.gamma_w,
-                                                                                                    self.psi2,
-                                                                                                    self.phi,
-                                                                                                    self.densidade_long,
-                                                                                                    f_mk_long,
-                                                                                                    f_vk_long,
-                                                                                                    e_modflex_long,
-                                                                                                )
+                                                                                        geo_long,
+                                                                                        p_gk_long,
+                                                                                        self.p_rodak,
+                                                                                        self.p_qk,
+                                                                                        self.a,
+                                                                                        l,
+                                                                                        self.classe_carregamento.lower(),
+                                                                                        self.classe_madeira.lower(),
+                                                                                        self.classe_umidade,
+                                                                                        self.gamma_g,
+                                                                                        self.gamma_q,
+                                                                                        self.gamma_w,
+                                                                                        self.psi2,
+                                                                                        self.phi,
+                                                                                        self.densidade_long,
+                                                                                        f_mk_long,
+                                                                                        f_vk_long,
+                                                                                        e_modflex_long,
+                                                                                    )
         # Avaliação do tabuleiro
         res_m_tab, relat = checagem_completa_tabuleiro_madeira_flexao(
                                                                         geo_tab,
@@ -1075,6 +1090,126 @@ def chamando_nsga2(dados: dict, ds: list, esps: list, bws: list, hs: list): # ->
                             }
                         )
 
+
+class ProjetoEstrutural:
+    def __init__(
+                    self,
+                    l,
+                    p_gk, p_rodak, p_qk, a,
+                    classe_carregamento, classe_madeira, classe_umidade,
+                    gamma_g, gamma_q, gamma_w, psi2, phi,
+                    densidade_long, densidade_tab,
+                    f_mk_long, f_vk_long, e_modflex_long,
+                    f_mk_tab,
+                ):
+        self.l = float(l)
+        self.p_gk = float(p_gk)
+        self.p_rodak = float(p_rodak)
+        self.p_qk = float(p_qk)
+        self.a = float(a)
+        self.classe_carregamento = classe_carregamento
+        self.classe_madeira = classe_madeira
+        self.classe_umidade = classe_umidade
+        self.gamma_g = float(gamma_g)
+        self.gamma_q = float(gamma_q)
+        self.gamma_w = float(gamma_w)
+        self.psi2 = float(psi2)
+        self.phi = float(phi)
+        self.densidade_long = float(densidade_long)
+        self.densidade_tab = float(densidade_tab)
+        self.f_mk_long = float(f_mk_long)
+        self.f_vk_long = float(f_vk_long)
+        self.e_modflex_long = float(e_modflex_long)
+        self.f_mk_tab = float(f_mk_tab)
+
+    def calcular(self, d_cm, esp_cm, bw_cm, h_cm):
+        """Executa o dimensionamento completo para uma solução definida.
+        """
+
+        # Conversões
+        l = self.l / 100.0
+        d = d_cm / 100.0
+        esp = esp_cm / 100.0
+        bw = bw_cm / 100.0
+        h = h_cm / 100.0
+        f_mk_long = self.f_mk_long * 1E3
+        f_vk_long = self.f_vk_long * 1E3
+        e_modflex_long = self.e_modflex_long * 1E6
+        f_mk_tab = self.f_mk_tab * 1E3
+
+        # Armazena geometria
+        geo_long = {"d": d}
+        geo_tab = {"b_w": bw, "h": h}
+
+        # Correção da carga permanente do tabuleiro
+        carga_area_tab = self.densidade_tab * h * 9.81 / 1E3                        # [kN/m²]
+        p_gk_long = (self.p_gk + carga_area_tab) * esp                              # [kN/m]
+        props_long = prop_madeiras(geo_long)
+        area_long = props_long[0]
+        p_gk_long += peso_proprio_longarina(self.densidade_long, area_long) * esp   # [kN/m]
+
+        # Avaliação da longarina
+        res_m, res_v, res_f_total, relat_long = checagem_completa_longarina_madeira_flexao(
+                                                                                                geo_long,
+                                                                                                p_gk_long,
+                                                                                                self.p_rodak,
+                                                                                                self.p_qk,
+                                                                                                self.a,
+                                                                                                l,
+                                                                                                self.classe_carregamento.lower(),
+                                                                                                self.classe_madeira.lower(),
+                                                                                                self.classe_umidade,
+                                                                                                self.gamma_g,
+                                                                                                self.gamma_q,
+                                                                                                self.gamma_w,
+                                                                                                self.psi2,
+                                                                                                self.phi,
+                                                                                                self.densidade_long,
+                                                                                                f_mk_long,
+                                                                                                f_vk_long,
+                                                                                                e_modflex_long,
+                                                                                            )
+        # Avaliação do tabuleiro
+        res_m_tab, relat_tab = checagem_completa_tabuleiro_madeira_flexao(
+                                                                            geo_tab,
+                                                                            self.p_gk + carga_area_tab,
+                                                                            self.p_rodak,
+                                                                            esp,
+                                                                            self.classe_carregamento.lower(),
+                                                                            self.classe_madeira.lower(),
+                                                                            self.classe_umidade,
+                                                                            self.gamma_g,
+                                                                            self.gamma_q,
+                                                                            self.gamma_w,
+                                                                            self.densidade_tab,
+                                                                            f_mk_tab,
+                                                                        )
+
+        # Área de materiais eempregados
+        props_tab = prop_madeiras(geo_tab)
+        area_tab = props_tab[0]
+
+        return {
+                    "geometria": {
+                                    "d_cm": d_cm,
+                                    "esp_cm": esp_cm,
+                                    "bw_cm": bw_cm,
+                                    "h_cm": h_cm,
+                                },
+                    "areas": {
+                                "longarina_m2": area_long,
+                                "tabuleiro_m2": area_tab,
+                                "total_m2": area_long + area_tab,
+                            },
+                    "flexao_longarina": res_m,
+                    "cisalhamento_longarina": res_v,
+                    "flecha_total_longarina": res_f_total,
+                    "flexao_tabuleiro": res_m_tab,
+                    "relatorios": {
+                                        "longarina": relat_long,
+                                        "tabuleiro": relat_tab,
+                                    },
+                }
 
 # if __name__ == "__main__":
 #     problem = ProjetoOtimo(

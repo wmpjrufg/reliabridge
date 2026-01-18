@@ -1,81 +1,249 @@
+# Tela de dimensionamento
+import io
+import json
+import hashlib
+
 import streamlit as st
 import pandas as pd
-from madeiras import textos_design
+
+from madeiras import textos_design, ProjetoEstrutural
 
 
-# Idioma: vem da HOME
+# -----------------------------
+# Helpers: assinatura + invalidação (pronto p/ evoluir depois)
+# -----------------------------
+def make_signature(d: dict) -> str:
+    payload = json.dumps(d, sort_keys=True, default=str).encode("utf-8")
+    return hashlib.md5(payload).hexdigest()
+
+
+def invalidate_results():
+    st.session_state["has_results"] = False
+    for k in ["res_design", "sig_last"]:
+        st.session_state.pop(k, None)
+
+
+def status_global(prefixo: str, *blocos: dict) -> tuple[str, bool]:
+    passou = all(
+        isinstance(b, dict) and str(b.get("analise", "")).upper() == "OK"
+        for b in blocos
+        if b is not None
+    )
+
+    if passou:
+        return f"✅ {prefixo} — OK", True
+    return f"❌ {prefixo} — NÃO ATENDE", False
+
+
+if "has_results" not in st.session_state:
+    st.session_state["has_results"] = False
+
+
+# -----------------------------
+# UI text
+# -----------------------------
 lang = st.session_state.get("lang", "pt")
 textos = textos_design()
 t = textos.get(lang, textos["pt"])
 
-# UI
-st.header(t["titulo"])
-st.subheader(t["projeto"])
-
-# Seleção dos dados iniciais
-uploaded_file = st.file_uploader(t["upload_label"], type=["xlsx"])
-if uploaded_file is None:
-    st.info("Faça o upload de um arquivo .xlsx para continuar.")
-    st.stop()
-df_input = pd.read_excel(uploaded_file)
-st.write(df_input.T)
-
-# 
+st.header(t.get("titulo", "Design"))
+st.subheader(t.get("pre", "Dimensionamento determinístico a partir do pré-dimensionamento"))
 
 
-# # 2) Informando as seções comerciais desejadas para dimensionamento
-# with st.form("form_dados_design", clear_on_submit=False):
-#     tipo_secao = dados.loc["tipo_secao"].values[0]
-#     if tipo_secao.lower() == "circular":
-#         diametro_desejado = st.number_input(t["diametro_desejado"], step=0.5, key="diametro_desejado")
-#         geo = {"d": diametro_desejado / 100} 
-#     else:
-#         pass
-#     submitted = st.form_submit_button(t["gerador_projeto"])
-#     if submitted:
-#         l = dados.loc["l (m)"].values[0]
-#         b_wpista_m = dados.loc["b_wpista (m)"].values[0]
-#         p_gk = dados.loc["p_gk (kN/m)"].values[0]
-#         p_rodak = dados.loc["p_rodak (kN)"].values[0]
-#         p_qk = dados.loc["p_qk (kN/m²)"].values
-#         a = dados.loc["a (m)"].values[0]
-#         classe_carregamento = dados.loc["classe_carregamento"].values[0]
-#         classe_madeira = dados.loc["classe_madeira"].values[0]
-#         classe_umidade = dados.loc["classe_umidade"].values[0]
-#         gamma_g = dados.loc["gamma_g"].values[0]
-#         gamma_q = dados.loc["gamma_q"].values[0]
-#         gamma_w = dados.loc["gamma_w"].values[0]
-#         f_ck = dados.loc["f_ck (MPa)"].values[0]
-#         f_tk = dados.loc["f_tk (MPa)"].values[0]
-#         f_mk = dados.loc["f_mk (MPa)"].values[0]
-#         f_vk = dados.loc["f_vk (MPa)"].values[0]
-#         e_cm = dados.loc["e_modflex (GPa)"].values[0]
-#         # MPa -> kPa (1e3); GPa -> kPa (1e6)
-#         f_ck = f_ck * 1e3
-#         f_tk = f_tk * 1e3
-#         f_mk = f_mk * 1e3
-#         f_vk = f_vk * 1e3
-#         e_cm = e_cm * 1e6
-#         res_m, res_v, res_f_var, res_f_total, relat = checagem_completa_longarina_madeira_flexao(
-#                                                                                                     geo,
-#                                                                                                     p_gk,
-#                                                                                                     p_qk,
-#                                                                                                     p_rodak,
-#                                                                                                     a,
-#                                                                                                     l,
-#                                                                                                     classe_carregamento,
-#                                                                                                     classe_madeira,
-#                                                                                                     classe_umidade,
-#                                                                                                     gamma_g,
-#                                                                                                     gamma_q,
-#                                                                                                     gamma_w,
-#                                                                                                     f_ck,
-#                                                                                                     f_tk,
-#                                                                                                     f_mk,
-#                                                                                                     f_vk,
-#                                                                                                     e_cm,
-#                                                                                                 )
-#         eff = {"sigma_sd/f_md": res_m["sigma_sd/f_md"], "tau_sd/f_vd": res_v["tau_sd/f_vd"]}
-#         df_resultado = pd.DataFrame(eff, index=[f"{diametro_desejado} cm"])
-#         st.write(t["res"])
-#         st.dataframe(df_resultado.T)
+# ============================================================
+# 1) FORM
+# ============================================================
+with st.form("form_design", clear_on_submit=False):
+
+    # -------------------------
+    # Inputs de geometria escolhida (projeto final)
+    # -------------------------
+    st.subheader(t.get("geo_head", "Geometria do projeto"))
+
+    colA, colB = st.columns(2)
+
+    with colA:
+        tipo_secao_longarina = st.selectbox(
+            t.get("entrada_tipo_secao_longarina", "Tipo de seção (longarina)"),
+            t.get("tipo_secao_longarina", ["Circular"]),
+            key="tipo_secao_longarina",
+        )
+
+        d_cm = None
+        if str(tipo_secao_longarina).lower() == "circular":
+            d_cm = st.number_input(
+                t.get("diametro_longarina", "Diâmetro da longarina (cm)"),
+                step=1.0,
+                key="d_cm",
+            )
+
+        esp_cm = st.number_input(
+            t.get("espaçamento_entre_longarinas", "Espaçamento entre longarinas (cm)"),
+            step=1.0,
+            key="esp_cm",
+        )
+
+    with colB:
+        tipo_secao_tabuleiro = st.selectbox(
+            t.get("tipo_secao_tabuleiro", "Tipo de seção (tabuleiro)"),
+            t.get("tipo_secao_tabuleiro_opcoes", ["Retangular"]),
+            key="tipo_secao_tabuleiro",
+        )
+
+        bw_cm = h_cm = None
+        if str(tipo_secao_tabuleiro).lower() == "retangular":
+            bw_cm = st.number_input(
+                t.get("largura_viga_tabuleiro", "Largura do tabuleiro (cm)"),
+                step=1.0,
+                key="bw_cm",
+            )
+            h_cm = st.number_input(
+                t.get("altura_viga_tabuleiro", "Altura do tabuleiro (cm)"),
+                step=1.0,
+                key="h_cm",
+            )
+
+    # -------------------------
+    # Upload da planilha do pré-dimensionamento (dados-base)
+    # -------------------------
+    st.subheader(t.get("planilha_head", "Planilha de dados do projeto"))
+
+    uploaded_file = st.file_uploader(
+        t.get("texto_up", "Faça upload do arquivo .xlsx"),
+        type=["xlsx"],
+        key="uploaded_design_xlsx",
+    )
+
+    # Preview da planilha
+    df = None
+    if uploaded_file is not None:
+        df = pd.read_excel(uploaded_file)
+        st.success(t.get("planilha_sucesso", "Planilha carregada com sucesso."))
+        st.markdown(t.get("planilha_preview", "Pré-visualização dos dados:"))
+        st.dataframe(df, use_container_width=True)
+    else:
+        st.info(t.get("aguardando_upload", "Aguardando upload do arquivo .xlsx."))
+
+    # Botão de cálculo
+    submitted_design = st.form_submit_button(t.get("gerador_projeto", "Gerar dimensionamento"))
+
+
+# ============================================================
+# 2) COMPUTE (somente no submit)
+# ============================================================
+if submitted_design:
+
+    # Validações mínimas (sem travar seu fluxo)
+    if uploaded_file is None or df is None:
+        st.error(t.get("erro_sem_planilha", "Envie a planilha .xlsx para continuar."))
+        st.stop()
+
+    if d_cm is None or bw_cm is None or h_cm is None:
+        st.error(t.get("erro_geo", "Preencha a geometria (longarina e tabuleiro) para continuar."))
+        st.stop()
+
+    # Se df veio como DataFrame com 1 linha, garantimos série/escalares
+    # (muitas vezes o Excel vem com 1 linha e você quer acessar como scalar)
+    # Regra: se df tem 1 linha, usamos df.iloc[0] (Series)
+    if isinstance(df, pd.DataFrame) and len(df) == 1:
+        df0 = df.iloc[0]
+    else:
+        # Se vier mais de uma linha, você decide depois qual usar.
+        # Por ora, vamos usar a primeira para não te travar.
+        df0 = df.iloc[0]
+
+    # Instancia o dimensionamento determinístico
+    projeto = ProjetoEstrutural(
+        l=df0["l (cm)"],
+        p_gk=df0["p_gk (kN/m²)"],
+        p_rodak=df0["p_rodak (kN)"],
+        p_qk=df0["p_qk (kN/m²)"],
+        a=df0["a (m)"],
+        classe_carregamento=df0["classe_carregamento"],
+        classe_madeira=df0["classe_madeira"],
+        classe_umidade=df0["classe_umidade"],
+        gamma_g=df0["gamma_g"],
+        gamma_q=df0["gamma_q"],
+        gamma_w=df0["gamma_w"],
+        psi2=df0["psi_2"],
+        phi=df0["phi"],
+        densidade_long=df0["densidade longarina (kg/m³)"],
+        densidade_tab=df0["densidade tabuleiro (kg/m³)"],
+        f_mk_long=df0["resistência característica à flexão longarina (MPa)"],
+        f_vk_long=df0["resistência característica ao cisalhamento longarina (MPa)"],
+        e_modflex_long=df0["módulo de elasticidade à flexão longarina (GPa)"],
+        f_mk_tab=df0["resistência característica à flexão tabuleiro (MPa)"],
+    )
+
+    # Calcula (uma vez só)
+    res = projeto.calcular(d_cm=d_cm, esp_cm=esp_cm, bw_cm=bw_cm, h_cm=h_cm)
+
+    # (Opcional) guarda na sessão para você evoluir depois sem recalcular
+    st.session_state["res_design"] = res
+    st.session_state["has_results"] = True
+
+
+# ============================================================
+# 3) DISPLAY (se existir resultado em sessão)
+# ============================================================
+if st.session_state.get("has_results", False):
+
+    res = st.session_state["res_design"]
+
+    st.subheader(t.get("resultado_head", "Resultado do Dimensionamento"))
+
+    # 1) Geometria
+    with st.expander(t.get("resultado_geo", "Geometria adotada"), expanded=True):
+        st.json(res.get("geometria", {}))
+
+    # 2) Áreas
+    with st.expander(t.get("resultado_areas", "Áreas e consumo de material"), expanded=True):
+        areas = res.get("areas", {})
+        if isinstance(areas, dict) and len(areas) > 0:
+            df_areas = pd.DataFrame.from_dict(areas, orient="index", columns=[t.get("col_valor", "Valor")])
+            st.dataframe(df_areas, use_container_width=True)
+        else:
+            st.warning(t.get("sem_areas", "Sem dados de áreas no resultado."))
+
+    # 3) Verificações — Longarina
+    titulo_longarina, longarina_ok = status_global(
+                                                    t.get("resultado_longarina", "Verificações da longarina"),
+                                                    res.get("flexao_longarina", {}),
+                                                    res.get("cisalhamento_longarina", {}),
+                                                    res.get("flecha_total_longarina", {}),
+                                                )
+
+    with st.expander(titulo_longarina, expanded=not longarina_ok):
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.markdown("**Flexão**")
+            st.json(res.get("flexao_longarina", {}))
+
+        with col2:
+            st.markdown("**Cisalhamento**")
+            st.json(res.get("cisalhamento_longarina", {}))
+
+        with col3:
+            st.markdown("**Flecha**")
+            st.json(res.get("flecha_total_longarina", {}))
+
+    # 4) Verificações — Tabuleiro (status no título)
+    titulo_tabuleiro, tabuleiro_ok = status_global(
+                                                    t.get("resultado_tabuleiro", "Verificações do tabuleiro"),
+                                                    res.get("flexao_tabuleiro", {}),
+                                                )
+
+    with st.expander(titulo_tabuleiro, expanded=not tabuleiro_ok):
+        st.markdown("**Flexão**")
+        st.json(res.get("flexao_tabuleiro", {}))
+
+    # 5) Relatórios completos (auditoria)
+    with st.expander(t.get("resultado_relatorios", "Relatórios completos de cálculo"), expanded=False):
+        rel = res.get("relatorios", {})
+        st.markdown("**Longarina**")
+        st.json(rel.get("longarina", {}))
+        st.markdown("**Tabuleiro**")
+        st.json(rel.get("tabuleiro", {}))
+else:
+    st.warning(t.get("aviso_gerar_primeiro", "Sem resultados atuais. Clique em “Gerar” para processar."))
