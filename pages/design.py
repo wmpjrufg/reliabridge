@@ -64,41 +64,41 @@ with st.form("form_design", clear_on_submit=False):
 
     with colA:
         tipo_secao_longarina = st.selectbox(
-            t.get("entrada_tipo_secao_longarina", "Tipo de seção (longarina)"),
-            t.get("tipo_secao_longarina", ["Circular"]),
+            t["entrada_tipo_secao_longarina"],
+            t["tipo_secao_longarina"],
             key="tipo_secao_longarina",
         )
 
         d_cm = None
         if str(tipo_secao_longarina).lower() == "circular":
             d_cm = st.number_input(
-                t.get("diametro_longarina", "Diâmetro da longarina (cm)"),
+                t["diametro_longarina"],
                 step=1.0,
                 key="d_cm",
             )
 
         esp_cm = st.number_input(
-            t.get("espaçamento_entre_longarinas", "Espaçamento entre longarinas (cm)"),
+            t["espaçamento_entre_longarinas"],
             step=1.0,
             key="esp_cm",
         )
 
     with colB:
         tipo_secao_tabuleiro = st.selectbox(
-            t.get("tipo_secao_tabuleiro", "Tipo de seção (tabuleiro)"),
-            t.get("tipo_secao_tabuleiro_opcoes", ["Retangular"]),
+            t["tipo_secao_tabuleiro"],
+            t["tipo_secao_tabuleiro_opcoes"],
             key="tipo_secao_tabuleiro",
         )
 
         bw_cm = h_cm = None
         if str(tipo_secao_tabuleiro).lower() == "retangular":
             bw_cm = st.number_input(
-                t.get("largura_viga_tabuleiro", "Largura do tabuleiro (cm)"),
+                t["largura_viga_tabuleiro"],
                 step=1.0,
                 key="bw_cm",
             )
             h_cm = st.number_input(
-                t.get("altura_viga_tabuleiro", "Altura do tabuleiro (cm)"),
+                t["altura_viga_tabuleiro"],
                 step=1.0,
                 key="h_cm",
             )
@@ -109,7 +109,7 @@ with st.form("form_design", clear_on_submit=False):
     st.subheader(t.get("planilha_head", "Planilha de dados do projeto"))
 
     uploaded_file = st.file_uploader(
-        t.get("texto_up", "Faça upload do arquivo .xlsx"),
+        t["texto_up"],
         type=["xlsx"],
         key="uploaded_design_xlsx",
     )
@@ -118,8 +118,8 @@ with st.form("form_design", clear_on_submit=False):
     df = None
     if uploaded_file is not None:
         df = pd.read_excel(uploaded_file)
-        st.success(t.get("planilha_sucesso", "Planilha carregada com sucesso."))
-        st.markdown(t.get("planilha_preview", "Pré-visualização dos dados:"))
+        st.success(t["planilha_sucesso"])
+        st.markdown(t["planilha_preview"])
         st.dataframe(df, use_container_width=True)
     else:
         st.info(t.get("aguardando_upload", "Aguardando upload do arquivo .xlsx."))
@@ -154,26 +154,26 @@ if submitted_design:
 
     # Instancia o dimensionamento determinístico
     projeto = ProjetoEstrutural(
-        l=df0["l (cm)"],
-        p_gk=df0["p_gk (kN/m²)"],
-        p_rodak=df0["p_rodak (kN)"],
-        p_qk=df0["p_qk (kN/m²)"],
-        a=df0["a (m)"],
-        classe_carregamento=df0["classe_carregamento"],
-        classe_madeira=df0["classe_madeira"],
-        classe_umidade=df0["classe_umidade"],
-        gamma_g=df0["gamma_g"],
-        gamma_q=df0["gamma_q"],
-        gamma_w=df0["gamma_w"],
-        psi2=df0["psi_2"],
-        phi=df0["phi"],
-        densidade_long=df0["densidade longarina (kg/m³)"],
-        densidade_tab=df0["densidade tabuleiro (kg/m³)"],
-        f_mk_long=df0["resistência característica à flexão longarina (MPa)"],
-        f_vk_long=df0["resistência característica ao cisalhamento longarina (MPa)"],
-        e_modflex_long=df0["módulo de elasticidade à flexão longarina (GPa)"],
-        f_mk_tab=df0["resistência característica à flexão tabuleiro (MPa)"],
-    )
+                                l=df0["l (cm)"],
+                                p_gk=df0["p_gk (kN/m²)"],
+                                p_rodak=df0["p_rodak (kN)"],
+                                p_qk=df0["p_qk (kN/m²)"],
+                                a=df0["a (m)"],
+                                classe_carregamento=df0["classe_carregamento"],
+                                classe_madeira=df0["classe_madeira"],
+                                classe_umidade=df0["classe_umidade"],
+                                gamma_g=df0["gamma_g"],
+                                gamma_q=df0["gamma_q"],
+                                gamma_w=df0["gamma_w"],
+                                psi2=df0["psi_2"],
+                                phi=df0["phi"],
+                                densidade_long=df0["densidade longarina (kg/m³)"],
+                                densidade_tab=df0["densidade tabuleiro (kg/m³)"],
+                                f_mk_long=df0["resistência característica à flexão longarina (MPa)"],
+                                f_vk_long=df0["resistência característica ao cisalhamento longarina (MPa)"],
+                                e_modflex_long=df0["módulo de elasticidade à flexão longarina (GPa)"],
+                                f_mk_tab=df0["resistência característica à flexão tabuleiro (MPa)"],
+                            )
 
     # Calcula (uma vez só)
     res = projeto.calcular(d_cm=d_cm, esp_cm=esp_cm, bw_cm=bw_cm, h_cm=h_cm)

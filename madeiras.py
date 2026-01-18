@@ -2,11 +2,14 @@
 import numpy as np
 import pandas as pd
 import io
+from scipy import stats as st
 
-from UQpy.distributions import Normal, Gamma, GeneralizedExtreme, JointIndependent
+from UQpy.distributions import TruncatedNormal
+from UQpy.distributions.collection.GeneralizedExtreme import GeneralizedExtreme
 from UQpy.run_model.model_execution.PythonModel import PythonModel
 from UQpy.run_model import RunModel
 from UQpy.reliability import FORM
+from UQpy.sampling import MonteCarloSampling, LatinHypercubeSampling
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 mpl.rcParams.update({
@@ -23,6 +26,11 @@ from pymoo.operators.crossover.sbx import SBX
 from pymoo.operators.mutation.pm import PM
 from pymoo.termination import get_termination
 from pymoo.optimize import minimize
+
+
+def beta_from_pf(pf: float) -> float:
+    pf = float(np.clip(pf, 1e-16, 1 - 1e-16))
+    return -st.norm.ppf(pf)
 
 
 def plot_longarinas_circulares(n_longarinas: int, diametro_cm: float, espacamento_cm: float) -> Figure:
@@ -774,8 +782,8 @@ def textos_design() -> dict:
                         "espaçamento_entre_longarinas": "Espaçamento entre longarinas (cm)",
                         "tipo_secao_tabuleiro": "Tipo de seção do tabuleiro",
                         "tipo_secao_tabuleiro_opcoes": ["Retangular"],
-                        "largura_viga_tabuleiro": "Largura (m) seção do tabuleiro",
-                        "altura_viga_tabuleiro": "Altura (m) seção do tabuleiro",
+                        "largura_viga_tabuleiro": "Largura viga (cm) seção do tabuleiro",
+                        "altura_viga_tabuleiro": "Altura viga (cm) seção do tabuleiro",
                         "planilha_head": "Upload da planilha de dados",
                         "texto_up": "Faça upload do arquivo gerado no pré-dimensionamento (.xlsx)",
                         "aguardando_upload": "Aguardando upload da planilha de pré-dimensionamento.",
@@ -892,7 +900,7 @@ def momento_max_carga_variavel_tabuleiro(p_rodak: float, esp: float, a_r: float 
     return (p_rodak / 4.0) * (esp - a_r)
 
 
-# Otimização
+# Otimização estrutural
 class ProjetoOtimo(ElementwiseProblem):
     def __init__(
                     self,
@@ -1091,6 +1099,7 @@ def chamando_nsga2(dados: dict, ds: list, esps: list, bws: list, hs: list): # ->
                         )
 
 
+# Projeto estrutural
 class ProjetoEstrutural:
     def __init__(
                     self,
@@ -1211,143 +1220,197 @@ class ProjetoEstrutural:
                                     },
                 }
 
-# if __name__ == "__main__":
-#     problem = ProjetoOtimo(
-#                             l=6.0,
-#                             p_gk=10.0,
-#                             p_rodak=40.0,
-#                             p_qk=4.0,
-#                             a=1.5,
-#                             classe_carregamento="permanente",
-#                             classe_madeira="madeira recomposta",
-#                             classe_umidade=1,
-#                             gamma_g=1.35,
-#                             gamma_q=1.5,
-#                             gamma_w=1.0,
-#                             densidade=650.0,
-#                             f_mk=30.0,
-#                             f_vk=20.0,
-#                             e_modflex=12.,
-#                             d_min=30.0,
-#                             d_max=100.0,
-#                         )
 
-#     # 2) Define uma solução manual (d em cm)
-#     x_manual = np.array([[100.0]])   # shape (1, n_var) -> aqui n_var=1
-
-#     # 3) Avalia
-#     out = problem.evaluate(x_manual, return_values_of=["F", "G"])
-
-#     f = out[0]
-#     g = out[1]
-#     print(f, g)
-
-# def flecha_max_carga_variavel_tabuleiro(p_rodak: float, e_modflex: float, i_x: float, esp: float, a_r: float = 0.45) -> float:
-#     """Flecha máxima devido à carga variável (por roda) no tabuleiro.
-
-#     :param p_rodak: Carga por roda [kN]
-#     :param e_modflex: Módulo de elasticidade da madeira [kN/m²]
-#     :param i_x: Momento de inércia da seção transversal do tabuleiro [m⁴]
-#     :param esp: Vão do tabuleiro (distância entre longarinas) [m]
-#     :param a_r: Comprimento efetivo associado à roda/classe [m]
-
-#     :return: Flecha máxima devido à carga variável [m]
-#     """
-
-#     termo = 0.5 * a_r * (esp ** 3) - (a_r ** 2) * (esp ** 2) + (a_r ** 4) / 24.0
-#     return (p_rodak / (16.0 * e_modflex * i_x * a_r)) * termo
+# Confiabilidade estrutural
+def smooth_max(a, b, k=50.0):
+    m = np.maximum(a, b)
+    return m + np.log(np.exp(k*(a-m)) + np.exp(k*(b-m))) / k
 
 
-# def relatorio():
-#     var = "# Cabeçalho"
-#     var += "\n"
-#     return var
+def obj_confia(samples, params):
+
+    g = np.zeros((samples.shape[0]))
+    for i in range(samples.shape[0]):
+        # Extrair amostras 
+        p_gk = samples[i, 0]
+        p_rodak = samples[i, 1]
+        p_qk  = samples[i, 2]
+        f_mk = samples[i, 3]
+        f_vk = samples[i, 4]
+        e_modflex = samples[i, 5]
+        f_mktab = samples[i, 6]
+        densidade_long = samples[i, 7]
+        densidade_tab = samples[i, 8]
+        # print(p_gk, p_rodak, p_qk, f_mk, f_vk, e_modflex, f_mktab, densidade_long, densidade_tab)
+        
+        # Parâmetros fixos
+        a = params[0]
+        l = params[1]
+        classe_carregamento = params[2]
+        classe_madeira = params[3]
+        classe_umidade = params[4]
+        d_cm = params[5]
+        esp = params[6]
+        bw_cm = params[7]
+        h_cm = params[8]
+        tipo_g = params[9]  # 'flexao', 'cisalhamento' ou 'flecha'
+
+        # Função Estado Limite
+        projeto = ProjetoEstrutural(
+                                        l=l,
+                                        p_gk=p_gk,
+                                        p_rodak=p_rodak,
+                                        p_qk=p_qk,
+                                        a=a,
+                                        classe_carregamento=classe_carregamento,
+                                        classe_madeira=classe_madeira,
+                                        classe_umidade=classe_umidade,
+                                        gamma_g=1.0,
+                                        gamma_q=1.0,
+                                        gamma_w=1.0,
+                                        psi2=1.0,
+                                        phi=1.0,
+                                        densidade_long=densidade_long,
+                                        densidade_tab=densidade_tab,
+                                        f_mk_long=f_mk,
+                                        f_vk_long=f_vk,
+                                        e_modflex_long=e_modflex,
+                                        f_mk_tab=f_mktab,
+                                    )
+        res = projeto.calcular(d_cm=d_cm, esp_cm=esp, bw_cm=bw_cm, h_cm=h_cm)
+        if tipo_g == 'flexao':
+            g[i] = -res["flexao_longarina"]["g [kN/m²]"]
+        elif tipo_g == 'cisalhamento':
+            g[i] = -res["cisalhamento_longarina"]["g [kN/m²]"]
+        elif tipo_g == 'flecha':
+            delta_sd_1 = res["flecha_total_longarina"]["delta_fluencia [m]"]
+            delta_rd_1 = res["flecha_total_longarina"]["delta_lim_total [m]"]
+            delta_sd_2 = res["flecha_total_longarina"]["delta_qk [m]"]
+            delta_rd_2 = res["flecha_total_longarina"]["delta_lim_variavel [m]"]
+            g_fluencia = delta_rd_1 - delta_sd_1
+            g_variavel = delta_rd_2 - delta_sd_2
+            g[i] = smooth_max(g_fluencia, g_variavel)
+        # print(g[i])
+
+    return g
+
+
+def gev_loc_scale_from_mean_std(mean: float, std: float) -> tuple[float, float]:
+    EULER_GAMMA = 0.5772156649015329
+    scale = std * np.sqrt(6) / np.pi
+    loc = mean - EULER_GAMMA * scale
+    return loc, scale
+
+
+def chamando_form(p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade, f_mk, f_vk, e_modflex, f_mktab, densidade_long, densidade_tab, d_cm, esp_cm, bw_cm, h_cm, tipo_g):
+    p_gk = float(p_gk)
+    p_rodak = float(p_rodak)
+    p_qk = float(p_qk)
+    a = float(a)
+    l = float(l)
+    f_mk = float(f_mk)
+    f_vk = float(f_vk)
+    e_modflex = float(e_modflex)
+    f_mktab = float(f_mktab)
+    densidade_long = float(densidade_long)
+    densidade_tab = float(densidade_tab)
+    d_cm = float(d_cm)
+    esp_cm = float(esp_cm)
+    bw_cm = float(bw_cm)
+    h_cm = float(h_cm)
+    # Parámetros GEV
+    loc_rodak, scale_rodak = gev_loc_scale_from_mean_std(p_rodak, p_rodak*0.2)
+    loc_qk, scale_qk = gev_loc_scale_from_mean_std(p_qk, p_qk*0.2)
     
-# def obj_confia(samples, params):
+    # Distribuições
+    p_gk_aux = TruncatedNormal(a=(-p_gk/(p_gk*0.1)), b=np.inf, loc=p_gk, scale=p_gk*0.1)
+    p_rodak_aux = GeneralizedExtreme(c=0.0, loc=loc_rodak, scale=scale_rodak)
+    p_qk_aux = GeneralizedExtreme(c=0.0, loc=loc_qk, scale=scale_qk)
+    f_mk_aux = TruncatedNormal(a=(-f_mk/(f_mk*0.1)), b=np.inf, loc=f_mk, scale=f_mk*0.1)
+    f_vk_aux = TruncatedNormal(a=(-f_vk/(f_vk*0.1)), b=np.inf, loc=f_vk, scale=f_vk*0.1)     
+    e_modflex_aux = TruncatedNormal(a=(-e_modflex/(e_modflex*0.1)), b=np.inf, loc=e_modflex, scale=e_modflex*0.1)
+    f_mktab_aux = TruncatedNormal(a=(-f_mktab/(f_mktab*0.1)), b=np.inf, loc=f_mktab, scale=f_mktab*0.1)
+    densidade_long_aux = TruncatedNormal(a=(-densidade_long/(densidade_long*0.1)), b=np.inf, loc=densidade_long, scale=densidade_long*0.1)
+    densidade_tab_aux = TruncatedNormal(a=(-densidade_tab/(densidade_tab*0.1)), b=np.inf, loc=densidade_tab, scale=densidade_tab*0.1)
 
-#     # Extrair amostras  
-#     n = samples.shape[0] #cada linha de samples gera um valor próprio de g, o vetor g passa a representar corretamente o estado limite, o FORM passa a enxergar a superfície de falha correta
-#     g = np.zeros(n)
-#     #g = np.zeros((samples.shape[0]))  g tinha tamanho n,apenas a posição g[0] era preenchida, todas as outras ficavam em zero, só a primeira amostra era avaliada, as demais eram tratadas como g = 0 (estado limite ativo), o resultado de β e pf ficava fisicamente errado
-#     p_gk = samples[:, 0]
-#     p_rodak = samples[:, 1]
-#     p_qk  = samples[:, 2]
-#     f_ck = samples[:, 3]
-#     f_tk = samples[:, 4]
-#     e_modflex = samples[:, 5]
+    # Variáveis fixas da viga
+    paramss = [a, l, classe_carregamento, classe_madeira, classe_umidade, d_cm, esp_cm, bw_cm, h_cm, tipo_g]
 
-    
-#     # Parâmetros fixos
-#     geo = params[0]
-#     a = params[1]
-#     l = params[2]
-#     classe_carregamento = params[3]
-#     classe_madeira = params[4]
-#     classe_umidade = params[5]
-#     gamma_g = params[6]
-#     gamma_q = params[7]
-#     gamma_w = params[8]
+    # Confiabilidade
+    varss = [p_gk_aux, p_rodak_aux, p_qk_aux, f_mk_aux, f_vk_aux, e_modflex_aux, f_mktab_aux, densidade_long_aux, densidade_tab_aux]
+    model = PythonModel(model_script='madeiras.py', model_object_name='obj_confia', params=paramss)
+    runmodel_nlc = RunModel(model=model)
+    form = FORM(distributions=varss, runmodel_object=runmodel_nlc, tolerance_u=1e-3, tolerance_beta=1e-3)
+    form.run()
+    beta = form.beta[0]
+    pf = form.failure_probability[0]
 
-#     # Função Estado Limite
-#     for i in range(n): res_m, _, _ = checagem_longarina_madeira_flexao(geo, p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_ck, f_tk, e_modflex)
-#     #g[0] = res_m["g [kN/m²]"]
-#     g[i] = res_m["g [kN/m²]"]
-
-#     return g
+    return beta, pf
 
 
-# def confia_flexao_pura(geo: dict, p_gk: float, p_rodak: float, p_qk: float, a: float, l: float, classe_carregamento: str, classe_madeira: str, classe_umidade: int, gamma_g: float, gamma_q: float, gamma_w: float, f_ck: float, f_tk: float, e_modflex: float) -> tuple[float, float]:
+def chamando_sampling(
+                            p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade,
+                            f_mk, f_vk, e_modflex, f_mktab, densidade_long, densidade_tab,
+                            d_cm, esp_cm, bw_cm, h_cm, tipo_g,
+                            method: str = "LHS",          # "MC" ou "LHS"
+                            nsamples: int = 100000,
+                            random_state: int = 123
+                        ):
+    # casts
+    p_gk = float(p_gk); p_rodak = float(p_rodak); p_qk = float(p_qk)
+    a = float(a); l = float(l)
+    f_mk = float(f_mk); f_vk = float(f_vk); e_modflex = float(e_modflex)
+    f_mktab = float(f_mktab)
+    densidade_long = float(densidade_long); densidade_tab = float(densidade_tab)
+    d_cm = float(d_cm); esp_cm = float(esp_cm); bw_cm = float(bw_cm); h_cm = float(h_cm)
 
-#     # Distribuições
-#     p_gk_aux = Normal(loc=p_gk, scale=p_gk*0.1)
-#     p_rodak_aux = Normal(loc=p_rodak, scale=p_rodak*0.1)
-#     p_qk_aux = Normal(loc=p_qk, scale=p_qk*0.1)
-#     f_tk_aux = Normal(loc=f_tk, scale=f_tk*0.1)
-#     f_ck_aux = Normal(loc=f_ck, scale=f_ck*0.1)     
-#     e_modflex_aux = Normal(loc=e_modflex, scale=e_modflex*0.1)
-#     varss = [p_gk_aux, p_rodak_aux, p_qk_aux, f_ck_aux, f_tk_aux, e_modflex_aux]
+    # GEV params
+    loc_rodak, scale_rodak = gev_loc_scale_from_mean_std(p_rodak, p_rodak * 0.2)
+    loc_qk, scale_qk       = gev_loc_scale_from_mean_std(p_qk,   p_qk   * 0.2)
 
-#     # Variáveis fixas da viga
-#     paramss = [geo, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_ck, f_tk, e_modflex]
+    # helper truncnorm X>=0 (a,b no domínio padrão)
+    def tn_pos(mean, cov):
+        mu = float(mean)
+        sig = float(abs(mean) * cov)
+        a_std = (0.0 - mu) / sig
+        return TruncatedNormal(a=a_std, b=np.inf, loc=mu, scale=sig)
 
-#     # Reliability analysis Normal Loading Condition
-#     model = PythonModel(model_script='madeiras.py', model_object_name='obj_confia', params=paramss)
-#     runmodel_nlc = RunModel(model=model)
-#     form = FORM(distributions=varss, runmodel_object=runmodel_nlc, tolerance_u=1e-5, tolerance_beta=1e-5)
-#     form.run()
-#     beta = form.beta[0]
-#     pf = form.failure_probability[0]
+    # distribuições (target)
+    p_gk_aux           = tn_pos(p_gk, 0.10)
+    p_rodak_aux        = GeneralizedExtreme(c=0.0, loc=loc_rodak, scale=scale_rodak)
+    p_qk_aux           = GeneralizedExtreme(c=0.0, loc=loc_qk, scale=scale_qk)
+    f_mk_aux           = tn_pos(f_mk, 0.10)
+    f_vk_aux           = tn_pos(f_vk, 0.10)
+    e_modflex_aux      = tn_pos(e_modflex, 0.10)
+    f_mktab_aux        = tn_pos(f_mktab, 0.10)
+    densidade_long_aux = tn_pos(densidade_long, 0.10)
+    densidade_tab_aux  = tn_pos(densidade_tab, 0.10)
 
-#     return beta, pf
+    varss = [p_gk_aux, p_rodak_aux, p_qk_aux, f_mk_aux, f_vk_aux,
+             e_modflex_aux, f_mktab_aux, densidade_long_aux, densidade_tab_aux]
 
+    # params fixos
+    paramss = [a, l, classe_carregamento, classe_madeira, classe_umidade, d_cm, esp_cm, bw_cm, h_cm, tipo_g]
 
-# if __name__ == "__main__":
-#     # Teste das funções
-#     geo = {'d': 0.49}
-#     p_gk = 1.7177
-#     p_rodak = 40.0
-#     p_qk = 4.0
-#     a = 1.5
-#     l = 13.4
-#     classe_carregamento = 'permanente'
-#     classe_madeira = 'madeira natural'
-#     classe_umidade = 1
-#     gamma_g = 1.3
-#     gamma_q = 1.5
-#     gamma_w = 1.4
-#     f_c0k = 40E3
-#     f_t0k = 40E3
-#     e_modflex = 14.5E6
+    # sampler UQpy
+    method = method.upper()
+    if method == "MC":
+        sampler = MonteCarloSampling(distributions=varss, nsamples=nsamples, random_state=random_state)
+    elif method == "LHS":
+        sampler = LatinHypercubeSampling(distributions=varss, nsamples=nsamples, random_state=random_state)
+    else:
+        raise ValueError("method deve ser 'MC' ou 'LHS'")
 
-#     # samples = np.array([[10.0, 40.0, 4.0, 20E3, 15E3, 12E6]])
-#     # params = [geo, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w]
-#     # g = obj_confia(samples, params)
-#     # res_flex, res_flecha, res_cis = checagem_longarina_madeira_flexao(geo, p_gk, p_qk, p_rodak, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_c0k, f_t0k, e_modflex)
-#     # print("g: ", g)
-#     # print("Flexão: ", res_flex)
-#     # print("Flecha: ", res_flecha)
-#     # print("Cisalhamento: ", res_cis)
+    # rodar modelo UQpy
+    model = PythonModel(model_script='madeiras.py', model_object_name='obj_confia', params=paramss)
+    rmodel = RunModel(model=model)
+    rmodel.run(samples=sampler.samples)  # avalia em batch
 
-#     beta, pf = confia_flexao_pura(geo, p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade, gamma_g, gamma_q, gamma_w, f_c0k, f_t0k, e_modflex)
-#     print("Beta: ", beta)
-#     print("Pf: ", pf)
+    # qoi_list contém os retornos por amostra (g)
+    g = np.asarray(rmodel.qoi_list, dtype=float).reshape(-1)
+
+    # Convenção: falha quando g <= 0
+    pf = float(np.mean(g <= 0.0))
+    beta = beta_from_pf(pf)
+
+    return sampler, beta, pf
