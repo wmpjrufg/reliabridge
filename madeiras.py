@@ -29,7 +29,7 @@ from pymoo.optimize import minimize
 
 
 def beta_from_pf(pf: float) -> float:
-    pf = float(np.clip(pf, 1e-16, 1 - 1e-16))
+    pf = float(np.clip(pf, 1e-20, 1 - 1e-20))
     return -st.norm.ppf(pf)
 
 
@@ -1290,7 +1290,6 @@ def obj_confia(samples, params):
             g_fluencia = delta_rd_1 - delta_sd_1
             g_variavel = delta_rd_2 - delta_sd_2
             g[i] = smooth_max(g_fluencia, g_variavel)
-        # print(g[i])
 
     return g
 
@@ -1348,14 +1347,22 @@ def chamando_form(p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira
     return beta, pf
 
 
+import numpy as np
+
+from UQpy.sampling import MonteCarloSampling, LatinHypercubeSampling
+from UQpy.sampling.ImportanceSampling import ImportanceSampling
+from UQpy.distributions import TruncatedNormal, GeneralizedExtreme, JointIndependent
+from UQpy.run_model.RunModel import RunModel
+from UQpy.run_model.model_execution.PythonModel import PythonModel
+
 def chamando_sampling(
-                            p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade,
-                            f_mk, f_vk, e_modflex, f_mktab, densidade_long, densidade_tab,
-                            d_cm, esp_cm, bw_cm, h_cm, tipo_g,
-                            method: str = "LHS",          # "MC" ou "LHS"
-                            nsamples: int = 100000,
-                            random_state: int = 123
-                        ):
+                        p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade,
+                        f_mk, f_vk, e_modflex, f_mktab, densidade_long, densidade_tab,
+                        d_cm, esp_cm, bw_cm, h_cm, tipo_g,
+                        method: str = "LHS",          # "MC", "LHS" ou "IS"
+                        nsamples: int = 100000,
+                        random_state: int = 123
+                    ):
     # casts
     p_gk = float(p_gk); p_rodak = float(p_rodak); p_qk = float(p_qk)
     a = float(a); l = float(l)
@@ -1364,10 +1371,6 @@ def chamando_sampling(
     densidade_long = float(densidade_long); densidade_tab = float(densidade_tab)
     d_cm = float(d_cm); esp_cm = float(esp_cm); bw_cm = float(bw_cm); h_cm = float(h_cm)
 
-    # GEV params
-    loc_rodak, scale_rodak = gev_loc_scale_from_mean_std(p_rodak, p_rodak * 0.2)
-    loc_qk, scale_qk       = gev_loc_scale_from_mean_std(p_qk,   p_qk   * 0.2)
-
     # helper truncnorm X>=0 (a,b no domínio padrão)
     def tn_pos(mean, cov):
         mu = float(mean)
@@ -1375,7 +1378,12 @@ def chamando_sampling(
         a_std = (0.0 - mu) / sig
         return TruncatedNormal(a=a_std, b=np.inf, loc=mu, scale=sig)
 
-    # distribuições (target)
+    # -------------------------
+    # TARGET (como você já faz)
+    # -------------------------
+    loc_rodak, scale_rodak = gev_loc_scale_from_mean_std(p_rodak, p_rodak * 0.2)
+    loc_qk, scale_qk       = gev_loc_scale_from_mean_std(p_qk,   p_qk   * 0.2)
+
     p_gk_aux           = tn_pos(p_gk, 0.10)
     p_rodak_aux        = GeneralizedExtreme(c=0.0, loc=loc_rodak, scale=scale_rodak)
     p_qk_aux           = GeneralizedExtreme(c=0.0, loc=loc_qk, scale=scale_qk)
@@ -1386,31 +1394,90 @@ def chamando_sampling(
     densidade_long_aux = tn_pos(densidade_long, 0.10)
     densidade_tab_aux  = tn_pos(densidade_tab, 0.10)
 
-    varss = [p_gk_aux, p_rodak_aux, p_qk_aux, f_mk_aux, f_vk_aux,
-             e_modflex_aux, f_mktab_aux, densidade_long_aux, densidade_tab_aux]
+    varss = [
+                p_gk_aux, p_rodak_aux, p_qk_aux, f_mk_aux, f_vk_aux,
+                e_modflex_aux, f_mktab_aux, densidade_long_aux, densidade_tab_aux
+            ]
 
     # params fixos
     paramss = [a, l, classe_carregamento, classe_madeira, classe_umidade, d_cm, esp_cm, bw_cm, h_cm, tipo_g]
 
-    # sampler UQpy
+    # -------------------------
+    # SAMPLER UQpy
+    # -------------------------
     method = method.upper()
+
     if method == "MC":
         sampler = MonteCarloSampling(distributions=varss, nsamples=nsamples, random_state=random_state)
+        samples = sampler.samples
+        weights = None
+
     elif method == "LHS":
         sampler = LatinHypercubeSampling(distributions=varss, nsamples=nsamples, random_state=random_state)
-    else:
-        raise ValueError("method deve ser 'MC' ou 'LHS'")
+        samples = sampler.samples
+        weights = None
 
+    elif method == "IS":
+        # 1) joint target (independente)
+        target_joint = JointIndependent(marginals=varss)
+
+        # 2) proposal: "puxar" para falha (heurística simples e editável)
+        #    - ações ↑ (médias maiores)
+        #    - resistências/rigidez ↓ (médias menores)
+        m_load = 1.20
+        m_res  = 0.85
+        m_E    = 0.90
+        m_rho  = 1.10
+
+        # GEV proposal (mantém COV ~ 0.2 via std = mean*0.2, só desloca a média)
+        p_rodak_p = p_rodak * m_load
+        p_qk_p    = p_qk    * m_load
+        loc_rodak_p, scale_rodak_p = gev_loc_scale_from_mean_std(p_rodak_p, p_rodak_p * 0.2)
+        loc_qk_p, scale_qk_p       = gev_loc_scale_from_mean_std(p_qk_p,    p_qk_p    * 0.2)
+
+        proposal_marginals = [
+            tn_pos(p_gk * m_load, 0.10),                                        # p_gk
+            GeneralizedExtreme(c=0.0, loc=loc_rodak_p, scale=scale_rodak_p),     # p_rodak
+            GeneralizedExtreme(c=0.0, loc=loc_qk_p,    scale=scale_qk_p),        # p_qk
+            tn_pos(f_mk * m_res, 0.10),                                          # f_mk
+            tn_pos(f_vk * m_res, 0.10),                                          # f_vk
+            tn_pos(e_modflex * m_E, 0.10),                                       # E
+            tn_pos(f_mktab * m_res, 0.10),                                       # f_mktab
+            tn_pos(densidade_long * m_rho, 0.10),                                # rho_long
+            tn_pos(densidade_tab  * m_rho, 0.10),                                # rho_tab
+        ]
+
+        proposal_joint = JointIndependent(marginals=proposal_marginals)
+
+        # 3) ImportanceSampling: gera amostras pela proposta e calcula pesos (normalizados)
+        sampler = ImportanceSampling(
+            log_pdf_target=target_joint.log_pdf,
+            proposal=proposal_joint,
+            random_state=random_state,
+            nsamples=nsamples,
+        )
+        samples = sampler.samples
+        weights = np.asarray(sampler.weights, dtype=float).reshape(-1)
+
+    else:
+        raise ValueError("method deve ser 'MC', 'LHS' ou 'IS'")
+
+    # -------------------------
     # rodar modelo UQpy
+    # -------------------------
     model = PythonModel(model_script='madeiras.py', model_object_name='obj_confia', params=paramss)
     rmodel = RunModel(model=model)
-    rmodel.run(samples=sampler.samples)  # avalia em batch
+    rmodel.run(samples=samples)
 
-    # qoi_list contém os retornos por amostra (g)
     g = np.asarray(rmodel.qoi_list, dtype=float).reshape(-1)
 
     # Convenção: falha quando g <= 0
-    pf = float(np.mean(g <= 0.0))
+    if weights is None:
+        pf = float(np.mean(g <= 0.0))
+    else:
+        # pesos do IS já vêm normalizados para somar 1 no UQpy
+        pf = float(np.sum((g <= 0.0).astype(float) * weights))
+
     beta = beta_from_pf(pf)
 
     return sampler, beta, pf
