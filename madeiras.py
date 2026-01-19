@@ -28,15 +28,15 @@ from pymoo.termination import get_termination
 from pymoo.optimize import minimize
 
 
-def vol_longarinas(b_wpista, compr, d):
-    esp_min = d / 3
+# def vol_longarinas(b_wpista, compr, d):
+#     esp_min = d / 3
 
 
-    return rest_esp_min, vol
+#     return rest_esp_min, vol
 
 
-def vol_tabuado(bw, h, compr, b_wpista)
-    return vol
+# def vol_tabuado(bw, h, compr, b_wpista)
+#     return vol
 
 
 def beta_from_pf(pf: float) -> float:
