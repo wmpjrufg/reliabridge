@@ -44,5 +44,3 @@ pip-chill > requirements.txt
 ```bash
 streamlit run app.py
 ```
-
-['l (m)', 'tipo_secao', 'p_gk (kN/m)', 'p_rodak (kN)', 'p_qk (kN/m²)', 'a (m)', 'classe_carregamento', 'classe_madeira', 'classe_umidade', 'gamma_g', 'gamma_q', 'gamma_w', 'f_mk (MPa)', 'f_vk (MPa)', 'e_modflex (GPa)']
