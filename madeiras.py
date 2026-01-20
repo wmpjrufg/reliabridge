@@ -967,7 +967,6 @@ class ProjetoOtimo(ElementwiseProblem):
         # Geometria da longarina e espaçamento entre longarinas
         d = float(x[0])
         esp = float(x[1])
-        geo_long = {"d": d}
 
         # Geometria do tabuleiro
         bw = float(x[2])
@@ -989,18 +988,18 @@ class ProjetoOtimo(ElementwiseProblem):
         geo_long = {"d": d}
 
         # Correção da carga permanente do tabuleiro
-        carga_area_tab = self.densidade_tab * h * 9.81 / 1E3                        # [kN/m²]
+        carga_area_tab = (self.densidade_tab * 9.81) * h / 1E3                        # [kN/m²]
         p_gk_long = (self.p_gk + carga_area_tab) * esp                              # [kN/m]
         props_long = prop_madeiras(geo_long)
         area_long = props_long[0]
-        p_gk_long += peso_proprio_longarina(self.densidade_long, area_long) * esp   # [kN/m]
+        p_gk_long += peso_proprio_longarina(self.densidade_long, area_long)         # [kN/m]
 
         # Avaliação da longarina
         res_m, res_v, res_f_total, relat = checagem_completa_longarina_madeira_flexao(
                                                                                         geo_long,
                                                                                         p_gk_long,
-                                                                                        self.p_rodak,
                                                                                         self.p_qk,
+                                                                                        self.p_rodak,
                                                                                         self.a,
                                                                                         l,
                                                                                         self.classe_carregamento.lower(),
@@ -1357,7 +1356,6 @@ def chamando_form(p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira
 
     return beta, pf
 
-
 import numpy as np
 
 from UQpy.sampling import MonteCarloSampling, LatinHypercubeSampling
@@ -1365,6 +1363,7 @@ from UQpy.sampling.ImportanceSampling import ImportanceSampling
 from UQpy.distributions import TruncatedNormal, GeneralizedExtreme, JointIndependent
 from UQpy.run_model.RunModel import RunModel
 from UQpy.run_model.model_execution.PythonModel import PythonModel
+
 
 def chamando_sampling(
                         p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira, classe_umidade,
@@ -1492,3 +1491,53 @@ def chamando_sampling(
     beta = beta_from_pf(pf)
 
     return sampler, beta, pf
+
+
+if __name__ == "__main__":
+    df = pd.read_excel("beam_data.xlsx")
+    df = df.to_dict(orient="records")
+    df = df[0] 
+    ds = [30, 150]
+    esps = [30, 200]
+    bws = [12, 60]
+    hs = [12, 60]
+    problem = ProjetoOtimo(
+                        l=df["l (cm)"],
+                        p_gk=df["p_gk (kN/m²)"],
+                        p_rodak=df["p_rodak (kN)"],
+                        p_qk=df["p_qk (kN/m²)"],
+                        a=df["a (m)"],
+                        classe_carregamento=df["classe_carregamento"],
+                        classe_madeira=df["classe_madeira"],
+                        classe_umidade=df["classe_umidade"],
+                        gamma_g=df["gamma_g"],
+                        gamma_q=df["gamma_q"],
+                        gamma_w=df["gamma_w"],
+                        psi2=df["psi_2"],
+                        phi=df["phi"],
+                        densidade_long=df["densidade longarina (kg/m³)"],
+                        densidade_tab=df["densidade tabuleiro (kg/m³)"],
+                        f_mk_long=df["resistência característica à flexão longarina (MPa)"],
+                        f_vk_long=df["resistência característica ao cisalhamento longarina (MPa)"],
+                        e_modflex_long=df["módulo de elasticidade à flexão longarina (GPa)"],
+                        f_mk_tab=df["resistência característica à flexão tabuleiro (MPa)"],
+                        d_min=ds[0],
+                        d_max=ds[1],
+                        esp_min=esps[0],
+                        esp_max=esps[1],
+                        bw_min=bws[0],
+                        bw_max=bws[1],
+                        h_min=hs[0],
+                        h_max=hs[1],
+                    )
+
+    # 2) Define uma solução manual
+    x_manual = np.array([[34., 120.0, 10., 30.]])   # d, esp, bw, h
+
+    # 3) Avalia
+    out = problem.evaluate(x_manual, return_values_of=["F", "G"])
+
+    # 4) Imprime resultados
+    f = out[0]
+    g = out[1]
+    print(f, g)
