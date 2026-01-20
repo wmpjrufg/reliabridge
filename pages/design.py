@@ -6,7 +6,7 @@ import hashlib
 import streamlit as st
 import pandas as pd
 
-from madeiras import textos_design, ProjetoEstrutural
+from madeiras import textos_design, ProjetoOtimo
 
 
 # -----------------------------
@@ -64,44 +64,44 @@ with st.form("form_design", clear_on_submit=False):
 
     with colA:
         tipo_secao_longarina = st.selectbox(
-            t["entrada_tipo_secao_longarina"],
-            t["tipo_secao_longarina"],
-            key="tipo_secao_longarina",
-        )
+                                                t["entrada_tipo_secao_longarina"],
+                                                t["tipo_secao_longarina"],
+                                                key="tipo_secao_longarina",
+                                            )
 
         d_cm = None
         if str(tipo_secao_longarina).lower() == "circular":
             d_cm = st.number_input(
-                t["diametro_longarina"],
-                step=1.0,
-                key="d_cm",
-            )
+                                        t["diametro_longarina"],
+                                        step=1.0,
+                                        key="d_cm",
+                                    )
 
         esp_cm = st.number_input(
-            t["espaçamento_entre_longarinas"],
-            step=1.0,
-            key="esp_cm",
-        )
+                                    t["espaçamento_entre_longarinas"],
+                                    step=1.0,
+                                    key="esp_cm",
+                                )
 
     with colB:
         tipo_secao_tabuleiro = st.selectbox(
-            t["tipo_secao_tabuleiro"],
-            t["tipo_secao_tabuleiro_opcoes"],
-            key="tipo_secao_tabuleiro",
-        )
+                                                t["tipo_secao_tabuleiro"],
+                                                t["tipo_secao_tabuleiro_opcoes"],
+                                                key="tipo_secao_tabuleiro",
+                                            )
 
         bw_cm = h_cm = None
         if str(tipo_secao_tabuleiro).lower() == "retangular":
             bw_cm = st.number_input(
-                t["largura_viga_tabuleiro"],
-                step=1.0,
-                key="bw_cm",
-            )
+                                        t["largura_viga_tabuleiro"],
+                                        step=1.0,
+                                        key="bw_cm",
+                                    )
             h_cm = st.number_input(
-                t["altura_viga_tabuleiro"],
-                step=1.0,
-                key="h_cm",
-            )
+                                        t["altura_viga_tabuleiro"],
+                                        step=1.0,
+                                        key="h_cm",
+                                    )
 
     # -------------------------
     # Upload da planilha do pré-dimensionamento (dados-base)
@@ -109,10 +109,10 @@ with st.form("form_design", clear_on_submit=False):
     st.subheader(t.get("planilha_head", "Planilha de dados do projeto"))
 
     uploaded_file = st.file_uploader(
-        t["texto_up"],
-        type=["xlsx"],
-        key="uploaded_design_xlsx",
-    )
+                                        t["texto_up"],
+                                        type=["xlsx"],
+                                        key="uploaded_design_xlsx",
+                                    )
 
     # Preview da planilha
     df = None
@@ -153,11 +153,11 @@ if submitted_design:
         df0 = df.iloc[0]
 
     # Instancia o dimensionamento determinístico
-    projeto = ProjetoEstrutural(
+    projeto = ProjetoOtimo(
                                 l=df0["l (cm)"],
-                                p_gk=df0["p_gk (kN/m²)"],
+                                p_gk=df0["p_gk (kPa)"],
                                 p_rodak=df0["p_rodak (kN)"],
-                                p_qk=df0["p_qk (kN/m²)"],
+                                p_qk=df0["p_qk (kPa)"],
                                 a=df0["a (m)"],
                                 classe_carregamento=df0["classe_carregamento"],
                                 classe_madeira=df0["classe_madeira"],
@@ -173,10 +173,18 @@ if submitted_design:
                                 f_vk_long=df0["resistência característica ao cisalhamento longarina (MPa)"],
                                 e_modflex_long=df0["módulo de elasticidade à flexão longarina (GPa)"],
                                 f_mk_tab=df0["resistência característica à flexão tabuleiro (MPa)"],
+                                d_min=0,
+                                d_max=0,
+                                esp_min=0,
+                                esp_max=0,
+                                bw_min=0,
+                                bw_max=0,
+                                h_min=0,
+                                h_max=0
                             )
 
     # Calcula (uma vez só)
-    res = projeto.calcular(d_cm=d_cm, esp_cm=esp_cm, bw_cm=bw_cm, h_cm=h_cm)
+    res = projeto.calcular_objetivos_restricoes_otimizacao(d=float(d_cm), esp=float(esp_cm), bw=float(bw_cm), h=float(h_cm))
 
     # (Opcional) guarda na sessão para você evoluir depois sem recalcular
     st.session_state["res_design"] = res
@@ -198,7 +206,8 @@ if st.session_state.get("has_results", False):
 
     # 2) Áreas
     with st.expander(t.get("resultado_areas", "Áreas e consumo de material"), expanded=True):
-        areas = res.get("areas", {})
+        areas = res[0]
+        areas = areas[0]
         if isinstance(areas, dict) and len(areas) > 0:
             df_areas = pd.DataFrame.from_dict(areas, orient="index", columns=[t.get("col_valor", "Valor")])
             st.dataframe(df_areas, use_container_width=True)
@@ -207,36 +216,34 @@ if st.session_state.get("has_results", False):
 
     # 3) Verificações — Longarina
     titulo_longarina, longarina_ok = status_global(
-                                                    t.get("resultado_longarina", "Verificações da longarina"),
-                                                    res.get("flexao_longarina", {}),
-                                                    res.get("cisalhamento_longarina", {}),
-                                                    res.get("flecha_total_longarina", {}),
+                                                    "Verificações da longarina",
+                                                    res[2],
+                                                    res[3],
+                                                    res[4],
                                                 )
-
     with st.expander(titulo_longarina, expanded=not longarina_ok):
         col1, col2, col3 = st.columns(3)
 
         with col1:
             st.markdown("**Flexão**")
-            st.json(res.get("flexao_longarina", {}))
+            st.json(res[2])
 
         with col2:
             st.markdown("**Cisalhamento**")
-            st.json(res.get("cisalhamento_longarina", {}))
-
+            st.json(res[3])
         with col3:
             st.markdown("**Flecha**")
-            st.json(res.get("flecha_total_longarina", {}))
+            st.json(res[4])
 
     # 4) Verificações — Tabuleiro (status no título)
     titulo_tabuleiro, tabuleiro_ok = status_global(
-                                                    t.get("resultado_tabuleiro", "Verificações do tabuleiro"),
-                                                    res.get("flexao_tabuleiro", {}),
+                                                    "Verificações do tabuleiro",
+                                                    res[6],
                                                 )
 
     with st.expander(titulo_tabuleiro, expanded=not tabuleiro_ok):
         st.markdown("**Flexão**")
-        st.json(res.get("flexao_tabuleiro", {}))
+        st.json(res[6])
 
     # 5) Relatórios completos (auditoria)
     with st.expander(t.get("resultado_relatorios", "Relatórios completos de cálculo"), expanded=False):

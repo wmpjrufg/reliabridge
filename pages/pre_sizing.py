@@ -43,14 +43,14 @@ st.subheader(t["pre"])
 # ============================================================
 with st.form("form_geometria", clear_on_submit=False):
 
-    l = st.number_input(t["entrada_comprimento"], min_value=3.0, key="l")
-    larg = st.number_input(t["pista"], min_value=0.5, key="larg")
+    l = st.number_input(t["entrada_comprimento"], min_value=300.0, key="l")
+    larg = st.number_input(t["pista"], min_value=200.040, key="larg")
 
     tipo_secao_longarina = st.selectbox(
-        t["entrada_tipo_secao_longarina"],
-        t["tipo_secao_longarina"],
-        key="tipo_secao_longarina"
-    )
+                                            t["entrada_tipo_secao_longarina"],
+                                            t["tipo_secao_longarina"],
+                                            key="tipo_secao_longarina"
+                                        )
     if tipo_secao_longarina.lower() == "circular":
         d_cm_min = st.number_input(t["diametro_minimo"], key="d_cm_min")
         d_cm_max = st.number_input(t["diametro_maximo"], key="d_cm_max")
@@ -58,10 +58,10 @@ with st.form("form_geometria", clear_on_submit=False):
         d_cm_min, d_cm_max = None, None
 
     tipo_secao_tabuleiro = st.selectbox(
-        t["tipo_secao_tabuleiro"],
-        t["tipo_secao_tabuleiro_opcoes"],
-        key="tipo_secao_tabuleiro"
-    )
+                                            t["tipo_secao_tabuleiro"],
+                                            t["tipo_secao_tabuleiro_opcoes"],
+                                            key="tipo_secao_tabuleiro"
+                                        )
     if tipo_secao_tabuleiro.lower() == "retangular":
         esp_min = st.number_input(t["espaçamento_entre_longarinas_min"], key="esp_min")
         esp_max = st.number_input(t["espaçamento_entre_longarinas_max"], key="esp_max")
@@ -78,20 +78,20 @@ with st.form("form_geometria", clear_on_submit=False):
     a = st.number_input(t["distancia_eixos"], key="a")
 
     classe_carregamento_raw = st.selectbox(
-        t["classe_carregamento"],
-        t["classe_carregamento_opcoes"],
-        key="classe_carregamento"
-    )
+                                                t["classe_carregamento"],
+                                                t["classe_carregamento_opcoes"],
+                                                key="classe_carregamento"
+                                            )
     classe_madeira_raw = st.selectbox(
-        t["classe_madeira"],
-        t["classe_madeira_opcoes"],
-        key="classe_madeira"
-    )
+                                            t["classe_madeira"],
+                                            t["classe_madeira_opcoes"],
+                                            key="classe_madeira"
+                                        )
     classe_umidade = st.selectbox(
-        t["classe_umidade"],
-        [1, 2, 3, 4],
-        key="classe_umidade"
-    )
+                                        t["classe_umidade"],
+                                        [1, 2, 3, 4],
+                                        key="classe_umidade"
+                                    )
 
     gamma_g = st.number_input(t["gamma_g"], step=0.1, key="gamma_g")
     gamma_q = st.number_input(t["gamma_q"], step=0.1, key="gamma_q")
@@ -115,55 +115,54 @@ with st.form("form_geometria", clear_on_submit=False):
 # ============================================================
 if lang == "pt":
     dados_projeto = {
-        "l (cm)": l,
-        "b_wpista (cm)": larg,
-        "tipo_secao_longarina": tipo_secao_longarina,
-        "tipo_secao_tabuleiro": tipo_secao_tabuleiro,
-        "p_gk (kN/m²)": p_gk,
-        "p_rodak (kN)": p_rodak,
-        "p_qk (kN/m²)": p_qk,
-        "a (m)": a,
-        "classe_carregamento": classe_carregamento_raw.lower(),
-        "classe_madeira": classe_madeira_raw.lower(),
-        "classe_umidade": classe_umidade,
-        "gamma_g": gamma_g,
-        "gamma_q": gamma_q,
-        "gamma_w": gamma_w,
-        "psi_2": psi_2,
-        "phi": fluencia,
-        "densidade longarina (kg/m³)": densidade_long,
-        "resistência característica à flexão longarina (MPa)": f_mk_mpa,
-        "resistência característica ao cisalhamento longarina (MPa)": f_vk_mpa,
-        "módulo de elasticidade à flexão longarina (GPa)": e_modflex_gpa,
-        "densidade tabuleiro (kg/m³)": densidade_tab,
-        "resistência característica à flexão tabuleiro (MPa)": f_mk_mpa_tab,
-    }
+                        "l (cm)": l,
+                        "b_wpista (cm)": larg,
+                        "tipo_secao_longarina": tipo_secao_longarina,
+                        "tipo_secao_tabuleiro": tipo_secao_tabuleiro,
+                        "p_gk (kPa)": p_gk,
+                        "p_rodak (kN)": p_rodak,
+                        "p_qk (kPa)": p_qk,
+                        "a (m)": a,
+                        "classe_carregamento": classe_carregamento_raw.lower(),
+                        "classe_madeira": classe_madeira_raw.lower(),
+                        "classe_umidade": classe_umidade,
+                        "gamma_g": gamma_g,
+                        "gamma_q": gamma_q,
+                        "gamma_w": gamma_w,
+                        "psi_2": psi_2,
+                        "phi": fluencia,
+                        "densidade longarina (kg/m³)": densidade_long,
+                        "resistência característica à flexão longarina (MPa)": f_mk_mpa,
+                        "resistência característica ao cisalhamento longarina (MPa)": f_vk_mpa,
+                        "módulo de elasticidade à flexão longarina (GPa)": e_modflex_gpa,
+                        "densidade tabuleiro (kg/m³)": densidade_tab,
+                        "resistência característica à flexão tabuleiro (MPa)": f_mk_mpa_tab,
+                    }
 else:
     dados_projeto = {
-        "l (cm)": l,
-        "b_wpista (cm)": larg,
-        "tipo_secao_longarina": tipo_secao_longarina,
-        "tipo_secao_tabuleiro": tipo_secao_tabuleiro,
-        "p_gk (kN/m²)": p_gk,
-        "p_rodak (kN)": p_rodak,
-        "p_qk (kN/m²)": p_qk,
-        "a (m)": a,
-        "classe_carregamento": classe_carregamento_raw.lower(),
-        "classe_madeira": classe_madeira_raw.lower(),
-        "classe_umidade": classe_umidade,
-        "gamma_g": gamma_g,
-        "gamma_q": gamma_q,
-        "gamma_w": gamma_w,
-        "psi_2": psi_2,
-        "phi": fluencia,
-        "densidade longarina (kg/m³)": densidade_long,
-        "resistência característica à flexão longarina (MPa)": f_mk_mpa,
-        "resistência característica ao cisalhamento longarina (MPa)": f_vk_mpa,
-        "módulo de elasticidade à flexão longarina (GPa)": e_modflex_gpa,
-        "densidade tabuleiro (kg/m³)": densidade_tab,
-        "resistência característica à flexão tabuleiro (MPa)": f_mk_mpa_tab,
-    }
-
+                        "l (cm)": l,
+                        "b_wpista (cm)": larg,
+                        "tipo_secao_longarina": tipo_secao_longarina,
+                        "tipo_secao_tabuleiro": tipo_secao_tabuleiro,
+                        "p_gk (kPa)": p_gk,
+                        "p_rodak (kN)": p_rodak,
+                        "p_qk (kPa)": p_qk,
+                        "a (m)": a,
+                        "classe_carregamento": classe_carregamento_raw.lower(),
+                        "classe_madeira": classe_madeira_raw.lower(),
+                        "classe_umidade": classe_umidade,
+                        "gamma_g": gamma_g,
+                        "gamma_q": gamma_q,
+                        "gamma_w": gamma_w,
+                        "psi_2": psi_2,
+                        "phi": fluencia,
+                        "densidade longarina (kg/m³)": densidade_long,
+                        "resistência característica à flexão longarina (MPa)": f_mk_mpa,
+                        "resistência característica ao cisalhamento longarina (MPa)": f_vk_mpa,
+                        "módulo de elasticidade à flexão longarina (GPa)": e_modflex_gpa,
+                        "densidade tabuleiro (kg/m³)": densidade_tab,
+                        "resistência característica à flexão tabuleiro (MPa)": f_mk_mpa_tab,
+                    }
 excel_bytes = montar_excel(dados_projeto)
 
 
@@ -188,7 +187,6 @@ if submitted_design:
     if esp_min is None or esp_max is None or bw_min is None or bw_max is None or h_min is None or h_max is None:
         st.error("Defina os limites do tabuleiro (esp, bw, h).")
         st.stop()
-
     st.session_state["sig_last"] = sig_now
 
     ds   = [float(d_cm_min), float(d_cm_max)]
@@ -202,32 +200,32 @@ if submitted_design:
     # padroniza DataFrame final (PT/EN)
     if lang == "pt":
         df_resultados = pd.DataFrame({
-            "d_cm": res_nsga["d [cm]"].tolist(),
-            "esp_cm": res_nsga["esp [cm]"].tolist(),
-            "bw_cm": res_nsga["bw [cm]"].tolist(),
-            "h_cm": res_nsga["h [cm]"].tolist(),
-            "area_m2": res_nsga["area [m²]"].tolist(),
-            "deflecção_m": res_nsga["delta [m]"].tolist(),
-            "longarina_g_m": res_nsga["flex lim beam [kPa]"].tolist(),
-            "longarina_g_v": res_nsga["cis lim beam [kPa]"].tolist(),
-            "longarina_g_f": res_nsga["delta lim beam [m]"].tolist(),
-            "tabuleiro_g_m": res_nsga["flex lim deck [kPa]"].tolist(),
-        })
+                                        "d_cm": res_nsga["d [cm]"].tolist(),
+                                        "esp_cm": res_nsga["esp [cm]"].tolist(),
+                                        "bw_cm": res_nsga["bw [cm]"].tolist(),
+                                        "h_cm": res_nsga["h [cm]"].tolist(),
+                                        "area_m2": res_nsga["area [m²]"].tolist(),
+                                        "deflecção": res_nsga["delta [-]"].tolist(),
+                                        "longarina_g_m": res_nsga["flex lim beam [(Ms-Mr)/Mr]"].tolist(),
+                                        "longarina_g_v": res_nsga["cis lim beam [(Vs-Vr)/Vr]"].tolist(),
+                                        "longarina_g_f": res_nsga["delta lim beam [(ps-pr)/pr]"].tolist(),
+                                        "tabuleiro_g_m": res_nsga["flex lim deck [(Ms-Mr)/Mr]"].tolist(),
+                                    })
         x = df_resultados["area_m2"].to_numpy()
         y = df_resultados["deflecção_m"].to_numpy()
     else:
         df_resultados = pd.DataFrame({
-            "d_cm": res_nsga["d [cm]"].tolist(),
-            "esp_cm": res_nsga["esp [cm]"].tolist(),
-            "bw_cm": res_nsga["bw [cm]"].tolist(),
-            "h_cm": res_nsga["h [cm]"].tolist(),
-            "area_m2": res_nsga["area [m²]"].tolist(),
-            "deflection_m": res_nsga["delta [m]"].tolist(),
-            "beam_g_m": res_nsga["flex lim beam [kPa]"].tolist(),
-            "beam_g_v": res_nsga["cis lim beam [kPa]"].tolist(),
-            "beam_g_f": res_nsga["delta lim beam [m]"].tolist(),
-            "deck_g_m": res_nsga["flex lim deck [kPa]"].tolist(),
-        })
+                                        "d_cm": res_nsga["d [cm]"].tolist(),
+                                        "esp_cm": res_nsga["esp [cm]"].tolist(),
+                                        "bw_cm": res_nsga["bw [cm]"].tolist(),
+                                        "h_cm": res_nsga["h [cm]"].tolist(),
+                                        "area_m2": res_nsga["area [m²]"].tolist(),
+                                        "deflection": res_nsga["delta [-]"].tolist(),
+                                        "beam_g_m": res_nsga["flex lim beam [(Ms-Mr)/Mr]"].tolist(),
+                                        "beam_g_v": res_nsga["cis lim beam [(Vs-Vr)/Vr]"].tolist(),
+                                        "beam_g_f": res_nsga["delta lim beam [(ps-pr)/pr]"].tolist(),
+                                        "deck_g_m": res_nsga["flex lim deck [(Ms-Mr)/Mr]"].tolist(),
+                                    })
         x = df_resultados["area_m2"].to_numpy()
         y = df_resultados["deflection_m"].to_numpy()
 
@@ -235,7 +233,9 @@ if submitted_design:
     excel_bytes_resultados = montar_excel_df(df_resultados)
 
     # Figura (salva como bytes PNG para re-render sem sumir)
-    fig = fronteira_pareto(x, y, t["tag_x_fig"], t["tag_y_fig"])
+    print(x)
+    print(x.tolist())
+    fig = fronteira_pareto(x.tolist(), y.tolist(), t["tag_x_fig"], t["tag_y_fig"])
     fig_buf = io.BytesIO()
     fig.savefig(fig_buf, format="png", dpi=400, bbox_inches="tight")
     fig_buf.seek(0)

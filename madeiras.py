@@ -28,17 +28,6 @@ from pymoo.termination import get_termination
 from pymoo.optimize import minimize
 
 
-# def vol_longarinas(b_wpista, compr, d):
-#     esp_min = d / 3
-
-
-#     return rest_esp_min, vol
-
-
-# def vol_tabuado(bw, h, compr, b_wpista)
-#     return vol
-
-
 def beta_from_pf(pf: float) -> float:
     pf = float(np.clip(pf, 1e-20, 1 - 1e-20))
     return -st.norm.ppf(pf)
@@ -71,21 +60,21 @@ def plot_longarinas_circulares(n_longarinas: int, diametro_cm: float, espacament
 
 def fronteira_pareto(x: list, y: list, label_x: str, label_y: str) -> Figure:
     ### Figure name and DPI
-    dpi = 600                                                   # Change as you wish
-    name = 'scatter'           # Change as you wish
+    dpi = 600                                                       # Change as you wish
+    name = 'scatter'                                                # Change as you wish
 
     ### Chart dimensions (in centimeters)
-    b_cm = 10                                                   # Change as you wish
-    h_cm = 10                                                    # Change as you wish
+    b_cm = 10                                                       # Change as you wish
+    h_cm = 10                                                       # Change as you wish
     inches_to_cm = 1 / 2.54
     b_input = b_cm * inches_to_cm
     h_input = h_cm * inches_to_cm
 
     ### Axis and labels (For LateX font format use the dollar sign $)
-    size_label = 10                                             # Change as you wish
-    color_label = 'black'                                        # or hexadecimal. Change as you wish
-    size_axis = 10                                              # Change as you wish
-    color_axis = 'black'                                          # or hexadecimal. Change as you wish
+    size_label = 10                                                 # Change as you wish
+    color_label = 'black'                                           # or hexadecimal. Change as you wish
+    size_axis = 10                                                  # Change as you wish
+    color_axis = 'black'                                            # or hexadecimal. Change as you wish
 
     ### Scatter
     alpha_scatter = 1.0                                             # Change as you wish
@@ -94,16 +83,16 @@ def fronteira_pareto(x: list, y: list, label_x: str, label_y: str) -> Figure:
 
     ### Grid
     on_or_off = True
-    line_width_grid = 0.5                                       # Change as you wish
-    alpha_grid = 0.3                                            # Change as you wish
-    style_grid = '-'                                            # Change as you wish
-    color_grid = 'gray'                                         # or hexadecimal. Change as you wish
+    line_width_grid = 0.5                                           # Change as you wish
+    alpha_grid = 0.3                                                # Change as you wish
+    style_grid = '-'                                                # Change as you wish
+    color_grid = 'gray'                                             # or hexadecimal. Change as you wish
 
     ### Figure
     fig, ax = plt.subplots(figsize=(b_input, h_input))
     ax.tick_params(axis='both', which='major', labelsize=size_axis, colors=color_axis)
     ax.set_xlabel(label_x, fontsize=size_label, color=color_label)
-    ax.set_ylabel(label_y, fontsize=size_label, color=color_label)
+    ax.set_ylabel(label_y, fontsize=size_label+2, color=color_label)
 
     ### Title. Do you need a title? Use the cell bellow:
     # ax.set_title('Sine Wave Plot', fontsize=16)
@@ -271,7 +260,7 @@ def cortante_max_carga_variavel(l: float, p_rodak: float, p_qk: float, a: float,
     
     :param l: vão teórico da viga [m]
     :param p_rodak: carga variável característica por roda [kN]
-    :param p_qk: carga variável característica de multidão [kN/m²]
+    :param p_qk: carga variável característica de multidão [kPa]
     :param a: distância entre eixos [m]
     :param h: altura média da viga [m]
 
@@ -289,7 +278,7 @@ def flecha_max_carga_permanente(p_gk: float, l: float, e_modflex: float, i_x: fl
     
     :param p_gk: carga permanente distribuída [kN/m]
     :param l: vão teórico da viga [m]
-    :param e_modflex: módulo de elasticidade da madeira [kN/m²]
+    :param e_modflex: módulo de elasticidade da madeira [kPa]
     :param i_x: momento de inércia da seção transversal [m⁴]
 
     :return: flecha máxima devido à carga permanente [m]
@@ -302,7 +291,7 @@ def flecha_max_carga_variavel(l: float, e_modflex: float, i_x: float, p_rodak: f
     """Calcula a flecha máxima devido à carga variável.
     
     :param l: vão teórico da viga [m]
-    :param e_modflex: módulo de elasticidade da madeira [kN/m²]
+    :param e_modflex: módulo de elasticidade da madeira [kPa]
     :param i_x: momento de inércia da seção transversal [m⁴]
     :param p_rodak: carga variável característica por roda [kN]
     :param a: distância entre eixos [m]
@@ -333,7 +322,7 @@ def reacao_apoio_carga_variavel(l: float, p_rodak: float, p_qk: float, a: float)
     
     :param l: vão teórico da viga [m]
     :param p_rodak: carga variável característica por roda [kN]
-    :param p_qk: carga variável característica de multidão [kN/m²]
+    :param p_qk: carga variável característica de multidão [kPa]
     :param a: distância entre eixos [m]
 
     :return: reação de apoio devido à carga variável [kN]
@@ -409,9 +398,9 @@ def flexao_obliqua(
     :param area: Área da seção transversal [m²]. Padroniza-se area = 1E-12 para flexão simples
     :param p: Força axial [kN]. Padroniza-se p = 0.0 para flexão simples
 
-    :return: [0] Tensão de flexão em relação ao eixo x [kN/m²], 
-             [1] Tensão de flexão em relação ao eixo y [kN/m²],  
-             [2] Tensão normal devido à força axial [kN/m²]
+    :return: [0] Tensão de flexão em relação ao eixo x [kPa], 
+             [1] Tensão de flexão em relação ao eixo y [kPa],  
+             [2] Tensão normal devido à força axial [kPa]
     """
 
     f_md_x = m_x / w_x
@@ -424,11 +413,11 @@ def flexao_obliqua(
 def resistencia_calculo(f_k: float, gamma_w: float, k_mod: float) -> float:
     """Calcula a resistência de cálculo da madeira conforme NBR 7190.
 
-    :param f_k: Resistência característica da madeira [kN/m²]
+    :param f_k: Resistência característica da madeira [kPa]
     :param gamma_w: Coeficiente parcial de segurança para madeira
     :param k_mod: Coeficiente de modificação da resistência da madeira
 
-    :return: Resistência de cálculo da madeira [kN/m²]
+    :return: Resistência de cálculo da madeira [kPa]
     """
 
     f_d = (f_k / gamma_w) * k_mod
@@ -436,20 +425,25 @@ def resistencia_calculo(f_k: float, gamma_w: float, k_mod: float) -> float:
     return f_d
 
 
-def checagem_tensoes_normais(k_m: float, sigma_x: float, sigma_y: float, f_md: float) -> tuple[float, str]:
+def checagem_tensoes_normais(
+                                k_m: float,
+                                sigma_x: float,
+                                sigma_y: float,
+                                f_md: float
+                            ) -> tuple[float, str]:
     """Verifica as tensões na madeira conforme NBR 7190.
     
     :param k_m: Coeficiente de correção do tipo da seção transversal
-    :param sigma_x: Tensão normal em relação ao eixo x [kN/m²]
-    :param sigma_y: Tensão normal em relação ao eixo y [kN/m²]
-    :param f_md: Resistência de cálculo da madeira na flexão [kN/m²]
+    :param sigma_x: Tensão normal em relação ao eixo x [kPa]
+    :param sigma_y: Tensão normal em relação ao eixo y [kPa]
+    :param f_md: Resistência de cálculo da madeira na flexão [kPa]
 
     :return: [0] Equação Estado Limite, [1] Descrição do Fator de utilização
     """
 
     verif_1 = (sigma_x + k_m * sigma_y) - f_md
     verif_2 = (sigma_y + k_m * sigma_x) - f_md
-    g = max(verif_1, verif_2)
+    g = max(verif_1/f_md, verif_2/f_md)
     analise = 'OK' if g <= 0 else 'N OK'
 
     return g, analise
@@ -468,30 +462,32 @@ def checagem_momento_fletor_viga(
                                     gamma_w: float, 
                                     f_mk: float
                                 ) -> dict:
-    """Verifica a função estado limite para momento fletor de uma viga de madeira conforme NBR 7190.
+    """Verificação da função estado limite para momento fletor de uma 
+        viga de madeira conforme NBR 7190.
 
     :param w_x: Módulo de resistência em relação ao eixo x [m³] 
     :param k_m: Coeficiente de correção do tipo da seção transversal
     :param m_gk: Momento fletor devido à carga permanente [kN.m]
     :param m_qk: Momento fletor devido à carga variável [kN.m]
-    :param classe_carregamento: 'permanente', 'longa duração', 'média duração', 'curta duração' ou 'instantânea'
+    :param classe_carregamento: 'permanente', 'longa duração', 'média duração', 
+                                'curta duração' ou 'instantânea'
     :param classe_madeira: 'madeira natural' ou 'madeira recomposta'
     :param classe_umidade: 1, 2, 3, 4
     :param gamma_g: Coeficiente parcial de segurança para carga permanente
     :param gamma_q: Coeficiente parcial de segurança para carga variável
     :param gamma_w: Coeficiente parcial de segurança para madeira
-    :param f_mk: Resistência característica à flexão da madeira [kN/m²]
+    :param f_mk: Resistência característica à flexão da madeira [kPa]
 
     :return:  Analise da verificação de tensões para momento fletor com as seguintes chaves: 
-             "m_sd [kN.m]": Momento fletor de cálculo, 
-             "k_mod1": Coeficiente de modificação 1, 
-             "k_mod2": Coeficiente de modificação 2, 
-             "k_mod": Coeficiente de modificação, 
-             "sigma_x [kN/m²]": Tensão normal em relação ao eixo x, 
-             "f_md [kN/m²]": Resistência de cálculo da madeira, 
-             "g [kN/m²]": Equação Estado Limite no formato R - S,
-             "sigma_sd/f_md": Fator de utilização da peça, 
-             "analise": descrição se a viga passa ou não passa na verificação de tensões     
+                "m_sd [kN.m]": Momento fletor de cálculo, 
+                "k_mod1": Coeficiente de modificação 1, 
+                "k_mod2": Coeficiente de modificação 2, 
+                "k_mod": Coeficiente de modificação, 
+                "sigma_x [kPa]": Tensão normal de cálculo em relação ao eixo x, 
+                "f_md [kPa]": Resistência de cálculo da madeira, 
+                "g_otimiz [-]": Equação Estado Limite no formato (S - R) / R,
+                "g_confia [kPa]": Equação Estado Limite no formato R - S, 
+                "analise": descrição se a viga passa ou não passa na verificação de tensões normais     
     """
 
     # Ações de cálculo
@@ -500,24 +496,24 @@ def checagem_momento_fletor_viga(
     # k_mod
     k_mod1, k_mod2, k_mod = k_mod_madeira(classe_carregamento, classe_madeira, classe_umidade)
 
-    # Tensões
-    s_x, _, _ = flexao_obliqua(w_x, m_sd)
+    # Tensões normais
+    s_xd, _, _ = flexao_obliqua(w_x, m_sd)
 
     # Resistência de cálculo
     f_md = resistencia_calculo(f_mk, gamma_w, k_mod)                
     
-    # Verificação
-    g, analise = checagem_tensoes_normais(k_m, s_x, 0.00, f_md)
+    # Verificação de tensões normais
+    g, analise = checagem_tensoes_normais(k_m, s_xd, 0.00, f_md)
 
     return {
                 "m_sd [kN.m]": m_sd,
                 "k_mod1": k_mod1,
                 "k_mod2": k_mod2,
                 "k_mod": k_mod,
-                "sigma_x [kN/m²]": s_x,
-                "f_md [kN/m²]": f_md,
-                "g [kN/m²]": g,
-                "sigma_sd/f_md": s_x / f_md,
+                "sigma_x [kPa]": s_xd,
+                "f_md [kPa]": f_md,
+                "g_otimiz [-]": g,
+                "g_confia [kPa]": f_md - s_xd,
                 "analise": analise,
             }
 
@@ -538,7 +534,8 @@ def checagem_cisalhamento_viga(
                                     gamma_w: float, 
                                     f_vk: float
                                 ) -> dict:
-    """Verifica a função estado limite para cisalhamento de uma viga de madeira conforme NBR 7190.
+    """Verifica a função estado limite para cisalhamento de uma 
+        viga de madeira conforme NBR 7190.
 
     :param s_x: Momento estático da seção em relação a x [m³]
     :param b_medio: Largura ou somatória das larguras no ponto da seção em estudo [m]
@@ -547,21 +544,22 @@ def checagem_cisalhamento_viga(
     :param tipo_secao: 'Retangular' ou 'Circular'
     :param v_gk: Esforço cortante característico devido às cargas permanentes [kN]
     :param v_qk: Esforço cortante característico devido às cargas variáveis [kN]
-    :param classe_carregamento: 'permanente', 'longa duração', 'média duração', 'curta duração' ou 'instantânea'
+    :param classe_carregamento: 'permanente', 'longa duração', 'média duração', 
+                                'curta duração' ou 'instantânea'
     :param classe_madeira: 'madeira natural' ou 'madeira recomposta'
     :param classe_umidade: 1, 2, 3, 4
     :param gamma_g: Coeficiente parcial de segurança para carga permanente
     :param gamma_q: Coeficiente parcial de segurança para carga variável
     :param gamma_w: Coeficiente parcial de segurança para madeira
-    :param f_vk: Resistência característica ao cisalhamento da madeira [kN/m²]
+    :param f_vk: Resistência característica ao cisalhamento da madeira [kPa]
 
     :return:  Analise da verificação de tensões para cisalhamento com as seguintes chaves:
              "v_sd [kN]": Cortante de cálculo,
-             "f_vd [kN/m²]": Resistência de cálculo ao cisalhamento,
-             "tau_sd [kN/m²]": Tensão de cisalhamento solicitante de cálculo,
-             "g [kN]": diferença entre resistência e solicitação,
-             "tau_sd/f_vd": tau_sd / f_vd,
-             "analise": descrição se a viga passa ou não passa na verificação de tensões     
+             "f_vd [kPa]": Resistência de cálculo ao cisalhamento,
+             "tau_sd [kPa]": Tensão de cisalhamento solicitante de cálculo,
+             "g_otimiz [-]": Equação Estado Limite no formato (S - R) / R,
+             "g_confia [kPa]": Equação Estado Limite no formato R - S, 
+             "analise": descrição se a viga passa ou não passa na verificação de tensões cisalhantes     
     """
 
     # Ações de cálculo
@@ -580,52 +578,64 @@ def checagem_cisalhamento_viga(
         tau_sd = (1.5 * v_sd) / area
 
     # Verificação
-    g =  tau_sd - f_vd
+    g =  (tau_sd - f_vd) / f_vd
 
     return {
                 "v_sd [kN]": v_sd,
-                "f_vd [kN/m²]": f_vd,
-                "tau_sd [kN/m²]": tau_sd,
-                "g [kN/m²]": g,
-                "tau_sd/f_vd": tau_sd / f_vd,
+                "f_vd [kPa]": f_vd,
+                "tau_sd [kPa]": tau_sd,
+                "g_otimiz [-]": g,
+                "g_confia [kPa]": f_vd - tau_sd,
                 "analise": 'OK' if g <= 0 else 'N OK',
             }
 
 
-def checagem_flecha_viga(l: float, delta_gk: float, delta_qk: float, psi2: float, phi: float) -> dict:
-    """Verifica a resistência à flexão oblíqua da madeira conforme NBR 7190.
+def checagem_flecha_viga(
+                            l: float,
+                            delta_gk: float,
+                            delta_qk: float,
+                            psi2: float,
+                            phi: float
+                        ) -> dict:
+    """Verificação da função estado limite para flecha de uma viga de madeira
+        conforme NBR 7190. São verificadas as flechas totais e para carga variável.
 
     :param l: vão teórico da viga [m]
     :param delta_gk: flecha devido a carga permanente [m]
     :param delta_qk: flecha devido a carga variável [m]
-    :param psi2: Coeficiente de combinação para carga variável
-    :param phi: Coeficiente de fluencia para carga variável
+    :param psi2: Coeficiente de combinação simultânea para carga variável
+    :param phi: Coeficiente de fluência para carga variável
 
     :return:  Analise da verificação de flecha com as seguintes chaves:
-             "delta_lim [m]": limite de flecha, 
-             "delta_qk [m]": flecha máxima devido à carga variável, 
-             "g [m]": Equação Estado Limite, 
-             "delta_qk/delta_lim": Fator de utilização da peça,
-             "analise": descrição se a viga passa ou não passa na verificação de flecha     
+                "delta_lim [m]": limite de flecha para carga total, 
+                "delta_lim_variavel [m]": limite de flecha para carga variável,
+                "delta_fluencia [m]": flecha máxima devido à fluência,
+                "delta_qk [m]": flecha máxima devido à carga variável, 
+                "g_otimiz [-]": Equação Estado Limite no formato (S - R) / R, 
+                "g_confia [m]": Equação Estado Limite no formato R - S, 
+                "of [-]": Desempenho da viga em relação ao limite de flecha considerando fluência,
+                "analise": descrição se a viga passa ou não passa na verificação de flecha     
     """
 
     # Verificação flecha total
     delta_sd_1 = delta_gk + psi2 * phi * delta_qk
-    g_sd1 = delta_sd_1 - l / 250
+    lim_1 = l / 250
+    g_sd1 = (delta_sd_1 - lim_1) / lim_1
 
     # Verificação flecha variável
     delta_sd_2 = delta_qk
-    g_sd2 = delta_sd_2 - l / 350
+    lim_2 = l / 350
+    g_sd2 = (delta_sd_2 - lim_2) / lim_2
     g_sd = max(g_sd1, g_sd2)
 
     return {
-                "delta_lim_total [m]": l/250,
-                "delta_lim_variavel [m]": l/350,
+                "delta_lim_total [m]": lim_1,
+                "delta_lim_variavel [m]": lim_2,
                 "delta_fluencia [m]": delta_sd_1,
                 "delta_qk [m]": delta_sd_2,
-                "g [m]": g_sd,
-                "delta_phi/delta_lim": delta_sd_1 / (l/250),
-                "delta_qk/delta_lim": delta_sd_2 / (l/350),
+                "g_otimiz [-]": g_sd,
+                "g_confia [m]": max(lim_1 - delta_sd_1, lim_2 - delta_sd_2),
+                "of [-]": delta_sd_1/lim_1,
                 "analise": 'OK' if g_sd <= 0 else 'N OK',
             }
 
@@ -645,17 +655,16 @@ def checagem_completa_longarina_madeira_flexao(
                                                 gamma_w: float,
                                                 psi2: float,
                                                 phi: float,
-                                                densidade: float, 
                                                 f_mk: float,
                                                 f_vk: float,
                                                 e_modflex: float, 
 
-                                            ) -> tuple[dict, dict, dict, dict, str]:
-    """Verifica a longarina de madeira submetida à flexão simples conforme NBR 7190.
+                                            ) -> tuple[dict, dict, dict, str]:
+    """Verifica a longarina de madeira nas  condições de flexão, cisalhamento e flecha conforme NBR 7190.
 
     :param geo: Parâmetros geométricos da seção transversal. Se retangular: Chaves: 'b_w': Largura da seção transversal [m] e 'h': Altura da seção transversal [m]. Se circular: Chaves: 'd': Diâmetro da seção transversal [m]
     :param p_gk: Carga permanente característica, uniformemente distribuída [kN/m]
-    :param p_qk: Carga variável característica de multidão [kN/m²]
+    :param p_qk: Carga variável característica de multidão [kPa]
     :param p_rodak: carga variável característica por roda [kN]
     :param a: distância entre eixos [m]
     :param l: Comprimento do vão [m]
@@ -667,10 +676,9 @@ def checagem_completa_longarina_madeira_flexao(
     :param gamma_w: Coeficiente parcial de segurança para madeira
     :param psi2: Coeficiente de combinação para carga variável
     :param phi: Coeficiente de fluencia para carga variável
-    :param densidade: densidade da madeira [kg/m³]
-    :param f_mk: Resistência caracteristica à flexão [kN/m²]
-    :param f_vk: Resistência caracteristica ao cisalhamento [kN/m²]
-    :param e_modflex: Módulo de elasticidade à flexão [kN/m²]
+    :param f_mk: Resistência caracteristica à flexão [kPa]
+    :param f_vk: Resistência caracteristica ao cisalhamento [kPa]
+    :param e_modflex: Módulo de elasticidade à flexão [kPa]
     """
 
     # Geometria, Propriedades da seção transversal e coeficiente de correção para impacto vertical
@@ -737,13 +745,12 @@ def checagem_completa_tabuleiro_madeira_flexao(
                                                 gamma_g: float, 
                                                 gamma_q: float, 
                                                 gamma_w: float,
-                                                densidade: float, 
                                                 f_mk: float,
                                             ) -> tuple[dict, str]:
-    """Verifica a longarina de madeira submetida à flexão simples conforme NBR 7190.
+    """Verifica o tabuleiro de madeira nas condição de flexão conforme NBR 7190.
 
     :param geo: Parâmetros geométricos da seção transversal. Se retangular: Chaves: 'b_w': Largura da seção transversal [m] e 'h': Altura da seção transversal [m]. Se circular: Chaves: 'd': Diâmetro da seção transversal [m]
-    :param p_gtabk: Carga permanente característica no tabuleiro excluso peso próprio [kN/m²]
+    :param p_gtabk: Carga permanente característica, uniformemente distribuída [kN/m]
     :param p_rodak: carga variável característica por roda [kN]
     :param esp: Espaçamento entre longarinas [m]
     :param classe_carregamento: 'permanente', 'longa duração', 'média duração', 'curta duração' ou 'instantânea'
@@ -752,8 +759,7 @@ def checagem_completa_tabuleiro_madeira_flexao(
     :param gamma_g: Coeficiente parcial de segurança para carga permanente
     :param gamma_q: Coeficiente parcial de segurança para carga variável
     :param gamma_w: Coeficiente parcial de segurança para madeira
-    :param densidade: densidade da madeira [kg/m³]
-    :param f_mk: Resistência caracteristica à flexão [kN/m²]
+    :param f_mk: Resistência caracteristica à flexão [kPa]
     """
 
     # Geometria, Propriedades da seção transversal e coeficiente de correção para impacto vertical
@@ -762,8 +768,7 @@ def checagem_completa_tabuleiro_madeira_flexao(
     aux_ci = (1 + 0.75 * (ci - 1))
 
     # Momentos fletores devido a carga permanente e variável
-    p_gk = p_gtabk * geo['b_w']
-    m_gk = momento_max_carga_permanente(p_gk, esp)
+    m_gk = momento_max_carga_permanente(p_gtabk, esp)
     m_qk = momento_max_carga_variavel_tabuleiro(p_rodak, esp)
     m_qk *= aux_ci
     
@@ -839,9 +844,9 @@ def textos_pre_sizing_l() -> dict:
                         "largura_viga_tabuleiro_max": "Largura máxima da viga do tabuleiro (cm)",
                         "altura_viga_tabuleiro_min": "Altura mínima da viga do tabuleiro (cm)",
                         "altura_viga_tabuleiro_max": "Altura máxima da viga do tabuleiro (cm)",
-                        "carga_permanente": "Carga permanente atuante no tabuleiro (kN/m²) excluso peso próprio",
+                        "carga_permanente": "Carga permanente atuante no tabuleiro (kPa) excluso peso próprio",
                         "carga_roda": "Carga por roda (kN)",
-                        "carga_multidao": "Carga de multidão (kN/m²)",
+                        "carga_multidao": "Carga de multidão (kPa)",
                         "distancia_eixos": "Distância entre eixos (m) do veículo tipo",
                         "classe_carregamento": "Classe de carregamento",
                         "classe_carregamento_opcoes": ["Permanente", "Longa duração", "Média duração", "Curta duração", "Instantânea"],
@@ -861,7 +866,7 @@ def textos_pre_sizing_l() -> dict:
                         "f_mk_tab": "Resistência característica à flexão (MPa) do tabuleiro",
                         "gerador_desempenho": "Gerar desempenho estrutural via NSGA-II para pré-dimensionamento",
                         "botao_dados_down": "Baixar dados do pré-dimensionamento",
-                        "tag_y_fig": "Flecha total ($m$)",
+                        "tag_y_fig": r'$\frac{\delta_{\text{total}}}{L/250}$',
                         "tag_x_fig": "Área de madeira ($m^2$)",
                     },
                 "en": {
@@ -873,9 +878,9 @@ def textos_pre_sizing_l() -> dict:
                         "tipo_secao": ["Circular"],
                         "diametro_minimo": "Minimum diameter (cm)",
                         "diametro_maximo": "Maximum diameter (cm)",
-                        "carga_permanente": "Dead load (kN/m²) excluding self-weight",
+                        "carga_permanente": "Dead load (kPa) excluding self-weight",
                         "carga_roda": "Load per wheel (kN)",
-                        "carga_multidao": "Crowd load (kN/m²)",
+                        "carga_multidao": "Crowd load (kPa)",
                         "distancia_eixos": "Distance between axles (m)",
                         "classe_carregamento": "Load duration class",
                         "classe_carregamento_opcoes": ["Dead", "Long-term", "Medium-term", "Short-term", "Instantaneous"],
@@ -915,14 +920,37 @@ def momento_max_carga_variavel_tabuleiro(p_rodak: float, esp: float, a_r: float 
 class ProjetoOtimo(ElementwiseProblem):
     def __init__(
                     self,
-                    l,
-                    p_gk, p_rodak, p_qk, a,
-                    classe_carregamento, classe_madeira, classe_umidade,
-                    gamma_g, gamma_q, gamma_w, psi2, phi,
-                    densidade_long, densidade_tab, f_mk_long, f_vk_long, e_modflex_long,
-                    d_min, d_max, esp_min, esp_max, 
-                    bw_min, bw_max, h_min, h_max, f_mk_tab
+                    l: float,
+                    p_gk: float,
+                    p_rodak: float,
+                    p_qk: float,
+                    a: float,
+                    classe_carregamento: str,
+                    classe_madeira: str,
+                    classe_umidade: int,
+                    gamma_g: float,
+                    gamma_q: float,
+                    gamma_w: float,
+                    psi2: float,
+                    phi: float,
+                    densidade_long: float,
+                    densidade_tab: float,
+                    f_mk_long: float,
+                    f_vk_long: float,
+                    e_modflex_long: float,
+                    d_min: float,
+                    d_max: float,
+                    esp_min: float,
+                    esp_max: float, 
+                    bw_min: float,
+                    bw_max: float,
+                    h_min: float,
+                    h_max: float,
+                    f_mk_tab: float
                 ):
+        """Inicialização das variáveis do problema de otimização/confiabilidade estrutural
+        """
+
         self.l = float(l)
         self.p_gk = float(p_gk)
         self.p_rodak = float(p_rodak)
@@ -941,6 +969,7 @@ class ProjetoOtimo(ElementwiseProblem):
         self.f_mk_long = float(f_mk_long)
         self.f_vk_long = float(f_vk_long)
         self.e_modflex_long = float(e_modflex_long)
+        self.f_mk_tab = float(f_mk_tab)
         self.d_min = float(d_min)
         self.d_max = float(d_max)
         self.esp_min = float(esp_min)
@@ -949,19 +978,101 @@ class ProjetoOtimo(ElementwiseProblem):
         self.bw_max = float(bw_max)
         self.h_min = float(h_min)
         self.h_max = float(h_max)
-        self.f_mk_tab = float(f_mk_tab)
         xl = np.array([d_min, esp_min, bw_min, h_min], dtype=float)
         xu = np.array([d_max, esp_max, bw_max, h_max], dtype=float)
 
         super().__init__(
-            n_var=4,
-            n_obj=2,
-            n_ieq_constr=4,
-            xl=xl,
-            xu=xu,
-            elementwise_evaluation=True
-        )
+                            n_var=4,
+                            n_obj=2,
+                            n_ieq_constr=4,
+                            xl=xl,
+                            xu=xu,
+                            elementwise_evaluation=True
+                        )
 
+    def calcular_objetivos_restricoes_otimizacao(
+                                                    self, 
+                                                    d: float, 
+                                                    esp: float, 
+                                                    bw: float, 
+                                                    h: float
+                                                ) -> tuple[list, list, dict, dict, dict, str, dict, str]:
+        """Determina os objetivos e restrições do problema de otimização.
+        """
+
+        # Conversão unidades e cálculo de cargas
+        l = self.l / 100.0                          # [m]
+        d /= 100.0                                  # [m]
+        esp /= 100.0                                # [m]
+        bw /= 100.0                                 # [m]
+        h /= 100.0                                  # [m]
+        f_mk_long = self.f_mk_long *1E3             # [kPa]
+        f_vk_long = self.f_vk_long * 1E3            # [kPa]
+        e_modflex_long = self.e_modflex_long * 1E6  # [kPa]
+        f_mk_tab = self.f_mk_tab * 1E3              # [kPa]
+
+        # Armazena o geometria
+        geo_tab = {"b_w": bw, "h": h}
+        geo_long = {"d": d}
+
+        # Carga permanente do tabuleiro que atua na longarina
+        carga_area_tab = (self.densidade_tab * 9.81) * h / 1E3                      # [kPa]
+        p_gk_long = (self.p_gk + carga_area_tab) * esp                              # [kN/m]
+        props_long = prop_madeiras(geo_long)
+        area_long = props_long[0]
+        p_gk_long += peso_proprio_longarina(self.densidade_long, area_long)         # [kN/m]
+
+        # Avaliação flexão, cisalhamento e flecha da longarina
+        res_m, res_v, res_f_total, relat_l = checagem_completa_longarina_madeira_flexao(
+                                                                                            geo_long,
+                                                                                            p_gk_long,
+                                                                                            self.p_qk,
+                                                                                            self.p_rodak,
+                                                                                            self.a,
+                                                                                            l,
+                                                                                            self.classe_carregamento.lower(),
+                                                                                            self.classe_madeira.lower(),
+                                                                                            self.classe_umidade,
+                                                                                            self.gamma_g,
+                                                                                            self.gamma_q,
+                                                                                            self.gamma_w,
+                                                                                            self.psi2,
+                                                                                            self.phi,
+                                                                                            f_mk_long,
+                                                                                            f_vk_long,
+                                                                                            e_modflex_long,
+                                                                                        )
+
+        # Carga permanente do tabuleiro que atua no tabuleiro
+        p_gtabk = (carga_area_tab + self.p_gk) * bw
+
+        # Avaliação do flexão tabuleiro
+        res_m_tab, relat_t = checagem_completa_tabuleiro_madeira_flexao(
+                                                                            geo_tab,
+                                                                            p_gtabk,
+                                                                            self.p_rodak,
+                                                                            esp,
+                                                                            self.classe_carregamento.lower(),
+                                                                            self.classe_madeira.lower(),
+                                                                            self.classe_umidade,
+                                                                            self.gamma_g,
+                                                                            self.gamma_q,
+                                                                            self.gamma_w,
+                                                                            f_mk_tab,
+                                                                        )
+        
+        # Área de materiais empregados
+        props_tab = prop_madeiras(geo_tab)
+        area_tab = props_tab[0]
+        f1 = area_long + area_tab
+        f2 = -res_f_total["of [-]"]         # Invertendo o sinal para garantir um processo de maximização
+        g1 = res_m["g_otimiz [-]"]
+        g2 = res_v["g_otimiz [-]"]
+        g3 = res_f_total["g_otimiz [-]"]
+        g4 = res_m_tab["g_otimiz [-]"]
+
+        return [f1, f2], [g1, g2, g3, g4], res_m, res_v, res_f_total, relat_l, res_m_tab, relat_t
+    
     def _evaluate(self, x, out, *args, **kwargs):
         
         # Geometria da longarina e espaçamento entre longarinas
@@ -972,80 +1083,28 @@ class ProjetoOtimo(ElementwiseProblem):
         bw = float(x[2])
         h = float(x[3])
 
-        # Conversão unidades e cálculo de cargas
-        l = self.l / 100.0                          # [m]
-        d /= 100.0                                  # [m]
-        esp /= 100.0                                # [m]
-        bw /= 100.0                                 # [m]
-        h /= 100.0                                  # [m]
-        f_mk_long = self.f_mk_long *1E3             # [kN/m²]
-        f_vk_long = self.f_vk_long * 1E3            # [kN/m²]
-        e_modflex_long = self.e_modflex_long * 1E6  # [kN/m²]
-        f_mk_tab = self.f_mk_tab * 1E3              # [kN/m²]
-
-        # Armazena o geometria
-        geo_tab = {"b_w": bw, "h": h}
-        geo_long = {"d": d}
-
-        # Correção da carga permanente do tabuleiro
-        carga_area_tab = (self.densidade_tab * 9.81) * h / 1E3                        # [kN/m²]
-        p_gk_long = (self.p_gk + carga_area_tab) * esp                              # [kN/m]
-        props_long = prop_madeiras(geo_long)
-        area_long = props_long[0]
-        p_gk_long += peso_proprio_longarina(self.densidade_long, area_long)         # [kN/m]
-
-        # Avaliação da longarina
-        res_m, res_v, res_f_total, relat = checagem_completa_longarina_madeira_flexao(
-                                                                                        geo_long,
-                                                                                        p_gk_long,
-                                                                                        self.p_qk,
-                                                                                        self.p_rodak,
-                                                                                        self.a,
-                                                                                        l,
-                                                                                        self.classe_carregamento.lower(),
-                                                                                        self.classe_madeira.lower(),
-                                                                                        self.classe_umidade,
-                                                                                        self.gamma_g,
-                                                                                        self.gamma_q,
-                                                                                        self.gamma_w,
-                                                                                        self.psi2,
-                                                                                        self.phi,
-                                                                                        self.densidade_long,
-                                                                                        f_mk_long,
-                                                                                        f_vk_long,
-                                                                                        e_modflex_long,
-                                                                                    )
-        # Avaliação do tabuleiro
-        res_m_tab, relat = checagem_completa_tabuleiro_madeira_flexao(
-                                                                        geo_tab,
-                                                                        self.p_gk + carga_area_tab,
-                                                                        self.p_rodak,
-                                                                        esp,
-                                                                        self.classe_carregamento.lower(),
-                                                                        self.classe_madeira.lower(),
-                                                                        self.classe_umidade,
-                                                                        self.gamma_g,
-                                                                        self.gamma_q,
-                                                                        self.gamma_w,
-                                                                        self.densidade_tab,
-                                                                        f_mk_tab,
-                                                                    )
-        
-        # Área de materiais eempregados
-        props_tab = prop_madeiras(geo_tab)
-        area_tab = props_tab[0]
-        area_total = area_long + area_tab
-        flecha_total = res_f_total["delta_fluencia [m]"]
-        out["F"] = np.array([area_total, -flecha_total], dtype=float)
-        out["G"] = np.array([res_m["g [kN/m²]"], res_v["g [kN/m²]"], res_f_total["g [m]"], res_m_tab["g [kN/m²]"]], dtype=float)
+        # Cálculo dos objetivos e restrições
+        f, g, _, _, _, _, _, _ = self.calcular_objetivos_restricoes_otimizacao(d, esp, bw, h)
+        out["F"] = np.array(f, dtype=float)
+        out["G"] = np.array(g, dtype=float)
 
 
-def chamando_nsga2(dados: dict, ds: list, esps: list, bws: list, hs: list): # -> pd.DataFrame:
+def chamando_nsga2(
+                        dados: dict,
+                        ds: list,
+                        esps: list,
+                        bws: list,
+                        hs: list
+                    ) -> pd.DataFrame:
+    """Função para chamar o algoritmo NSGA-II para otimização do projeto estrutural.
+    """
+
+    # Instanciando o problema de otimização, construindo a estrutura exemplo
     problem = ProjetoOtimo(
                             l=dados["l (cm)"],
-                            p_gk=dados["p_gk (kN/m²)"],
+                            p_gk=dados["p_gk (kPa)"],
                             p_rodak=dados["p_rodak (kN)"],
-                            p_qk=dados["p_qk (kN/m²)"],
+                            p_qk=dados["p_qk (kPa)"],
                             a=dados["a (m)"],
                             classe_carregamento=dados["classe_carregamento"],
                             classe_madeira=dados["classe_madeira"],
@@ -1100,208 +1159,86 @@ def chamando_nsga2(dados: dict, ds: list, esps: list, bws: list, hs: list): # ->
                                 "bw [cm]": X_nsga[:, 2],
                                 "h [cm]": X_nsga[:, 3],
                                 "area [m²]": F_nsga[:, 0],
-                                "delta [m]": -F_nsga[:, 1], 
-                                "flex lim beam [kPa]": G_nsga[:, 0], 
-                                "cis lim beam [kPa]": G_nsga[:, 1], 
-                                "delta lim beam [m]": G_nsga[:, 2],
-                                "flex lim deck [kPa]": G_nsga[:, 3],
+                                "delta [-]": -F_nsga[:, 1], 
+                                "flex lim beam [(Ms-Mr)/Mr]": G_nsga[:, 0], 
+                                "cis lim beam [(Vs-Vr)/Vr]": G_nsga[:, 1], 
+                                "delta lim beam [(ps-pr)/pr]": G_nsga[:, 2],
+                                "flex lim deck [(Ms-Mr)/Mr]": G_nsga[:, 3],
                             }
                         )
 
 
-# Projeto estrutural
-class ProjetoEstrutural:
-    def __init__(
-                    self,
-                    l,
-                    p_gk, p_rodak, p_qk, a,
-                    classe_carregamento, classe_madeira, classe_umidade,
-                    gamma_g, gamma_q, gamma_w, psi2, phi,
-                    densidade_long, densidade_tab,
-                    f_mk_long, f_vk_long, e_modflex_long,
-                    f_mk_tab,
-                ):
-        self.l = float(l)
-        self.p_gk = float(p_gk)
-        self.p_rodak = float(p_rodak)
-        self.p_qk = float(p_qk)
-        self.a = float(a)
-        self.classe_carregamento = classe_carregamento
-        self.classe_madeira = classe_madeira
-        self.classe_umidade = classe_umidade
-        self.gamma_g = float(gamma_g)
-        self.gamma_q = float(gamma_q)
-        self.gamma_w = float(gamma_w)
-        self.psi2 = float(psi2)
-        self.phi = float(phi)
-        self.densidade_long = float(densidade_long)
-        self.densidade_tab = float(densidade_tab)
-        self.f_mk_long = float(f_mk_long)
-        self.f_vk_long = float(f_vk_long)
-        self.e_modflex_long = float(e_modflex_long)
-        self.f_mk_tab = float(f_mk_tab)
-
-    def calcular(self, d_cm, esp_cm, bw_cm, h_cm):
-        """Executa o dimensionamento completo para uma solução definida.
-        """
-
-        # Conversões
-        l = self.l / 100.0
-        d = d_cm / 100.0
-        esp = esp_cm / 100.0
-        bw = bw_cm / 100.0
-        h = h_cm / 100.0
-        f_mk_long = self.f_mk_long * 1E3
-        f_vk_long = self.f_vk_long * 1E3
-        e_modflex_long = self.e_modflex_long * 1E6
-        f_mk_tab = self.f_mk_tab * 1E3
-
-        # Armazena geometria
-        geo_long = {"d": d}
-        geo_tab = {"b_w": bw, "h": h}
-
-        # Correção da carga permanente do tabuleiro
-        carga_area_tab = self.densidade_tab * h * 9.81 / 1E3                        # [kN/m²]
-        p_gk_long = (self.p_gk + carga_area_tab) * esp                              # [kN/m]
-        props_long = prop_madeiras(geo_long)
-        area_long = props_long[0]
-        p_gk_long += peso_proprio_longarina(self.densidade_long, area_long) * esp   # [kN/m]
-
-        # Avaliação da longarina
-        res_m, res_v, res_f_total, relat_long = checagem_completa_longarina_madeira_flexao(
-                                                                                                geo_long,
-                                                                                                p_gk_long,
-                                                                                                self.p_rodak,
-                                                                                                self.p_qk,
-                                                                                                self.a,
-                                                                                                l,
-                                                                                                self.classe_carregamento.lower(),
-                                                                                                self.classe_madeira.lower(),
-                                                                                                self.classe_umidade,
-                                                                                                self.gamma_g,
-                                                                                                self.gamma_q,
-                                                                                                self.gamma_w,
-                                                                                                self.psi2,
-                                                                                                self.phi,
-                                                                                                self.densidade_long,
-                                                                                                f_mk_long,
-                                                                                                f_vk_long,
-                                                                                                e_modflex_long,
-                                                                                            )
-        # Avaliação do tabuleiro
-        res_m_tab, relat_tab = checagem_completa_tabuleiro_madeira_flexao(
-                                                                            geo_tab,
-                                                                            self.p_gk + carga_area_tab,
-                                                                            self.p_rodak,
-                                                                            esp,
-                                                                            self.classe_carregamento.lower(),
-                                                                            self.classe_madeira.lower(),
-                                                                            self.classe_umidade,
-                                                                            self.gamma_g,
-                                                                            self.gamma_q,
-                                                                            self.gamma_w,
-                                                                            self.densidade_tab,
-                                                                            f_mk_tab,
-                                                                        )
-
-        # Área de materiais eempregados
-        props_tab = prop_madeiras(geo_tab)
-        area_tab = props_tab[0]
-
-        return {
-                    "geometria": {
-                                    "d_cm": d_cm,
-                                    "esp_cm": esp_cm,
-                                    "bw_cm": bw_cm,
-                                    "h_cm": h_cm,
-                                },
-                    "areas": {
-                                "longarina_m2": area_long,
-                                "tabuleiro_m2": area_tab,
-                                "total_m2": area_long + area_tab,
-                            },
-                    "flexao_longarina": res_m,
-                    "cisalhamento_longarina": res_v,
-                    "flecha_total_longarina": res_f_total,
-                    "flexao_tabuleiro": res_m_tab,
-                    "relatorios": {
-                                        "longarina": relat_long,
-                                        "tabuleiro": relat_tab,
-                                    },
-                }
+# # Confiabilidade estrutural
+# def smooth_max(a, b, k=50.0):
+#     m = np.maximum(a, b)
+#     return m + np.log(np.exp(k*(a-m)) + np.exp(k*(b-m))) / k
 
 
-# Confiabilidade estrutural
-def smooth_max(a, b, k=50.0):
-    m = np.maximum(a, b)
-    return m + np.log(np.exp(k*(a-m)) + np.exp(k*(b-m))) / k
+# def obj_confia(samples, params):
 
-
-def obj_confia(samples, params):
-
-    g = np.zeros((samples.shape[0]))
-    for i in range(samples.shape[0]):
-        # Extrair amostras 
-        p_gk = samples[i, 0]
-        p_rodak = samples[i, 1]
-        p_qk  = samples[i, 2]
-        f_mk = samples[i, 3]
-        f_vk = samples[i, 4]
-        e_modflex = samples[i, 5]
-        f_mktab = samples[i, 6]
-        densidade_long = samples[i, 7]
-        densidade_tab = samples[i, 8]
-        # print(p_gk, p_rodak, p_qk, f_mk, f_vk, e_modflex, f_mktab, densidade_long, densidade_tab)
+#     g = np.zeros((samples.shape[0]))
+#     for i in range(samples.shape[0]):
+#         # Extrair amostras 
+#         p_gk = samples[i, 0]
+#         p_rodak = samples[i, 1]
+#         p_qk  = samples[i, 2]
+#         f_mk = samples[i, 3]
+#         f_vk = samples[i, 4]
+#         e_modflex = samples[i, 5]
+#         f_mktab = samples[i, 6]
+#         densidade_long = samples[i, 7]
+#         densidade_tab = samples[i, 8]
+#         # print(p_gk, p_rodak, p_qk, f_mk, f_vk, e_modflex, f_mktab, densidade_long, densidade_tab)
         
-        # Parâmetros fixos
-        a = params[0]
-        l = params[1]
-        classe_carregamento = params[2]
-        classe_madeira = params[3]
-        classe_umidade = params[4]
-        d_cm = params[5]
-        esp = params[6]
-        bw_cm = params[7]
-        h_cm = params[8]
-        tipo_g = params[9]  # 'flexao', 'cisalhamento' ou 'flecha'
+#         # Parâmetros fixos
+#         a = params[0]
+#         l = params[1]
+#         classe_carregamento = params[2]
+#         classe_madeira = params[3]
+#         classe_umidade = params[4]
+#         d_cm = params[5]
+#         esp = params[6]
+#         bw_cm = params[7]
+#         h_cm = params[8]
+#         tipo_g = params[9]  # 'flexao', 'cisalhamento' ou 'flecha'
 
-        # Função Estado Limite
-        projeto = ProjetoEstrutural(
-                                        l=l,
-                                        p_gk=p_gk,
-                                        p_rodak=p_rodak,
-                                        p_qk=p_qk,
-                                        a=a,
-                                        classe_carregamento=classe_carregamento,
-                                        classe_madeira=classe_madeira,
-                                        classe_umidade=classe_umidade,
-                                        gamma_g=1.0,
-                                        gamma_q=1.0,
-                                        gamma_w=1.0,
-                                        psi2=1.0,
-                                        phi=1.0,
-                                        densidade_long=densidade_long,
-                                        densidade_tab=densidade_tab,
-                                        f_mk_long=f_mk,
-                                        f_vk_long=f_vk,
-                                        e_modflex_long=e_modflex,
-                                        f_mk_tab=f_mktab,
-                                    )
-        res = projeto.calcular(d_cm=d_cm, esp_cm=esp, bw_cm=bw_cm, h_cm=h_cm)
-        if tipo_g == 'flexao':
-            g[i] = -res["flexao_longarina"]["g [kN/m²]"]
-        elif tipo_g == 'cisalhamento':
-            g[i] = -res["cisalhamento_longarina"]["g [kN/m²]"]
-        elif tipo_g == 'flecha':
-            delta_sd_1 = res["flecha_total_longarina"]["delta_fluencia [m]"]
-            delta_rd_1 = res["flecha_total_longarina"]["delta_lim_total [m]"]
-            delta_sd_2 = res["flecha_total_longarina"]["delta_qk [m]"]
-            delta_rd_2 = res["flecha_total_longarina"]["delta_lim_variavel [m]"]
-            g_fluencia = delta_rd_1 - delta_sd_1
-            g_variavel = delta_rd_2 - delta_sd_2
-            g[i] = smooth_max(g_fluencia, g_variavel)
+#         # Função Estado Limite
+#         projeto = ProjetoEstrutural(
+#                                         l=l,
+#                                         p_gk=p_gk,
+#                                         p_rodak=p_rodak,
+#                                         p_qk=p_qk,
+#                                         a=a,
+#                                         classe_carregamento=classe_carregamento,
+#                                         classe_madeira=classe_madeira,
+#                                         classe_umidade=classe_umidade,
+#                                         gamma_g=1.0,
+#                                         gamma_q=1.0,
+#                                         gamma_w=1.0,
+#                                         psi2=1.0,
+#                                         phi=1.0,
+#                                         densidade_long=densidade_long,
+#                                         densidade_tab=densidade_tab,
+#                                         f_mk_long=f_mk,
+#                                         f_vk_long=f_vk,
+#                                         e_modflex_long=e_modflex,
+#                                         f_mk_tab=f_mktab,
+#                                     )
+#         res = projeto.calcular(d_cm=d_cm, esp_cm=esp, bw_cm=bw_cm, h_cm=h_cm)
+#         if tipo_g == 'flexao':
+#             g[i] = -res["flexao_longarina"]["g [kPa]"]
+#         elif tipo_g == 'cisalhamento':
+#             g[i] = -res["cisalhamento_longarina"]["g [kPa]"]
+#         elif tipo_g == 'flecha':
+#             delta_sd_1 = res["flecha_total_longarina"]["delta_fluencia [m]"]
+#             delta_rd_1 = res["flecha_total_longarina"]["delta_lim_total [m]"]
+#             delta_sd_2 = res["flecha_total_longarina"]["delta_qk [m]"]
+#             delta_rd_2 = res["flecha_total_longarina"]["delta_lim_variavel [m]"]
+#             g_fluencia = delta_rd_1 - delta_sd_1
+#             g_variavel = delta_rd_2 - delta_sd_2
+#             g[i] = smooth_max(g_fluencia, g_variavel)
 
-    return g
+#     return g
 
 
 def gev_loc_scale_from_mean_std(mean: float, std: float) -> tuple[float, float]:
@@ -1355,6 +1292,7 @@ def chamando_form(p_gk, p_rodak, p_qk, a, l, classe_carregamento, classe_madeira
     pf = form.failure_probability[0]
 
     return beta, pf
+
 
 import numpy as np
 
@@ -1503,9 +1441,9 @@ if __name__ == "__main__":
     hs = [12, 60]
     problem = ProjetoOtimo(
                         l=df["l (cm)"],
-                        p_gk=df["p_gk (kN/m²)"],
+                        p_gk=df["p_gk (kPa)"],
                         p_rodak=df["p_rodak (kN)"],
-                        p_qk=df["p_qk (kN/m²)"],
+                        p_qk=df["p_qk (kPa)"],
                         a=df["a (m)"],
                         classe_carregamento=df["classe_carregamento"],
                         classe_madeira=df["classe_madeira"],
