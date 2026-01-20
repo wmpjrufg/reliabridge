@@ -692,7 +692,7 @@ def gerar_relatorio_md(ctx: dict) -> str:
     
     # Obs: Dividimos valores kpa por 1000 para exibir em MPa no PDF
     md = f"""---
-title: "RLÁTORIO: Longarina"
+title: "RELÁTORIO: Longarina"
 author: "X"
 date: "{datetime.now().strftime('%d/%m/%Y')}"
 geometry: "left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm"
