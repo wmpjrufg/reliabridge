@@ -659,11 +659,11 @@ def checagem_completa_longarina_madeira_flexao(
                                                 f_vk: float,
                                                 e_modflex: float, 
 
-                                            ) -> tuple[dict, dict, dict, str]:
+                                            ) -> tuple[dict, dict, dict, dict]:
     """Verifica a longarina de madeira nas  condições de flexão, cisalhamento e flecha conforme NBR 7190.
 
     :param geo: Parâmetros geométricos da seção transversal. Se retangular: Chaves: 'b_w': Largura da seção transversal [m] e 'h': Altura da seção transversal [m]. Se circular: Chaves: 'd': Diâmetro da seção transversal [m]
-    :param p_gk: Carga permanente característica, uniformemente distribuída [kN/m]
+    :param p_gk: Carga permanente característica, uniformemente distribuída [kN/m] na longarina
     :param p_qk: Carga variável característica de multidão [kPa]
     :param p_rodak: carga variável característica por roda [kN]
     :param a: distância entre eixos [m]
@@ -729,9 +729,39 @@ def checagem_completa_longarina_madeira_flexao(
     res_flecha = checagem_flecha_viga(l, delta_gk, delta_qk, psi2, phi)
 
     # Relatório
-    # relat = relatorio()
+    relat =  {
+                    "area [m2]": area,
+                    "w_x [m3]": w_x,
+                    "i_x [m4]": i_x,
+                    "s_x [m3]": s_x,
+                    "coeficiente_impacto_vertical": ci,
+                    "m_gk [kN.m]": m_gk,
+                    "aux_ci": aux_ci,
+                    "m_qk [kN.m]": m_qk,
+                    "m_sd [kN.m]": res_flex["m_sd [kN.m]"],
+                    "k_mod1": res_flex["k_mod1"],
+                    "k_mod2": res_flex["k_mod2"],
+                    "k_mod": res_flex["k_mod"],
+                    "sigma_x [kPa]": res_flex["sigma_x [kPa]"],
+                    "f_md [kPa]": res_flex["f_md [kPa]"],
+                    "g_flexao [-]": res_flex["g_confia [kPa]"],
+                    "analise_flexao": res_flex["analise"],
+                    "v_gk [kN]": v_gk,
+                    "v_qk [kN]": v_qk,
+                    "v_sd [kN]": res_cis["v_sd [kN]"],
+                    "f_vd [kPa]": res_cis["f_vd [kPa]"],
+                    "tau_sd [kPa]": res_cis["tau_sd [kPa]"],
+                    "g_cisalhamento [-]": res_cis["g_confia [kPa]"],
+                    "analise_cisalhamento": res_cis["analise"],
+                    "delta_gk [m]": delta_gk,
+                    "delta_qk [m]": delta_qk,
+                    "delta_fluencia [m]": res_flecha["delta_fluencia [m]"],
+                    "delta_lim_total [m]": res_flecha["delta_lim_total [m]"],
+                    "delta_lim_variavel [m]": res_flecha["delta_lim_variavel [m]"],
+                    "g_flecha [-]": res_flecha["g_confia [m]"]
+                }
 
-    return res_flex, res_cis, res_flecha, "relat"
+    return res_flex, res_cis, res_flecha, relat
 
 
 def checagem_completa_tabuleiro_madeira_flexao(
@@ -746,11 +776,11 @@ def checagem_completa_tabuleiro_madeira_flexao(
                                                 gamma_q: float, 
                                                 gamma_w: float,
                                                 f_mk: float,
-                                            ) -> tuple[dict, str]:
+                                            ) -> tuple[dict, dict]:
     """Verifica o tabuleiro de madeira nas condição de flexão conforme NBR 7190.
 
     :param geo: Parâmetros geométricos da seção transversal. Se retangular: Chaves: 'b_w': Largura da seção transversal [m] e 'h': Altura da seção transversal [m]. Se circular: Chaves: 'd': Diâmetro da seção transversal [m]
-    :param p_gtabk: Carga permanente característica, uniformemente distribuída [kN/m]
+    :param p_gtabk: Carga permanente característica, uniformemente distribuída [kN/m] no tabuleiro
     :param p_rodak: carga variável característica por roda [kN]
     :param esp: Espaçamento entre longarinas [m]
     :param classe_carregamento: 'permanente', 'longa duração', 'média duração', 'curta duração' ou 'instantânea'
@@ -782,9 +812,26 @@ def checagem_completa_tabuleiro_madeira_flexao(
                                             )
 
     # Relatório
-    # relat = relatorio()
+    relat =  {
+                    "area [m2]": area,
+                    "w_x [m3]": w_x,
+                    "i_x [m4]": i_x,
+                    "s_x [m3]": s_x,
+                    "coeficiente_impacto_vertical": ci,
+                    "m_gk [kN.m]": m_gk,
+                    "aux_ci": aux_ci,
+                    "m_qk [kN.m]": m_qk,
+                    "m_sd [kN.m]": res_flex["m_sd [kN.m]"],
+                    "k_mod1": res_flex["k_mod1"],
+                    "k_mod2": res_flex["k_mod2"],
+                    "k_mod": res_flex["k_mod"],
+                    "sigma_x [kPa]": res_flex["sigma_x [kPa]"],
+                    "f_md [kPa]": res_flex["f_md [kPa]"],
+                    "g_flexao [-]": res_flex["g_confia [kPa]"],
+                    "analise_flexao": res_flex["analise"],
+                }
 
-    return res_flex, "relat"
+    return res_flex, relat
 
 
 def textos_design() -> dict:
@@ -996,7 +1043,7 @@ class ProjetoOtimo(ElementwiseProblem):
                                                     esp: float, 
                                                     bw: float, 
                                                     h: float
-                                                ) -> tuple[list, list, dict, dict, dict, str, dict, str]:
+                                                ) -> tuple[list, list, dict, dict, dict, dict, dict, dict, dict]:
         """Determina os objetivos e restrições do problema de otimização.
         """
 
@@ -1020,7 +1067,8 @@ class ProjetoOtimo(ElementwiseProblem):
         p_gk_long = (self.p_gk + carga_area_tab) * esp                              # [kN/m]
         props_long = prop_madeiras(geo_long)
         area_long = props_long[0]
-        p_gk_long += peso_proprio_longarina(self.densidade_long, area_long)         # [kN/m]
+        pp_gk_long = peso_proprio_longarina(self.densidade_long, area_long)         # [kN/m]
+        p_gk_long += pp_gk_long                                                     # [kN/m]
 
         # Avaliação flexão, cisalhamento e flecha da longarina
         res_m, res_v, res_f_total, relat_l = checagem_completa_longarina_madeira_flexao(
@@ -1045,6 +1093,12 @@ class ProjetoOtimo(ElementwiseProblem):
 
         # Carga permanente do tabuleiro que atua no tabuleiro
         p_gtabk = (carga_area_tab + self.p_gk) * bw
+        relat_carga = {
+                        "carga_area_tab [kPa]": carga_area_tab,
+                        "p_gtabk [kN/m]": p_gtabk,
+                        "pp_gk_long [kN/m]": pp_gk_long,
+                        "p_glongk [kN/m]": p_gk_long,
+                      }
 
         # Avaliação do flexão tabuleiro
         res_m_tab, relat_t = checagem_completa_tabuleiro_madeira_flexao(
@@ -1071,7 +1125,7 @@ class ProjetoOtimo(ElementwiseProblem):
         g3 = res_f_total["g_otimiz [-]"]
         g4 = res_m_tab["g_otimiz [-]"]
 
-        return [f1, f2], [g1, g2, g3, g4], res_m, res_v, res_f_total, relat_l, res_m_tab, relat_t
+        return [f1, f2], [g1, g2, g3, g4], res_m, res_v, res_f_total, relat_l, res_m_tab, relat_t, relat_carga
     
     def _evaluate(self, x, out, *args, **kwargs):
         
