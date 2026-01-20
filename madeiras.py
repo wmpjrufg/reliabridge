@@ -640,35 +640,68 @@ def checagem_completa_longarina_madeira_flexao(
 
 
 def gerar_relatorio_md(ctx: dict) -> str:
-    """
-    Gera uma string formatada em Markdown com LaTeX, estruturada como memória de cálculo.
-    Recebe um dicionário 'ctx' contendo todos os dados da verificação.
-    """
-    
-    # Helper para formatar status
-    def status_fmt(condicao):
-        return "**APROVADO** [OK]" if condicao else "**REPROVADO** $\\times$"
+    """Gera o relatório de memória de cálculo formatado em Markdown compatível com Pandoc/LaTeX.
 
-    # Extraindo dados para legibilidade
-    geo = ctx['geo']
-    res_flex = ctx['res_flex']
-    res_cis = ctx['res_cis']
-    res_flecha = ctx['res_flecha_var']
+    :param ctx: Dicionário de contexto contendo todos os dados de entrada e resultados das verificações.
+                Deve conter as seguintes chaves principais:
+                - 'geo': Dicionário com geometria ('b_w', 'h' ou 'd') [m]
+                - 'res_flex': Dicionário de resultados da flexão (chaves: 'sigma_x [kN/m²]', 'f_md [kN/m²]', etc.)
+                - 'res_cis': Dicionário de resultados do cisalhamento (chaves: 'tau_sd [kN/m²]', 'f_vd [kN/m²]', etc.)
+                - 'res_flecha_var': Dicionário de resultados da flecha (chaves: 'delta_qk [m]', 'delta_lim [m]', etc.)
+                - 'tipo_secao': Tipo da seção ('Retangular' ou 'Circular')
+                - 'm_gk', 'm_qk': Momentos fletores característicos [kN.m]
+                - 'v_gk', 'v_qk': Esforços cortantes característicos [kN]
+                - 'gamma_g', 'gamma_q', 'gamma_w': Coeficientes parciais de segurança
+                - 'ci': Coeficiente de impacto vertical
+                - 'classe_umidade', 'classe_carregamento', 'classe_madeira': Dados do material
+
+    :return: String única contendo todo o corpo do relatório formatado em Markdown,
+            incluindo cabeçalho YAML para conversão direta em PDF via Pandoc,
+            tabelas de esforços e resumo das verificações (ELU e ELS).
+    """
     
-    # Cabeçalho YAML para o Pandoc
-    # Note o uso de \\ para comandos LaTeX dentro da f-string
+    # HELPER DE STATUS
+    def get_status_str(dicionario):
+        # Lê a chave 'analise' que retorna 'OK' ou 'N OK'
+        status = dicionario.get('analise', '')
+        if status == 'OK' or status is True:
+            return "**APROVADO** [OK]"
+        return "**REPROVADO** $\\times$"
+
+    # EXTRAÇÃO DOS DADOS
+    
+    # FLEXÃO
+    r_flex = ctx['res_flex']
+    sigma_md_kpa = r_flex.get("sigma_x [kN/m²]", 0)
+    f_md_kpa     = r_flex.get("f_md [kN/m²]", 0)
+    ratio_flex   = r_flex.get("sigma_sd/f_md", 0)
+
+    # CISALHAMENTO
+    r_cis = ctx['res_cis']
+    tau_vd_kpa = r_cis.get("tau_sd [kN/m²]", 0)
+    f_vd_kpa   = r_cis.get("f_vd [kN/m²]", 0)
+    ratio_cis  = r_cis.get("tau_sd/f_vd", 0)
+    
+    # FLECHA
+    r_flecha = ctx['res_flecha_var']
+    flecha_calc = r_flecha.get("delta_qk [m]", 0)
+    flecha_lim  = r_flecha.get("delta_lim [m]", 0)
+
+    # CONSTRUÇÃO DO TEXTO MARKDOWN
+    geo = ctx['geo']
+    
+    # Obs: Dividimos valores kpa por 1000 para exibir em MPa no PDF
     md = f"""---
-title: "Relatório de Longarina de Madeira"
-author: "Engenharia Automatizada"
+title: "RLÁTORIO: Longarina"
+author: "X"
 date: "{datetime.now().strftime('%d/%m/%Y')}"
 geometry: "left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm"
 documentclass: article
 output: pdf_document
 ---
 
-# 1. Parâmetros de Projeto
-
-* **Tipo de Seção:** {ctx['tipo_secao']}
+# 1. Dados de Entrada
+* **Seção Transversal:** {ctx['tipo_secao']}
 """
     if 'd' in geo:
         md += f"* **Diâmetro ($d$):** {geo['d']*100:.1f} cm\n"
@@ -676,56 +709,47 @@ output: pdf_document
         md += f"* **Base ($b_w$):** {geo['b_w']*100:.1f} cm\n* **Altura ($h$):** {geo['h']*100:.1f} cm\n"
 
     md += f"""
-## 1.2 Propriedades Mecânicas e Coeficientes
 * **Classe de Umidade:** {ctx['classe_umidade']}
 * **Classe de Carregamento:** {ctx['classe_carregamento'].title()}
 * **Madeira:** {ctx['classe_madeira'].title()}
-* **Coeficientes Parciais:** $\\gamma_g = {ctx['gamma_g']}$, $\\gamma_q = {ctx['gamma_q']}$, $\\gamma_w = {ctx['gamma_w']}$
-* **Coeficiente de Impacto Vertical ($C_i$):** {ctx['ci']:.3f}
+* **Coeficientes:** $\\gamma_g = {ctx['gamma_g']}$, $\\gamma_q = {ctx['gamma_q']}$, $\\gamma_w = {ctx['gamma_w']}$
+* **Coef. Impacto Vertical ($C_i$):** {ctx['ci']:.3f}
 
+---
 
-
-# 2. Esforços Solicitantes de Cálculo
-
-Os esforços foram majorados pelos coeficientes de ponderação e impacto vertical.
+# 2. Esforços de Cálculo (Majorados)
 
 | Esforço | Carga Permanente ($G$) | Carga Variável ($Q$) |
 | :--- | :---: | :---: |
-| **Momento Fletor máx.** | {ctx['m_gk']:.2f} kN.m | {ctx['m_qk']:.2f} kN.m |
-| **Cortante máx.** | {ctx['v_gk']:.2f} kN | {ctx['v_qk']:.2f} kN |
+| **Momento Máx.** | {ctx['m_gk']:.2f} kN.m | {ctx['m_qk']:.2f} kN.m |
+| **Cortante Máx.** | {ctx['v_gk']:.2f} kN | {ctx['v_qk']:.2f} kN |
 
+---
 
-
-# 3. Verificações de Segurança (ELU)
+# 3. Verificações (ELU)
 
 ## 3.1 Flexão Simples
-Verificação das tensões normais na borda da seção.
+* **Tensão Atuante ($\\sigma_{{x,d}}$):** {sigma_md_kpa/1000:.2f} MPa
+* **Resistência ($f_{{md}}$):** {f_md_kpa/1000:.2f} MPa
+* **Índice de Uso:** {ratio_flex*100:.1f}%
 
-* **Tensão Atuante ($\\sigma_{{md}}$):** {res_flex.get('sigma_md', 0):.2f} MPa
-* **Resistência de Cálculo ($f_{{md}}$):** {res_flex.get('f_md', 0):.2f} MPa
-* **Índice de Aproveitamento:** {res_flex.get('ratio', 0)*100:.1f}%
-
-> **Resultado:** {status_fmt(res_flex.get('aprovado', False))}
+> **Status:** {get_status_str(r_flex)}
 
 ## 3.2 Cisalhamento
-Verificação das tensões tangenciais máximas.
+* **Tensão Atuante ($\\tau_{{sd}}$):** {tau_vd_kpa/1000:.2f} MPa
+* **Resistência ($f_{{vd}}$):** {f_vd_kpa/1000:.2f} MPa
+* **Índice de Uso:** {ratio_cis*100:.1f}%
 
-* **Tensão Atuante ($\\tau_{{vd}}$):** {res_cis.get('tau_vd', 0):.2f} MPa
-* **Resistência de Cálculo ($f_{{vd}}$):** {res_cis.get('f_vd', 0):.2f} MPa
-* **Índice de Aproveitamento:** {res_cis.get('ratio', 0)*100:.1f}%
+> **Status:** {get_status_str(r_cis)}
 
-> **Resultado:** {status_fmt(res_cis.get('aprovado', False))}
-
-
+---
 
 # 4. Verificação de Deformação (ELS)
 
-Verificação da flecha máxima sob cargas variáveis.
+* **Flecha Calculada:** {flecha_calc*100:.2f} cm
+* **Flecha Limite ($L/360$):** {flecha_lim*100:.2f} cm
 
-* **Flecha Calculada:** {res_flecha.get('flecha', 0)*100:.2f} cm
-* **Flecha Limite:** {res_flecha.get('limite', 0)*100:.2f} cm
-
-> **Resultado:** {status_fmt(res_flecha.get('aprovado', False))}
+> **Status:** {get_status_str(r_flecha)}
 """
     return md
 
