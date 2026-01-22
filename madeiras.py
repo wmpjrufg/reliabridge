@@ -519,8 +519,6 @@ def checagem_momento_fletor_viga(
 
 
 def checagem_cisalhamento_viga(
-                                    s_x: float, 
-                                    b_medio: float, 
                                     i_x: float, 
                                     area: float, 
                                     tipo_secao: str,
@@ -573,7 +571,7 @@ def checagem_cisalhamento_viga(
 
     # Tensão de cálculo
     if tipo_secao == "Circular":
-        tau_sd = (v_sd * s_x) / (b_medio * i_x)
+        tau_sd = (4/3) * v_sd / area
     else:
         tau_sd = (1.5 * v_sd) / area
 
@@ -718,7 +716,7 @@ def checagem_completa_longarina_madeira_flexao(
     
     # Verificação do cisalhamento
     res_cis = checagem_cisalhamento_viga(
-                                            s_x, b_medio, i_x, area, tipo_secao, 
+                                            i_x, area, tipo_secao, 
                                             v_gk, v_qk, 
                                             classe_carregamento,
                                             classe_madeira, classe_umidade,
@@ -1488,6 +1486,7 @@ def chamando_sampling(
 
 if __name__ == "__main__":
     df = pd.read_excel("beam_data.xlsx")
+    print(df)
     df = df.to_dict(orient="records")
     df = df[0] 
     ds = [30, 150]
@@ -1525,7 +1524,7 @@ if __name__ == "__main__":
                     )
 
     # 2) Define uma solução manual
-    x_manual = np.array([[34., 120.0, 10., 30.]])   # d, esp, bw, h
+    x_manual = np.array([[50., 120.0, 10., 30.]])   # d, esp, bw, h
 
     # 3) Avalia
     out = problem.evaluate(x_manual, return_values_of=["F", "G"])
