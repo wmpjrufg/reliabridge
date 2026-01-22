@@ -46,8 +46,8 @@ lang = st.session_state.get("lang", "pt")
 textos = textos_design()
 t = textos.get(lang, textos["pt"])
 
-st.header(t.get("titulo", "Design"))
-st.subheader(t.get("pre", "Dimensionamento determinístico a partir do pré-dimensionamento"))
+st.header(t["titulo"])
+st.subheader(t["pre"])
 
 
 # ============================================================
@@ -58,7 +58,7 @@ with st.form("form_design", clear_on_submit=False):
     # -------------------------
     # Inputs de geometria escolhida (projeto final)
     # -------------------------
-    st.subheader(t.get("geo_head", "Geometria do projeto"))
+    st.subheader(t["dados_pre"])
 
     colA, colB = st.columns(2)
 

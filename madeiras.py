@@ -839,6 +839,7 @@ def textos_design() -> dict:
                 "pt": {
                         "titulo": "Projeto estrutural de uma ponte de madeira",
                         "pre": "Verificação dos elementos estruturais",
+                        "dados_pre": "Dados para dimensionamento",
                         "entrada_tipo_secao_longarina": "Tipo de seção",
                         "tipo_secao_longarina": ["Circular"],
                         "diametro_longarina": "Diâmetro da longarina (cm)",
