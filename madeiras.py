@@ -1138,7 +1138,7 @@ class ProjetoOtimo(ElementwiseProblem):
         h = float(x[3])
 
         # Cálculo dos objetivos e restrições
-        f, g, _, _, _, _, _, _ = self.calcular_objetivos_restricoes_otimizacao(d, esp, bw, h)
+        f, g, _, _, _, _, _, _, _ = self.calcular_objetivos_restricoes_otimizacao(d, esp, bw, h)
         out["F"] = np.array(f, dtype=float)
         out["G"] = np.array(g, dtype=float)
 

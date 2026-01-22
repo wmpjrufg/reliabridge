@@ -200,20 +200,6 @@ if st.session_state.get("has_results", False):
 
     st.subheader(t.get("resultado_head", "Resultado do Dimensionamento"))
 
-    # 1) Geometria
-    with st.expander(t.get("resultado_geo", "Geometria adotada"), expanded=True):
-        st.json(res.get("geometria", {}))
-
-    # 2) Áreas
-    with st.expander(t.get("resultado_areas", "Áreas e consumo de material"), expanded=True):
-        areas = res[0]
-        areas = areas[0]
-        if isinstance(areas, dict) and len(areas) > 0:
-            df_areas = pd.DataFrame.from_dict(areas, orient="index", columns=[t.get("col_valor", "Valor")])
-            st.dataframe(df_areas, use_container_width=True)
-        else:
-            st.warning(t.get("sem_areas", "Sem dados de áreas no resultado."))
-
     # 3) Verificações — Longarina
     titulo_longarina, longarina_ok = status_global(
                                                     "Verificações da longarina",
@@ -247,10 +233,14 @@ if st.session_state.get("has_results", False):
 
     # 5) Relatórios completos (auditoria)
     with st.expander(t.get("resultado_relatorios", "Relatórios completos de cálculo"), expanded=False):
-        rel = res.get("relatorios", {})
+        rel_carga = res[-1]
+        rel_l = res[-2]
+        rel_t = res[-3]
+        st.markdown("**Cargas**")
+        st.json(rel_carga)
         st.markdown("**Longarina**")
-        st.json(rel.get("longarina", {}))
+        st.json(rel_l)
         st.markdown("**Tabuleiro**")
-        st.json(rel.get("tabuleiro", {}))
+        st.json(rel_t)
 else:
     st.warning(t.get("aviso_gerar_primeiro", "Sem resultados atuais. Clique em “Gerar” para processar."))

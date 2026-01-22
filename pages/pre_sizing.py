@@ -44,7 +44,7 @@ st.subheader(t["pre"])
 with st.form("form_geometria", clear_on_submit=False):
 
     l = st.number_input(t["entrada_comprimento"], min_value=300.0, key="l")
-    larg = st.number_input(t["pista"], min_value=200.040, key="larg")
+    larg = st.number_input(t["pista"], min_value=200.0, key="larg")
 
     tipo_secao_longarina = st.selectbox(
                                             t["entrada_tipo_secao_longarina"],
@@ -212,7 +212,7 @@ if submitted_design:
                                         "tabuleiro_g_m": res_nsga["flex lim deck [(Ms-Mr)/Mr]"].tolist(),
                                     })
         x = df_resultados["area_m2"].to_numpy()
-        y = df_resultados["deflecção_m"].to_numpy()
+        y = df_resultados["deflecção"].to_numpy()
     else:
         df_resultados = pd.DataFrame({
                                         "d_cm": res_nsga["d [cm]"].tolist(),
