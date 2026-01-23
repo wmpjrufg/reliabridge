@@ -693,11 +693,9 @@ def checagem_completa_longarina_madeira_flexao(
     v_gk = cortante_max_carga_permanente(p_gk, l)
     if 'd' in geo:
         v_qk = cortante_max_carga_variavel(l, p_rodak, p_qk, a, geo['d'])
-        b_medio = geo['d']
         tipo_secao = "Circular"
     else:
         v_qk = cortante_max_carga_variavel(l, p_rodak, p_qk, a, geo['h'])    
-        b_medio = geo['b_w']
         tipo_secao = "Retangular"
     v_qk *= aux_ci
 
@@ -1486,7 +1484,6 @@ def chamando_sampling(
 
 if __name__ == "__main__":
     df = pd.read_excel("beam_data.xlsx")
-    print(df)
     df = df.to_dict(orient="records")
     df = df[0] 
     ds = [30, 150]
