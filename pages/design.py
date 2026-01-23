@@ -2,11 +2,12 @@
 import io
 import json
 import hashlib
+from datetime import datetime
 
 import streamlit as st
 import pandas as pd
 
-from madeiras import textos_design, ProjetoOtimo
+from madeiras import textos_design, ProjetoOtimo, gerar_relatorio_final
 
 
 # -----------------------------
@@ -242,5 +243,22 @@ if st.session_state.get("has_results", False):
         st.json(rel_l)
         st.markdown("**Tabuleiro**")
         st.json(rel_t)
+    
+    # Gera o relatório
+    md_text = gerar_relatorio_final(
+        projeto=projeto,
+        res=res,
+        geo_real={'d': d_cm, 'esp': esp_cm, 'bw': bw_cm, 'h': h_cm}
+    )
+
+    st.markdown("---")
+    st.subheader("Relatório Técnico")
+
+    st.download_button(
+        label="📄 Baixar Relatório (Markdown)",
+        data=md_text,
+        file_name=f"Relatorio_Ponte.md",
+        mime="text/markdown",
+    )
 else:
     st.warning(t.get("aviso_gerar_primeiro", "Sem resultados atuais. Clique em “Gerar” para processar."))
