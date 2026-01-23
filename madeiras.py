@@ -475,7 +475,7 @@ def checagem_momento_fletor_viga(
     :param classe_umidade: 1, 2, 3, 4
     :param gamma_g: Coeficiente parcial de segurança para carga permanente
     :param gamma_q: Coeficiente parcial de segurança para carga variável
-    :param gamma_w: Coeficiente parcial de segurança para madeira
+    :param gamma_w: Coeficiente parcial de segurança para madeira na flexão
     :param f_mk: Resistência característica à flexão da madeira [kPa]
 
     :return:  Analise da verificação de tensões para momento fletor com as seguintes chaves: 
@@ -548,7 +548,7 @@ def checagem_cisalhamento_viga(
     :param classe_umidade: 1, 2, 3, 4
     :param gamma_g: Coeficiente parcial de segurança para carga permanente
     :param gamma_q: Coeficiente parcial de segurança para carga variável
-    :param gamma_w: Coeficiente parcial de segurança para madeira
+    :param gamma_w: Coeficiente parcial de segurança para madeira no cisalhamento
     :param f_vk: Resistência característica ao cisalhamento da madeira [kPa]
 
     :return:  Analise da verificação de tensões para cisalhamento com as seguintes chaves:
@@ -571,9 +571,9 @@ def checagem_cisalhamento_viga(
 
     # Tensão de cálculo
     if tipo_secao == "Circular":
-        tau_sd = (4/3) * v_sd / area
+        tau_sd = (4/3) * (v_sd / area)
     else:
-        tau_sd = (1.5 * v_sd) / area
+        tau_sd = (3/2) * (v_sd / area)
 
     # Verificação
     g =  (tau_sd - f_vd) / f_vd
@@ -616,13 +616,14 @@ def checagem_flecha_viga(
     """
 
     # Verificação flecha total
-    delta_sd_1 = delta_gk + psi2 * phi * delta_qk
+    delta_qk_aux_cor = psi2 * (1 + phi) * delta_qk
+    delta_sd_1 = delta_gk + delta_qk_aux_cor
     lim_1 = l / 250
     g_sd1 = (delta_sd_1 - lim_1) / lim_1
 
     # Verificação flecha variável
     delta_sd_2 = delta_qk
-    lim_2 = l / 350
+    lim_2 = l / 360
     g_sd2 = (delta_sd_2 - lim_2) / lim_2
     g_sd = max(g_sd1, g_sd2)
 
@@ -650,7 +651,8 @@ def checagem_completa_longarina_madeira_flexao(
                                                 classe_umidade: int, 
                                                 gamma_g: float, 
                                                 gamma_q: float, 
-                                                gamma_w: float,
+                                                gamma_wf: float,
+                                                gamma_wc: float,
                                                 psi2: float,
                                                 phi: float,
                                                 f_mk: float,
@@ -671,7 +673,8 @@ def checagem_completa_longarina_madeira_flexao(
     :param classe_umidade: 1, 2, 3, 4
     :param gamma_g: Coeficiente parcial de segurança para carga permanente
     :param gamma_q: Coeficiente parcial de segurança para carga variável
-    :param gamma_w: Coeficiente parcial de segurança para madeira
+    :param gamma_wf: Coeficiente parcial de segurança para madeira na flexão
+    :param gamma_wc: Coeficiente parcial de segurança para madeira no cisalhamento
     :param psi2: Coeficiente de combinação para carga variável
     :param phi: Coeficiente de fluencia para carga variável
     :param f_mk: Resistência caracteristica à flexão [kPa]
@@ -709,7 +712,7 @@ def checagem_completa_longarina_madeira_flexao(
                                                 m_gk, m_qk, 
                                                 classe_carregamento, 
                                                 classe_madeira, classe_umidade, 
-                                                gamma_g, gamma_q, gamma_w, f_mk
+                                                gamma_g, gamma_q, gamma_wf, f_mk
                                             )
     
     # Verificação do cisalhamento
@@ -718,7 +721,7 @@ def checagem_completa_longarina_madeira_flexao(
                                             v_gk, v_qk, 
                                             classe_carregamento,
                                             classe_madeira, classe_umidade,
-                                            gamma_g, gamma_q, gamma_w, f_vk
+                                            gamma_g, gamma_q, gamma_wc, f_vk
                                         )
 
     # Verificação de deslocamento carga variável e total com fluência
@@ -974,7 +977,8 @@ class ProjetoOtimo(ElementwiseProblem):
                     classe_umidade: int,
                     gamma_g: float,
                     gamma_q: float,
-                    gamma_w: float,
+                    gamma_wf: float,
+                    gamma_wc: float,
                     psi2: float,
                     phi: float,
                     densidade_long: float,
@@ -1005,7 +1009,8 @@ class ProjetoOtimo(ElementwiseProblem):
         self.classe_umidade = classe_umidade
         self.gamma_g = float(gamma_g)
         self.gamma_q = float(gamma_q)
-        self.gamma_w = float(gamma_w)
+        self.gamma_wf = float(gamma_wf)
+        self.gamma_wc = float(gamma_wc)
         self.psi2 = float(psi2)
         self.phi = float(phi)
         self.densidade_long = float(densidade_long)
@@ -1080,7 +1085,8 @@ class ProjetoOtimo(ElementwiseProblem):
                                                                                             self.classe_umidade,
                                                                                             self.gamma_g,
                                                                                             self.gamma_q,
-                                                                                            self.gamma_w,
+                                                                                            self.gamma_wf,
+                                                                                            self.gamma_wc,
                                                                                             self.psi2,
                                                                                             self.phi,
                                                                                             f_mk_long,
@@ -1108,7 +1114,7 @@ class ProjetoOtimo(ElementwiseProblem):
                                                                             self.classe_umidade,
                                                                             self.gamma_g,
                                                                             self.gamma_q,
-                                                                            self.gamma_w,
+                                                                            self.gamma_wf,
                                                                             f_mk_tab,
                                                                         )
         
@@ -1501,7 +1507,8 @@ if __name__ == "__main__":
                         classe_umidade=df["classe_umidade"],
                         gamma_g=df["gamma_g"],
                         gamma_q=df["gamma_q"],
-                        gamma_w=df["gamma_w"],
+                        gamma_wf=df["gamma_wf"],
+                        gamma_wc=df["gamma_wc"],
                         psi2=df["psi_2"],
                         phi=df["phi"],
                         densidade_long=df["densidade longarina (kg/m³)"],
