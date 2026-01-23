@@ -27,6 +27,32 @@ from pymoo.operators.mutation.pm import PM
 from pymoo.termination import get_termination
 from pymoo.optimize import minimize
 
+#voltagem<=voltagem_max
+#voltagem-voltagem_max<=0
+#voltagem/voltagem_max-voltagem_max/voltagem_max<=0
+
+def calculo_g(esp,comp,bw,n):
+    g=(comp-bw*n)/(n-1)
+    return g
+
+def restringir_espaço(g,esp_min,esp_max,comp,bw,n):
+
+    n_arr_cima=np.floor(n)
+    n_arr_baixo=np.ceil(n)
+
+    g1=esp_min - calculo_g(comp,bw,n_arr_cima)
+    g2=calculo_g(comp,bw,n_arr_cima)-esp_max
+
+    g3=esp_min-calculo_g(comp,bw,n_arr_baixo)
+    g4=calculo_g(comp,bw,n_arr_baixo)-esp_max
+    
+    g=max(g1,g2,g3,g4)
+
+    return g
+
+def vol_tabuado(bw,h,compr,b_pista,qtd):
+    vol=h*bw*b_pista*qtd
+    return vol
 
 def beta_from_pf(pf: float) -> float:
     pf = float(np.clip(pf, 1e-20, 1 - 1e-20))
