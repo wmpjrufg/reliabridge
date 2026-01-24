@@ -56,6 +56,8 @@ with st.form("form_geometria", clear_on_submit=False):
         d_cm_max = st.number_input(t["diametro_maximo"], key="d_cm_max")
     else:
         d_cm_min, d_cm_max = None, None
+    esp_min = st.number_input(t["espaçamento_entre_longarinas_min"], key="esp_min")
+    esp_max = st.number_input(t["espaçamento_entre_longarinas_max"], key="esp_max")
 
     tipo_secao_tabuleiro = st.selectbox(
                                             t["tipo_secao_tabuleiro"],
@@ -63,12 +65,12 @@ with st.form("form_geometria", clear_on_submit=False):
                                             key="tipo_secao_tabuleiro"
                                         )
     if tipo_secao_tabuleiro.lower() == "retangular":
-        esp_min = st.number_input(t["espaçamento_entre_longarinas_min"], key="esp_min")
-        esp_max = st.number_input(t["espaçamento_entre_longarinas_max"], key="esp_max")
         bw_min  = st.number_input(t["largura_viga_tabuleiro_min"], key="bw_min")
         bw_max  = st.number_input(t["largura_viga_tabuleiro_max"], key="bw_max")
         h_min   = st.number_input(t["altura_viga_tabuleiro_min"], key="h_min")
         h_max   = st.number_input(t["altura_viga_tabuleiro_max"], key="h_max")
+        esp_min_tab = st.number_input(t["espaçamento_entre_peças_tabuleiro_min"], key="esp_tab_min")
+        esp_max_tab = st.number_input(t["espaçamento_entre_peças_tabuleiro_max"], key="esp_tab_max")
     else:
         esp_min = esp_max = bw_min = bw_max = h_min = h_max = None
 
@@ -129,7 +131,8 @@ if lang == "pt":
                         "classe_umidade": classe_umidade,
                         "gamma_g": gamma_g,
                         "gamma_q": gamma_q,
-                        "gamma_w": gamma_w,
+                        "gamma_wc": gamma_wc,
+                        "gamma_wf": gamma_wf,
                         "psi_2": psi_2,
                         "phi": fluencia,
                         "densidade longarina (kg/m³)": densidade_long,
@@ -154,7 +157,8 @@ else:
                         "classe_umidade": classe_umidade,
                         "gamma_g": gamma_g,
                         "gamma_q": gamma_q,
-                        "gamma_w": gamma_w,
+                        "gamma_wc": gamma_wc,
+                        "gamma_wf": gamma_wf,
                         "psi_2": psi_2,
                         "phi": fluencia,
                         "densidade longarina (kg/m³)": densidade_long,
