@@ -986,6 +986,7 @@ class ProjetoOtimo(ElementwiseProblem):
                     f_mk_long: float,
                     f_vk_long: float,
                     e_modflex_long: float,
+                    f_mk_tab: float,
                     d_min: float,
                     d_max: float,
                     esp_min: float,
@@ -994,9 +995,37 @@ class ProjetoOtimo(ElementwiseProblem):
                     bw_max: float,
                     h_min: float,
                     h_max: float,
-                    f_mk_tab: float
                 ):
-        """Inicialização das variáveis do problema de otimização/confiabilidade estrutural
+        """Inicialização das variáveis do problema de otimização/confiabilidade estrutural.
+
+        :param l: Comprimento do vão [cm]
+        :param p_gk: Carga permanente característica atuante no tabuleiro [kPa]
+        :param p_rodak: carga variável característica por roda [kN]
+        :param p_qk: Carga variável característica de multidão [kPa]
+        :param a: distância entre eixos [m]
+        :param classe_carregamento: 'permanente', 'longa duração', 'média duração', 'curta duração' ou 'instantânea'
+        :param classe_madeira: 'madeira natural' ou 'madeira recomposta'
+        :param classe_umidade: 1, 2, 3, 4
+        :param gamma_g: Coeficiente parcial de segurança para carga permanente
+        :param gamma_q: Coeficiente parcial de segurança para carga variável
+        :param gamma_wf: Coeficiente parcial de segurança para madeira na flexão
+        :param gamma_wc: Coeficiente parcial de segurança para madeira no cisalhamento
+        :param psi2: Coeficiente de combinação para carga variável
+        :param phi: Coeficiente de fluência para carga variável
+        :param densidade_long: Densidade da madeira (kg/m³) da longarina
+        :param densidade_tab: Densidade da madeira (kg/m³) do tabuleiro
+        :param f_mk_long: Resistência característica à flexão (MPa) da longarina
+        :param f_vk_long: Resistência característica ao cisalhamento (MPa) da longarina
+        :param e_modflex_long: Módulo de elasticidade à flexão (GPa) da longarina
+        :param f_mk_tab: Resistência característica à flexão (MPa) do tabuleiro
+        :param d_min: Diâmetro mínimo da longarina [cm]
+        :param d_max: Diâmetro máximo da longarina [cm]
+        :param esp_min: Espaçamento mínimo entre longarinas [cm]
+        :param esp_max: Espaçamento máximo entre longarinas [cm]
+        :param bw_min: Largura mínima da viga do tabuleiro [cm]
+        :param bw_max: Largura máxima da viga do tabuleiro [cm]
+        :param h_min: Altura mínima da viga do tabuleiro [cm]
+        :param h_max: Altura máxima da viga do tabuleiro [cm]
         """
 
         self.l = float(l)
@@ -1047,6 +1076,21 @@ class ProjetoOtimo(ElementwiseProblem):
                                                     h: float
                                                 ) -> tuple[list, list, dict, dict, dict, dict, dict, dict, dict]:
         """Determina os objetivos e restrições do problema de otimização.
+
+        :param d: Diâmetro da longarina [cm]
+        :param esp: Espaçamento entre longarinas [cm]
+        :param bw: Largura da viga do tabuleiro [cm]
+        :param h: Altura da viga do tabuleiro [cm]
+
+        :return:    [0] Lista com os objetivos. f0 area total de madeira [m²], f1 desempenho da longarina na verificação de flecha (aqui o valor já vem corrigido para maximização)
+                    [1] Lista com as restrições
+                    [2] Dicionário com resultados da verificação de flexão da longarina
+                    [3] Dicionário com resultados da verificação de cisalhamento da longarina
+                    [4] Dicionário com resultados da verificação de flecha da longarina
+                    [5] Dicionário com o relatório da longarina
+                    [6] Dicionário com resultados da verificação de flexão do tabuleiro
+                    [7] Dicionário com o relatório do tabuleiro
+                    [8] Dicionário com o relatório das cargas atuantes
         """
 
         # Conversão unidades e cálculo de cargas
@@ -1168,7 +1212,8 @@ def chamando_nsga2(
                             classe_umidade=dados["classe_umidade"],
                             gamma_g=dados["gamma_g"],
                             gamma_q=dados["gamma_q"],
-                            gamma_w=dados["gamma_w"],
+                            gamma_wf=dados["gamma_wf"],
+                            gamma_wc=dados["gamma_wc"],
                             psi2=dados["psi_2"],
                             phi=dados["phi"],
 
