@@ -95,7 +95,8 @@ with st.form("form_geometria", clear_on_submit=False):
 
     gamma_g = st.number_input(t["gamma_g"], step=0.1, key="gamma_g")
     gamma_q = st.number_input(t["gamma_q"], step=0.1, key="gamma_q")
-    gamma_w = st.number_input(t["gamma_w"], step=0.1, key="gamma_w")
+    gamma_wf = st.number_input(t["gamma_wf"], step=0.1, key="gamma_wf")
+    gamma_wc = st.number_input(t["gamma_wc"], step=0.1, key="gamma_wc")
     psi_2   = st.number_input(t["psi2"], step=0.1, key="psi_2")
     fluencia = st.number_input(t["considerar_fluencia"], step=0.1, key="phi")
 
