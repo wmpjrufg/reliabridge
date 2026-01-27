@@ -24,7 +24,7 @@ def invalidate_results():
         st.session_state.pop(k, None)
 
 
-def status_global(prefixo: str, *blocos: dict) -> tuple[str, bool]:
+def status_global(prefixo: str, *blocos: dict, lang: str = 'pt') -> tuple[str, bool]:
     passou = all(
         isinstance(b, dict) and str(b.get("analise", "")).upper() == "OK"
         for b in blocos
@@ -52,7 +52,7 @@ st.subheader(t["pre"])
 
 
 # ============================================================
-# 1) FORM
+# 1) form para dados do dimensionamento
 # ============================================================
 with st.form("form_design", clear_on_submit=False):
 
@@ -92,7 +92,8 @@ with st.form("form_design", clear_on_submit=False):
                                             )
 
         bw_cm = h_cm = None
-        if str(tipo_secao_tabuleiro).lower() == "retangular":
+        if str(tipo_secao_tabuleiro).lower() == "retangular" or str(tipo_secao_tabuleiro).lower() == "rectangular":
+            print(lang, tipo_secao_tabuleiro)
             bw_cm = st.number_input(
                                         t["largura_viga_tabuleiro"],
                                         step=1.0,
@@ -140,7 +141,7 @@ if submitted_design:
         st.stop()
 
     if d_cm is None or bw_cm is None or h_cm is None:
-        st.error(t["erro_geo"])##teste
+        st.error(t["erro_geo"])
         st.stop()
 
     # Se df veio como DataFrame com 1 linha, garantimos série/escalares
@@ -165,7 +166,8 @@ if submitted_design:
                                 classe_umidade=df0["classe_umidade"],
                                 gamma_g=df0["gamma_g"],
                                 gamma_q=df0["gamma_q"],
-                                gamma_w=df0["gamma_w"],
+                                gamma_wc=df0["gamma_wc"],
+                                gamma_wf=df0["gamma_wf"],
                                 psi2=df0["psi_2"],
                                 phi=df0["phi"],
                                 densidade_long=df0["densidade longarina (kg/m³)"],
@@ -207,6 +209,7 @@ if st.session_state.get("has_results", False):
                                                     res[2],
                                                     res[3],
                                                     res[4],
+                                                    lang=lang
                                                 )
     with st.expander(titulo_longarina, expanded=not longarina_ok):
         col1, col2, col3 = st.columns(3)
@@ -226,6 +229,7 @@ if st.session_state.get("has_results", False):
     titulo_tabuleiro, tabuleiro_ok = status_global(
                                                     "Verificações do tabuleiro",
                                                     res[6],
+                                                    lang=lang
                                                 )
 
     with st.expander(titulo_tabuleiro, expanded=not tabuleiro_ok):
@@ -246,18 +250,16 @@ if st.session_state.get("has_results", False):
     
     # Gera o relatório
     md_text = gerar_relatorio_final(
-        projeto=projeto,
-        res=res,
-        geo_real={'d': d_cm, 'esp': esp_cm, 'bw': bw_cm, 'h': h_cm}
-    )
-
-    st.subheader(t["relatorio_head"])
-
+                                    projeto=projeto,
+                                    res=res,
+                                    geo_real={'d': d_cm, 'esp': esp_cm, 'bw': bw_cm, 'h': h_cm}
+                                )
     st.download_button(
-        label="📄 Baixar Relatório (Markdown)",
-        data=md_text,
-        file_name=f"Relatorio_Ponte.md",
-        mime="text/markdown",
-    )
+                            label="📄 Baixar Relatório (Markdown)",
+                            data=md_text,
+                            file_name=f"Relatorio_Ponte.md",
+                            mime="text/markdown",
+                        )
 else:
     st.warning(t["aviso_gerar_primeiro"]) ##teste
+    

@@ -9,8 +9,8 @@ textos = {
                         "lang_label": "Idioma/Language",
                         "lang_opts": ["Português", "English"],
                         "title": "Bem-vindo",
-                        "logo_ufcat": "imgs/UFCAT_Logo.jpg",
-                        "logo_ufscar": "imgs/UFSCAR_Logo.jpg",
+                        "logo_ufcat": "imgs/ufcat.jpeg",
+                        "logo_ufscar": "imgs/ufscar.jpeg",
                         "body": (   
                                     "Esta plataforma realiza análises estruturais em pontes de madeira, seguindo rigorosamente as "
                                     "especificações da **NBR 7190:2022 - Projeto de Estruturas de Madeira**. "
@@ -31,8 +31,8 @@ textos = {
                         "lang_label": "Language/Idioma",
                         "lang_opts": ["Português", "English"],
                         "title": "Welcome",
-                        "logo_ufcat": "imgs/UFCAT_Logo.jpg",
-                        "logo_ufscar": "imgs/UFSCAR_Logo.jpg",
+                        "logo_ufcat": "imgs/ufcat.jpeg",
+                        "logo_ufscar": "imgs/ufscar.jpeg",
                         "body": (
                                     "This platform performs structural analyses of timber bridges, rigorously following the specifications of "
                                     "**NBR 7190:2022 - Design of Timber Structures**. This platform was developed by the team: "
@@ -66,13 +66,13 @@ with st.sidebar:
 
 # --- Conteúdo ---
 try:
-    col_logo1, col_logo2 = st.columns([0.07, 1])
+    col_logo1, col_logo2 = st.columns([1, 1])
 
     with col_logo1:
         st.image(t["logo_ufcat"], width=200)
 
     with col_logo2:
-        st.image(t["logo_ufscar"], width=100)
+        st.image(t["logo_ufscar"], width=200)
 except:
     st.warning("Arquivo de imagem não encontrado. Verifique a pasta 'images/'.")
     
