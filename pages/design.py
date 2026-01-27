@@ -2,11 +2,12 @@
 import io
 import json
 import hashlib
+from datetime import datetime
 
 import streamlit as st
 import pandas as pd
 
-from madeiras import textos_design, ProjetoOtimo
+from madeiras import textos_design, ProjetoOtimo, gerar_relatorio_final
 
 
 # -----------------------------
@@ -106,7 +107,7 @@ with st.form("form_design", clear_on_submit=False):
     # -------------------------
     # Upload da planilha do pré-dimensionamento (dados-base)
     # -------------------------
-    st.subheader(t.get("planilha_head", "Planilha de dados do projeto"))
+    st.subheader(t["planilha_head"])
 
     uploaded_file = st.file_uploader(
                                         t["texto_up"],
@@ -122,10 +123,10 @@ with st.form("form_design", clear_on_submit=False):
         st.markdown(t["planilha_preview"])
         st.dataframe(df, use_container_width=True)
     else:
-        st.info(t.get("aguardando_upload", "Aguardando upload do arquivo .xlsx."))
+        st.info(t["aguardando_upload"])
 
     # Botão de cálculo
-    submitted_design = st.form_submit_button(t.get("gerador_projeto", "Gerar dimensionamento"))
+    submitted_design = st.form_submit_button(t["gerador_projeto"])
 
 
 # ============================================================
@@ -135,11 +136,11 @@ if submitted_design:
 
     # Validações mínimas (sem travar seu fluxo)
     if uploaded_file is None or df is None:
-        st.error(t.get("erro_sem_planilha", "Envie a planilha .xlsx para continuar."))
+        st.error(t["erro_sem_planilha"])
         st.stop()
 
     if d_cm is None or bw_cm is None or h_cm is None:
-        st.error(t.get("erro_geo", "Preencha a geometria (longarina e tabuleiro) para continuar."))
+        st.error(t["erro_geo"])##teste
         st.stop()
 
     # Se df veio como DataFrame com 1 linha, garantimos série/escalares
@@ -198,7 +199,7 @@ if st.session_state.get("has_results", False):
 
     res = st.session_state["res_design"]
 
-    st.subheader(t.get("resultado_head", "Resultado do Dimensionamento"))
+    st.subheader(t["resultado_head"])
 
     # 3) Verificações — Longarina
     titulo_longarina, longarina_ok = status_global(
@@ -232,7 +233,7 @@ if st.session_state.get("has_results", False):
         st.json(res[6])
 
     # 5) Relatórios completos (auditoria)
-    with st.expander(t.get("resultado_relatorios", "Relatórios completos de cálculo"), expanded=False):
+    with st.expander(t["resultado_relatorios"], expanded=False):
         rel_carga = res[-1]
         rel_l = res[-2]
         rel_t = res[-3]
@@ -242,5 +243,21 @@ if st.session_state.get("has_results", False):
         st.json(rel_l)
         st.markdown("**Tabuleiro**")
         st.json(rel_t)
+    
+    # Gera o relatório
+    md_text = gerar_relatorio_final(
+        projeto=projeto,
+        res=res,
+        geo_real={'d': d_cm, 'esp': esp_cm, 'bw': bw_cm, 'h': h_cm}
+    )
+
+    st.subheader(t["relatorio_head"])
+
+    st.download_button(
+        label="📄 Baixar Relatório (Markdown)",
+        data=md_text,
+        file_name=f"Relatorio_Ponte.md",
+        mime="text/markdown",
+    )
 else:
-    st.warning(t.get("aviso_gerar_primeiro", "Sem resultados atuais. Clique em “Gerar” para processar."))
+    st.warning(t["aviso_gerar_primeiro"]) ##teste
