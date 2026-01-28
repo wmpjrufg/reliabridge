@@ -864,9 +864,22 @@ def textos_design() -> dict:
                         "gerador_desempenho": "Gerar desempenho estrutural para pré-dimensionamento",
                         "resultado_relatorios": "Relatórios completos de cálculo",
                         "resultado_head": "Relatórios de dimensionamento",
+                        "verif_longarina_titulo": "Verificações da longarina",
+                        "label_flexao": "Flexão",
+                        "label_cisalhamento": "Cisalhamento",
+                        "label_flecha": "Flecha",
+                        "verif_tabuleiro_titulo": "Verificações do tabuleiro",
+                        "label_flexao": "Flexão",
+                        "label_cargas": "Cargas",
+                        "label_longarina": "Longarina",
+                        "label_tabuleiro": "Tabuleiro",
+                        "botao_baixar_relatorio": "📄 Baixar relatório (Markdown)",
+                        "nome_arquivo": "Relatorio_Ponte",
                         "aviso_gerar_primeiro": "Sem resultados atuais. Clique em “Gerar” para processar.",
                         "erro_sem_planilha": "Envie a planilha .xlsx para continuar.",
-                        "erro_geo": "Preencha a geometria (longarina e tabuleiro) para continuar."
+                        "erro_geo": "Preencha a geometria (longarina e tabuleiro) para continuar.",
+                        "status_ok": "OK",
+                        "status_falha": "NÃO ATENDE"
                     },
                 "en": {
                         "titulo": "Parametric structural design of a wooden bridge",
@@ -896,9 +909,21 @@ def textos_design() -> dict:
                         "gerador_desempenho": "Generate structural performance for pre-sizing",
                         "resultado_relatorios":  "Complete calculation reports",
                         "resultado_head": "Full design report",
+                        "verif_longarina_titulo": "Stringer checks",
+                        "label_flexao": "Bending",
+                        "label_cisalhamento": "Shear",
+                        "label_flecha": "Deflection",
+                        "verif_tabuleiro_titulo": "Deck checks",
+                        "label_cargas": "Loads",
+                        "label_longarina": "Stringer",
+                        "label_tabuleiro": "Deck",
+                        "botao_baixar_relatorio": "📄 Download Report (Markdown)",
+                        "nome_arquivo": "Bridge_Report",
                         "aviso_gerar_primeiro": "No current results. Click “Generate” to process.",
                         "erro_sem_planilha": "Send the .xlsx spreadsheet to continue.",
-                        "erro_geo": "Fill in the geometry (beam and deck) to continue."
+                        "erro_geo": "Fill in the geometry (beam and deck) to continue.",
+                        "status_ok": "OK",
+                        "status_falha": "NOT OK"
                     },
             }
     return textos
@@ -1031,113 +1056,114 @@ def gerar_relatorio_final(projeto, res, geo_real):
     # Montagem do texto final. Usa f-strings (o f na frente das aspas)
     # para injetar os valores das variáveis direto no meio do texto.
     
-    md = f"""<div style="text-align: center">
-            <h1>RELIABRIDGE</h1>
-            <h2>Memorial de Cálculo Detalhado</h2>
-            <p><strong>Grupo de Pesquisa e Estudos em Engenharia - GPEE</strong></p>
-            <p>Data de emissão: {datetime.now().strftime('%d/%m/%Y')}</p>
-            </div>
+    md = f"""
+<div style="text-align: center">
+  <h1>RELIABRIDGE</h1>
+  <h2>Memorial de Cálculo Detalhado</h2>
+  <p><strong>Grupo de Pesquisa e Estudos em Engenharia - GPEE</strong></p>
+  <p>Data de emissão: {datetime.now().strftime('%d/%m/%Y')}</p>
+</div>
 
-            ---
+---
 
-            *Disclaimer:* Este software é parte de um projeto de pesquisa, desenvolvido para fins educacionais. Não nos responsabilizamos por quaisquer danos diretos ou indiretos decorrentes do uso deste software.
+*Disclaimer:* Este software é parte de um projeto de pesquisa, desenvolvido para fins educacionais. Não nos responsabilizamos por quaisquer danos diretos ou indiretos decorrentes do uso deste software.
 
-            ---
+---
 
-            # 1. Dados de Entrada e Materiais
+# 1. Dados de Entrada e Materiais
 
-            | Parâmetro | Valor | Unidade | Descrição |
-            | :--- | :---: | :---: | :--- |
-            | *Vão ($l$)* | {fmt(projeto.l)} | cm | Comprimento do vão livre |
-            | *Carga Perm. ($p_{{gk}}$)* | {fmt(projeto.p_gk)} | kN/m | Carga distribuída na longarina |
-            | *Carga Roda ($P_{{rodak}}$)* | {fmt(projeto.p_rodak)} | kN | Carga pontual característica |
-            | *Carga Multidão ($p_{{qk}}$)* | {fmt(projeto.p_qk)} | kPa | Carga distribuída de multidão |
-            | *Classe Madeira* | {projeto.classe_madeira.title()} | - | Umidade: {projeto.classe_umidade} |
-            | *$f_{{mk}}$ Longarina* | {projeto.f_mk_long} | MPa | Resistência característica flexão |
-            | *$E_{{m}}$ Longarina* | {projeto.e_modflex_long} | GPa | Módulo de Elasticidade |
-            | *Coef. Segurança* | $\\gamma_g={projeto.gamma_g}, \\gamma_q={projeto.gamma_q}$ | - | Majoradores de carga |
+| Parâmetro | Valor | Unidade | Descrição |
+| :--- | :---: | :---: | :--- |
+| *Vão ($l$)* | {fmt(projeto.l)} | cm | Comprimento do vão livre |
+| *Carga Perm. ($p_{{gk}}$)* | {fmt(projeto.p_gk)} | kN/m | Carga distribuída na longarina |
+| *Carga Roda ($P_{{rodak}}$)* | {fmt(projeto.p_rodak)} | kN | Carga pontual característica |
+| *Carga Multidão ($p_{{qk}}$)* | {fmt(projeto.p_qk)} | kPa | Carga distribuída de multidão |
+| *Classe Madeira* | {projeto.classe_madeira.title()} | - | Umidade: {projeto.classe_umidade} |
+| *$f_{{mk}}$ Longarina* | {projeto.f_mk_long} | MPa | Resistência característica flexão |
+| *$E_{{m}}$ Longarina* | {projeto.e_modflex_long} | GPa | Módulo de Elasticidade |
+| *Coef. Segurança* | $\\gamma_g={projeto.gamma_g}, \\gamma_q={projeto.gamma_q}$ | - | Majoradores de carga |
 
-            ---
+---
 
-            # 2. Geometria e Propriedades da Seção
+# 2. Geometria e Propriedades da Seção
 
-            ## 2.1 Dimensões Adotadas
-            * *Longarina:* Seção {geo_real.get('tipo_secao_longarina', 'Circular')} com $d = {geo_real['d']}$ cm.
-            * *Tabuleiro:* Seção Retangular com $b_w = {geo_real['bw']}$ cm e $h = {geo_real['h']}$ cm.
-            * *Espaçamento:* {geo_real['esp']} cm entre longarinas.
+## 2.1 Dimensões Adotadas
+* *Longarina:* Seção {geo_real.get('tipo_secao_longarina', 'Circular')} com $d = {geo_real['d']}$ cm.
+* *Tabuleiro:* Seção Retangular com $b_w = {geo_real['bw']}$ cm e $h = {geo_real['h']}$ cm.
+* *Espaçamento:* {geo_real['esp']} cm entre longarinas.
 
-            ## 2.2 Propriedades Geométricas Calculadas (Longarina)
+## 2.2 Propriedades Geométricas Calculadas (Longarina)
 
-            | Propriedade | Símbolo | Valor Calculado | Unidade |
-            | :--- | :---: | :---: | :---: |
-            | *Área da Seção* | $A$ | {fmt(relat_l.get('area [m2]'), 0.0001)} | $cm^2$ |
-            | *Módulo Resistente* | $W_x$ | {fmt(relat_l.get('w_x [m3]'), 0.000001)} | $cm^3$ |
-            | *Momento de Inércia* | $I_x$ | {fmt(relat_l.get('i_x [m4]'), 0.00000001)} | $cm^4$ |
-            | *Momento Estático* | $S_x$ | {fmt(relat_l.get('s_x [m3]'), 0.000001)} | $cm^3$ |
+| Propriedade | Símbolo | Valor Calculado | Unidade |
+| :--- | :---: | :---: | :---: |
+| *Área da Seção* | $A$ | {fmt(relat_l.get('area [m2]'), 0.0001)} | $cm^2$ |
+| *Módulo Resistente* | $W_x$ | {fmt(relat_l.get('w_x [m3]'), 0.000001)} | $cm^3$ |
+| *Momento de Inércia* | $I_x$ | {fmt(relat_l.get('i_x [m4]'), 0.00000001)} | $cm^4$ |
+| *Momento Estático* | $S_x$ | {fmt(relat_l.get('s_x [m3]'), 0.000001)} | $cm^3$ |
 
-            ---
+---
 
-            # 3. Detalhamento dos Esforços (Longarina)
+# 3. Detalhamento dos Esforços (Longarina)
 
-            Aqui apresentamos os esforços característicos (sem coeficientes de segurança) e os fatores de impacto utilizados.
+Aqui apresentamos os esforços característicos (sem coeficientes de segurança) e os fatores de impacto utilizados.
 
-            | Esforço / Fator | Símbolo | Valor | Unidade/Obs |
-            | :--- | :---: | :---: | :--- |
-            | *Coef. Impacto Vertical* | $C_i$ | {fmt(relat_l.get('coeficiente_impacto_vertical'), 1, 3)} | Calculado via norma |
-            | *Auxiliar Impacto* | $Aux_{{ci}}$ | {fmt(relat_l.get('aux_ci'), 1, 3)} | - |
-            | *Momento Permanente* | $M_{{gk}}$ | {fmt(relat_l.get('m_gk [kN.m]'))} | kN.m |
-            | *Momento Variável* | $M_{{qk}}$ | {fmt(relat_l.get('m_qk [kN.m]'))} | kN.m |
-            | *Momento de Cálculo* | *$M_{{sd}}$* | *{fmt(relat_l.get('m_sd [kN.m]'))}* | *kN.m* (Majorado) |
+| Esforço / Fator | Símbolo | Valor | Unidade/Obs |
+| :--- | :---: | :---: | :--- |
+| *Coef. Impacto Vertical* | $C_i$ | {fmt(relat_l.get('coeficiente_impacto_vertical'), 1, 3)} | Calculado via norma |
+| *Auxiliar Impacto* | $Aux_{{ci}}$ | {fmt(relat_l.get('aux_ci'), 1, 3)} | - |
+| *Momento Permanente* | $M_{{gk}}$ | {fmt(relat_l.get('m_gk [kN.m]'))} | kN.m |
+| *Momento Variável* | $M_{{qk}}$ | {fmt(relat_l.get('m_qk [kN.m]'))} | kN.m |
+| *Momento de Cálculo* | *$M_{{sd}}$* | *{fmt(relat_l.get('m_sd [kN.m]'))}* | *kN.m* (Majorado) |
 
-            ---
+---
 
-            # 4. Verificação ELU: Longarina
+# 4. Verificação ELU: Longarina
 
-            ## 4.1 Flexão Simples
-            *Status:* {status_icon(res_m)}
+## 4.1 Flexão Simples
+*Status:* {status_icon(res_m)}
 
-            * *Tensão Atuante ($\\sigma_{{x,d}}$):* {fmt(res_m.get('sigma_x [kPa]'), 1000)} MPa
-            * *Resistência ($f_{{md}}$):* {fmt(res_m.get('f_md [kPa]'), 1000)} MPa
-            * *Coeficientes de Modificação ($k_{{mod}}$):*
-                * $k_{{mod,1}} = {res_m.get('k_mod1')}$ (Carregamento)
-                * $k_{{mod,2}} = {res_m.get('k_mod2')}$ (Umidade)
-                * $k_{{mod,3}} = {fmt(float(res_m.get('k_mod', 0)) / (float(res_m.get('k_mod1', 1))*float(res_m.get('k_mod2', 1))), 1, 2)}$ (Categoria)
-                * *$k_{{mod, total}} = {res_m.get('k_mod')}$*
+* *Tensão Atuante ($\\sigma_{{x,d}}$):* {fmt(res_m.get('sigma_x [kPa]'), 1000)} MPa
+* *Resistência ($f_{{md}}$):* {fmt(res_m.get('f_md [kPa]'), 1000)} MPa
+* *Coeficientes de Modificação ($k_{{mod}}$):*
+    * $k_{{mod,1}} = {res_m.get('k_mod1')}$ (Carregamento)
+    * $k_{{mod,2}} = {res_m.get('k_mod2')}$ (Umidade)
+    * $k_{{mod,3}} = {fmt(float(res_m.get('k_mod', 0)) / (float(res_m.get('k_mod1', 1))*float(res_m.get('k_mod2', 1))), 1, 2)}$ (Categoria)
+    * *$k_{{mod, total}} = {res_m.get('k_mod')}$*
 
-            ## 4.2 Cisalhamento
-            *Status:* {status_icon(res_v)}
+## 4.2 Cisalhamento
+*Status:* {status_icon(res_v)}
 
-            * *Cortante de Cálculo ($V_{{sd}}$):* {fmt(res_v.get('v_sd [kN]'))} kN
-            * *Tensão Atuante ($\\tau_{{sd}}$):* {fmt(res_v.get('tau_sd [kPa]'), 1000)} MPa
-            * *Resistência ($f_{{vd}}$):* {fmt(res_v.get('f_vd [kPa]'), 1000)} MPa
+* *Cortante de Cálculo ($V_{{sd}}$):* {fmt(res_v.get('v_sd [kN]'))} kN
+* *Tensão Atuante ($\\tau_{{sd}}$):* {fmt(res_v.get('tau_sd [kPa]'), 1000)} MPa
+* *Resistência ($f_{{vd}}$):* {fmt(res_v.get('f_vd [kPa]'), 1000)} MPa
 
-            ---
+---
 
-            # 5. Verificação ELS: Deformação (Flecha)
+# 5. Verificação ELS: Deformação (Flecha)
 
-            *Status:* {status_icon(res_f)}
+*Status:* {status_icon(res_f)}
 
-            | Componente | Valor Calculado | Limite Normativo | Análise |
-            | :--- | :---: | :---: | :---: |
-            | *Flecha Instantânea ($Q$)* | {fmt(res_f.get('delta_qk [m]'), 0.01)} cm | - | - |
-            | *Flecha Fluência* | {fmt(res_f.get('delta_fluencia [m]'), 0.01)} cm | - | $\\phi = {projeto.phi}$ |
-            | *Flecha Variável (Lim.)* | *{fmt(res_f.get('delta_lim_variavel [m]'), 0.01)} cm* | *{fmt(res_f.get('delta_lim [m]'), 0.01)} cm* | *{res_f.get('analise')}* |
-            | *Flecha Total* | {fmt(res_f.get('delta_lim_total [m]'), 0.01)} cm | - | Informativo |
+| Componente | Valor Calculado | Limite Normativo | Análise |
+| :--- | :---: | :---: | :---: |
+| *Flecha Instantânea ($Q$)* | {fmt(res_f.get('delta_qk [m]'), 0.01)} cm | - | - |
+| *Flecha Fluência* | {fmt(res_f.get('delta_fluencia [m]'), 0.01)} cm | - | $\\phi = {projeto.phi}$ |
+| *Flecha Variável (Lim.)* | *{fmt(res_f.get('delta_lim_variavel [m]'), 0.01)} cm* | *{fmt(res_f.get('delta_lim [m]'), 0.01)} cm* | *{res_f.get('analise')}* |
+| *Flecha Total* | {fmt(res_f.get('delta_lim_total [m]'), 0.01)} cm | - | Informativo |
 
-            ---
+---
 
-            # 6. Tabuleiro: Verificação Local
+# 6. Tabuleiro: Verificação Local
 
-            *Status Flexão:* {status_icon(res_m_tab)}
+*Status Flexão:* {status_icon(res_m_tab)}
 
-            * *Momento de Cálculo ($M_{{sd}}$):* {fmt(res_m_tab.get('m_sd [kN.m]'))} kN.m
-            * *Tensão Atuante ($\\sigma_{{x,d}}$):* {fmt(res_m_tab.get('sigma_x [kPa]'), 1000)} MPa
-            * *Resistência ($f_{{md}}$):* {fmt(res_m_tab.get('f_md [kPa]'), 1000)} MPa
-            * *Coeficientes:* $k_{{mod}} = {res_m_tab.get('k_mod')}$ ($k_{{mod1}}={res_m_tab.get('k_mod1')}, k_{{mod2}}={res_m_tab.get('k_mod2')}$)
+* *Momento de Cálculo ($M_{{sd}}$):* {fmt(res_m_tab.get('m_sd [kN.m]'))} kN.m
+* *Tensão Atuante ($\\sigma_{{x,d}}$):* {fmt(res_m_tab.get('sigma_x [kPa]'), 1000)} MPa
+* *Resistência ($f_{{md}}$):* {fmt(res_m_tab.get('f_md [kPa]'), 1000)} MPa
+* *Coeficientes:* $k_{{mod}} = {res_m_tab.get('k_mod')}$ ($k_{{mod1}}={res_m_tab.get('k_mod1')}, k_{{mod2}}={res_m_tab.get('k_mod2')}$)
 
-            ---
-            Relatório gerado automaticamente pelo sistema RELIABRIDGE em {datetime.now().strftime('%d/%m/%Y às %H:%M')}.
-            """
+---
+Relatório gerado automaticamente pelo sistema RELIABRIDGE em {datetime.now().strftime('%d/%m/%Y às %H:%M')}.
+"""
     return md
 
 
