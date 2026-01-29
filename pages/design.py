@@ -209,8 +209,7 @@ if st.session_state.get("has_results", False):
                                                     t["verif_longarina_titulo"],
                                                     res[2],
                                                     res[3],
-                                                    res[4],
-                                                    lang=lang
+                                                    res[4]
                                                 )
     with st.expander(titulo_longarina, expanded=not longarina_ok):
         col1, col2, col3 = st.columns(3)
@@ -229,8 +228,7 @@ if st.session_state.get("has_results", False):
     # 4) Verificações — Tabuleiro (status no título)
     titulo_tabuleiro, tabuleiro_ok = status_global(
                                                     t["verif_tabuleiro_titulo"],
-                                                    res[6],
-                                                    lang=lang
+                                                    res[6]
                                                 )
 
     with st.expander(titulo_tabuleiro, expanded=not tabuleiro_ok):
