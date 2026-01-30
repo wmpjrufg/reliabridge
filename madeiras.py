@@ -1155,6 +1155,17 @@ class ProjetoOtimo(ElementwiseProblem):
         g4 = res_m_tab["g_otimiz [-]"]
 
         return [f1, f2], [g1, g2, g3, g4], res_m, res_v, res_f_total, relat_l, res_m_tab, relat_t, relat_carga
+    def calcular_robustez(self,d,esp,bw,h):
+        d=np.uniform(d*0.9,d*1.1)
+        esp=np.uniform(esp*0.9,esp*1.1)
+        bw=np.uniform(bw*0.9,bw*1.1)
+        h=np.uniform(h*0.9,h*1.1)
+        size=5
+        robustez=0
+        for i in range(size):
+            
+        
+        return robustez/size
     
     def _evaluate(self, x, out, *args, **kwargs):
         
