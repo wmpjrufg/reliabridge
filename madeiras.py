@@ -12,6 +12,7 @@ from UQpy.reliability import FORM
 from UQpy.sampling import MonteCarloSampling, LatinHypercubeSampling
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+from sympy import comp
 mpl.rcParams.update({
                         'font.family': 'serif',
                         'mathtext.fontset': 'cm',
@@ -31,28 +32,46 @@ from pymoo.optimize import minimize
 #voltagem-voltagem_max<=0
 #voltagem/voltagem_max-voltagem_max/voltagem_max<=0
 
-def calculo_g(esp,comp,bw,n):
-    g=(comp-bw*n)/(n-1)
+
+def restringir_espaço(esp:float, esp_min: float, esp_max: float, comp: float, largura_peca: float):
+    """Verifica se o espaçamento escolhido está dentro dos limites especificados pelo usuário.
+
+    :param esp: Espaçamento escolhido pelo usuário [m]
+
+    """
+
+    n_pecas = (comp + esp) / (largura_peca + esp)
+    n_arr_cima=np.floor(n_pecas)
+    n_arr_baixo=np.ceil(n_pecas)
+
+    # Teste se o usuário escolher um número de peças arredondando para cima
+    esp_cor1 = comp - largura_peca*n_arr_cima - (n_arr_cima-1)
+    g0 = (esp_min - esp_cor1) / esp_min
+    g1 = (esp_cor1 - esp_max) / esp_max
+
+    # Teste se o usuário escolher um número de peças arredondando para baixo
+    esp_cor2 = comp - largura_peca*n_arr_baixo - (n_arr_baixo-1)
+    g2 = (esp_min - esp_cor2) / esp_min
+    g3 = (esp_cor2 - esp_max) / esp_max
+
+    g = max([g0,g1,g2,g3])
+
     return g
 
-def restringir_espaço(g,esp_min,esp_max,comp,bw,n):
 
-    n_arr_cima=np.floor(n)
-    n_arr_baixo=np.ceil(n)
+def volume_madeira(esp:float, comp: float, largura_peca: float, densidade: float, area_peca: float):
+    """Determina o volume de madeira necessário para a construção da estrutura em função do espaçamento entre peças.
 
-    g1=esp_min - calculo_g(comp,bw,n_arr_cima)
-    g2=calculo_g(comp,bw,n_arr_cima)-esp_max
+    :param esp: Espaçamento escolhido pelo usuário [m]
 
-    g3=esp_min-calculo_g(comp,bw,n_arr_baixo)
-    g4=calculo_g(comp,bw,n_arr_baixo)-esp_max
-    
-    g=max(g1,g2,g3,g4)
+    """
 
-    return g
+    n_pecas = (comp + esp) / (largura_peca + esp)
+    vol_unit = area_peca * comp * densidade
+    vol = vol_unit * n_pecas
 
-def vol_tabuado(bw,h,compr,b_pista,qtd):
-    vol=h*bw*b_pista*qtd
     return vol
+
 
 def beta_from_pf(pf: float) -> float:
     pf = float(np.clip(pf, 1e-20, 1 - 1e-20))
@@ -1015,12 +1034,16 @@ class ProjetoOtimo(ElementwiseProblem):
                     d_min: float,
                     d_max: float,
                     esp_min: float,
-                    esp_max: float, 
+                    esp_max: float,
+                    f_mk_tab: float, 
                     bw_min: float,
                     bw_max: float,
                     h_min: float,
                     h_max: float,
-                    f_mk_tab: float
+                    esp_min_long: float,
+                    esp_max_long: float,
+                    esp_min_tab: float,
+                    esp_max_tab: float,
                 ):
         """Inicialização das variáveis do problema de otimização/confiabilidade estrutural
         """
@@ -1070,7 +1093,11 @@ class ProjetoOtimo(ElementwiseProblem):
                                                     d: float, 
                                                     esp: float, 
                                                     bw: float, 
-                                                    h: float
+                                                    h: float,
+                                                    esp_min_long: float,
+                                                    esp_max_long: float,
+                                                    esp_min_tab: float,
+                                                    esp_max_tab: float
                                                 ) -> tuple[list, list, dict, dict, dict, dict, dict, dict, dict]:
         """Determina os objetivos e restrições do problema de otimização.
         """
