@@ -866,9 +866,22 @@ def textos_design() -> dict:
                         "gerador_desempenho": "Gerar desempenho estrutural para pré-dimensionamento",
                         "resultado_relatorios": "Relatórios completos de cálculo",
                         "resultado_head": "Relatórios de dimensionamento",
+                        "verif_longarina_titulo": "Verificações da longarina",
+                        "label_flexao": "Flexão",
+                        "label_cisalhamento": "Cisalhamento",
+                        "label_flecha": "Flecha",
+                        "verif_tabuleiro_titulo": "Verificações do tabuleiro",
+                        "label_flexao": "Flexão",
+                        "label_cargas": "Cargas",
+                        "label_longarina": "Longarina",
+                        "label_tabuleiro": "Tabuleiro",
+                        "botao_baixar_relatorio": "📄 Baixar relatório (Markdown)",
+                        "nome_arquivo": "Relatorio_Ponte",
                         "aviso_gerar_primeiro": "Sem resultados atuais. Clique em “Gerar” para processar.",
                         "erro_sem_planilha": "Envie a planilha .xlsx para continuar.",
-                        "erro_geo": "Preencha a geometria (longarina e tabuleiro) para continuar."
+                        "erro_geo": "Preencha a geometria (longarina e tabuleiro) para continuar.",
+                        "status_ok": "OK",
+                        "status_falha": "NÃO ATENDE"
                     },
                 "en": {
                         "titulo": "Parametric structural design of a wooden bridge",
@@ -898,13 +911,24 @@ def textos_design() -> dict:
                         "gerador_desempenho": "Generate structural performance for pre-sizing",
                         "resultado_relatorios":  "Complete calculation reports",
                         "resultado_head": "Full design report",
+                        "verif_longarina_titulo": "Girder checks",
+                        "label_flexao": "Bending",
+                        "label_cisalhamento": "Shear",
+                        "label_flecha": "Deflection",
+                        "verif_tabuleiro_titulo": "Deck checks",
+                        "label_cargas": "Loads",
+                        "label_longarina": "Girder",
+                        "label_tabuleiro": "Deck",
+                        "botao_baixar_relatorio": "📄 Download Report (Markdown)",
+                        "nome_arquivo": "Bridge_Report",
                         "aviso_gerar_primeiro": "No current results. Click “Generate” to process.",
                         "erro_sem_planilha": "Send the .xlsx spreadsheet to continue.",
-                        "erro_geo": "Fill in the geometry (beam and deck) to continue."
+                        "erro_geo": "Fill in the geometry (beam and deck) to continue.",
+                        "status_ok": "OK",
+                        "status_falha": "NOT OK"
                     },
             }
     return textos
-
 
 def textos_pre_sizing_l() -> dict:
     textos = {
