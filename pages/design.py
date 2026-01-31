@@ -7,7 +7,7 @@ from datetime import datetime
 import streamlit as st
 import pandas as pd
 
-from madeiras import textos_design, ProjetoOtimo, markdown_para_pdf
+from madeiras import textos_design, ProjetoOtimo, gerar_relatorio_final, markdown_para_pdf
 
 
 # -----------------------------
@@ -247,6 +247,11 @@ if st.session_state.get("has_results", False):
         st.json(rel_t)
     
     # 2. Converte esse texto para os bytes do PDF
+    md_text = gerar_relatorio_final(
+                                        projeto=projeto,
+                                        res=res,
+                                        geo_real={'d': d_cm, 'esp': esp_cm, 'bw': bw_cm, 'h': h_cm}
+                                    )
     pdf_bytes = markdown_para_pdf(md_text)
 
     # 3. Configura o botão para baixar os bytes do PDF
