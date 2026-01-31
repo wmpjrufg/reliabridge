@@ -61,20 +61,21 @@ with st.sidebar:
         st.session_state["lang"] = novo_lang
         st.rerun()
 
-    
-
 
 # --- Conteúdo ---
 try:
-    col_logo1, col_logo2 = st.columns([1, 1])
+    # Definimos colunas com pesos pequenos para as logos e um peso grande (8) para o vazio
+    # Isso garante que as logos fiquem compactas no início da linha
+    col_logo1, col_logo2, col_vazia = st.columns([1, 1, 8])
 
     with col_logo1:
-        st.image(t["logo_ufcat"], width=200)
+        st.image(t["logo_ufcat"], width=150) # Reduzi um pouco a largura para aproximar mais
 
     with col_logo2:
-        st.image(t["logo_ufscar"], width=200)
-except:
-    st.warning("Arquivo de imagem não encontrado. Verifique a pasta 'images/'.")
+        st.image(t["logo_ufscar"], width=150)
+
+except Exception:
+    st.warning(t.get("erro_imagem", "Arquivo de imagem não encontrado."))
     
 st.title(t["title"])
 st.write(t["body"])
