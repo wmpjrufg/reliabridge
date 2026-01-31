@@ -64,7 +64,8 @@ titulos_menu = {
 home_page = st.Page("pages/home.py", title=titulos_menu[lang]["home"], icon="🏠", default=True)
 longarina_page = st.Page("pages/pre_sizing.py", title=titulos_menu[lang]["longarina"], icon="🏗️")
 design_page = st.Page("pages/design.py", title=titulos_menu[lang]["design"], icon="🛠️")
-reliability_page = st.Page("pages/reliability.py", title=titulos_menu[lang]["confiabilidade"], icon="📊")
+# reliability_page = st.Page("pages/reliability.py", title=titulos_menu[lang]["confiabilidade"], icon="📊")
 
-pg = st.navigation([home_page, longarina_page, design_page, reliability_page])
+# pg = st.navigation([home_page, longarina_page, design_page, reliability_page])
+pg = st.navigation([home_page, longarina_page, design_page])
 pg.run()
