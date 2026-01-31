@@ -236,8 +236,6 @@ if submitted_design:
     excel_bytes_resultados = montar_excel_df(df_resultados)
 
     # Figura (salva como bytes PNG para re-render sem sumir)
-    print(x)
-    print(x.tolist())
     fig = fronteira_pareto(x.tolist(), y.tolist(), t["tag_x_fig"], t["tag_y_fig"])
     fig_buf = io.BytesIO()
     fig.savefig(fig_buf, format="png", dpi=400, bbox_inches="tight")

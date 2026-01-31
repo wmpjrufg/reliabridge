@@ -1,4 +1,6 @@
 """Contém funções para cálculo e verificação de estruturas de madeira."""
+import markdown
+from xhtml2pdf import pisa
 from datetime import datetime
 import numpy as np
 import pandas as pd
@@ -1142,6 +1144,29 @@ def gerar_relatorio_final(projeto, res, geo_real):
                 Relatório gerado automaticamente pelo sistema RELIABRIDGE em {datetime.now().strftime('%d/%m/%Y às %H:%M')}.
                 """
     return md
+
+
+def markdown_para_pdf(conteudo_md):
+    # Converte MD para HTML
+    html_text = markdown.markdown(conteudo_md, extensions=['tables'])
+    
+    # Adiciona um CSS básico para as tabelas de engenharia não ficarem bagunçadas
+    css = """
+    <style>
+        @page { size: A4; margin: 2cm; }
+        body { font-family: Helvetica, Arial, sans-serif; font-size: 10pt; }
+        h1, h2 { color: #2c3e50; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+        th, td { border: 1px solid #333; padding: 5px; text-align: center; }
+        th { background-color: #f0f0f0; }
+    </style>
+    """
+    html_final = f"<html><head><meta charset='UTF-8'></head><body>{css}{html_text}</body></html>"
+    
+    # Gera o PDF em memória
+    pdf_buffer = BytesIO()
+    pisa.CreatePDF(html_final, dest=pdf_buffer)
+    return pdf_buffer.getvalue()
 
 
 # Otimização estrutural
