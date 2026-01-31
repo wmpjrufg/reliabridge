@@ -246,18 +246,16 @@ if st.session_state.get("has_results", False):
         st.markdown(f"**{t['label_tabuleiro']}**")
         st.json(rel_t)
     
-    # Gera o relatório
-    md_text = gerar_relatorio_final(
-                                    projeto=projeto,
-                                    res=res,
-                                    geo_real={'d': d_cm, 'esp': esp_cm, 'bw': bw_cm, 'h': h_cm}
-                                )
+    # 2. Converte esse texto para os bytes do PDF
+    pdf_bytes = markdown_para_pdf(md_text)
+
+    # 3. Configura o botão para baixar os bytes do PDF
     st.download_button(
-                            label=t["botao_baixar_relatorio"],
-                            data=md_text,
-                            file_name=f"{t['nome_arquivo']}.md",
-                            mime="text/markdown",
-                        )
+        label="📄 Baixar Relatório em PDF",
+        data=pdf_bytes,
+        file_name=f"{t['nome_arquivo']}.pdf",
+        mime="application/pdf",
+    )
 else:
     st.warning(t["aviso_gerar_primeiro"]) ##teste
     
