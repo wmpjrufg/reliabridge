@@ -7,7 +7,7 @@ from datetime import datetime
 import streamlit as st
 import pandas as pd
 
-from madeiras import textos_design, ProjetoOtimo, gerar_relatorio_final
+from madeiras import textos_design, ProjetoOtimo, markdown_para_pdf
 
 
 # -----------------------------
