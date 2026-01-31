@@ -24,20 +24,21 @@ def invalidate_results():
         st.session_state.pop(k, None)
 
 
-def status_global(prefixo: str, *blocos: dict, lang: str = 'pt') -> tuple[str, bool]:
+def status_global(prefixo: str, *blocos: dict) -> tuple[str, bool]:
+    lang = st.session_state.get("lang", "pt")
+    
+    textos = textos_design()
+    t_local = textos.get(lang, textos["pt"])
     passou = all(
         isinstance(b, dict) and str(b.get("analise", "")).upper() == "OK"
         for b in blocos
         if b is not None
     )
 
-    if passou:
-        return f"✅ {prefixo} — OK", True
-    return f"❌ {prefixo} — NÃO ATENDE", False
+    status_texto = t_local["status_ok"] if passou else t_local["status_falha"]
+    emoji = "✅" if passou else "❌"
 
-
-if "has_results" not in st.session_state:
-    st.session_state["has_results"] = False
+    return f"{emoji} {prefixo} — {status_texto}", passou
 
 
 # -----------------------------
@@ -205,35 +206,33 @@ if st.session_state.get("has_results", False):
 
     # 3) Verificações — Longarina
     titulo_longarina, longarina_ok = status_global(
-                                                    "Verificações da longarina",
+                                                    t["verif_longarina_titulo"],
                                                     res[2],
                                                     res[3],
-                                                    res[4],
-                                                    lang=lang
+                                                    res[4]
                                                 )
     with st.expander(titulo_longarina, expanded=not longarina_ok):
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            st.markdown("**Flexão**")
+            st.markdown(f"**{t['label_flexao']}**")
             st.json(res[2])
 
         with col2:
-            st.markdown("**Cisalhamento**")
+            st.markdown(f"**{t['label_cisalhamento']}**")
             st.json(res[3])
         with col3:
-            st.markdown("**Flecha**")
+            st.markdown(f"**{t['label_flecha']}**")
             st.json(res[4])
 
     # 4) Verificações — Tabuleiro (status no título)
     titulo_tabuleiro, tabuleiro_ok = status_global(
-                                                    "Verificações do tabuleiro",
-                                                    res[6],
-                                                    lang=lang
+                                                    t["verif_tabuleiro_titulo"],
+                                                    res[6]
                                                 )
 
     with st.expander(titulo_tabuleiro, expanded=not tabuleiro_ok):
-        st.markdown("**Flexão**")
+        st.markdown(f"**{t['label_flexao']}**")
         st.json(res[6])
 
     # 5) Relatórios completos (auditoria)
@@ -241,11 +240,11 @@ if st.session_state.get("has_results", False):
         rel_carga = res[-1]
         rel_l = res[-2]
         rel_t = res[-3]
-        st.markdown("**Cargas**")
+        st.markdown(f"**{t['label_cargas']}**")
         st.json(rel_carga)
-        st.markdown("**Longarina**")
+        st.markdown(f"**{t['label_longarina']}**")
         st.json(rel_l)
-        st.markdown("**Tabuleiro**")
+        st.markdown(f"**{t['label_tabuleiro']}**")
         st.json(rel_t)
     
     # Gera o relatório
@@ -255,9 +254,9 @@ if st.session_state.get("has_results", False):
                                     geo_real={'d': d_cm, 'esp': esp_cm, 'bw': bw_cm, 'h': h_cm}
                                 )
     st.download_button(
-                            label="📄 Baixar Relatório (Markdown)",
+                            label=t["botao_baixar_relatorio"],
                             data=md_text,
-                            file_name=f"Relatorio_Ponte.md",
+                            file_name=f"{t['nome_arquivo']}.md",
                             mime="text/markdown",
                         )
 else:
