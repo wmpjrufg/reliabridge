@@ -5,6 +5,7 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 import io
+from io import BytesIO
 from scipy import stats as st
 
 from UQpy.distributions import TruncatedNormal
