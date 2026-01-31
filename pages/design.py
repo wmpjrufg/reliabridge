@@ -94,7 +94,6 @@ with st.form("form_design", clear_on_submit=False):
 
         bw_cm = h_cm = None
         if str(tipo_secao_tabuleiro).lower() == "retangular" or str(tipo_secao_tabuleiro).lower() == "rectangular":
-            print(lang, tipo_secao_tabuleiro)
             bw_cm = st.number_input(
                                         t["largura_viga_tabuleiro"],
                                         step=1.0,
