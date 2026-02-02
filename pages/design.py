@@ -255,12 +255,15 @@ if st.session_state.get("has_results", False):
     pdf_bytes = markdown_para_pdf(md_text)
 
     # 3. Configura o botão para baixar os bytes do PDF
-    st.download_button(
-        label="📄 Baixar Relatório em PDF",
-        data=pdf_bytes,
-        file_name=f"{t['nome_arquivo']}.pdf",
-        mime="application/pdf",
-    )
+    if pdf_bytes:
+        st.download_button(
+            label="📄 Baixar Relatório em PDF",
+            data=pdf_bytes,
+            file_name=f"{t['nome_arquivo']}.pdf",
+            mime="application/pdf",
+        )
+    else:
+        st.error("❌ Falha na geração do PDF. Verifique o terminal para ver o erro do LaTeX.")
 else:
     st.warning(t["aviso_gerar_primeiro"]) ##teste
     

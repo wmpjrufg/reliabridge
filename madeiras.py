@@ -1,9 +1,12 @@
 """Contém funções para cálculo e verificação de estruturas de madeira."""
 import markdown
 from xhtml2pdf import pisa
+import pypandoc
+import tempfile
 from datetime import datetime
 import numpy as np
 import pandas as pd
+import os
 import io
 from io import BytesIO
 from scipy import stats as st
@@ -1061,137 +1064,142 @@ def gerar_relatorio_final(projeto, res, geo_real):
     # para injetar os valores das variáveis direto no meio do texto.
     
     md = f"""
-                <div style="text-align: center">
-                <h1>RELIABRIDGE</h1>
-                <h2>Memorial de Cálculo Detalhado</h2>
-                <p><strong>Grupo de Pesquisa e Estudos em Engenharia - GPEE</strong></p>
-                <p>Data de emissão: {datetime.now().strftime('%d/%m/%Y')}</p>
-                </div>
+<div style="text-align: center">
+  <h1>RELIABRIDGE</h1>
+  <h2>Memorial de Cálculo Detalhado</h2>
+  <p><strong>Grupo de Pesquisa e Estudos em Engenharia - GPEE</strong></p>
+  <p>Data de emissão: {datetime.now().strftime('%d/%m/%Y')}</p>
+</div>
 
-                ---
+---
 
-                *Disclaimer:* Este software é parte de um projeto de pesquisa, desenvolvido para fins educacionais. Não nos responsabilizamos por quaisquer danos diretos ou indiretos decorrentes do uso deste software.
+*Disclaimer:* Este software é parte de um projeto de pesquisa, desenvolvido para fins educacionais. Não nos responsabilizamos por quaisquer danos diretos ou indiretos decorrentes do uso deste software.
 
-                ---
+---
 
-                # 1. Dados de Entrada e Materiais
+# 1. Dados de Entrada e Materiais
 
-                | Parâmetro | Valor | Unidade | Descrição |
-                | :--- | :---: | :---: | :--- |
-                | *Vão ($l$)* | {fmt(projeto.l)} | cm | Comprimento do vão livre |
-                | *Carga Perm. ($p_{{gk}}$)* | {fmt(projeto.p_gk)} | kN/m | Carga distribuída na longarina |
-                | *Carga Roda ($P_{{rodak}}$)* | {fmt(projeto.p_rodak)} | kN | Carga pontual característica |
-                | *Carga Multidão ($p_{{qk}}$)* | {fmt(projeto.p_qk)} | kPa | Carga distribuída de multidão |
-                | *Classe Madeira* | {projeto.classe_madeira.title()} | - | Umidade: {projeto.classe_umidade} |
-                | *$f_{{mk}}$ Longarina* | {projeto.f_mk_long} | MPa | Resistência característica flexão |
-                | *$E_{{m}}$ Longarina* | {projeto.e_modflex_long} | GPa | Módulo de Elasticidade |
-                | *Coef. Segurança* | $\\gamma_g={projeto.gamma_g}, \\gamma_q={projeto.gamma_q}$ | - | Majoradores de carga |
+| Parâmetro | Valor | Unidade | Descrição |
+| :--- | :---: | :---: | :--- |
+| *Vão ($l$)* | {fmt(projeto.l)} | cm | Comprimento do vão livre |
+| *Carga Perm. ($p_{{gk}}$)* | {fmt(projeto.p_gk)} | kN/m | Carga distribuída na longarina |
+| *Carga Roda ($P_{{rodak}}$)* | {fmt(projeto.p_rodak)} | kN | Carga pontual característica |
+| *Carga Multidão ($p_{{qk}}$)* | {fmt(projeto.p_qk)} | kPa | Carga distribuída de multidão |
+| *Classe Madeira* | {projeto.classe_madeira.title()} | - | Umidade: {projeto.classe_umidade} |
+| *$f_{{mk}}$ Longarina* | {projeto.f_mk_long} | MPa | Resistência característica flexão |
+| *$E_{{m}}$ Longarina* | {projeto.e_modflex_long} | GPa | Módulo de Elasticidade |
+| *Coef. Segurança* | $\\gamma_g={projeto.gamma_g}, \\gamma_q={projeto.gamma_q}$ | - | Majoradores de carga |
 
-                ---
 
-                # 2. Geometria e Propriedades da Seção
+# 2. Geometria e Propriedades da Seção
 
-                ## 2.1 Dimensões Adotadas
-                * *Longarina:* Seção {geo_real.get('tipo_secao_longarina', 'Circular')} com $d = {geo_real['d']}$ cm.
-                * *Tabuleiro:* Seção Retangular com $b_w = {geo_real['bw']}$ cm e $h = {geo_real['h']}$ cm.
-                * *Espaçamento:* {geo_real['esp']} cm entre longarinas.
+## 2.1 Dimensões Adotadas
+* *Longarina:* Seção {geo_real.get('tipo_secao_longarina', 'Circular')} com $d = {geo_real['d']}$ cm.
+* *Tabuleiro:* Seção Retangular com $b_w = {geo_real['bw']}$ cm e $h = {geo_real['h']}$ cm.
+* *Espaçamento:* {geo_real['esp']} cm entre longarinas.
 
-                ## 2.2 Propriedades Geométricas Calculadas (Longarina)
+## 2.2 Propriedades Geométricas Calculadas (Longarina)
 
-                | Propriedade | Símbolo | Valor Calculado | Unidade |
-                | :--- | :---: | :---: | :---: |
-                | *Área da Seção* | $A$ | {fmt(relat_l.get('area [m2]'), 0.0001)} | $cm^2$ |
-                | *Módulo Resistente* | $W_x$ | {fmt(relat_l.get('w_x [m3]'), 0.000001)} | $cm^3$ |
-                | *Momento de Inércia* | $I_x$ | {fmt(relat_l.get('i_x [m4]'), 0.00000001)} | $cm^4$ |
-                | *Momento Estático* | $S_x$ | {fmt(relat_l.get('s_x [m3]'), 0.000001)} | $cm^3$ |
+| Propriedade | Símbolo | Valor Calculado | Unidade |
+| :--- | :---: | :---: | :---: |
+| *Área da Seção* | $A$ | {fmt(relat_l.get('area [m2]'), 0.0001)} | $cm^2$ |
+| *Módulo Resistente* | $W_x$ | {fmt(relat_l.get('w_x [m3]'), 0.000001)} | $cm^3$ |
+| *Momento de Inércia* | $I_x$ | {fmt(relat_l.get('i_x [m4]'), 0.00000001)} | $cm^4$ |
+| *Momento Estático* | $S_x$ | {fmt(relat_l.get('s_x [m3]'), 0.000001)} | $cm^3$ |
 
-                ---
 
-                # 3. Detalhamento dos Esforços (Longarina)
+# 3. Detalhamento dos Esforços (Longarina)
 
-                Aqui apresentamos os esforços característicos (sem coeficientes de segurança) e os fatores de impacto utilizados.
+Aqui apresentamos os esforços característicos (sem coeficientes de segurança) e os fatores de impacto utilizados.
 
-                | Esforço / Fator | Símbolo | Valor | Unidade/Obs |
-                | :--- | :---: | :---: | :--- |
-                | *Coef. Impacto Vertical* | $C_i$ | {fmt(relat_l.get('coeficiente_impacto_vertical'), 1, 3)} | Calculado via norma |
-                | *Auxiliar Impacto* | $Aux_{{ci}}$ | {fmt(relat_l.get('aux_ci'), 1, 3)} | - |
-                | *Momento Permanente* | $M_{{gk}}$ | {fmt(relat_l.get('m_gk [kN.m]'))} | kN.m |
-                | *Momento Variável* | $M_{{qk}}$ | {fmt(relat_l.get('m_qk [kN.m]'))} | kN.m |
-                | *Momento de Cálculo* | *$M_{{sd}}$* | *{fmt(relat_l.get('m_sd [kN.m]'))}* | *kN.m* (Majorado) |
+| Esforço / Fator | Símbolo | Valor | Unidade/Obs |
+| :--- | :---: | :---: | :--- |
+| *Coef. Impacto Vertical* | $C_i$ | {fmt(relat_l.get('coeficiente_impacto_vertical'), 1, 3)} | Calculado via norma |
+| *Auxiliar Impacto* | $Aux_{{ci}}$ | {fmt(relat_l.get('aux_ci'), 1, 3)} | - |
+| *Momento Permanente* | $M_{{gk}}$ | {fmt(relat_l.get('m_gk [kN.m]'))} | kN.m |
+| *Momento Variável* | $M_{{qk}}$ | {fmt(relat_l.get('m_qk [kN.m]'))} | kN.m |
+| *Momento de Cálculo* | *$M_{{sd}}$* | *{fmt(relat_l.get('m_sd [kN.m]'))}* | *kN.m* (Majorado) |
 
-                ---
 
-                # 4. Verificação ELU: Longarina
+# 4. Verificação ELU: Longarina
 
-                ## 4.1 Flexão Simples
-                *Status:* {status_icon(res_m)}
+## 4.1 Flexão Simples
+*Status:* {status_icon(res_m)}
 
-                * *Tensão Atuante ($\\sigma_{{x,d}}$):* {fmt(res_m.get('sigma_x [kPa]'), 1000)} MPa
-                * *Resistência ($f_{{md}}$):* {fmt(res_m.get('f_md [kPa]'), 1000)} MPa
-                * *Coeficientes de Modificação ($k_{{mod}}$):*
-                    * $k_{{mod,1}} = {res_m.get('k_mod1')}$ (Carregamento)
-                    * $k_{{mod,2}} = {res_m.get('k_mod2')}$ (Umidade)
-                    * $k_{{mod,3}} = {fmt(float(res_m.get('k_mod', 0)) / (float(res_m.get('k_mod1', 1))*float(res_m.get('k_mod2', 1))), 1, 2)}$ (Categoria)
-                    * *$k_{{mod, total}} = {res_m.get('k_mod')}$*
+* *Tensão Atuante ($\\sigma_{{x,d}}$):* {fmt(res_m.get('sigma_x [kPa]'), 1000)} MPa
+* *Resistência ($f_{{md}}$):* {fmt(res_m.get('f_md [kPa]'), 1000)} MPa
+* *Coeficientes de Modificação ($k_{{mod}}$):*
+    * $k_{{mod,1}} = {res_m.get('k_mod1')}$ (Carregamento)
+    * $k_{{mod,2}} = {res_m.get('k_mod2')}$ (Umidade)
+    * $k_{{mod,3}} = {fmt(float(res_m.get('k_mod', 0)) / (float(res_m.get('k_mod1', 1))*float(res_m.get('k_mod2', 1))), 1, 2)}$ (Categoria)
+    * *$k_{{mod, total}} = {res_m.get('k_mod')}$*
 
-                ## 4.2 Cisalhamento
-                *Status:* {status_icon(res_v)}
+## 4.2 Cisalhamento
+*Status:* {status_icon(res_v)}
 
-                * *Cortante de Cálculo ($V_{{sd}}$):* {fmt(res_v.get('v_sd [kN]'))} kN
-                * *Tensão Atuante ($\\tau_{{sd}}$):* {fmt(res_v.get('tau_sd [kPa]'), 1000)} MPa
-                * *Resistência ($f_{{vd}}$):* {fmt(res_v.get('f_vd [kPa]'), 1000)} MPa
+* *Cortante de Cálculo ($V_{{sd}}$):* {fmt(res_v.get('v_sd [kN]'))} kN
+* *Tensão Atuante ($\\tau_{{sd}}$):* {fmt(res_v.get('tau_sd [kPa]'), 1000)} MPa
+* *Resistência ($f_{{vd}}$):* {fmt(res_v.get('f_vd [kPa]'), 1000)} MPa
 
-                ---
 
-                # 5. Verificação ELS: Deformação (Flecha)
+# 5. Verificação ELS: Deformação (Flecha)
 
-                *Status:* {status_icon(res_f)}
+*Status:* {status_icon(res_f)}
 
-                | Componente | Valor Calculado | Limite Normativo | Análise |
-                | :--- | :---: | :---: | :---: |
-                | *Flecha Instantânea ($Q$)* | {fmt(res_f.get('delta_qk [m]'), 0.01)} cm | - | - |
-                | *Flecha Fluência* | {fmt(res_f.get('delta_fluencia [m]'), 0.01)} cm | - | $\\phi = {projeto.phi}$ |
-                | *Flecha Variável (Lim.)* | *{fmt(res_f.get('delta_lim_variavel [m]'), 0.01)} cm* | *{fmt(res_f.get('delta_lim [m]'), 0.01)} cm* | *{res_f.get('analise')}* |
-                | *Flecha Total* | {fmt(res_f.get('delta_lim_total [m]'), 0.01)} cm | - | Informativo |
+| Componente | Valor Calculado | Limite Normativo | Análise |
+| :--- | :---: | :---: | :---: |
+| *Flecha Instantânea ($Q$)* | {fmt(res_f.get('delta_qk [m]'), 0.01)} cm | - | - |
+| *Flecha Fluência* | {fmt(res_f.get('delta_fluencia [m]'), 0.01)} cm | - | $\\phi = {projeto.phi}$ |
+| *Flecha Variável (Lim.)* | *{fmt(res_f.get('delta_lim_variavel [m]'), 0.01)} cm* | *{fmt(res_f.get('delta_lim [m]'), 0.01)} cm* | *{res_f.get('analise')}* |
+| *Flecha Total* | {fmt(res_f.get('delta_lim_total [m]'), 0.01)} cm | - | Informativo |
 
-                ---
 
-                # 6. Tabuleiro: Verificação Local
+# 6. Tabuleiro: Verificação Local
 
-                *Status Flexão:* {status_icon(res_m_tab)}
+*Status Flexão:* {status_icon(res_m_tab)}
 
-                * *Momento de Cálculo ($M_{{sd}}$):* {fmt(res_m_tab.get('m_sd [kN.m]'))} kN.m
-                * *Tensão Atuante ($\\sigma_{{x,d}}$):* {fmt(res_m_tab.get('sigma_x [kPa]'), 1000)} MPa
-                * *Resistência ($f_{{md}}$):* {fmt(res_m_tab.get('f_md [kPa]'), 1000)} MPa
-                * *Coeficientes:* $k_{{mod}} = {res_m_tab.get('k_mod')}$ ($k_{{mod1}}={res_m_tab.get('k_mod1')}, k_{{mod2}}={res_m_tab.get('k_mod2')}$)
+* *Momento de Cálculo ($M_{{sd}}$):* {fmt(res_m_tab.get('m_sd [kN.m]'))} kN.m
+* *Tensão Atuante ($\\sigma_{{x,d}}$):* {fmt(res_m_tab.get('sigma_x [kPa]'), 1000)} MPa
+* *Resistência ($f_{{md}}$):* {fmt(res_m_tab.get('f_md [kPa]'), 1000)} MPa
+* *Coeficientes:* $k_{{mod}} = {res_m_tab.get('k_mod')}$ ($k_{{mod1}}={res_m_tab.get('k_mod1')}, k_{{mod2}}={res_m_tab.get('k_mod2')}$)
 
-                ---
-                Relatório gerado automaticamente pelo sistema RELIABRIDGE em {datetime.now().strftime('%d/%m/%Y às %H:%M')}.
-                """
+Relatório gerado automaticamente pelo sistema RELIABRIDGE em {datetime.now().strftime('%d/%m/%Y às %H:%M')}.
+"""
     return md
 
 
-def markdown_para_pdf(conteudo_md):
-    # Converte MD para HTML
-    html_text = markdown.markdown(conteudo_md, extensions=['tables'])
-    
-    # Adiciona um CSS básico para as tabelas de engenharia não ficarem bagunçadas
-    css = """
-    <style>
-        @page { size: A4; margin: 2cm; }
-        body { font-family: Helvetica, Arial, sans-serif; font-size: 10pt; }
-        h1, h2 { color: #2c3e50; text-align: center; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-        th, td { border: 1px solid #333; padding: 5px; text-align: center; }
-        th { background-color: #f0f0f0; }
-    </style>
-    """
-    html_final = f"<html><head><meta charset='UTF-8'></head><body>{css}{html_text}</body></html>"
-    
-    # Gera o PDF em memória
-    pdf_buffer = BytesIO()
-    pisa.CreatePDF(html_final, dest=pdf_buffer)
-    return pdf_buffer.getvalue()
+def markdown_para_pdf(conteudo_md, output_filename=None):
+    extra_args = [
+        '--pdf-engine=xelatex',
+        '-V', 'geometry:margin=2cm',
+    ]
+
+    try:
+        # Cria arquivo temporário
+        with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
+            tmp_path = tmp.name
+
+        # Tenta converter
+        pypandoc.convert_text(
+            conteudo_md,
+            'pdf',
+            format='md',
+            outputfile=tmp_path,
+            extra_args=extra_args
+        )
+
+        if os.path.exists(tmp_path) and os.path.getsize(tmp_path) > 0:
+            with open(tmp_path, "rb") as f:
+                pdf_bytes = f.read()
+            os.unlink(tmp_path) # Deleta o temp
+            return pdf_bytes
+        else:
+            print("ERRO: O arquivo PDF foi criado mas está vazio (0 bytes).")
+            return None
+
+    except Exception as e:
+        print(f"ERRO CRÍTICO NO PANDOC: {e}")
+        return None
 
 
 # Otimização estrutural
