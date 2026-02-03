@@ -59,8 +59,8 @@ lang = st.session_state.get("lang", "pt")
 textos = textos_design()
 t = textos.get(lang, textos["pt"])
 
-st.header(t.get("titulo", "Design"))
-st.subheader(t.get("pre", "Dimensionamento determinístico a partir do pré-dimensionamento"))
+st.header(t["titulo"])
+st.subheader(t["pre"])
 
 
 # ============================================================
@@ -71,47 +71,47 @@ with st.form("form_design", clear_on_submit=False):
     # -------------------------
     # Inputs de geometria escolhida (projeto final)
     # -------------------------
-    st.subheader(t.get("geo_head", "Geometria do projeto"))
+    st.subheader(t["geo_head"])
 
     colA, colB = st.columns(2)
 
     with colA:
         tipo_secao_longarina = st.selectbox(
-            t.get("entrada_tipo_secao_longarina", "Tipo de seção (longarina)"),
-            t.get("tipo_secao_longarina", ["Circular"]),
+            t["entrada_tipo_secao_longarina"],
+            t["tipo_secao_longarina"],
             key="tipo_secao_longarina",
         )
 
         d_cm = None
         if str(tipo_secao_longarina).lower() == "circular":
             d_cm = st.number_input(
-                t.get("diametro_longarina", "Diâmetro da longarina (cm)"),
+                t["diametro_longarina"],
                 step=1.0,
                 key="d_cm",
             )
 
         esp_cm = st.number_input(
-            t.get("espaçamento_entre_longarinas", "Espaçamento entre longarinas (cm)"),
+            t["espaçamento_entre_longarinas"], 
             step=1.0,
             key="esp_cm",
         )
 
     with colB:
         tipo_secao_tabuleiro = st.selectbox(
-            t.get("tipo_secao_tabuleiro", "Tipo de seção (tabuleiro)"),
-            t.get("tipo_secao_tabuleiro_opcoes", ["Retangular"]),
+            t["tipo_secao_tabuleiro"],
+            t["tipo_secao_tabuleiro_opcoes"],
             key="tipo_secao_tabuleiro",
         )
 
         bw_cm = h_cm = None
         if str(tipo_secao_tabuleiro).lower() == "retangular":
             bw_cm = st.number_input(
-                t.get("largura_viga_tabuleiro", "Largura do tabuleiro (cm)"),
+                t["largura_viga_tabuleiro"],
                 step=1.0,
                 key="bw_cm",
             )
             h_cm = st.number_input(
-                t.get("altura_viga_tabuleiro", "Altura do tabuleiro (cm)"),
+                t["altura_viga_tabuleiro"],
                 step=1.0,
                 key="h_cm",
             )
@@ -119,10 +119,10 @@ with st.form("form_design", clear_on_submit=False):
     # -------------------------
     # Upload da planilha do pré-dimensionamento (dados-base)
     # -------------------------
-    st.subheader(t.get("planilha_head", "Planilha de dados do projeto"))
+    st.subheader(t["planilha_head"])
 
     uploaded_file = st.file_uploader(
-        t.get("texto_up", "Faça upload do arquivo .xlsx"),
+        t["texto_up"],
         type=["xlsx"],
         key="uploaded_design_xlsx",
     )
@@ -131,15 +131,14 @@ with st.form("form_design", clear_on_submit=False):
     df = None
     if uploaded_file is not None:
         df = pd.read_excel(uploaded_file)
-        st.success(t.get("planilha_sucesso", "Planilha carregada com sucesso."))
-        st.markdown(t.get("planilha_preview", "Pré-visualização dos dados:"))
+        st.success(t["planilha_sucesso"])
+        st.markdown(t["planilha_preview"])
         st.dataframe(df, use_container_width=True)
     else:
-        st.info(t.get("aguardando_upload", "Aguardando upload do arquivo .xlsx."))
+        st.info(t["aguardando_upload"])
 
     # Botão de cálculo
-    submitted_design = st.form_submit_button(t.get("gerador_projeto", "Gerar dimensionamento"))
-
+    submitted_design = st.form_submit_button(t["gerador_projeto"])
 
 # ============================================================
 # 2) COMPUTE (somente no submit)
@@ -148,11 +147,11 @@ if submitted_design:
 
     # Validações mínimas (sem travar seu fluxo)
     if uploaded_file is None or df is None:
-        st.error(t.get("erro_sem_planilha", "Envie a planilha .xlsx para continuar."))
+        st.error(t["erro_sem_planilha"])
         st.stop()
 
     if d_cm is None or bw_cm is None or h_cm is None:
-        st.error(t.get("erro_geo", "Preencha a geometria (longarina e tabuleiro) para continuar."))
+        st.error(t["erro_sem_geo"])
         st.stop()
 
     if isinstance(df, pd.DataFrame) and len(df) == 1:

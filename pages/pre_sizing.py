@@ -95,7 +95,8 @@ with st.form("form_geometria", clear_on_submit=False):
 
     gamma_g = st.number_input(t["gamma_g"], step=0.1, key="gamma_g")
     gamma_q = st.number_input(t["gamma_q"], step=0.1, key="gamma_q")
-    gamma_w = st.number_input(t["gamma_w"], step=0.1, key="gamma_w")
+    gamma_wf = st.number_input(t["gamma_wf"], step=0.1, key="gamma_wf")
+    gamma_wc = st.number_input(t["gamma_wc"], step=0.1, key="gamma_wc")
     psi_2   = st.number_input(t["psi2"], step=0.1, key="psi_2")
     fluencia = st.number_input(t["considerar_fluencia"], step=0.1, key="phi")
 
@@ -128,7 +129,8 @@ if lang == "pt":
                         "classe_umidade": classe_umidade,
                         "gamma_g": gamma_g,
                         "gamma_q": gamma_q,
-                        "gamma_w": gamma_w,
+                        "gamma_wc": gamma_wc,
+                        "gamma_wf": gamma_wf,
                         "psi_2": psi_2,
                         "phi": fluencia,
                         "densidade longarina (kg/m³)": densidade_long,
@@ -153,7 +155,8 @@ else:
                         "classe_umidade": classe_umidade,
                         "gamma_g": gamma_g,
                         "gamma_q": gamma_q,
-                        "gamma_w": gamma_w,
+                        "gamma_wc": gamma_wc,
+                        "gamma_wf": gamma_wf,
                         "psi_2": psi_2,
                         "phi": fluencia,
                         "densidade longarina (kg/m³)": densidade_long,
@@ -233,8 +236,6 @@ if submitted_design:
     excel_bytes_resultados = montar_excel_df(df_resultados)
 
     # Figura (salva como bytes PNG para re-render sem sumir)
-    print(x)
-    print(x.tolist())
     fig = fronteira_pareto(x.tolist(), y.tolist(), t["tag_x_fig"], t["tag_y_fig"])
     fig_buf = io.BytesIO()
     fig.savefig(fig_buf, format="png", dpi=400, bbox_inches="tight")
