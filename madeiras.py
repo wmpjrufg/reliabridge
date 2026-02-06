@@ -1183,15 +1183,22 @@ class ProjetoOtimo(ElementwiseProblem):
 
         return [f1, f2], [g1, g2, g3, g4], res_m, res_v, res_f_total, relat_l, res_m_tab, relat_t, relat_carga
     def calcular_robustez(self,d,esp,bw,h):
-        d=np.uniform(d*0.9,d*1.1)
-        esp=np.uniform(esp*0.9,esp*1.1)
-        bw=np.uniform(bw*0.9,bw*1.1)
-        h=np.uniform(h*0.9,h*1.1)
-        size=5
+        # Cálculo da robustez do projeto
+        # quantidade de repetições
+        size=100
         robustez=0
         for i in range(size):
-            
-        
+            #variação de d,esp,bw,h em ±20%
+            d0=np.random.uniform(d*0.8,d*1.2)
+            esp0=np.random.uniform(esp*0.8,esp*1.2)
+            bw0=np.random.uniform(bw*0.8,bw*1.2)
+            h0=np.random.uniform(h*0.8,h*1.2)
+            # Cálculo dos objetivos e restrições
+            f, g, _, _, _, _, _, _, _ = self.calcular_objetivos_restricoes_otimizacao(d0, esp0, bw0, h0)
+            #verifica se todas as restrições são atendidas caso afirmativo incrementa a robustez
+            if g[0]<=0 and g[1]<=0 and g[2]<=0 and g[3]<=0:
+                robustez+=1
+        #retorna a robustez normalizada
         return robustez/size
     
     def _evaluate(self, x, out, *args, **kwargs):
