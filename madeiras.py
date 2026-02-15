@@ -35,6 +35,36 @@ from pymoo.termination import get_termination
 from pymoo.optimize import minimize
 
 
+def restringir_espaço(esp:float, esp_min: float, esp_max: float, comp: float, largura_peca: float):
+    """Verifica se o espaçamento escolhido está dentro dos limites especificados pelo usuário.
+
+    :param esp: Espaçamento escolhido pelo usuário [m]
+    :param esp_min: Espaçamento mínimo permitido [m]
+    :param esp_max: Espaçamento máximo permitido [m]
+    :param comp: Comprimento total disponível [m]
+    :param largura_peca: Largura de cada peça [m]
+
+    """
+
+    n_pecas = (comp + esp) / (largura_peca + esp)
+    n_arr_cima=np.floor(n_pecas)
+    n_arr_baixo=np.ceil(n_pecas)
+
+    # Teste se o usuário escolher um número de peças arredondando para cima
+    esp_cor1 = comp - largura_peca*n_arr_cima - (n_arr_cima-1)
+    g0 = (esp_min - esp_cor1) / esp_min
+    g1 = (esp_cor1 - esp_max) / esp_max
+
+    # Teste se o usuário escolher um número de peças arredondando para baixo
+    esp_cor2 = comp - largura_peca*n_arr_baixo - (n_arr_baixo-1)
+    g2 = (esp_min - esp_cor2) / esp_min
+    g3 = (esp_cor2 - esp_max) / esp_max
+
+    g = max([g0,g1,g2,g3])
+
+    return g, n_pecas
+
+
 def beta_from_pf(pf: float) -> float:
     pf = float(np.clip(pf, 1e-20, 1 - 1e-20))
     return -st.norm.ppf(pf)
@@ -187,17 +217,16 @@ def prop_madeiras(
     return area, w_x, w_y, i_x, i_y, s_x, s_y, r_x, r_y, k_m
 
 
-def peso_proprio_longarina(densidade: float, area_secao: float, g: float = 9.81) -> float:
+def peso_proprio_longarina(densidade: float, area_secao: float) -> float:
     """Calcula o peso próprio (PP) da longarina.
 
     :param densidade: densidade da madeira [kg/m³]
     :param area_secao: área da seção transversal da longarina [m²]
-    :param g: aceleração da gravidade [m/s²] (padrão = 9.81)
 
     :return: peso próprio por metro linear [kN/m]
     """
 
-    return densidade * area_secao * g / 1E3
+    return densidade * area_secao
 
 
 def coef_impacto_vertical(liv: float) -> float:
@@ -1206,6 +1235,7 @@ def markdown_para_pdf(conteudo_md, output_filename=None):
 class ProjetoOtimo(ElementwiseProblem):
     def __init__(
                     self,
+                    bw_pista: float,
                     l: float,
                     p_gk: float,
                     p_rodak: float,
@@ -1228,15 +1258,20 @@ class ProjetoOtimo(ElementwiseProblem):
                     f_mk_tab: float,
                     d_min: float,
                     d_max: float,
-                    esp_min: float,
-                    esp_max: float, 
                     bw_min: float,
                     bw_max: float,
                     h_min: float,
                     h_max: float,
+                    esp_min_long: float,
+                    esp_max_long: float,
+                    esp_min_tab: float,
+                    esp_max_tab: float,
+                    n_checagens: int = 10,
+                    perc_robustez: float = 5.0
                 ):
         """Inicialização das variáveis do problema de otimização/confiabilidade estrutural.
 
+        :param bw_pista: Largura da pista disponível para longarinas [cm]
         :param l: Comprimento do vão [cm]
         :param p_gk: Carga permanente característica atuante no tabuleiro [kPa]
         :param p_rodak: carga variável característica por roda [kN]
@@ -1259,14 +1294,19 @@ class ProjetoOtimo(ElementwiseProblem):
         :param f_mk_tab: Resistência característica à flexão (MPa) do tabuleiro
         :param d_min: Diâmetro mínimo da longarina [cm]
         :param d_max: Diâmetro máximo da longarina [cm]
-        :param esp_min: Espaçamento mínimo entre longarinas [cm]
-        :param esp_max: Espaçamento máximo entre longarinas [cm]
         :param bw_min: Largura mínima da viga do tabuleiro [cm]
         :param bw_max: Largura máxima da viga do tabuleiro [cm]
         :param h_min: Altura mínima da viga do tabuleiro [cm]
         :param h_max: Altura máxima da viga do tabuleiro [cm]
+        :param esp_min_long: Espaçamento mínimo entre longarinas [cm]
+        :param esp_max_long: Espaçamento máximo entre longarinas [cm]
+        :param esp_min_tab: Espaçamento mínimo entre vigas do tabuleiro [cm]
+        :param esp_max_tab: Espaçamento máximo entre vigas do tabuleiro [cm]
+        :param n_checagens: Número de checagens para avaliação robusta na otimização
+        :param perc_robustez: Percentual de robustez para considerar na otimização [5 igual a 5%]
         """
 
+        self.bw_pista = float(bw_pista)
         self.l = float(l)
         self.p_gk = float(p_gk)
         self.p_rodak = float(p_rodak)
@@ -1289,19 +1329,23 @@ class ProjetoOtimo(ElementwiseProblem):
         self.f_mk_tab = float(f_mk_tab)
         self.d_min = float(d_min)
         self.d_max = float(d_max)
-        self.esp_min = float(esp_min)
-        self.esp_max = float(esp_max)
         self.bw_min = float(bw_min)
         self.bw_max = float(bw_max)
         self.h_min = float(h_min)
         self.h_max = float(h_max)
-        xl = np.array([d_min, esp_min, bw_min, h_min], dtype=float)
-        xu = np.array([d_max, esp_max, bw_max, h_max], dtype=float)
+        self.esp_min_long = float(esp_min_long)
+        self.esp_max_long = float(esp_max_long)
+        self.esp_min_tab = float(esp_min_tab)
+        self.esp_max_tab = float(esp_max_tab)
+        self.n_checagens = int(n_checagens)
+        self.perc_robustez = float(perc_robustez)
+        xl = np.array([d_min, bw_min, h_min, esp_min_long, esp_min_tab], dtype=float)
+        xu = np.array([d_max, bw_max, h_max, esp_max_long, esp_max_tab], dtype=float)
 
         super().__init__(
-                            n_var=4,
+                            n_var=5,
                             n_obj=2,
-                            n_ieq_constr=4,
+                            n_ieq_constr=6,
                             xl=xl,
                             xu=xu,
                             elementwise_evaluation=True
@@ -1310,18 +1354,20 @@ class ProjetoOtimo(ElementwiseProblem):
     def calcular_objetivos_restricoes_otimizacao(
                                                     self, 
                                                     d: float, 
-                                                    esp: float, 
                                                     bw: float, 
-                                                    h: float
+                                                    h: float,
+                                                    esp_long: float,
+                                                    esp_tab: float
                                                 ) -> tuple[list, list, dict, dict, dict, dict, dict, dict, dict]:
         """Determina os objetivos e restrições do problema de otimização.
 
         :param d: Diâmetro da longarina [cm]
-        :param esp: Espaçamento entre longarinas [cm]
         :param bw: Largura da viga do tabuleiro [cm]
         :param h: Altura da viga do tabuleiro [cm]
+        :param esp_long: Espaçamento entre longarinas [cm]
+        :param esp_tab: Espaçamento entre vigas do tabuleiro [cm]
 
-        :return:    [0] Lista com os objetivos. f0 area total de madeira [m²], f1 desempenho da longarina na verificação de flecha (aqui o valor já vem corrigido para maximização)
+        :return:    [0] Lista com os objetivos. f0 volume total de madeira [m³], f1 desempenho da longarina na verificação de flecha (aqui o valor já vem corrigido para maximização)
                     [1] Lista com as restrições
                     [2] Dicionário com resultados da verificação de flexão da longarina
                     [3] Dicionário com resultados da verificação de cisalhamento da longarina
@@ -1334,26 +1380,38 @@ class ProjetoOtimo(ElementwiseProblem):
 
         # Conversão unidades e cálculo de cargas
         l = self.l / 100.0                          # [m]
+        bw_pista = self.bw_pista / 100.0            # [m]
         d /= 100.0                                  # [m]
-        esp /= 100.0                                # [m]
         bw /= 100.0                                 # [m]
         h /= 100.0                                  # [m]
-        f_mk_long = self.f_mk_long *1E3             # [kPa]
-        f_vk_long = self.f_vk_long * 1E3            # [kPa]
-        e_modflex_long = self.e_modflex_long * 1E6  # [kPa]
-        f_mk_tab = self.f_mk_tab * 1E3              # [kPa]
+        esp_long /= 100.0                           # [m]
+        esp_tab /= 100.0                            # [m]
+        esp_min_long = self.esp_min_long / 100.0    # [m]
+        esp_max_long = self.esp_max_long / 100.0    # [m]
+        esp_min_tab = self.esp_min_tab / 100.0      # [m]
+        esp_max_tab = self.esp_max_tab / 100.0      # [m]
+        f_mk_long = self.f_mk_long *1E3                         # [kPa]
+        f_vk_long = self.f_vk_long * 1E3                        # [kPa]
+        e_modflex_long = self.e_modflex_long * 1E6              # [kPa]
+        f_mk_tab = self.f_mk_tab * 1E3                          # [kPa]
+        densidade_long = self.densidade_long * 9.81 / 1000.0    # [kN/m³]
+        densidade_tab = self.densidade_tab * 9.81 / 1000.0      # [kN/m³]
 
         # Armazena o geometria
         geo_tab = {"b_w": bw, "h": h}
         geo_long = {"d": d}
 
+        # Restrição de preenchimento do espaço disponível para longarina e tabuleiro
+        g5, n_lons = restringir_espaço(esp_long, esp_min_long, esp_max_long, bw_pista, d)
+        g6, n_tabs = restringir_espaço(esp_tab, esp_min_tab, esp_max_tab, bw, l)
+
         # Carga permanente do tabuleiro que atua na longarina
-        carga_area_tab = (self.densidade_tab * 9.81) * h / 1E3                      # [kPa]
-        p_gk_long = (self.p_gk + carga_area_tab) * esp                              # [kN/m]
+        carga_area_tab = n_tabs * densidade_tab * (h * bw * bw_pista) / (bw_pista * l)  # [kPa]            
+        p_gk_long = (self.p_gk + carga_area_tab) * esp_long                             # [kN/m]
         props_long = prop_madeiras(geo_long)
         area_long = props_long[0]
-        pp_gk_long = peso_proprio_longarina(self.densidade_long, area_long)         # [kN/m]
-        p_gk_long += pp_gk_long                                                     # [kN/m]
+        pp_gk_long = peso_proprio_longarina(densidade_long, area_long)                  # [kN/m]
+        p_gk_long += pp_gk_long                                                         # [kN/m]
 
         # Avaliação flexão, cisalhamento e flecha da longarina
         res_m, res_v, res_f_total, relat_l = checagem_completa_longarina_madeira_flexao(
@@ -1391,7 +1449,7 @@ class ProjetoOtimo(ElementwiseProblem):
                                                                             geo_tab,
                                                                             p_gtabk,
                                                                             self.p_rodak,
-                                                                            esp,
+                                                                            esp_long,
                                                                             self.classe_carregamento.lower(),
                                                                             self.classe_madeira.lower(),
                                                                             self.classe_umidade,
@@ -1404,43 +1462,83 @@ class ProjetoOtimo(ElementwiseProblem):
         # Área de materiais empregados
         props_tab = prop_madeiras(geo_tab)
         area_tab = props_tab[0]
-        f1 = area_long + area_tab
+        f1 = n_lons * area_long * l + n_tabs * area_tab * bw_pista
         f2 = -res_f_total["of [-]"]         # Invertendo o sinal para garantir um processo de maximização
         g1 = res_m["g_otimiz [-]"]
         g2 = res_v["g_otimiz [-]"]
         g3 = res_f_total["g_otimiz [-]"]
         g4 = res_m_tab["g_otimiz [-]"]
 
-        return [f1, f2], [g1, g2, g3, g4], res_m, res_v, res_f_total, relat_l, res_m_tab, relat_t, relat_carga
+        return [f1, f2], [g1, g2, g3, g4, g5, g6], res_m, res_v, res_f_total, relat_l, res_m_tab, relat_t, relat_carga
     
     def _evaluate(self, x, out, *args, **kwargs):
         
         # Geometria da longarina e espaçamento entre longarinas
         d = float(x[0])
-        esp = float(x[1])
 
         # Geometria do tabuleiro
-        bw = float(x[2])
-        h = float(x[3])
+        bw = float(x[1])
+        h = float(x[2])
 
-        # Cálculo dos objetivos e restrições
-        f, g, _, _, _, _, _, _, _ = self.calcular_objetivos_restricoes_otimizacao(d, esp, bw, h)
+        # Espaçamento de longarinas e vigas do tabuleiro
+        esp_long = float(x[3])
+        esp_tab = float(x[4])
+
+        # Cálculo dos objetivos e restrições para avaliação robusta (média de várias checagens para cada indivíduo)
+        dados = []
+        for _ in range(self.n_checagens):
+            f, g, *_ = self.calcular_objetivos_restricoes_otimizacao(d, bw, h, esp_long, esp_tab)
+            resultado = {
+                            'f1': f[0],
+                            'f2': f[1],
+                            'g1': g[0],
+                            'g2': g[1],
+                            'g3': g[2],
+                            'g4': g[3],
+                            'g5': g[4],
+                            'g6': g[5],
+                        }
+            dados.append(resultado)
+        df = pd.DataFrame(dados)
+        f = df[['f1', 'f2']].mean().tolist()
+        g = df[['g1', 'g2', 'g3', 'g4', 'g5', 'g6']].mean().tolist()
+
         out["F"] = np.array(f, dtype=float)
         out["G"] = np.array(g, dtype=float)
 
+    # def _evaluate(self, x, out, *args, **kwargs):
+        
+    #     # Geometria da longarina e espaçamento entre longarinas
+    #     d = float(x[0])
+
+    #     # Geometria do tabuleiro
+    #     bw = float(x[1])
+    #     h = float(x[2])
+
+    #     # Espaçamento de longarinas e vigas do tabuleiro
+    #     esp_long = float(x[3])
+    #     esp_tab = float(x[4])
+
+    #     # Cálculo dos objetivos e restrições
+    #     f, g, _, _, _, _, _, _, _ = self.calcular_objetivos_restricoes_otimizacao(d, bw, h, esp_long, esp_tab)
+    #     out["F"] = np.array(f, dtype=float)
+    #     out["G"] = np.array(g, dtype=float)
 
 def chamando_nsga2(
                         dados: dict,
                         ds: list,
-                        esps: list,
                         bws: list,
-                        hs: list
+                        hs: list,
+                        esp_l: list,
+                        esp_t: list
                     ) -> pd.DataFrame:
     """Função para chamar o algoritmo NSGA-II para otimização do projeto estrutural.
     """
 
     # Instanciando o problema de otimização, construindo a estrutura exemplo
     problem = ProjetoOtimo(
+
+                            bw_pista=dados["largura pista (cm)"],
                             l=dados["l (cm)"],
                             p_gk=dados["p_gk (kPa)"],
                             p_rodak=dados["p_rodak (kN)"],
@@ -1467,12 +1565,14 @@ def chamando_nsga2(
 
                             d_min=ds[0],
                             d_max=ds[1],
-                            esp_min=esps[0],
-                            esp_max=esps[1],
                             bw_min=bws[0],
                             bw_max=bws[1],
                             h_min=hs[0],
                             h_max=hs[1],
+                            esp_l_min=esp_l[0],
+                            esp_l_max=esp_l[1],
+                            esp_t_min=esp_t[0],
+                            esp_t_max=esp_t[1],
                         )
 
     algorithm = NSGA2(
@@ -1514,9 +1614,10 @@ if __name__ == "__main__":
     df = df.to_dict(orient="records")
     df = df[0] 
     ds = [30, 150]
-    esps = [30, 200]
     bws = [5, 60]
     hs = [5, 60]
+    esp_l = [30, 200]
+    esp_t = [5, 60]
     problem = ProjetoOtimo(
                                 l=df["l (cm)"],
                                 p_gk=df["p_gk (kPa)"],

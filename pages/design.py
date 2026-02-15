@@ -205,3 +205,4 @@ if st.session_state.get("has_results", False):
         st.error("❌ Falha na geração do PDF. Verifique o terminal para ver o erro do LaTeX.")
 else:
     st.warning(t["aviso_gerar_primeiro"])
+    
