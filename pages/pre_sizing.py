@@ -35,78 +35,119 @@ textos = textos_pre_sizing_l()
 t = textos.get(lang, textos["pt"])
 
 st.header(t["titulo"])
-st.subheader(t["pre"])
+with st.container():
+    st.markdown(t["pre"])
 
 
 # ============================================================
-# 1) FORM
+# 1) FORM PARA ENTRADA DE DADOS
 # ============================================================
 with st.form("form_geometria", clear_on_submit=False):
 
-    l = st.number_input(t["entrada_comprimento"], min_value=300.0, key="l")
-    larg = st.number_input(t["pista"], min_value=200.0, key="larg")
+    st.subheader(t["geometria_t"])
+    col1, col2 = st.columns(2)
+    with col1:
+        l = st.number_input(t["entrada_comprimento"], min_value=300.0, key="l")
+    with col2:
+        larg = st.number_input(t["pista"], min_value=200.0, key="larg")
 
-    tipo_secao_longarina = st.selectbox(
-                                            t["entrada_tipo_secao_longarina"],
-                                            t["tipo_secao_longarina"],
-                                            key="tipo_secao_longarina"
-                                        )
-    if tipo_secao_longarina.lower() == "circular":
-        d_cm_min = st.number_input(t["diametro_minimo"], key="d_cm_min")
-        d_cm_max = st.number_input(t["diametro_maximo"], key="d_cm_max")
-    else:
-        d_cm_min, d_cm_max = None, None
+    st.divider()
 
-    tipo_secao_tabuleiro = st.selectbox(
-                                            t["tipo_secao_tabuleiro"],
-                                            t["tipo_secao_tabuleiro_opcoes"],
-                                            key="tipo_secao_tabuleiro"
-                                        )
-    if tipo_secao_tabuleiro.lower() == "retangular":
-        esp_min = st.number_input(t["espaçamento_entre_longarinas_min"], key="esp_min")
-        esp_max = st.number_input(t["espaçamento_entre_longarinas_max"], key="esp_max")
-        bw_min  = st.number_input(t["largura_viga_tabuleiro_min"], key="bw_min")
-        bw_max  = st.number_input(t["largura_viga_tabuleiro_max"], key="bw_max")
-        h_min   = st.number_input(t["altura_viga_tabuleiro_min"], key="h_min")
-        h_max   = st.number_input(t["altura_viga_tabuleiro_max"], key="h_max")
-    else:
-        esp_min = esp_max = bw_min = bw_max = h_min = h_max = None
+    st.subheader(t["variaveis_otimizacao"])
+    col1, col2 = st.columns(2)
+    with col1:
+        tipo_secao_longarina = st.selectbox(t["entrada_tipo_secao_longarina"], t["tipo_secao_longarina"], key="tipo_secao_longarina")
+        if tipo_secao_longarina.lower() == "circular":
+            d_cm_min = st.number_input(t["diametro_minimo"], min_value=1.0, key="d_cm_min")
+            d_cm_max = st.number_input(t["diametro_maximo"], min_value=1.0, key="d_cm_max")
+        else:
+            d_cm_min, d_cm_max, n_max = None
+        n_min_long = st.number_input(t["espaço_min_longarinas"], value=0.0, min_value=0.0, key="n_min_long")
+        n_max_long = st.number_input(t["espaço_max_longarinas"], value=0.0, min_value=0.0, key="n_max_long")
 
-    p_gk = st.number_input(t["carga_permanente"], key="p_gk")
-    p_rodak = st.number_input(t["carga_roda"], key="p_rodak")
-    p_qk = st.number_input(t["carga_multidao"], key="p_qk")
-    a = st.number_input(t["distancia_eixos"], key="a")
+    with col2:
+        tipo_secao_tabuleiro = st.selectbox(t["tipo_secao_tabuleiro"], t["tipo_secao_tabuleiro_opcoes"], key="tipo_secao_tabuleiro")
+        if tipo_secao_tabuleiro.lower() == "retangular":
+            bw_min  = st.number_input(t["largura_viga_tabuleiro_min"], key="bw_min")
+            bw_max  = st.number_input(t["largura_viga_tabuleiro_max"], key="bw_max")
+            h_min   = st.number_input(t["altura_viga_tabuleiro_min"], key="h_min")
+            h_max   = st.number_input(t["altura_viga_tabuleiro_max"], key="h_max")
+        else:
+            bw_min = bw_max = h_min = h_max = None
+        n_min_tab = st.number_input(t["espaço_min_tabuleiros"], value=0.0, min_value=0.0, key="n_min_tab")
+        n_max_tab = st.number_input(t["espaço_max_tabuleiros"], value=0.0, min_value=0.0, key="n_max_tab")
 
-    classe_carregamento_raw = st.selectbox(
-                                                t["classe_carregamento"],
-                                                t["classe_carregamento_opcoes"],
-                                                key="classe_carregamento"
-                                            )
-    classe_madeira_raw = st.selectbox(
-                                            t["classe_madeira"],
-                                            t["classe_madeira_opcoes"],
-                                            key="classe_madeira"
-                                        )
-    classe_umidade = st.selectbox(
-                                        t["classe_umidade"],
-                                        [1, 2, 3, 4],
-                                        key="classe_umidade"
-                                    )
+    st.divider()
 
-    gamma_g = st.number_input(t["gamma_g"], step=0.1, key="gamma_g")
-    gamma_q = st.number_input(t["gamma_q"], step=0.1, key="gamma_q")
-    gamma_wf = st.number_input(t["gamma_wf"], step=0.1, key="gamma_wf")
-    gamma_wc = st.number_input(t["gamma_wc"], step=0.1, key="gamma_wc")
-    psi_2   = st.number_input(t["psi2"], step=0.1, key="psi_2")
-    fluencia = st.number_input(t["considerar_fluencia"], step=0.1, key="phi")
+    st.subheader(t["cargas_projeto"])
+    col1, col2 = st.columns(2)
+    with col1:
+        p_gk    = st.number_input(t["carga_permanente"], key="p_gk")
+        p_rodak = st.number_input(t["carga_roda"], key="p_rodak")
+    with col2:
+        p_qk = st.number_input(t["carga_multidao"], key="p_qk")
+        a    = st.number_input(t["distancia_eixos"], key="a")
 
-    densidade_long = st.number_input(t["densidade_long"], step=1.0, key="densidade_long")
-    f_mk_mpa = st.number_input(t["f_mk"], step=0.1, key="f_mk_mpa")
-    f_vk_mpa = st.number_input(t["f_vk"], step=0.1, key="f_vk_mpa")
-    e_modflex_gpa = st.number_input(t["e_modflex"], step=0.1, key="e_modflex_gpa")
+    st.divider()
 
-    densidade_tab = st.number_input(t["densidade_tab"], step=1.0, key="densidade_tab")
-    f_mk_mpa_tab  = st.number_input(t["f_mk_tab"], step=0.1, key="f_mk_mpa_tab")
+    st.subheader(t["classes_mad_carga"])
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        classe_carregamento_raw = st.selectbox(
+            t["classe_carregamento"],
+            t["classe_carregamento_opcoes"],
+            key="classe_carregamento"
+        )
+    with col2:
+        classe_madeira_raw = st.selectbox(
+            t["classe_madeira"],
+            t["classe_madeira_opcoes"],
+            key="classe_madeira"
+        )
+    with col3:
+        classe_umidade = st.selectbox(
+            t["classe_umidade"],
+            [1, 2, 3, 4],
+            key="classe_umidade"
+        )
+
+    st.divider()
+
+    st.subheader(t["coeficientes_seguranca"])
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        gamma_g = st.number_input(t["gamma_g"], step=0.1, key="gamma_g")
+        gamma_q = st.number_input(t["gamma_q"], step=0.1, key="gamma_q")
+    with col2:
+        gamma_wf = st.number_input(t["gamma_wf"], step=0.1, key="gamma_wf")
+        gamma_wc = st.number_input(t["gamma_wc"], step=0.1, key="gamma_wc")
+    with col3:
+        psi_2 = st.number_input(t["psi2"], step=0.1, key="psi_2")
+        fluencia = st.number_input(t["considerar_fluencia"], step=0.1, key="phi")
+
+    st.divider()
+
+    st.subheader(t["prop_madeira"])
+
+    st.markdown(f"**{t['longarina_t']}**")
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        densidade_long = st.number_input(t["densidade_long"], step=1.0, key="densidade_long")
+    with col2:
+        f_mk_mpa = st.number_input(t["f_mk"], step=0.1, key="f_mk_mpa")
+    with col3:
+        f_vk_mpa = st.number_input(t["f_vk"], step=0.1, key="f_vk_mpa")
+    with col4:
+        e_modflex_gpa = st.number_input(t["e_modflex"], step=0.1, key="e_modflex_gpa")
+
+    st.markdown(f"**{t['tabuleiro_t']}**")
+    col1, col2 = st.columns(2)
+    with col1:
+        densidade_tab = st.number_input(t["densidade_tab"], step=1.0, key="densidade_tab")
+    with col2:
+        f_mk_mpa_tab = st.number_input(t["f_mk_tab"], step=0.1, key="f_mk_mpa_tab")
+
+    st.divider()
 
     submitted_design = st.form_submit_button(t["gerador_desempenho"])
 
@@ -114,58 +155,31 @@ with st.form("form_geometria", clear_on_submit=False):
 # ============================================================
 # 2) DADOS DO PROJETO (sempre disponíveis)
 # ============================================================
-if lang == "pt":
-    dados_projeto = {
-                        "l (cm)": l,
-                        "b_wpista (cm)": larg,
-                        "tipo_secao_longarina": tipo_secao_longarina,
-                        "tipo_secao_tabuleiro": tipo_secao_tabuleiro,
-                        "p_gk (kPa)": p_gk,
-                        "p_rodak (kN)": p_rodak,
-                        "p_qk (kPa)": p_qk,
-                        "a (m)": a,
-                        "classe_carregamento": classe_carregamento_raw.lower(),
-                        "classe_madeira": classe_madeira_raw.lower(),
-                        "classe_umidade": classe_umidade,
-                        "gamma_g": gamma_g,
-                        "gamma_q": gamma_q,
-                        "gamma_wc": gamma_wc,
-                        "gamma_wf": gamma_wf,
-                        "psi_2": psi_2,
-                        "phi": fluencia,
-                        "densidade longarina (kg/m³)": densidade_long,
-                        "resistência característica à flexão longarina (MPa)": f_mk_mpa,
-                        "resistência característica ao cisalhamento longarina (MPa)": f_vk_mpa,
-                        "módulo de elasticidade à flexão longarina (GPa)": e_modflex_gpa,
-                        "densidade tabuleiro (kg/m³)": densidade_tab,
-                        "resistência característica à flexão tabuleiro (MPa)": f_mk_mpa_tab,
-                    }
-else:
-    dados_projeto = {
-                        "l (cm)": l,
-                        "b_wpista (cm)": larg,
-                        "tipo_secao_longarina": tipo_secao_longarina,
-                        "tipo_secao_tabuleiro": tipo_secao_tabuleiro,
-                        "p_gk (kPa)": p_gk,
-                        "p_rodak (kN)": p_rodak,
-                        "p_qk (kPa)": p_qk,
-                        "a (m)": a,
-                        "classe_carregamento": classe_carregamento_raw.lower(),
-                        "classe_madeira": classe_madeira_raw.lower(),
-                        "classe_umidade": classe_umidade,
-                        "gamma_g": gamma_g,
-                        "gamma_q": gamma_q,
-                        "gamma_wc": gamma_wc,
-                        "gamma_wf": gamma_wf,
-                        "psi_2": psi_2,
-                        "phi": fluencia,
-                        "densidade longarina (kg/m³)": densidade_long,
-                        "resistência característica à flexão longarina (MPa)": f_mk_mpa,
-                        "resistência característica ao cisalhamento longarina (MPa)": f_vk_mpa,
-                        "módulo de elasticidade à flexão longarina (GPa)": e_modflex_gpa,
-                        "densidade tabuleiro (kg/m³)": densidade_tab,
-                        "resistência característica à flexão tabuleiro (MPa)": f_mk_mpa_tab,
-                    }
+dados_projeto = {
+                    f"{t['entrada_comprimento']}": l,
+                    f"{t['pista']}": larg,
+                    f"{t['tipo_secao_longarina']}": tipo_secao_longarina,
+                    f"{t['tipo_secao_tabuleiro']}": tipo_secao_tabuleiro,
+                    f"{t['carga_permanente']} (kPa)": p_gk,
+                    f"{t['carga_roda']} (kN)": p_rodak,
+                    f"{t['carga_multidao']} (kPa)": p_qk,
+                    f"{t['distancia_eixos']} (m)": a,
+                    f"{t['classe_carregamento']}": classe_carregamento_raw.lower(),
+                    f"{t['classe_madeira']}": classe_madeira_raw.lower(),
+                    f"{t['classe_umidade']}": classe_umidade,
+                    f"{t['gamma_g']}": gamma_g,
+                    f"{t['gamma_q']}": gamma_q,
+                    f"{t['gamma_wc']}": gamma_wc,
+                    f"{t['gamma_wf']}": gamma_wf,
+                    f"{t['psi2']}": psi_2,
+                    f"{t['considerar_fluencia']}": fluencia,
+                    f"{t['densidade_long']} (kg/m³)": densidade_long,
+                    f"{t['f_mk']} (MPa)": f_mk_mpa,
+                    f"{t['f_vk']} (MPa)": f_vk_mpa,
+                    f"{t['e_modflex']} (GPa)": e_modflex_gpa,
+                    f"{t['densidade_tab']} (kg/m³)": densidade_tab,
+                    f"{t['f_mk_tab']} (MPa)": f_mk_mpa_tab,
+                }
 excel_bytes = montar_excel(dados_projeto)
 
 
@@ -183,22 +197,112 @@ if st.session_state.get("has_results", False) and (sig_last is not None) and (si
 # 4) COMPUTE (apenas quando clicar em Gerar)
 # ============================================================
 if submitted_design:
-    # validações mínimas (para evitar rodar com None)
-    if d_cm_min is None or d_cm_max is None:
-        st.error("Defina os limites de diâmetro (d_min e d_max).")
+    erros = []
+
+    # ------------------------------------------------------------
+    # Geometria geral
+    # ------------------------------------------------------------
+    if l <= 0:
+        erros.append(f"- {t['entrada_comprimento']}")
+    if larg <= 0:
+        erros.append(f"- {t['pista']}")
+
+    # ------------------------------------------------------------
+    # Variáveis de otimização - Longarinas
+    # ------------------------------------------------------------
+    if tipo_secao_longarina.lower() == "circular":
+        if d_cm_min is None or d_cm_min <= 0:
+            erros.append(f"- {t['diametro_minimo']}")
+        if d_cm_max is None or d_cm_max <= 0:
+            erros.append(f"- {t['diametro_maximo']}")
+        if d_cm_min is not None and d_cm_max is not None and d_cm_min > d_cm_max:
+            erros.append(f"- {t['diametro_minimo']} > {t['diametro_maximo']}")
+        if n_max_long is None or n_max_long <= 0:
+            erros.append(f"- {t['espaço_max_longarinas']}")
+
+    # ------------------------------------------------------------
+    # Variáveis de otimização - Tabuleiro
+    # ------------------------------------------------------------
+    if tipo_secao_tabuleiro.lower() == "retangular":
+        if bw_min is None or bw_min <= 0:
+            erros.append(f"- {t['largura_viga_tabuleiro_min']}")
+        if bw_max is None or bw_max <= 0:
+            erros.append(f"- {t['largura_viga_tabuleiro_max']}")
+        if h_min is None or h_min <= 0:
+            erros.append(f"- {t['altura_viga_tabuleiro_min']}")
+        if h_max is None or h_max <= 0:
+            erros.append(f"- {t['altura_viga_tabuleiro_max']}")
+        if bw_min is not None and bw_max is not None and bw_min > bw_max:
+            erros.append(f"- {t['largura_viga_tabuleiro_min']} > {t['largura_viga_tabuleiro_max']}")
+        if h_min is not None and h_max is not None and h_min > h_max:
+            erros.append(f"- {t['altura_viga_tabuleiro_min']} > {t['altura_viga_tabuleiro_max']}")
+        if n_max_tab is None or n_max_tab <= 0:
+            erros.append(f"- {t['espaço_max_tabuleiros']}")
+
+    # ------------------------------------------------------------
+    # Cargas
+    # ------------------------------------------------------------
+    if p_gk <= 0:
+        erros.append(f"- {t['carga_permanente']}")
+    if p_rodak <= 0:
+        erros.append(f"- {t['carga_roda']}")
+    if p_qk <= 0:
+        erros.append(f"- {t['carga_multidao']}")
+    if a <= 0:
+        erros.append(f"- {t['distancia_eixos']}")
+
+    # ------------------------------------------------------------
+    # Coeficientes de segurança
+    # ------------------------------------------------------------
+    if gamma_g <= 0:
+        erros.append(f"- {t['gamma_g']}")
+    if gamma_q <= 0:
+        erros.append(f"- {t['gamma_q']}")
+    if gamma_wf <= 0:
+        erros.append(f"- {t['gamma_wf']}")
+    if gamma_wc <= 0:
+        erros.append(f"- {t['gamma_wc']}")
+    if psi_2 <= 0:
+        erros.append(f"- {t['psi2']}")
+    if fluencia <= 0:
+        erros.append(f"- {t['considerar_fluencia']}")
+
+    # ------------------------------------------------------------
+    # Propriedades da madeira
+    # ------------------------------------------------------------
+    if densidade_long <= 0:
+        erros.append(f"- {t['densidade_long']}")
+    if f_mk_mpa <= 0:
+        erros.append(f"- {t['f_mk']}")
+    if f_vk_mpa <= 0:
+        erros.append(f"- {t['f_vk']}")
+    if e_modflex_gpa <= 0:
+        erros.append(f"- {t['e_modflex']}")
+
+    if densidade_tab <= 0:
+        erros.append(f"- {t['densidade_tab']}")
+    if f_mk_mpa_tab <= 0:
+        erros.append(f"- {t['f_mk_tab']}")
+
+    # ------------------------------------------------------------
+    # Resultado da validação
+    # ------------------------------------------------------------
+    if erros:
+        st.error("Os seguintes campos devem ser preenchidos com valores maiores que zero:\n\n" + "\n".join(erros))
         st.stop()
-    if esp_min is None or esp_max is None or bw_min is None or bw_max is None or h_min is None or h_max is None:
-        st.error("Defina os limites do tabuleiro (esp, bw, h).")
-        st.stop()
+
+    # Se passou na validação, segue o processamento
+    st.success("Dados validados com sucesso.")
     st.session_state["sig_last"] = sig_now
 
-    ds   = [float(d_cm_min), float(d_cm_max)]
-    esps = [float(esp_min),  float(esp_max)]
-    bws  = [float(bw_min),   float(bw_max)]
-    hs   = [float(h_min),    float(h_max)]
+    ds       = [float(d_cm_min), float(d_cm_max)]
+    bws      = [float(bw_min),   float(bw_max)]
+    hs       = [float(h_min),    float(h_max)]
+    n_p_long = [float(n_min_long), float(n_max_long)]
+    n_p_tab  = [float(n_min_tab),  float(n_max_tab)]
 
     # NSGA-II
-    res_nsga = chamando_nsga2(dados_projeto, ds, esps, bws, hs)
+    res_nsga = chamando_nsga2(dados_projeto, ds, bws, hs, n_p_long, n_p_tab, t)
 
     # padroniza DataFrame final (PT/EN)
     if lang == "pt":
