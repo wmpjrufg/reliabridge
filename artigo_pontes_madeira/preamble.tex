@@ -1,0 +1,134 @@
+% Language setting
+\usepackage[brazil]{babel}
+
+% Set page size and margins
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2.5cm,right=2.5cm,marginparwidth=1.75cm]{geometry}
+
+%----------- APA style references & citations (starting) ---
+% Useful packages
+%\usepackage[natbibapa]{apacite} % APA-style citations.
+
+\usepackage[style=apa, backend=biber]{biblatex} % APA 7th edition style citations using biblatex
+\addbibresource{references.bib} % Your .bib file
+
+% Formatting DOI in APA-7 style
+%\renewcommand{\doiprefix}{https://doi.org/}
+
+% Add additional APA 7th edition requirements
+\DeclareLanguageMapping{brazil}{brazilian-apa} % Set language mapping
+\DeclareFieldFormat[article]{volume}{\apanum{#1}} % Format volume number
+
+% Modify 'and' to '&' in the bibliography
+\renewcommand*{\finalnamedelim}{%
+  \ifnumgreater{\value{liststop}}{2}{\finalandcomma}{}%
+  \addspace\&\space}
+  
+%----------- APA style references & citations (ending) ---
+
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{xcolor}
+% Comando para as sugestoes de resultados de alto impacto (destaque em vermelho)
+\newcommand{\sugestao}[1]{%
+  \par\medskip\noindent
+  \colorbox{red!8}{\parbox{0.98\linewidth}{%
+    \color{red}\small\textbf{[SUGESTAO DE ALTO IMPACTO]}\ #1}}%
+  \par\medskip}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+%\usepackage{orcidlink}
+\usepackage[title]{appendix}
+\usepackage{mathrsfs}
+\usepackage{amsfonts}
+\usepackage{booktabs}       % For \toprule, \midrule, \botrule
+\usepackage{threeparttable} % For table footnotes
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{enumitem}
+\IfFileExists{chngcntr.sty}{\usepackage{chngcntr}}{}
+\usepackage{lipsum}
+\usepackage{subcaption}
+\IfFileExists{authblk.sty}{\usepackage{authblk}}{}
+\usepackage[T1]{fontenc}    % Font encoding
+\usepackage{csquotes}       % Include csquotes
+\IfFileExists{diagbox.sty}{\usepackage{diagbox}}{}
+\IfFileExists{comment.sty}{\usepackage{comment}}{}
+\usepackage{url}
+
+%\usepackage[justification=raggedright, singlelinecheck=false]{caption}
+\IfFileExists{helvet.sty}{\usepackage{helvet}}{}  % Load Helvetica (Arial-like)
+\IfFileExists{lmodern.sty}{\usepackage{lmodern}}{}  % Ensures default LaTeX font is available
+
+% label format: capital, centering, and parens
+\renewcommand{\thesubfigure}{\Alph{subfigure}}
+
+% Customize line spacing
+\IfFileExists{setspace.sty}{%
+  \usepackage{setspace}
+  \onehalfspacing % 1.5 line spacing
+}{%
+  \linespread{1.25} % Fallback close to 1.5 line spacing
+}
+
+% Redefine section and subsection numbering format
+\IfFileExists{titlesec.sty}{%
+  \usepackage{titlesec}
+  \titleformat{\section} % Redefine section numbering format
+    {\normalfont\Large\bfseries}{\thesection.}{1em}{}
+}{}
+  
+% Customize line numbering format to right-align line numbers
+%\usepackage{lineno} % Add the lineno package
+%\renewcommand\linenumberfont{\normalfont\scriptsize\sffamily\color{blue}}
+%\rightlinenumbers % Right-align line numbers
+
+%\linenumbers % Enable line numbering
+
+% Define a new command for the fourth-level title.
+\newcommand{\subsubsubsection}[1]{%
+  \vspace{\baselineskip}% Add some space
+  \noindent\textbf{#1\\}\quad% Adjust formatting as needed
+}
+% Change the position of the table caption above the table
+\usepackage{float}   % for customizing caption position
+\usepackage{caption}
+\captionsetup[table]{position=top} % caption position for tables
+\captionsetup[table]{labelfont=bf} % caption label
+\captionsetup[figure]{labelfont=bf} % caption label
+
+% Define the unnumbered list
+\makeatletter
+\newenvironment{unlist}{%
+  \begin{list}{}{%
+    \setlength{\labelwidth}{0pt}%
+    \setlength{\labelsep}{0pt}%
+    \setlength{\leftmargin}{2em}%
+    \setlength{\itemindent}{-2em}%
+    \setlength{\topsep}{\medskipamount}%
+    \setlength{\itemsep}{3pt}%
+  }%
+}{%
+  \end{list}%
+}
+\makeatother
+
+% Suppress the warning about \@parboxrestore
+\pdfsuppresswarningpagegroup=1
+
+\date{}  % Remove date
+
+% Keep the template compilable when example image files are not uploaded yet.
+\makeatletter
+\let\template@orig@includegraphics\includegraphics
+\renewcommand{\includegraphics}[2][]{%
+  \IfFileExists{#2}{%
+    \template@orig@includegraphics[#1]{#2}%
+  }{%
+    \fbox{\parbox[c][0.22\textheight][c]{0.75\linewidth}{%
+      \centering\small Missing figure: \texttt{\detokenize{#2}}%
+    }}%
+  }%
+}
+\makeatother

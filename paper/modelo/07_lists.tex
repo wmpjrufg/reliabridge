@@ -1,0 +1,53 @@
+\section{How to include lists}\label{sec7}
+
+List in \LaTeX{} can be of three types: numbered, bulleted, and unnumbered. The ``enumerate'' environment produces a numbered list, the 
+``itemize'' environment produces a bulleted list, and the ``unlist''
+environment produces an unnumbered list.
+In each environment, a new entry is added via the \verb+\item+ command.
+
+\begin{enumerate}[label=\arabic*.]
+\item This is the 1st item
+\item Enumerate creates numbered lists, itemize creates bulleted lists, and unnumerate creates unnumbered lists.
+
+\begin{enumerate}[label=\alph*.]
+\item Second level numbered list. Enumerate creates numbered lists, itemize creates bulleted lists, and description creates unnumbered lists.
+\item Second level numbered list. Enumerate creates numbered lists, itemize creates bulleted lists, and description creates unnumbered lists.
+
+\begin{enumerate}[label=(\roman*)]
+\item Third level numbered list. Enumerate creates numbered lists, itemize creates bulleted lists, and description creates unnumbered lists.
+\item Third level numbered list. Enumerate creates numbered lists.
+\end{enumerate}
+
+\item Second level numbered list. Enumerate creates numbered lists, itemize creates bulleted lists, and description creates unnumbered lists.
+\end{enumerate}
+
+\item Numbered lists continue.
+\end{enumerate}
+Lists in \LaTeX{} can be of three types: enumerate, itemize, and description.
+In each environment, a new entry is added via the \verb+\item+ command.
+
+\begin{itemize}
+\item First level bulleted list. This is the 1st item
+\item First level bulleted list. Itemize creates bulleted lists, and description creates unnumbered lists.
+
+\begin{itemize}
+\item Second level dashed list. Itemize creates bulleted lists, and description creates unnumbered lists.
+\item Second level dashed list. Itemize creates bulleted lists, and description creates unnumbered lists.
+\end{itemize}
+
+\item First level bulleted list. Bullet lists continue.
+\end{itemize}
+
+\noindent
+Example of unnumbered list items:
+
+\begin{unlist}
+\item Sample unnumberd list text. Sample unnumberd list text. Sample unnumberd list text. Sample unnumberd list text. Sample unnumberd list text.
+
+\item Sample unnumberd list text. Sample unnumberd list text. Sample unnumberd list text.
+
+\item Sample unnumberd list text. Sample unnumberd list text. Sample unnumberd list text. Sample unnumberd list text. 
+\end{unlist}
+
+
+%--- Section ---%

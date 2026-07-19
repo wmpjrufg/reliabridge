@@ -1,0 +1,75 @@
+% ----------------------------------------------------------
+\chapter{Metodologia}\label{sec:metodologia}
+% ----------------------------------------------------------
+
+A presente pesquisa tem como objetivo o desenvolvimento de uma plataforma computacional para o dimensionamento de pontes de madeira, baseada em uma abordagem de otimização multiobjetivo. A metodologia adotada consiste na formulação do problema estrutural segundo os critérios normativos da NBR 7190 \cite{NBR7190-1:2022}, na definição das funções objetivo e restrições de projeto, e na aplicação de uma metaheurística para a obtenção de soluções eficientes.
+
+O estudo considera pontes hipotéticas de madeira a partir da NBR 7190 \cite{NBR7190-1:2022}, realizando as verificações referentes a flexão simples, cisalhamento e flecha. O comportamento estrutural das pontes é avaliado por meio de modelos determinísticos, utilizando propriedades mecânicas características do material e ações de projeto estabelecidas conforme as prescrições normativas.
+
+Logo, o dimensionamento das pontes de madeira é formulado como um problema de otimização multiobjetivo, onde as variáveis de decisão do problema correspondem às dimensões geométricas da seção transversal da viga, tais como diâmetro da viga, espaçamento entre longarinas, base e altura da seção transversal do tabuleiro.
+
+Sendo assim, as funções objetivo consideradas neste trabalho são:
+
+\begin{itemize}
+    \item Minimização da área total da viga;
+    \item Maximização da relação $\dfrac{\delta_{\text{total}}}{L/250}$.
+\end{itemize}
+
+Os objetivos considerados são antagônicos, visto que a redução da área da seção transversal e do peso da estrutura tende a intensificar as deformações, enquanto o aumento da rigidez estrutural demanda maior quantidade de material. Assim, procura-se obter um conjunto de soluções viáveis entre esses objetivos, representadas por uma Fronteira de Pareto.
+
+As restrições do problema incluem as verificações normativas de resistência à flexão, cisalhamento e limites máximos de deslocamento, conforme estabelecido pela NBR 7190 \cite{NBR7190-1:2022}.
+
+Para a resolução do problema de otimização multiobjetivo, é empregada uma metaheurística capaz de explorar eficientemente o espaço de soluções e identificar soluções não dominadas. A metaheurística atua de forma iterativa, avaliando populações de soluções candidatas e promovendo sua evolução com base nos valores das funções objetivo e no atendimento às restrições do problema.
+
+A abordagem adotada permite a obtenção da fronteira de Pareto associada ao problema do dimensionamento, fornecendo ao projetista um conjunto de alternativas viáveis para a tomada de decisão.
+
+A plataforma computacional é desenvolvida utilizando a linguagem \textit{Python}, utilizando bibliotecas científicas para cálculo numérico e otimização. 
+Os resultados são apresentados de forma gráfica e numérica, incluindo a visualização da fronteira de Pareto e das soluções ótimas correspondentes. Dessa forma, a plataforma possibilita uma análise comparativa entre diferentes alternativas de dimensionamento, promovendo maior eficiência e racionalidade no processo de projeto estrutural.
+
+O fluxo metodológico adotado neste trabalho pode ser resumido nas seguintes etapas apresentadas na Figura \ref{fig:fluxograma} e conforme descrito a seguir.
+
+\begin{enumerate}
+    \item Definição geométrica e das cargas: 
+    Inicialmente, são estabelecidas as propriedades geométricas da estrutura, como vão, seção transversal e espaçamentos. Nesta etapa também são definidas as cargas permanentes atuantes na estrutura devido ao peso próprio.
+
+    \item Definição do trem-tipo:
+    Determina-se o modelo de carregamento móvel (trem-tipo) a ser considerado, de acordo com as normas vigentes e a finalidade da ponte.
+
+    \item Cálculo estrutural:
+    Realiza-se a análise estrutural para obtenção dos esforços solicitantes e deslocamentos, incluindo momento fletor máximo, esforço cortante máximo e flecha máxima.
+
+    \item Combinações de ações:
+    São aplicadas as combinações de carregamento para os Estados Limites, considerando o Estado Limite Último (ELU) e Estado Limite de Serviço (ELS).
+
+    \item Determinação da resistência de projeto:
+    Calculam-se as resistências de cálculo do material, considerando os coeficientes de modificação e segurança.
+
+    \item Verificações necessárias: 
+    São realizadas as verificações estruturais para avaliar se a seção atende aos critérios de segurança e desempenho. Caso não atenda, o projeto deve ser ajustado e o processo retorna às etapas anteriores.
+
+    \item Otimização (NSGA-II):
+    Se todas as verificações forem atendidas, aplica-se o Algoritmo Genético de Ordenação Não Dominada II (NSGA-II) para obtenção da fronteira eficiente, buscando soluções que atendam as funções objetivo.
+
+    \item Solução viável final:
+    Por fim, obtem-se o conjunto de soluções viáveis, permitindo que o projetista selecione a que melhor atende ao projeto, pois estarão respeitando a função objetivo adotada e as restrições estruturais e normativas.
+\end{enumerate}
+
+\begin{figure}[htpb!]
+    \centering
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Fluxograma para otimização do dimensionamento de pontes de madeira.}
+    \label{fig:fluxograma} 
+    \includegraphics[width=0.9\textwidth]{template_eca_ufsc_abnt/figuras/fluxograma.jpeg}
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{figure}
+
+
+
+
+
+

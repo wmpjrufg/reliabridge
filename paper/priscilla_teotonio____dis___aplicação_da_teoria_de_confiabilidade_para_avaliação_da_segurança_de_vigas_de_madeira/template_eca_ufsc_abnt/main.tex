@@ -1,0 +1,397 @@
+% ------------------------------------------------------------------------
+% ------------------------------------------------------------------------
+% Modelo de TCC do curso de Engenharia de Controle e Automação - UFSC/Campus Blumenau
+% Autor: Ciro André Pitz
+% Revisão: Brenda Teresa Porto de Matos
+% O presente modelo foi obtido a partir do modelo desenvolvido por Alisson Lopes Furlani disponível na BU/UFSC.
+% ------------------------------------------------------------------------
+% ------------------------------------------------------------------------
+
+
+\documentclass[
+12pt,				% tamanho da fonte
+%openright,			% capítulos começam em pág ímpar (insere página vazia caso preciso)
+oneside,			% para impressão no anverso. Oposto a twoside
+a4paper,			% tamanho do papel. 
+chapter=TITLE,		% títulos de capítulos convertidos em letras maiúsculas
+section=TITLE,		% títulos de seções convertidos em letras maiúsculas
+%subsection=TITLE,	% títulos de subseções convertidos em letras maiúsculas
+%subsubsection=TITLE,% títulos de subsubseções convertidos em letras maiúsculas
+% -- opções do pacote babel --
+english,			% idioma adicional para hifenização
+brazil				% o último idioma é o principal do documento
+]{abntex2}
+
+\PassOptionsToPackage{nopatch=eqnum}{microtype}
+\usepackage{configs/eca_ufsc_bnu} % personalização da ABNTEX2 
+% \usepackage{setspace}
+\addbibresource{pos_textual/referencias.bib} % Seus arquivos de referências
+\emergencystretch=2em
+
+% --- Hyperref-safe: títulos em MAIÚSCULAS no Sumário sem redefinir \contentsline
+% \AtBeginDocument{%
+%   \renewcommand{\cftsectionfont}{\ABNTEXsectionfont\MakeTextUppercase}%
+%   \renewcommand{\cftsectionpagefont}{\cftsectionfont}%
+%   % Se quiser também SUBSEÇÕES/OUTROS níveis, descomente:
+%   % \renewcommand{\cftsubsectionfont}{\ABNTEXsubsectionfont\MakeTextUppercase}%
+%   % \renewcommand{\cftsubsectionpagefont}{\cftsubsectionfont}%
+% }
+\AtBeginDocument{%
+  % CAPÍTULOS (Nível 0): Negrito e Maiúsculas
+  \renewcommand{\cftchapterfont}{\bfseries\MakeUppercase}
+  \renewcommand{\cftchapterpagefont}{\bfseries}
+  
+  % SEÇÕES (Nível 1): Negrito mas SEM Maiúsculas (removido \MakeUppercase)
+  \renewcommand{\cftsectionfont}{\bfseries} 
+  \renewcommand{\cftsectionpagefont}{\bfseries}
+  
+  % SUBSEÇÕES (Nível 2): Fonte normal
+  \renewcommand{\cftsubsectionfont}{\normalfont}
+  \renewcommand{\cftsubsectionpagefont}{\normalfont}
+
+  % Para garantir que o sumário não mostre o Nível 4 (Subsubseção)
+  \setcounter{tocdepth}{2}
+}
+
+%---------------------------------------------------------------------------------------------
+%--------- DADOS BÁSICOS DO TCC (Preencher todos) -------------------------------------
+%---------------------------------------------------------------------------------------------
+%Substituir 'Nome completo do autor' pelo seu nome.
+\autor{PRISCILLA SILVA TEOTÔNIO}
+% FIXME Substituir 'Título do trabalho' pelo título da trabalho.
+\titulo{CONTRIBUIÇÃO AO DIMENSIONAMENTO DE PONTES DE MADEIRA BASEADO EM MODELAGEM METAHEURÍSTICA MULTIOBJETIVA}
+% Substituir 'Subtítulo (se houver)' pelo subtítulo da trabalho. 
+% Se não houver subtítulo, basta deletar o texto.
+\subtitulo{}
+
+\orientador{Prof. Dr. Wellington Andrade da Silva}
+% Se for orientado por uma mulher, comente a linha acima e descomente a linha a seguir.
+% \orientador[Orientadora]{Profa. Nome, Dra.}
+
+% Caso não tenha coorientador, comente a linha a seguir.
+\coorientador{Prof. Dr. Wanderlei Malaquias Pereira Junior}
+% Se for coorientado por uma mulher, comente a linha acima e descomente a linha a seguir.
+% \coorientador[Coorientadora]{Profa. Nome, Dra.}
+
+\dia{13}
+\mes{Fevereiro}
+\ano{2026}
+\local{Catalão}
+\formacao{Engenharia Civil}
+% Se for mulher, comente a linha acima e descomente a linha a seguir.
+%\formacao{Engenheira de Controle e Automação}
+
+\bancanomea{Prof. Dr. Wanderson Ferreira dos Santos} %Primeiro membro da banca (normalmente o orientador). Altere as abreviações para o feminino (exemplo: Profa., Dra.) quando for o caso.
+\bancainsta{FENG/UFCAT} %Nome da instituição (UFSC, por exemplo) ou empresa do primeiro membro da banca
+
+\bancanomeb{Prof. Dr. Romes Antonio Borges} %Segundo membro da banca. Altere as abreviações para o feminino (exemplo: Profa., Dra.) quando for o caso.
+\bancainstb{IMTeq/UFCAT} %Nome da instituição (UFSC, por exemplo) ou empresa do segundo membro da banca
+
+%Resumo e palavras-chave do trabalho
+\resumotcc{%
+
+Teotônio, P. S. \textbf{Contribuição ao dimensionamento de pontes de madeira baseado em modelagem metaheurística multiobjetiva}. 2026. 63 f. Trabalho de Conclusão de Curso (Bacharelado em Engenharia Civil) - Universidade Federal de Catalão, Faculdade de Engenharia, Catalão, 2026.
+
+\par\noindent\hspace*{1.25cm} A madeira destaca-se como um material estrutural sustentável por apresentar baixo impacto ambiental e elevada relação resistência-peso. No contexto de projetos de infraestrutura, especialmente em pontes de pequeno e médio porte, o dimensionamento de estruturas em madeira envolve múltiplas variáveis e critérios normativos, tornando o processo tradicional complexo e dependente da experiência do projetista. Diante desse cenário, este trabalho propõe uma contribuição ao dimensionamento de pontes de madeira por meio do desenvolvimento de uma plataforma computacional baseada em modelagem metaheurística de otimização multiobjetiva. O problema de projeto é formulado considerando simultaneamente objetivos conflitantes, como a minimização do consumo de material e a maximização do desempenho estrutural em termos de deslocamentos, respeitando as restrições impostas pelos estados limites últimos e de serviço estabelecidos pela NBR 7190 \parencite{NBR7190-1:2022}. A metodologia adotada utiliza o Algoritmo Genético de Ordenação Não Dominada II (NSGA-II), permitindo a obtenção de um conjunto de soluções eficientes representadas por uma fronteira de Pareto. Os resultados demonstram a capacidade da abordagem proposta em fornecer soluções estruturalmente seguras, eficientes e coerentes com as práticas normativas vigentes, além de ampliar o suporte à tomada de decisão no projeto preliminar de pontes de madeira. Dessa forma, o estudo contribui para a modernização dos métodos de dimensionamento estrutural e para o impulsionamento do uso racional e sustentável da madeira na engenharia civil.
+}
+
+\palavraschave{Madeira. Pontes. Otimização multiobjetivo. Metaheurística. Dimensionamento estrutural.}
+
+%Abstract e keywords do trabalho
+\abstracttcc{Teotônio, P.S.; \textbf{Contribution to the design of timber bridges based on multiobjective metaheuristic modeling}. 2026. 63 p. Undergraduate Thesis (Bachelor’s Degree in Civil Engineering) - Federal University of Catalão, School of Engineering, Catalão, 2026.
+
+\par\noindent\hspace*{1.25cm} Timber stands out as a sustainable structural material due to its low environmental impact and high strength-to-weight ratio. In the context of infrastructure projects, especially small- and medium-span bridges, the design of timber structures involves multiple variables and normative criteria, making the traditional design process complex and highly dependent on the designer’s experience. In this scenario, this study proposes a contribution to the design of timber bridges through the development of a computational platform based on multiobjective metaheuristic optimization modeling. The design problem is formulated by simultaneously considering conflicting objectives, such as minimizing material consumption and maximizing structural performance in terms of displacements, while respecting the constraints imposed by the ultimate and serviceability limit states established by NBR 7190 \parencite{NBR7190-1:2022}. The adopted methodology employs the Non-dominated Sorting Genetic Algorithm II (NSGA-II), enabling the identification of a set of efficient solutions represented by a Pareto frontier. The results demonstrate the capability of the proposed approach to provide structurally safe, efficient solutions that are consistent with current normative practices, while also enhancing decision-making support in the preliminary design of timber bridges. Therefore, this study contributes to the modernization of structural design methods and to the promotion of the rational and sustainable use of timber in civil engineering.}
+\keywords{Timber. Bridges. Multiobjective optimization. Metaheuristic. Structural design.}
+
+%Agradecimentos (opcional). Caso não queira inserir, deixe em branco (\agradecimentostcc{} )
+\agradecimentostcc{
+
+Agradeço primeiramente a Deus, que já havia planejado e escrito essa conquista para a minha vida antes mesmo de eu sonhar com ela.
+
+À minha família, que foi a base fundamental de apoio durante toda essa trajetória. Em especial, aos meus pais, Adriana Amâncio Silva Teotônio e Severino Ferreira Teotônio, e à minha irmã Yasmim Silva Teotônio, por todo o apoio, incentivo e amor em cada etapa. Agradeço também à nova integrante da minha vida, minha sobrinha Maria Júlia Godoy Teotônio, que nasceu durante essa jornada e que, com um simples ``oi, titia'', consegue deixar tudo mais leve.
+
+Ao meu orientador, Prof. Dr. Wanderlei Malaquias Pereira Júnior, por todo o apoio, ensinamentos e oportunidades ao longo da graduação. Registro minha profunda gratidão por sua orientação, pelos conselhos, pelas aulas, pelas pesquisas desenvolvidas, pelos estágios proporcionados e por todo o conhecimento compartilhado. Admiro profundamente seu trabalho e sua dedicação.
+
+Aos meus amigos, que tornaram a trajetória acadêmica mais leve e significativa, entre estudos, projetos, festas e aprendizados, o apoio, o companheirismo e as experiências vividas que contribuíram para o desenvolvimento dessa etapa acadêmica. Registro meus sinceros agradecimentos à Ana Carolina Martins Fernandes, minha dupla do início ao fim da faculdade, parceira de trabalhos, desafios e conquistas. Ter você ao meu lado durante toda essa trajetória fez toda a diferença. 
+
+Agradeço também à Glenda Gonçalves Carneiro, Gabriel Alves Fonseca, Maria Luiza Carneiro e Izadora Vereda Nunes, por nunca negarem um convite, por estarem presentes nos momentos importantes e por tornarem essa caminhada muito mais leve, divertida e inesquecível. Vocês foram parte essencial dessa história.
+
+Agradeço também às minhas amigas que, mesmo à distância, sempre estiveram presentes e me apoiaram, em especial Amanda Mendonça Momenté e Sabrina de Cássia Bernardo Miola.
+
+Aos membros da banca examinadora, pelo tempo, dedicação e contribuições que enriqueceram este trabalho.
+
+Por fim, agradeço a todos que, direta ou indiretamente, contribuíram para a realização deste trabalho, possibilitando a conclusão de uma importante etapa da minha formação acadêmica.
+}
+
+%Epígrafe (opcional). Caso não queira inserir, deixe em branco (\epigrafetcc{} )
+\epigrafetcc{“A otimização desempenha um papel essencial em muitas áreas científicas, como engenharia, análise de dados e aprendizado profundo.” 
+
+\begin{minipage}{\textwidth}
+\raggedleft
+\normalfont
+\parencite{blank2020}
+\end{minipage}
+}
+
+%Decatória (opcional). Caso não queira inserir, deixe em branco (\dedicatoriatcc{} )
+\dedicatoriatcc{Dedico este trabalho à minha mãe e ao meu pai, meus maiores apoiadores e incentivadores ao longo de toda a minha vida. Registro aqui minha profunda gratidão por todas as oportunidades que me foram proporcionadas.}
+
+%Lista de quadros
+%Além de figuras e tabelas, o TCC contém quadros? Caso afirmativo digite sim ou deixe em branco para não (\contemquadros{}).
+\contemquadros{sim}
+
+%Lista de siglas (opcional).
+%Deseja incluir lista de abreviaturas e siglas? Caso afirmativo digite sim ou deixe em branco para não (\contemsiglas{}).
+\contemsiglas{sim}
+
+%Lista de símbolos (opcional).
+%Deseja incluir lista de símbolos? Caso afirmativo digite sim ou deixe em branco para não (\contemsimbolos{}).
+\contemsimbolos{sim}
+
+% %Agradecimentos (opcional). Caso não queira inserir, deixe em branco (\agradecimentostcc{} )
+% \publicacoestcc{Inserir os agradecimentos aos colaboradores à execução do trabalho.}
+
+%-------------------------FIM DOS DADOS BÁSICOS DO TCC--------------------------------------------
+
+
+% ajusta espaçamento das listas itemize e enumerate
+\setitemize{topsep=0pt,itemsep=0pt,leftmargin=\parindent+\labelwidth-\labelsep}
+\setenumerate{topsep=0pt,itemsep=0pt,leftmargin=\parindent+\labelwidth-\labelsep}
+
+% define a macro \Autoref to allow multiple references to be passed to \autoref
+\makeatletter
+\newcommand\Autoref[1]{\@first@ref#1,@}
+\def\@throw@dot#1.#2@{#1}% discard everything after the dot
+\def\@set@refname#1{%    % set \@refname to autoefname+s using \getrefbykeydefault
+	\edef\@tmp{\getrefbykeydefault{#1}{anchor}{}}%
+	\xdef\@tmp{\expandafter\@throw@dot\@tmp.@}%
+	\ltx@IfUndefined{\@tmp autorefnameplural}%
+	{\def\@refname{\@nameuse{\@tmp autorefname}s}}%
+	{\def\@refname{\@nameuse{\@tmp autorefnameplural}}}%
+}
+\def\@first@ref#1,#2{%
+	\ifx#2@\autoref{#1}\let\@nextref\@gobble% only one ref, revert to normal \autoref
+	\else%
+	\@set@refname{#1}%  set \@refname to autoref name
+	\@refname~\ref{#1}% add autoefname and first reference
+	\let\@nextref\@next@ref% push processing to \@next@ref
+	\fi%
+	\@nextref#2%
+}
+\def\@next@ref#1,#2{%
+	\ifx#2@ e~\ref{#1}\let\@nextref\@gobble% at end: print e+\ref and stop
+	\else, \ref{#1}% print  ,+\ref and continue
+	\fi%
+	\@nextref#2%
+}
+\makeatother
+
+% Cria comando para referenciar Anexo automaticamente \refanexo
+\newcommand{\refanexo}[1]{\hyperref[#1]{Anexo~\ref{#1}}}
+
+% Define comandos para tabelas que permite ajustar o tamanho da coluna e manter alinhamento C, R ou L
+%\newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
+\newcolumntype{C}[1]{>{\centering\let\arraybackslash}m{#1}}
+\newcolumntype{R}[1]{>{\RaggedLeft\let\arraybackslash}m{#1}}
+\newcolumntype{L}[1]{>{\RaggedRight\let\arraybackslash}m{#1}}
+
+
+% ---
+% Filtering and Mapping Bibliographies
+% ---
+\DeclareSourcemap{
+	\maps[datatype=bibtex]{
+		% remove fields that are always useless
+		\map{
+			\step[fieldset=abstract, null]
+			\step[fieldset=pagetotal, null]
+			\step[fieldset=doi, null]
+		}
+		% remove URLs for types that are primarily printed
+		\map{
+			\pernottype{software}
+			\pernottype{online}
+			\pernottype{report}
+			\pernottype{techreport}
+			\pernottype{standard}
+			\pernottype{manual}
+			\pernottype{misc}
+			\step[fieldset=url, null]
+			\step[fieldset=urldate, null]
+		}
+		\map{
+			\pertype{inproceedings}
+			% remove mostly redundant conference information
+			%\step[fieldset=venue, null]
+			%\step[fieldset=eventdate, null]
+			%\step[fieldset=eventtitle, null]
+			% do not show ISBN for proceedings
+			\step[fieldset=isbn, null]
+			% Citavi bug
+			%\step[fieldset=volume, null]
+		}
+	}
+}
+% ---
+
+\preambulo
+{%
+	Trabalho de Conclusão de Curso de Graduação em Engenharia Civil da Universidade Federal de Catalão, apresentado como requisito parcial para a obtenção do título de Bacharel em Engenharia Civil.
+}
+% ---
+
+% ---
+% Configurações de aparência do PDF final
+% ---
+% alterando o aspecto da cor azul
+\definecolor{blue}{RGB}{41,5,195}
+% informações do PDF
+\makeatletter
+\hypersetup{
+	%pagebackref=true,
+	pdftitle={\@title}, 
+	pdfauthor={\@author},
+	pdfsubject={\imprimirpreambulo},
+	pdfcreator={LaTeX with abnTeX2},
+	pdfkeywords={ufsc, latex, abntex2}, 
+	colorlinks=true,       		% false: boxed links; true: colored links
+	linkcolor=black,%blue,          	% color of internal links
+	citecolor=black,%blue,        		% color of links to bibliography
+	filecolor=black,%magenta,      		% color of file links
+	urlcolor=blue,
+	bookmarksdepth=4
+}
+\makeatother
+% ---
+
+% Definição das siglas e símbolos
+\input{pre_textual/siglas_simbolos}
+% compila a lista de abreviaturas e siglas e a lista de símbolos
+\makenoidxglossaries 
+
+% compila o indice
+\makeindex
+
+\Urlmuskip=0mu plus 2mu
+
+% Garanta que biblatex use os .lbx do pacote ABNT
+\DeclareLanguageMapping{brazilian}{brazilian-abnt}
+\DeclareLanguageMapping{brazil}{brazilian-abnt}
+\DeclareLanguageMapping{english}{english-abnt}
+
+% ============================================================
+% CONFIGURAÇÃO DE QUADROS (ABNT) - COLE AQUI
+% ============================================================
+\usepackage{caption}
+\usepackage{newfloat} 
+
+\DeclareFloatingEnvironment[
+    fileext=loq,
+    listname={Lista de quadros},
+    name=Quadro,
+    placement=htpb!
+]{quadro}
+
+\captionsetup[quadro]{
+    labelfont={bf,small},
+    font={small},
+    labelsep=endash,
+    justification=centering
+}
+% ============================================================
+
+% --- Configuração de numeração vinculada ao capítulo (Seção 1.1, 2.1, etc.) ---
+\counterwithin{figure}{chapter} % Numeração de Figuras por capítulo
+\counterwithin{table}{chapter}  % Numeração de Tabelas por capítulo
+\counterwithin{quadro}{chapter} % Numeração de Quadros por capítulo (o ambiente que criamos)
+\counterwithin{equation}{chapter}
+\makeatletter
+\renewcommand{\tagform@}[1]{(#1)}
+\makeatother
+
+\settocdepth{subsection} % Trava o sumário no nível 2 (Subsection)
+\setsecnumdepth{subsection} % Trava a numeração no nível 2
+
+\usepackage{pdfpages}
+
+% ---------------------------------
+---------------------------------------------------------------
+% --------------------------INÍCIO DO DOCUMENTO---------------------------------------------
+% ------------------------------------------------------------------------------------------------
+\begin{document}
+
+    % Siglas e simbolos
+    \glsaddall
+	
+	% Seleciona o idioma do documento (conforme pacotes do babel)
+	%\selectlanguage{english}
+	\selectlanguage{brazil}
+	
+	% Retira espaço extra obsoleto entre as frases.
+	\frenchspacing 
+	
+	% Espaçamento 1.5 entre linhas
+	\OnehalfSpacing
+	
+	% Corrige justificação
+	%\sloppy
+	
+
+	%Elementos pré-textuais
+	% \pretextual %a macro \pretextual é acionado automaticamente no início de \begin{document}
+	% Capa, folha de rosto, ficha bibliografica, errata, folha de aprovação
+	% Dedicatória, agradecimentos, epígrafe (opcional), resumos, listas
+	\input{pre_textual/pretextual}
+
+	% Elementos textuais
+	\textual
+	
+	% 1 - Introdução
+	\include{capitulos/cap_1}
+	
+	% 2 - Desenvolvimento
+	\include{capitulos/cap_2}
+	
+	% 3 - Seção
+	\include{capitulos/cap_3}
+	
+	% 4 - Resultados
+	\include{capitulos/cap_4}
+
+    % 5 - Conclusão
+	\include{capitulos/cap_5}
+	
+% Elementos pós-textuais
+	\postextual
+
+	% Referências bibliográficas (Sempre vem primeiro no pós-textual)
+	\begingroup
+	    \printbibliography[title=REFERÊNCIAS]
+	\endgroup
+	
+	% Reconfiguração do título para apêndices e anexos (Garante formatação correta)
+	\renewcommand{\ABNTEXchapterupperifneeded}[1]{#1} 
+
+	% --- Apêndices ---
+	\begin{apendicesenv}
+	    \partapendices
+	    \include{pos_textual/apendice_a}
+	\end{apendicesenv}
+
+	%Reconfiguração do título para apêndices e anexos
+	 \renewcommand{\ABNTEXchapterupperifneeded}[1]{#1} 
+	\makeatletter
+	\settocpreprocessor{chapter}{%
+      \let\tempf@rtoc\f@rtoc%
+      \def\f@rtoc{%
+      \texorpdfstring{{\tempf@rtoc}}{\tempf@rtoc}}%
+      }
+    \makeatother
+
+    % Anexos
+    \begin{anexosenv}
+    	%\partanexos*
+    	\input{pos_textual/anexo_a}
+    \end{anexosenv}
+
+\end{document}

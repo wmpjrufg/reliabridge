@@ -1,0 +1,16 @@
+% Não use \chapter aqui fora, senão ele cria a página em branco.
+% O comando abaixo coloca o título e a 1ª página do PDF juntos.
+
+\includepdf[
+    pages=1, 
+    pagecommand={\chapter{MEMORIAL DE CÁLCULO DETALHADO}\label{apendice:memorial}}, 
+    scale=0.9, 
+    offset=0 -3.5cm
+]{pos_textual/Relatorio_Ponte (1) (1).pdf}
+
+% Inclui o restante das páginas (da 2 em diante)
+\includepdf[
+    pages=2-, 
+    pagecommand={}, 
+    scale=1
+]{pos_textual/Relatorio_Ponte (1) (1).pdf}

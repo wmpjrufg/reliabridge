@@ -1,0 +1,59 @@
+% ----------------------------------------------------------
+\chapter{Introdução}
+% ----------------------------------------------------------
+
+A madeira está presente desde os primeiros materiais de construção, empregada para função estrutural, e continua inserida na construção ao longo da história da humanidade. Ao longo dos anos, a madeira passou a ser integrada em conjunto a outros materiais de construção, como tijolos e argamassa \parencite{NEVES2025}. Além disso, a criação de estruturas mistas, como as de madeira-concreto e madeira-aço, também surgem como alternativas que consideram a racionalização de seu uso \parencite{MIOTTO2009}.
+
+Essas soluções evidenciam a versatilidade da madeira, que ainda hoje é amplamente utilizada em razão de sua ecoeficiência, da inovação arquitetônica, e do seu papel estratégico na redução das emissões de gases de efeito estufa.
+
+No Brasil, a madeira é utilizada de forma inconsistente, pois são inseridas em etapas construtivas com curto ciclo de vida e com baixo valor agregado, gerando sérios impactos ambientais. Para o uso efetivo, seria adequado adotá-la para finalidades permanentes, como sistemas estruturais ou paredes, aproveitando as melhores características físico-mecânicas do material, suas vantagens e colaborando com as metas de descarbonização da construção \parencite{NEVES2025}.
+
+O setor da construção civil, incluindo a engenharia e a arquitetura, consome uma quantidade significativa de energia, desde o início da obra até a fase de demolição. Nesse contexto, torna-se fundamental priorizar o uso de materiais sustentáveis. A perspectiva atual aponta para a adoção de recursos renováveis capazes de reduzir os impactos ambientais sem comprometer as exigências estéticas e funcionais dos projetos. 
+
+Nesse cenário, a madeira destaca-se por apresentar baixo consumo de energia em sua produção, ser um material renovável e ecológico, além de possuir elevada relação resistência-peso \parencite{FRAGA2025}. Dessa forma, diante das mudanças globais voltadas à redução das emissões de monóxido de carbono (CO), a madeira surge como uma alternativa estrutural promissora.
+
+Por sua vez, o uso da madeira como sistema estrutural confiável e eficaz advém da aplicação criteriosa de normas técnicas. Essas normas estabelecem os parâmetros fundamentais para o dimensionamento e a verificação da segurança das estruturas, além de preverem o comportamento do material em função das solicitações de projeto \parencite{ADOLFS2011}.
+
+No Brasil, a NBR 7190 \parencite{NBR7190-1:2022} regulamenta o projeto de estruturas de madeira, fornecendo diretrizes para o cálculo das seções e a verificação dos estados limites. No entanto, o processo de dimensionamento desses elementos envolve múltiplas variáveis de projeto, tais como dimensões geométricas, propriedades do material e condições de carregamento, o que torna o procedimento complexo e dependente da experiência do projetista.
+
+Devido a essa complexidade das variáveis, o dimensionamento de pontes de madeira deve ser realizado em conformidade com a NBR 7190 \parencite{NBR7190-1:2022}. O atendimento criterioso aos requisitos normativos é fundamental para garantir um projeto estrutural seguro, funcional e economicamente viável, uma vez que impacta diretamente o consumo de material, o desempenho estrutural e a viabilidade da solução adotada. Tradicionalmente, esse processo é conduzido por meio de métodos iterativos ou abordagens empíricas, que podem demandar elevado tempo de análise e, em muitos casos, não asseguram a obtenção de soluções eficientes.
+
+Nesse contexto, o problema de dimensionamento de estruturas de pontes de madeira pode ser formulado como um problema de otimização, no qual múltiplos objetivos conflitantes devem ser considerados simultaneamente, tais como a minimização do consumo de material, o atendimento aos estados limites últimos e de serviço e o desempenho estrutural global. 
+
+A otimização estrutural multiobjetivo surge, portanto, como uma ferramenta adequada para lidar com essa complexidade, permitindo a avaliação simultânea de diferentes critérios de projeto. Essa abordagem possibilita a obtenção de um conjunto de soluções eficientes, representadas por uma fronteira de Pareto, oferecendo ao projetista maior flexibilidade na tomada de decisão e favorecendo o uso racional dos recursos.
+
+Portanto, este trabalho propõe uma contribuição ao dimensionamento de pontes de madeira por meio do desenvolvimento de uma plataforma computacional baseada em uma modelagem metaheurística multiobjetiva. A ferramenta visa automatizar o processo de dimensionamento dos elementos estruturais, integrando os critérios normativos da NBR 7190 \parencite{NBR7190-1:2022} ao procedimento de otimização, de forma a reduzir o tempo de projeto e ampliar a qualidade das soluções obtidas. Dessa maneira, a plataforma contribui tanto para a modernização dos métodos de dimensionamento estrutural quanto para o incentivo do uso da madeira como material estrutural sustentável na engenharia civil.
+
+\section{Objetivos}
+
+\subsection{Objetivo geral}
+
+O objetivo geral deste trabalho é desenvolver uma plataforma computacional para o dimensionamento dos elementos estruturais de pontes de madeira, baseada em uma metaheurística de otimização multiobjetivo, em conformidade com os critérios normativos da NBR 7190 \parencite{NBR7190-1:2022}. A plataforma tem como finalidade automatizar o processo de obtenção de soluções viáveis e eficientes, considerando simultaneamente objetivos conflitantes associados ao desempenho estrutural, ao uso racional do material e à viabilidade da solução, tais como a minimização da área da seção transversal dos elementos estruturais e a maximização do desempenho estrutural em termos de deslocamentos.
+
+\subsection{Objetivos específicos}
+
+Os objetivos específicos deste trabalho são:
+
+\begin{itemize}
+    \item Formular o problema de dimensionamento dos elementos estruturais de pontes de madeira como um problema de otimização multiobjetivo, definindo funções objetivo e restrições compatíveis com os critérios de segurança e desempenho estabelecidos pela NBR 7190 \parencite{NBR7190-1:2022};
+
+    \item Implementar uma metaheurística de otimização multiobjetivo capaz de explorar eficientemente o espaço de busca do problema, assegurando a convergência das soluções e a identificação de conjuntos de soluções ótimas de compromisso;
+
+    \item Desenvolver uma plataforma computacional que permita a inserção dos parâmetros geométricos, mecânicos e de carregamento dos elementos estruturais das pontes de madeira, bem como a análise e visualização dos resultados obtidos ao longo do processo de otimização;
+
+    \item Determinar e analisar a fronteira de Pareto associada ao problema de dimensionamento, considerando simultaneamente a minimização da área da seção transversal e a maximização da relação entre a flecha solicitante e a flecha resistente;
+
+    \item Avaliar o desempenho da plataforma computacional quanto à sua capacidade de fornecer soluções estruturalmente seguras, eficientes sob o ponto de vista do projeto e coerentes com as práticas usuais de dimensionamento de pontes de madeira.
+\end{itemize}
+
+\subsection{Justificativa}
+
+A utilização da madeira como material estrutural em pontes apresenta relevantes vantagens ambientais, econômicas e técnicas, destacando-se como uma alternativa sustentável frente às demandas atuais da infraestrutura de transportes. Além de ser um material renovável, a madeira possui elevada relação resistência-peso, o que a torna especialmente atrativa para estruturas de pontes de pequeno e médio porte. Ainda assim, o dimensionamento dessas estruturas é comumente baseado em métodos empíricos ou em procedimentos iterativos dependentes da experiência do projetista.
+
+O dimensionamento de pontes de madeira envolve a consideração simultânea de múltiplas variáveis e critérios, tais como a redução do consumo de material, o atendimento aos estados limites últimos e de serviço e o controle de deslocamentos. Por sua vez, as abordagens tradicionais não permitem a avaliação sistemática do conjunto de soluções possíveis, restringindo o processo decisório a alternativas pontuais ou conservadoras.
+
+Nesse contexto, a aplicação de técnicas de otimização multiobjetivo baseadas em metaheurísticas configura-se como uma estratégia eficiente para lidar com a complexidade do problema, possibilitando a obtenção de um conjunto de soluções eficientes representadas por uma fronteira de Pareto. Essa abordagem amplia a capacidade de análise do projetista, promove escolhas mais racionais e contribui para a redução do tempo de projeto.
+
+Dessa forma, o desenvolvimento de uma plataforma computacional voltada ao dimensionamento de pontes de madeira justifica-se pela necessidade de modernização dos métodos de projeto estrutural, pelo incentivo ao uso racional de materiais renováveis e pela ampliação de ferramentas computacionais que integrem sustentabilidade, desempenho estrutural e eficiência no processo de tomada de decisão na engenharia civil.
+
+

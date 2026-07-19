@@ -1,0 +1,13 @@
+\section{Conclusões}\label{sec:conclusoes}
+
+Este trabalho apresentou uma abordagem de projeto inteligente para o dimensionamento de pontes de madeira roliça, integrando modelagem paramétrica, verificação normativa segundo a ABNT NBR 7190 e otimização robusta multiobjetivo por meio do algoritmo NSGA-II. Os resultados demonstram que os objetivos propostos foram atingidos, tanto do ponto de vista computacional quanto estrutural.
+
+A plataforma computacional desenvolvida mostrou-se eficiente e funcional, permitindo a obtenção de soluções de projeto em curto intervalo de tempo por meio de uma interface intuitiva. Essa característica representa um avanço em relação aos métodos tradicionais de dimensionamento, ao possibilitar a geração rápida de múltiplas alternativas e favorecer decisões técnicas mais fundamentadas.
+
+O algoritmo NSGA-II demonstrou elevada eficiência na obtenção da fronteira de Pareto, identificando soluções estruturalmente viáveis e materialmente eficientes. A comparação com o método de Monte Carlo evidenciou a superioridade do processo de otimização, uma vez que as soluções obtidas por amostragem aleatória apresentaram comportamento mais conservador, com maior consumo de material e baixa utilização da capacidade resistente da estrutura.
+
+A incorporação da robustez, avaliando cada solução candidata sob um desvio de 5\% aplicado aos valores nominais das variáveis de projeto, mostrou-se essencial para garantir que as soluções da fronteira eficiente permaneçam seguras diante da variabilidade dimensional inerente à madeira roliça. Ao penalizar soluções posicionadas exatamente sobre as restrições ativas, a estratégia deslocou a fronteira para o interior do domínio viável, assegurando margem de segurança adicional em troca de um acréscimo controlado no consumo de material.
+
+A análise comparativa entre os cenários de carregamento confirmou a coerência física do modelo: a adoção do trem tipo TB-450 implicou um acréscimo sistemático da ordem de 35\% a 44\% no consumo de madeira em relação ao TB-240, resultado diretamente associado à elevação das solicitações de projeto. Essa proporcionalidade valida a precisão física do sistema desenvolvido.
+
+Como perspectivas de continuidade, destaca-se a integração ao modelo dos demais componentes do sistema estrutural, como ligações, sistemas de fundação e pilares, cuja influência é direta no comportamento global da estrutura. Recomenda-se ainda o aprofundamento da análise de robustez por meio de estudos de sensibilidade do nível de desvio adotado, da comparação entre estratégias de agregação por média e por pior caso, e da conexão com análises de confiabilidade estrutural, ampliando o alcance da metodologia proposta.

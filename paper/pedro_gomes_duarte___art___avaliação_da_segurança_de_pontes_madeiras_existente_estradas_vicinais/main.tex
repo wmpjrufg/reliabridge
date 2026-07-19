@@ -1,0 +1,141 @@
+\documentclass[preprint,11pt]{elsarticle}
+
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    citecolor=blue,
+    linkcolor=black,
+    urlcolor=blue,
+    pdfborder={0 0 0}
+}
+\usepackage{subcaption}
+\usepackage[backend=biber]{biblatex}
+\addbibresource{mybibfile.bib}
+\usepackage{adjustbox}
+\usepackage{verbatim}
+\usepackage{amssymb}
+\usepackage{lineno}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{dsfont}
+\usepackage[multiple]{footmisc}
+\usepackage{mathtools}
+\usepackage{url}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{natbib}
+\usepackage{color}
+\biboptions{sort&compress}
+\restylefloat{table}
+\usepackage{upgreek}
+\usepackage{nicefrac}
+\usepackage{xargs}                      
+\usepackage[pdftex,dvipsnames]{xcolor} 
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+%\usepackage{algorithmic}
+\usepackage{xcolor}
+\usepackage{multicol}
+% \usepackage{algorithm}
+%\usepackage[noend]{algpseudocode}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+%\def\BState{\State\hskip-\ALG@thistlm}
+\usepackage{lipsum}
+\makeatother
+\usepackage{nomencl}
+\makenomenclature
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argminB}{arg\,min}
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem*{cor}{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}[section]
+\newtheorem{conj}{Conjecture}[section]
+\newtheorem{exmp}{Example}[section]
+
+\theoremstyle{remark}
+\newtheorem*{rem}{Remark}
+\newtheorem*{note}{Note}
+
+
+\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommandx{\change}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
+\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+\newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
+
+\usepackage{lineno}
+
+\journal{}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Parametric modeling for automated intelligent design of timber beam bridges: Pre-sizing, optimal design and reliability}
+
+\author[label1]{Wanderlei M. Pereira Junior}
+\author[label1]{Priscilla Silva Teotônio}
+\author[label1]{Pedro Henrique Gomes Duarte}
+\author[label1]{Wellington A. da Silva}
+\author[label3]{André Luís Christoforo}
+\author[label4]{Matheus Henrique Morato de Moraes}
+\author[label1]{João Paulo M. Lopes}
+\author[label1]{Enzo}
+\author[label1]{Maria José Pereira Dantas}
+\address[label1]{Faculdade de Engenharia, Universidade Federal de Catalão, Catalão 75705-220, Goiás, Brasil}
+\address[label2]{Escola de Engenharia de São Carlos, Universidade de São Paulo, São Carlos 13566-590, São Paulo, Brasil}
+\address[label3]{Departamento de Engenharia Civil, Universidade Federal de São Carlos 13565-905, São Paulo, Brasil}
+\address[label4]{Faculdade de Ciências e Tecnologia, Universidade Federal de Goiás 74971-451, Goiás, Brasil}
+
+
+\makeatletter
+\renewcommand\abstractname{Resumo}
+\makeatother
+
+\begin{abstract}
+Este artigo apresenta uma análise de confiabilidade aplicada a estruturas de alvenaria estrutural submetidas a cenários de perda de paredes. O objetivo é avaliar a vulnerabilidade ao colapso progressivo e identificar condições em que medidas adicionais de robustez podem ser justificadas. O método combina modelos probabilísticos, que permitem representar as incertezas relacionadas a cargas e resistências, com a formulação baseada em risco. Para a avaliação foi utilizado um problema de \textit{benchmark} composto por uma edificação hipotética de múltiplos pavimentos em alvenaria estrutural. Os resultados mostraram que a remoção de paredes provoca redistribuições significativas de esforços e reduz o índice de confiabilidade em média 25\%, evidenciando a suscetibilidade ao colapso progressivo mesmo em sistemas redundantes. Conclui-se que a incorporação de abordagens probabilísticas e de avaliação orientada por risco ao dimensionamento de alvenaria contribui para maior confiabilidade estrutural, melhor embasamento das decisões de projeto e redução da exposição das edificações a falhas progressivas.
+\end{abstract}
+
+\begin{keyword}
+Multi-objective optimization. Timber bridges. Parametric design. Structural automation. Pre-sizing.
+\end{keyword}
+
+\end{frontmatter}
+
+\linenumbers
+
+\section{Introduction}              \input{Section1.tex}        \label{intro}
+\section{Methodology}               \input{Section2.tex}        \label{metho}
+\section{Results}                   \input{Section3.tex}        \label{resul}
+\section{Study Case}                \input{Section4.tex}        \label{study_case}
+\section{Concluding remarks}        \input{Section5.tex}        \label{concl}
+
+\section{Agradecimentos}
+\input{agradecimentos}
+
+
+
+
+\bibliographystyle{model1-num-names}
+\bibliography{mybibfile.bib}
+
+\end{document}

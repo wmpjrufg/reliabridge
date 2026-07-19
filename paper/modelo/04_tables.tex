@@ -1,0 +1,48 @@
+\section{How to include tables}\label{sec5}
+
+Use the table and tabular environments for basic tables --- see Tables~\ref{tab1} and \ref{tab2}, for example. Table \ref{tab1} is an sample figure including table footnotes. For more information, please see this help article on \href{https://www.overleaf.com/learn/latex/tables}{tables}. 
+
+\begin{table}[!ht]
+\caption{Sample table with footnotes\label{tab1}}
+\begin{threeparttable}
+\begin{tabular*}{\columnwidth}{@{\extracolsep\fill}llll@{\extracolsep\fill}}
+\toprule
+column 1 & column 2 & column 3 & column 4\\
+\midrule
+row 1 & data 1 & data 2 & data 3 \\
+row 2 & data 4 & data 5\tnote{1} & data 6 \\
+row 3 & data 7 & data 8 & data 9\tnote{2} \\
+\bottomrule
+\end{tabular*}
+\begin{tablenotes}
+\item Source: This is an example of table footnote. This is an example of table footnote. This is an example of table footnote. This is an example of table footnote. This is an example of table footnote.
+\item[1] Example of a first table footnote.
+\item[2] Example of a second table footnote.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table*}[!ht]
+\caption{Example of a lengthy table which is set to full textwidth.\label{tab2}}
+\tabcolsep=0pt
+\begin{threeparttable}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccc@{\extracolsep{\fill}}}
+\toprule
+& \multicolumn{3}{c}{Element 1\tnote{1}} & \multicolumn{3}{c}{Element 2\tnote{2}} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Project & Energy & $\sigma_{\mathrm{calc}}$ & $\sigma_{\mathrm{expt}}$ & Energy & $\sigma_{\mathrm{calc}}$ & $\sigma_{\mathrm{expt}}$ \\
+\midrule
+Element 3 & 990 A & 1168 & $1547\pm12$ & 780 A & 1166 & $1239\pm100$ \\
+Element 4 & 500 A & 961 & $922\pm10$ & 900 A & 1268 & $1092\pm40$ \\
+\bottomrule
+\end{tabular*}
+\begin{tablenotes}
+\item Note: This is an example of table footnote this is an example of table footnote this is an example of table footnote this is an example of~table footnote this is an example of table footnote.
+\item[1] Example of a first table footnote.
+\item[2] Example of a second table footnote.
+\end{tablenotes}
+\end{threeparttable}
+\end{table*}
+
+
+%--- Section ---%

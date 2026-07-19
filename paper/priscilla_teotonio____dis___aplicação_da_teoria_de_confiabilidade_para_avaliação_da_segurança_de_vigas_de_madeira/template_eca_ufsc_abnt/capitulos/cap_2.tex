@@ -1,0 +1,834 @@
+% ----------------------------------------------------------
+\chapter{Fundamentação teórica}\label{cap:desenvolvimento}
+% ----------------------------------------------------------
+
+Este capítulo descreve os conceitos teóricos necessários para o desenvolvimento do trabalho. Serão apresentadas as teorias de otimização e de projeto de peças de madeira submetidas à flexão.
+
+\section{Estrutura de otimização multiobjetivo}
+
+O projeto da ponte de madeira é integrado a uma estrutura de otimização multiobjetivo visando apoiar uma etapa racional e orientada ao desempenho do dimensionamento estrutural. A tarefa de otimização é formulada como um problema de otimização multiobjetivo e resolvida por meio do Algoritmo Genético de Ordenação Não Dominada II (NSGA-II), sendo adequado para problemas não lineares, com restrições e objetivos conflitantes.
+
+Um problema de otimização multiobjetivo envolve a minimização e/ou maximização simultânea de múltiplas funções objetivo, sujeitas a um conjunto de restrições que definem a viabilidade das soluções candidatas. Diferentemente da otimização monoobjetivo ele não conduz a uma única solução ótima, alternativamente, resulta em um conjunto de soluções ótimas de Pareto, cada uma representando um caso distinto entre critérios de desempenho concorrentes.
+
+A formulação matemática geral de um problema de otimização multiobjetivo pode ser expressa conforme a Equação~\eqref{eq:mop}.
+
+\begin{equation}
+\begin{cases} 
+f_m(\mathbf{x}), & m = 1,2,\ldots,M; \\ 
+g_j(\mathbf{x}) \leq 0, & j = 1,2,\ldots,J; \\ 
+h_k(\mathbf{x}) = 0, & k = 1,2,\ldots,K; \\ 
+x_i^{(L)} \leq x_i \leq x_i^{(U)}, & i = 1,2,\ldots,n.
+\end{cases}
+\label{eq:mop}
+\end{equation}
+
+Nesta formulação, o vetor de funções objetivo é definido segundo a Equação~\eqref{eq:fx}.
+
+\begin{equation}
+f(\mathbf{x}) = \left(f_1(\mathbf{x}), f_2(\mathbf{x}), \ldots, f_M(\mathbf{x})\right)^T
+\label{eq:fx}
+\end{equation}
+
+Onde, $\mathbf{x} = (x_1, x_2, \ldots, x_n)^T$ representa o vetor $n$-dimensional de variáveis de projeto. 
+
+O espaço de projeto viável é restringido por restrições de desigualdade $g_j(\mathbf{x})$, restrições de igualdade $h_k(\mathbf{x})$ e restrições de domínio definidas pelos limites inferior e superior $x_i^{(L)}$ e $x_i^{(U)}$, que em conjunto definem o domínio admissível $(D)$ \parencite{DEB2009}.
+
+Objetivos inicialmente formulados como problemas de maximização são convertidos em problemas equivalentes de minimização por meio da multiplicação das respectivas funções objetivo por $-1$, garantindo uma estrutura de otimização unificada e consistente.
+
+A Figura~\ref{fig:pareto} ilustra o espaço de soluções de um problema biobjetivo, destacando a diversidade de soluções viáveis e o conceito de dominância de Pareto que caracteriza a otimização multiobjetivo.
+
+\begin{figure}[htpb!]
+    \centering
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Possíveis soluções de um problema de otimização multiobjetivo.}
+    \label{fig:pareto} 
+    \includegraphics[width=0.6\textwidth]{template_eca_ufsc_abnt/figuras/z_types_frontier.png}
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} {\textcite{DEB2009}.}
+\end{figure}
+
+\subsection{Algoritmo Genético de Ordenação Não Dominada II (NSGA-II)}
+
+O problema de otimização multiobjetivo é resolvido utilizando o Algoritmo Genético de Ordenação Não Dominada II (NSGA-II), um algoritmo evolutivo desenvolvido especificamente para aproximar o conjunto ótimo de Pareto em problemas que envolvem objetivos conflitantes \parencite{DEB2009}. Diferentemente de abordagens baseadas em escalarização, o NSGA-II preserva a natureza multiobjetivo do problema e busca um conjunto diverso de soluções não dominadas.
+
+Seja $f(\mathbf{x}) = \left(f_1(\mathbf{x}), f_2(\mathbf{x}), \ldots, f_M(\mathbf{x})\right)^T$ o vetor de funções objetivo. Dadas duas soluções candidatas $\mathbf{x}^a$ e $\mathbf{x}^b$, diz-se que $\mathbf{x}^a$ \textit{domina no sentido de Pareto} $\mathbf{x}^b$, denotado por $\mathbf{x}^a \prec \mathbf{x}^b$, se atende as condições da Equação \eqref{eq:333}.
+
+\begin{equation}
+\forall m \in \{1,\ldots,M\}, \; f_m(\mathbf{x}^a) \leq f_m(\mathbf{x}^b)
+\quad \text{e} \quad
+\exists m \; : \; f_m(\mathbf{x}^a) < f_m(\mathbf{x}^b)
+\label{eq:333}
+\end{equation}
+
+A cada geração, a população é ordenada em frentes sucessivas não dominadas $\mathcal{F}_1, \mathcal{F}_2, \ldots$, sendo $\mathcal{F}_1$ o conjunto de soluções não dominadas, representando a aproximação atual da fronteira de Pareto. A seleção dos indivíduos é baseada tanto na hierarquia de Pareto quanto na diversidade das soluções.
+
+Para preservar a diversidade ao longo da fronteira de Pareto, o NSGA-II emprega a métrica denominada distância de aglomeração (\textit{crowding distance}). Para uma solução $\mathbf{x}_i$ pertencente a uma determinada frente, a distância de aglomeração $d_i$ é calculada conforme a Equação~\eqref{eq:diversidade}.
+
+\begin{equation}
+d_i = \sum_{m=1}^{M}
+\frac{f_m(\mathbf{x}_{i+1}) - f_m(\mathbf{x}_{i-1})}
+{f_m^{\max} - f_m^{\min}}
+\label{eq:diversidade}
+\end{equation}
+
+Onde, $f_m^{\max}$ e $f_m^{\min}$ representam, respectivamente, os valores máximo e mínimo da $m$-ésima função objetivo dentro da mesma frente. Soluções localizadas em regiões menos densas do espaço de objetivos são preferidas, promovendo uma distribuição uniforme da fronteira eficiente.
+
+Uma estratégia elitista é adotada por meio da combinação das populações parental e descendente, sendo os melhores indivíduos selecionados com base no nível de Pareto e na distância de aglomeração. O resultado final do processo de otimização é uma aproximação da fronteira eficiente de Pareto, representando um conjunto de alternativas de projeto viáveis, nas quais a melhoria de um objetivo implica necessariamente a degradação de pelo menos outro.
+
+\subsection{Tratamento das restrições}
+
+O tratamento das restrições a base de otimização multiobjetivo propõe uma abordagem baseada em viabilidade, conforme implementado na Biblioteca de otimização \texttt{pymoo} \parencite{blank2020}. Dessa forma, o problema de otimização multiobjetivo com restrições é definido por um conjunto de restrições de desigualdade e igualdade, expressas, respectivamente, segundo as Equações \eqref{eq:g} e \eqref{eq:h}.
+
+\begin{equation}
+g_j(\mathbf{x}) \leq 0, \quad j = 1,2,\ldots,J
+\label{eq:g}
+\end{equation}
+
+e
+
+\begin{equation}
+h_k(\mathbf{x}) = 0, \quad k = 1,2,\ldots,K
+\label{eq:h}
+\end{equation}
+
+As restrições de igualdade são internamente transformadas em restrições de desigualdade por meio da introdução de uma tolerância numérica $\varepsilon$, conforme a expressão \eqref{eq:hk}.
+
+\begin{equation}
+|h_k(\mathbf{x})| - \varepsilon \leq 0
+\label{eq:hk}
+\end{equation}
+
+Para cada solução candidata $\mathbf{x}$, é calculada uma medida agregada de violação das restrições $\mathrm{CV}(\mathbf{x})$, segundo a Equação~\eqref{eq:sum}.
+
+\begin{equation}
+\mathrm{CV}(\mathbf{x}) =
+\sum_{j=1}^{J} \max\left(0, g_j(\mathbf{x})\right)
++
+\sum_{k=1}^{K} \max\left(0, |h_k(\mathbf{x})| - \varepsilon \right)
+\label{eq:sum}
+\end{equation}
+
+Uma solução é considerada viável se $\mathrm{CV}(\mathbf{x}) = 0$, sendo considerada inviável caso contrário. Durante o processo evolutivo, a comparação e seleção das soluções seguem as regras de viabilidade originalmente propostas por \textcite{DEB2009}. De acordo com essas regras, soluções viáveis sempre dominam soluções inviáveis; entre soluções viáveis, aplica-se a dominância de Pareto; e, entre soluções inviáveis, a ordenação é baseada no grau total de violação das restrições \parencite{DEB2009}.
+
+Essa estratégia orientada pela viabilidade permite que o processo de otimização convirja de forma consistente e numericamente robusta para a fronteira de Pareto viável, sem a necessidade de funções de penalização ou reformulação das funções objetivo, sendo particularmente adequada para problemas de otimização estrutural com múltiplos objetivos e restrições rigorosas \parencite{blank2020}.
+
+\subsection{Formulação da otimização para o projeto de pontes em madeira}
+
+Esta seção apresenta a formulação do problema de otimização multiobjetivo adotado para o dimensionamento estrutural do sistema de ponte em madeira. O problema de otimização é totalmente acoplado ao modelo estrutural paramétrico e tem como objetivo identificar soluções eficientes que representem compromissos adequados entre segurança estrutural e requisitos de serviço.
+
+O sistema estrutural considerado consiste em um tabuleiro de madeira composto por pranchas longitudinais, apoiadas sobre vigas longitudinais circulares de madeira (longarinas), regularmente espaçadas a uma distância denominada espaçamento ($esp$). O tabuleiro está sujeito a ações permanentes (peso próprio) e ações variáveis associadas ao tráfego (carga móvel). As cargas atuantes no tabuleiro são transferidas para as longarinas de apoio e modeladas como carregamentos uniformemente distribuídos ao longo do vão. Uma representação esquemática do sistema estrutural é apresentado na Figura~\ref{fig:caminhao_ponte}.
+
+\begin{figure}[htpb!]
+    \centering
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small}, % 'small' equivale a 11pt em documentos de base 12pt
+        labelsep=endash
+    }
+    \caption{Representação conceitual do sistema estrutural da ponte em madeira.}
+    \label{fig:caminhao_ponte}
+    \includegraphics[width=0.5\textwidth]{template_eca_ufsc_abnt/figuras/Caminhão.png}
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{figure}
+
+O problema de otimização é formulado em termos de um vetor de variáveis de projeto $\mathbf{x}$, composto pelo diâmetro da longarina circular de madeira, pelo espaçamento entre longarinas e pelas dimensões geométricas do tabuleiro, representadas por sua base e altura. As propriedades da seção transversal da longarina dependem diretamente de seu diâmetro, o qual influencia de forma significativa a rigidez, a resistência e o peso próprio do elemento. Por sua vez, o espaçamento entre longarinas e as dimensões do tabuleiro afetam o comportamento estrutural global do sistema tabuleiro-longarina, condicionando a distribuição de esforços, a rigidez do conjunto e os níveis de deformação da estrutura.
+
+O problema de otimização é formulado com duas funções objetivo antagônicas.
+
+A primeira função objetivo consiste na minimização da área total de madeira, definida conforme a Equação~\eqref{eq:minarea}.
+
+\begin{equation}
+f_1(\mathbf{x}) = A = A_{longarina} + A_{tabuleiro}
+\label{eq:minarea}
+\end{equation}
+
+Onde, $A$ representa a área total de madeira (m²).
+
+A segunda função objetivo visa maximizar o desempenho estrutural associado aos critérios de serviço, expresso por meio de uma função de desempenho baseada em deslocamentos. Para compatibilidade baseando na minimização, essa função é definida segundo a Equação~\eqref{eq:maxflecha}.
+
+\begin{equation}
+f_2(\mathbf{x}) = - \frac{\delta_{\mathrm{tot}}}{\delta_{\mathrm{lim}}} = - \frac{\delta_{\mathrm{tot}}}{\frac{L}{250}}
+\label{eq:maxflecha}
+\end{equation}
+
+Onde, $\delta_{\mathrm{tot}}$ é o deslocamento total no meio do vão da longarina sob a combinação das ações permanentes e variáveis, e $\delta_{\mathrm{lim}} = L/250$ representa o limite admissível de deslocamento, sendo $L$ o comprimento do vão da longarina (m).
+
+O problema de otimização está sujeito a restrições estruturais associadas aos estados limites últimos e de serviço, tanto da longarina quanto do tabuleiro.
+
+Para a longarina de madeira, são impostas as restrições a seguir.
+
+Primeiramente a restrição de tensão normal à flexão é dada pela Equação~\eqref{eq:flexaolong}.
+
+\begin{equation}
+g_{g,\sigma}(\mathbf{x}) =
+\frac{\sigma_{Sd}^{(l)}}{\sigma_{Rd}^{(l)}} - 1\leq 0
+\label{eq:flexaolong}
+\end{equation}
+
+Em que, $\sigma_{Sd}$ e $\sigma_{Rd}$ representam, respectivamente, a tensão de flexão de cálculo e a resistência de cálculo à flexão.
+
+Restrição de tensão de cisalhamento é dada pela Equação~\eqref{eq:cisalhalong}.
+    
+\begin{equation}
+g_{g,\tau}(\mathbf{x}) =
+\frac{\tau_{Sd}^{(l)}}{\tau_{Rd}^{(l)}} - 1 \leq 0
+\label{eq:cisalhalong}
+\end{equation}
+    
+Onde, $\tau_{Sd}$ e $\tau_{Rd}$ correspondem à tensão de cisalhamento de cálculo e à resistência de cálculo ao cisalhamento.
+
+Restrição de deslocamentos é dada pela Equação~\eqref{eq:flechalong}.
+
+\begin{equation}
+g_{g,\delta}(\mathbf{x}) =
+\max \left(
+\frac{\delta_{\mathrm{tot}}^{(l)}}{L/250},
+\frac{\delta_{qk}^{(l)}}{L/360}
+\right) - 1 \leq 0
+\label{eq:flechalong}
+\end{equation}
+    
+Sendo, $\delta_{qk}$ o deslocamento devido exclusivamente à ação variável.
+
+Para o tabuleiro de madeira, impõe-se uma restrição de tensão normal à flexão, garantindo a segurança estrutural, conforme a Equação~\eqref{eq:tabuleiro1}.
+
+\begin{equation}
+g_{d,\sigma}(\mathbf{x}) =
+\frac{\sigma_{Sd}^{(t)}}{\sigma_{Rd}^{(t)}} - 1 \leq 0
+\label{eq:tabuleiro1}
+\end{equation}
+
+Em que $\sigma_{Sd}^{(t)}$ e $\sigma_{Rd}^{(t)}$ representam, respectivamente, a tensão de flexão de cálculo e a resistência de cálculo à flexão dos elementos do tabuleiro.
+
+O problema completo de otimização multiobjetivo pode, portanto, ser expresso conforme a Equação~\eqref{eq:tabuleiro}.
+
+\begin{equation}
+\begin{aligned}
+& \min_{\mathbf{x}} \quad \left[ f_1(\mathbf{x}),\; f_2(\mathbf{x}) \right] \\
+& \text{sujeito a} \quad
+g_{g,\sigma}(\mathbf{x}) \leq 0,\;
+g_{g,\tau}(\mathbf{x}) \leq 0,\;
+g_{g,\delta}(\mathbf{x}) \leq 0,\;
+g_{d,\sigma}(\mathbf{x}) \leq 0
+\label{eq:tabuleiro}
+\end{aligned}
+\end{equation}
+
+Essa formulação possibilita a identificação de soluções ótimas de Pareto que equilibram eficiência no uso de material e desempenho estrutural, fornecendo uma base racional para a tomada de decisão no projeto preliminar de pontes em madeira.
+
+\section{Projeto de estruturas de pontes em madeira}\label{sec:proj_estrutras}
+
+Logo, neste trabalho será aplicada a otimização no dimensionamento dos elementos em madeira, devendo ser verificados os estados limites últimos associados às tensões normais e tangenciais, bem como os estados limites de serviço relacionados a deslocamentos. 
+
+Dessa forma, esta seção tem como objetivo a apresentação dos itens normativos e equacionamento para verificação dos elementos de pontes em madeira. Para tanto serão usadas as normativas (a) NBR 7190 \parencite{NBR7190-1:2022} para projeto de peças de madeira (b) NBR 6120 \parencite{NBR6120:2019} e (c) NBR 7188 \parencite{nbr7188} para levantamento das ações. 
+
+\subsection{Propriedades geométricas da seção transversal}
+
+A determinação das propriedades geométricas da seção transversal constitui uma etapa fundamental na análise e no dimensionamento de elementos estruturais, uma vez que essas propriedades influenciam diretamente a resistência, a rigidez e a estabilidade da estrutura. Parâmetros como área, momento de inércia, módulo resistente e raio de giração são essenciais para a verificação dos estados limites últimos e de serviço, conforme os critérios estabelecidos pela NBR 7190 \parencite{NBR7190-1:2022}.
+
+Para o caso de seções transversais circulares maciças, a área (m²) pode ser obtida conforme a Equação~\eqref{eq:1}.
+
+\begin{equation}
+A = \frac{\pi d^2}{4}
+\label{eq:1}
+\end{equation}
+
+Onde, \(d\) é o diâmetro da seção transversal (m).
+
+Por sua vez, para seções transversais de geometria retangular, a área (m²) é determinada pela Equação~\eqref{eq:2}.
+
+\begin{equation}
+A = b \cdot h
+\label{eq:2}
+\end{equation}
+
+Onde, \(b\) corresponde à largura (m) e \(h\) à sua altura (m).
+
+Os momentos de inércia em relação aos eixos principais ($m^4$) caracterizam a distribuição da área da seção transversal e são determinantes para a avaliação da rigidez à flexão dos elementos estruturais. Esses parâmetros dependem diretamente da geometria da seção analisada.
+
+Para seções transversais circulares maciças, em razão da simetria geométrica, os momentos de inércia ($m^4$) em relação aos eixos principais \(x\) e \(y\) são idênticos, sendo expressos pela Equação~\eqref{eq:3}.
+
+\begin{equation}
+I_x = I_y = \frac{\pi d^4}{64}
+\label{eq:3}
+\end{equation}
+
+Onde, \(d\) representa o diâmetro da seção (m).
+
+Por sua vez, para seções transversais de geometria retangular, como o tabuleiro, os momentos de inércia ($m^4$) em relação aos eixos principais são distintos e definidos pelas Equações \eqref{eq:4} e \eqref{eq:5}.
+
+\begin{equation}
+I_x = \frac{b h^3}{12}
+\label{eq:4}
+\end{equation}
+
+\begin{equation}
+I_y = \frac{h b^3}{12}
+\label{eq:5}
+\end{equation}
+
+Onde, \(b\) corresponde à largura (m)  e \(h\) à sua altura (m).
+
+O módulo resistente (m³) está associado à capacidade da seção transversal em resistir aos momentos fletores máximos, sendo definido como a razão entre o momento de inércia e a distância da fibra mais afastada ao eixo neutro. Para seções circulares, o módulo resistente é o mesmo em ambos os eixos principais e é dado pela Equação~\eqref{eq:6}.
+
+\begin{equation}
+W_x = W_y = \frac{I_x}{d/2}
+\label{eq:6}
+\end{equation}
+
+Já para seções retangulares, os módulos resistentes (m³) em relação aos eixos principais são definidos pelas Equações \eqref{eq:7} e \eqref{eq:8}.
+
+\begin{equation}
+W_x = \frac{I_x}{h/2}
+\label{eq:7}
+\end{equation}
+
+\begin{equation}
+W_y = \frac{I_y}{b/2}
+\label{eq:8}
+\end{equation}
+
+Outro parâmetro relevante é o raio de giração (m), amplamente utilizado nas verificações de estabilidade estrutural, como a análise de flambagem. O raio de giração relaciona o momento de inércia com a área da seção transversal. Para seções circulares e retangulares, os raios de giração são expressos pelas Equações \eqref{eq:9} e \eqref{eq:10}.
+
+\begin{equation}
+r_x = \sqrt{\frac{I_x}{A}}
+\label{eq:9}
+\end{equation}
+
+\begin{equation}
+r_y = \sqrt{\frac{I_y}{A}}
+\label{eq:10}
+\end{equation}
+
+Dessa forma, a determinação das propriedades geométricas das seções transversais circulares e retangulares fornece a base necessária para a realização das verificações estruturais, assegurando coerência entre a modelagem geométrica adotada e os critérios normativos aplicáveis.
+
+\subsection{Determinação da carga permanente}\label{levan_estat}
+
+Neste item são identificadas as ações de caráter permanente atuantes sobre a ponte, constituindo  uma etapa inicial e fundamental para a determinação dos esforços solicitantes na estrutura. Segundo a NBR 8681 \parencite{NBR8681:2025}, as cargas permanentes correspondem àquelas que atuam de forma contínua ao longo da vida útil da estrutura. 
+
+No caso de pontes em madeira roliça, consideram-se como ações permanentes o peso próprio das longarinas, do tabuleiro, dos rodeiros, entre outros elementos estruturais. O cálculo dessas cargas é realizado em função da geometria de cada elemento e do peso específico dos materiais constituintes, conforme a Equação~\eqref{eq:acoes_permanentes}.
+
+\begin{equation}
+G = \gamma \cdot A
+\label{eq:acoes_permanentes}
+\end{equation}
+
+\begin{tabular}{ll}
+$G$ & Peso próprio (ação permanente) (kN/m); \\
+$\gamma$ & Peso específico do material (kN/m³); \\
+$A$ & Área da seção transversal (m²).
+\end{tabular}
+
+\subsection{Levantamento do trem tipo}\label{levan_trem}
+
+É a caracterização dos tipos de cargas móveis que transita sobre uma ponte. Basicamente, é a análise do tipo de veículo (“trem”) que a estrutura será dimensionada para suportar, incluindo peso próprio do veículo somado com a sua capacidade de caga, disposição dos eixos e espaçamento entre eles.
+
+A carga móvel rodoviária padrão TB-450, conforme estabelecido pela NBR 7188 \parencite{nbr7188}, é representada por um veículo-tipo com peso total de 450~kN, distribuído em seis rodas com carga individual de 75~kN. O modelo considera três eixos espaçados entre si em 1{,}5~m, ocupando uma área total de 18{,}0~m\textsuperscript{2}, a qual é envolvida por uma carga uniformemente distribuída constante de intensidade $p = 5$~kN/m\textsuperscript{2}.
+
+Além disso, a NBR 7188 \parencite{nbr7188} também estabelece critérios aplicáveis a projetos de estradas vicinais, rodovias e também a obras de iniciativa privada, definindo como carga móvel rodoviária mínima o trem-tipo TB-240. Esse modelo de carregamento é representado por um veículo com peso total de 240 kN, composto por três eixos e seis rodas. Cada eixo transmite uma carga de 40 kN à estrutura, com espaçamento de 1,5 m entre eixos. O veículo ocupa uma área de 18,0 m$^{2}$, e uma carga uniformemente distribuída de multidão de 4,0 kN/m$^{2}$, conforme ilustrado na Figura~\ref{fig:trem}.
+
+\begin{figure}[htpb!]
+    \centering
+    % Configura o negrito e o tamanho 11pt para a Legenda
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Configuração trem de tipo.}
+    \label{fig:trem}
+
+    % Imagem centralizada
+    \includegraphics[width=1.0\textwidth]{template_eca_ufsc_abnt/figuras/Disposição das cargas estáticas.png}
+
+    % Fonte com tamanho 11pt e "Fonte:" em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} NBR 7190 \parencite{nbr7188}.}
+\end{figure}
+
+No dimensionamento das ações provenientes do trem-tipo, considera-se o o coeficiente de impacto vertical ($CIV$), para incorporar os efeitos dinâmicos associados à passagem das cargas móveis. O $CIV$ é aplicado como fator de majoração da carga estática do trem-tipo, conforme a NBR 7188 \parencite{nbr7188}, garantindo que os esforços solicitantes representassem adequadamente as amplificações dinâmicas decorrentes da interação veículo-estrutura. O coeficiente de impacto vertical é determinado pela Equação \eqref{eq:CIV10} e \eqref{eq:CIVmaior}.
+
+\begin{equation}
+CIV = 1{,}35 \quad \text{para } L \leq 10{,}0 \text{ m}
+\label{eq:CIV10}
+\end{equation}
+
+\begin{equation}
+CIV = 1 + 1{,}06 \left( \frac{20}{LIV + 50} \right)
+\quad \text{para } 10{,}0 < L \leq 200{,}0 \text{ m}
+\label{eq:CIVmaior}
+\end{equation}
+
+Onde, $LIV$ corresponde ao comprimento característico da estrutura, sendo igual ao vão para estruturas isostáticas, à média aritmética dos vãos para estruturas contínuas e ao comprimento do balanço para estruturas em balanço.
+
+\subsection{Determinação do momento máximo}
+
+O momento fletor máximo devido à carga permanente é obtido a partir da hipótese de viga biapoiada submetida a carregamento uniformemente distribuído ao longo do vão teórico, segundo a Equação~\eqref{eq:mg} \parencite{CALIL2006}. 
+
+\begin{equation}
+M_{g,k} = \frac{q \cdot L^{2}}{8}
+\label{eq:mg}
+\end{equation}
+
+Já para a carga variável, no caso das classes estruturais 30 e 45, o momento máximo depende da extensão do vão, sendo consideradas expressões distintas para vãos entre 3 m e 6 m e para vãos superiores a 6 m, conforme as Equações \eqref{eq:m30} e \eqref{eq:m45}. Essas formulações levam em conta a atuação de cargas concentradas e distribuídas, bem como as posições relativas dessas cargas ao longo do vão \parencite{CALIL2006}.
+
+\begin{equation}
+M_{q,k} = \left( \frac{3 \cdot P \cdot L}{4} - P \cdot a \right),
+\quad \text{para } 3\,\text{m} < L \leq 6\,\text{m}
+\label{eq:m30}
+\end{equation}
+
+\begin{equation}
+M_{q,k} = \left( \frac{3 \cdot P \cdot L}{4} - P \cdot a \right) + \frac{q \cdot c^{2}}{2},
+\quad \text{para } L > 6\,\text{m}
+\label{eq:m45}
+\end{equation}
+
+Onde,
+
+
+\begin{tabular}{ll}
+$M_{g,k}$ & Momento fletor máximo devido a carga permanente (kN.m);\\
+$M_{q,k}$ & Momento fletor máximo devido a carga variável (kN.m);\\
+$L$ & vão teórico (m);\\
+$a$ & 1,5 m (Classes 30 e 45);\\
+$b$ & $\dfrac{L-2a}{2}$;\\
+$c$ & $\dfrac{L-4a}{2}$;\\
+$P$ & Carga concentrada aplicada (kN);\\
+$q$ & Carga de multidão (kN/m);\\
+$g$ & Carga permanente (kN/m).
+\end{tabular}
+
+\subsection{Determinação do esforço cortante máximo}\label{subsub:verificacao_cisalhamento}
+
+A cortante máxima devida à carga permanente é dada pela Equação \eqref{eq:cortante_permanente} \parencite{CALIL2006}.
+
+\begin{equation}
+Q_{g,k} = \frac{g \cdot L}{2}
+\label{eq:cortante_permanente}
+\end{equation}
+
+Onde, 
+
+\begin{tabular}{ll}
+$Q_{g,k}$ & Valor característico da força cortante máxima devida às ações permanentes (kN);\\
+$g$ & Carga permanente distribuída por unidade de comprimento (kN/m);\\
+$L$ & Vão do elemento estrutural (m).
+\end{tabular}
+
+Essa expressão é válida para elementos estruturais simplesmente apoiados submetidos a carregamento uniformemente distribuído ao longo de todo o vão. A força cortante máxima ocorre nos apoios e a equação é amplamente empregada no dimensionamento e na verificação de vigas e outros elementos lineares quanto ao estado limite último de cisalhamento \cite{CALIL2006}.
+
+Para as classes estruturais 30 e 45, pode-se considerar a cortante máxima reduzida conforme a Equação \eqref{eq:cortante_reduzida}.
+
+\begin{equation}
+Q_{q,k} = \frac{P}{L}\,(6a + 3e) + \frac{q \cdot e^{2}}{2 \cdot L}
+\label{eq:cortante_reduzida}
+\end{equation}
+
+Onde,
+
+\begin{tabular}{ll}
+$Q_{q,k}$ & Valor característico da força cortante máxima reduzida (kN);\\
+$P$ & Carga concentrada aplicada (kN);\\
+$q$ & Carga distribuída de multidão (kN/m);\\
+$L$ & Vão da estrutura (m);\\
+$a$ & Distância entre eixos (m);\\
+$e$ & É dado pela relação $L - 3 \cdot a - 2 \cdot h$.
+\end{tabular}
+
+Essa formulação permite uma avaliação mais realista dos esforços cortantes, considerando a posição das cargas e a redistribuição dos esforços ao longo do elemento estrutural. Sua aplicação é indicada para vigas de madeira enquadradas nas classes estruturais 30 e 45, sendo especialmente útil no dimensionamento de estruturas sujeitas à combinação de cargas concentradas e distribuídas, como pontes, passarelas e vigas de cobertura \parencite{CALIL2006}.
+
+\subsection{Determinação da flecha máxima}\label{subsub:verificacao_flecha}
+
+A flecha máxima devida à carga permanente é dada pela Equação \eqref{eq:flecha_permanente}.
+
+\begin{equation}
+\delta_{g,k} = \frac{5 \cdot g \cdot L^{4}}{384 \cdot E_{0,\mathrm{ef}} \cdot I}
+\label{eq:flecha_permanente}
+\end{equation}
+
+Onde,
+
+\begin{tabular}{ll}
+$\delta_{g,k}$ & Valor característico da flecha máxima devida às ações permanentes (m);\\
+$g$ & Carga permanente distribuída permanente (kN/m);\\
+$L$ & Vão do elemento estrutural (m);\\
+$E_{0,\mathrm{ef}}$ & Módulo de elasticidade efetivo do material (kPa);\\
+$I$ & Momento de inércia da seção transversal ($m^4$).
+\end{tabular}
+
+Essa expressão é válida para elementos estruturais simplesmente apoiados submetidos a carregamento uniformemente distribuído ao longo de todo o vão, sendo amplamente utilizada na verificação do estado limite de serviço relacionado às deformações excessivas.
+
+Para as classes estruturais 30 e 45, pode-se considerar a flecha característica conforme a Equação \eqref{eq:flecha_reduzida}, desprezando-se o efeito da carga acidental distribuída próximo aos apoios:
+
+\begin{equation}
+\delta_{q,k} =
+\frac{P}{48 \cdot E_{0,\mathrm{ef}} \cdot I}
+\left[
+L^{3} + 2 \cdot b \cdot \left( 3 \cdot L^{2} - 4 \cdot b^{2} \right)
+\right]
+\label{eq:flecha_reduzida}
+\end{equation}
+
+Onde,
+
+\begin{tabular}{ll}
+$\delta_{q,k}$ & Valor característico da flecha máxima devida à ação variável (m);\\
+$P$ & Carga concentrada devido a roda (kN);\\
+$L$ & Vão da estrutura (m);\\
+$b$ & É dado pela relação $\dfrac{L - 2a}{2}$;\\
+$E_{0,\mathrm{ef}}$ & Módulo de elasticidade efetivo do material (kPa);\\
+$I$ & Momento de inércia da seção transversal ($m^4$).
+\end{tabular}
+
+\subsection{Combinações de ações para o Estado Limite Último (ELU)}
+
+Primeiramente, deve-se dispor dos esforços solicitantes característicos, após isso a NBR 7190 \parencite{NBR7190-1:2022} apresenta valores dos coeficientes de ponderação $\gamma_{g}$ para ações permanentes utilizados nas combinações, conforme os tópicos abaixo. São especificados na norma três opções de valores, ficando a critério do projetista qual adotar, podendo ser mais conservador ou não.
+
+\begin{enumerate}[label=\alph*)]
+    \item $\gamma_{g} = 1,3;\ \gamma_{g} = 1,2;\ \gamma_{g} = 1,15;$ para elementos estruturais de madeira em geral;
+    \item $\gamma_{g} = 1,25;\ \gamma_{g} = 1,15;\ \gamma_{g} = 1,10;$ para elementos estruturais industrializados de madeira;
+\end{enumerate}
+
+Para avaliar e dimensionar estruturas de madeira nos Estados Limite Último (ELU) e de Serviço (ELS), a NBR 7190 \parencite{NBR7190-1:2022} recomenda a aplicação da NBR 8681 \parencite{NBR8681:2025}. No caso do dimensionamento no ELU, utiliza-se a combinação última normal, correspondente a situações com probabilidade de ocorrência suficientemente elevada, conforme estabelecido na NBR 8681 \parencite{NBR8681:2025} , assim como descrito na Equação \eqref{eq:2.01}.
+
+\begin{equation}
+F_d = \sum_{i=1}^{m} \gamma_{gi}\, F_{Gi,k}
+      + \gamma_{q1}\, F_{Q1,k}
+      + \sum_{j=2}^{n} \gamma_{qj}\, F_{Qj,k}\, \psi_{0j}
+       \label{eq:2.01}
+\end{equation}
+
+Onde,
+
+\begin{tabular}{ll}
+$F_d$ & Valor de cálculo da ação combinada;\\
+$\gamma_{gi}$ & Coeficientes de majoração das ações permanentes;\\
+$F_{G i,k}$ & Valores característicos das ações permanentes;\\
+$\gamma_{q1}$ & Coeficiente de majoração da ação variável principal;\\
+$\gamma_{qj}$ & Coeficientes de majoração das ações variáveis secundárias;\\
+$F_{Q1,k}$ & Valor característico da ação variável principal;\\
+$\psi_{0j}$ & Fatores de combinação das ações variáveis secundárias;\\
+$F_{Qj,k}$ & Valores característicos das ações variáveis secundárias;\\
+$m,n$ & Números de ações permanentes e de ações variáveis secundárias.
+\end{tabular}
+\\
+
+Além disso, no presente trabalho, também foi adotada a combinação última normal, conforme estabelecido pela NBR 7190 \parencite{NBR7190-1:2022}, a qual corresponde a uma variação da combinação do Estado Limite Último (ELU), adotada para a correção das ações variáveis no exemplo de dimensionamento da longarina de madeira, considerando o trem-tipo como ação variável principal. Dessa forma, o valor característico dessa ação variável foi reduzido conforme a Equação~\eqref{eq:2.09}, em conformidade com as recomendações da NBR 7190 \parencite{NBR7190-1:2022}, sendo essa consideração aplicada exclusivamente às verificações das peças estruturais de madeira.
+
+\begin{equation}
+      F_d = \sum_{i=1}^{m} \gamma_{gi}\, F_{Gi,k}
+      + \gamma_{qw}\, 0{,}75\, F_{Qw,k}
+      + \gamma_{q2}\, \psi_{0,q2}\, F_{Q2,k}
+      \label{eq:2.09}
+\end{equation}
+
+Onde,
+
+\begin{tabular}{ll}
+$\gamma_{qw}$ & Coeficiente de majoração da ação do vento;\\
+$\gamma_{q2}$ & Coeficiente de majoração da ação variável secundária;\\
+$\psi_{0,q2}$ & Fator de combinação da ação variável secundária.
+\end{tabular}
+
+
+\subsection{Resistência de projeto}\label{valor_calculo}
+
+Nesta etapa, é necessário possuir o valor do $k_{mod}$, definido pela Equação~\eqref{eq:2.11}, onde $k_{mod,1}$ está associado à classe de carregamento, enquanto $k_{mod,2}$ corresponde à classe de umidade, conforme especificados nos Quadros \ref{qua:kmod1_completo} e \ref{qua:kmod2_fiel}. 
+
+\begin{quadro}[htpb!]
+    \centering
+    % Define o nome como Quadro para este elemento específico
+    \renewcommand{\tablename}{Quadro}
+    
+    % Configura o negrito e o tamanho 11pt para a Legenda (no topo)
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Valores de $k_{mod,1}$.}
+    \label{qua:kmod1_completo}
+
+    % Definição do quadro com bordas fechadas e tamanho 11pt
+    \fontsize{11pt}{13.2pt}\selectfont
+    \begin{tabular}{|>{\centering\arraybackslash}m{2.5cm}|>{\centering\arraybackslash}m{2.2cm}|>{\centering\arraybackslash}m{3.5cm}|>{\centering\arraybackslash}m{3.5cm}|>{\centering\arraybackslash}m{2cm}|}
+        \hline
+        \textbf{Classes de carregamento} & \multicolumn{2}{c|}{\textbf{Ação variável principal da combinação}} & \multicolumn{2}{c|}{\textbf{Tipos de madeira}} \\ \cline{2-5} 
+        & \textbf{Duração acumulada} & \textbf{Ordem de grandeza da duração acumulada} & \textbf{Serrada, roliça, MLC, MLCC, LVL} & \textbf{Madeira recomposta} \\ \hline
+        Permanente & Permanente & Mais de dez anos & 0,60 & 0,30 \\ \hline
+        Longa duração & Longa duração & Seis meses a dez anos & 0,70 & 0,45 \\ \hline
+        Média duração & Média duração & Uma semana a seis meses & 0,80 & 0,65 \\ \hline
+        Curta duração & Curta duração & Menos de uma semana & 0,90 & 0,90 \\ \hline
+        Instantânea & Instantânea & Muito curta & 1,10 & 1,10 \\ \hline
+    \end{tabular}
+
+    % Fonte abaixo com tamanho 11pt e termo em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Adaptado da NBR 7190 \cite{NBR7190-1:2022}.}
+\end{table}
+
+\begin{quadro}[htpb!]
+    \centering
+    % Define o nome como Quadro para este elemento específico
+    \renewcommand{\tablename}{Quadro}
+    
+    % Configura o negrito e o tamanho 11pt para a Legenda (no topo)
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Valores de $k_{mod,2}$.}
+    \label{qua:kmod2_fiel}
+
+    % Definição do quadro com bordas fechadas e tamanho 11pt
+    \fontsize{11pt}{13.2pt}\selectfont
+    \begin{tabular}{|>{\centering\arraybackslash}m{3.5cm}|>{\centering\arraybackslash}m{6cm}|>{\centering\arraybackslash}m{3cm}|}
+        \hline
+        \textbf{Classes de umidade} & \multicolumn{2}{c|}{\textbf{Tipos de madeira}} \\ \cline{2-3}
+         & \textbf{Serrada, roliça, MLC, MLCC, LVL} & \textbf{Madeira recomposta} \\ \hline
+        (1) & 1,00 & 1,00 \\ \hline
+        (2) & 0,90 & 0,95 \\ \hline
+        (3) & 0,80 & 0,93 \\ \hline
+        (4) & 0,70\textsuperscript{a} & 0,90 \\ \hline
+    \end{tabular}
+
+    % Espaço para notas e fonte
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textsuperscript{a} Não é permitido o uso de MLCC para classe de umidade (4).}
+    
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Adaptado da NBR 7190 \cite{NBR7190-1:2022}.}
+\end{quadro}
+
+Com base nesses valores e após obter os esforços de cálculo, determina-se a resistência mecânica da madeira, segundo a Equação~\eqref{eq:2.10}. Para a realização dessas verificações, a NBR 7190 \parencite{NBR7190-1:2022} estabelece parâmetros de resistência ($f$) e de módulo de elasticidade ($E$), bem como classes de resistência para madeiras dos grupos das Coníferas e das Folhosas.
+
+\begin{equation}
+    X_d = K_{mod} \cdot \frac{X_k}{\gamma_m}
+    \label{eq:2.10}
+\end{equation}
+
+\begin{equation}
+    k_{mod} = k_{mod,1} \cdot k_{mod,2}
+    \label{eq:2.11}
+\end{equation}
+
+O valor de $X_d$ está relacionado à classe de resistência da madeira, onde os valores de $X_k$ são apresentados nas Tabelas 2 e 3 da NBR 7190 \parencite{NBR7190-1:2022}, divididos entre resistências obtidas por corpos de prova isentos de defeitos e resistências obtidas por ensaios de peças estruturais. Com base nessa equação que se obtêm os valores resistentes para flexão e cisalhamento.
+
+Além disso, é aplicado o coeficiente de minoração ($\gamma_m$), onde se admite o valor de 1,4 para ações nos estados-limite últimos decorrentes de tensões normais e 1,8 para tensões de cisalhamento.
+
+\subsection{Verificação das tensões normais de flexão}
+
+A NBR 7190 \parencite{NBR7190-1:2022} estabelece a verificação da flexão simples em elementos estruturais de madeira que deve ser realizada considerando-se a possibilidade de ocorrência de flexão reta ou flexão oblíqua, em função da direção de aplicação dos esforços em relação aos eixos principais de inércia da seção transversal.
+
+Na flexão reta, o momento fletor atua em torno de um único eixo principal, resultando em uma distribuição linear de tensões normais, cuja verificação é realizada por meio da relação entre a tensão de flexão de cálculo e a resistência de cálculo à flexão, conforme a Equação~\eqref{eq:flexao_reta}.
+
+\begin{equation}
+\frac{\sigma_{Mx,d}}{f_{m,d}} = \frac{M_d}{W \, f_{m,d}} \leq 1
+\label{eq:flexao_reta}
+\end{equation}
+
+Onde,
+
+\begin{tabular}{ll}
+$\sigma_{Mx,d}$ & Tensão de cálculo devido à flexão na direção do eixo $x$ (kPa);\\
+$f_{m,d}$ & Valor de cálculo da resistência à flexão (kPa);\\
+$M_d$ & Momento fletor de cálculo (kN.m);\\
+$W_x$ & Módulo de resistência da seção transversal em relação ao eixo x ($m^3$);\\
+\end{tabular}
+
+\subsection{Verificação das tensões cisalhantes}
+
+A verificação da segurança das vigas de madeira em relação às tensões de cisalhamento decorrentes do esforço cortante deve ser realizada conforme os critérios estabelecidos pela NBR 7190 \parencite{NBR7190-1:2022}. Essas tensões, de natureza tangencial, surgem em função da ação do esforço cortante atuante na seção transversal e devem ser limitadas de modo a garantir que a resistência do material não seja ultrapassada.
+
+De forma geral, a condição de segurança para as tensões de cisalhamento é expressa pela Equação \eqref{eq:3.22}, a qual estabelece que o valor de cálculo da máxima tensão de cisalhamento atuante, $\tau_d$, deve ser menor ou igual ao valor de cálculo da resistência ao cisalhamento paralelo às fibras da madeira, $f_{v0,d}$. 
+
+\begin{equation}
+\tau_d = \frac{V_d \cdot S}{b \cdot I} \leq f_{v0,d}
+\label{eq:3.22}
+\end{equation}
+
+Para peças com seção transversal retangular, a norma permite a utilização de uma expressão simplificada, apresentada na Equação \eqref{eq:3.23}. O valor obtido deve ser comparado diretamente com a resistência de cálculo ao cisalhamento paralelo às fibras, $f_{v0,d}$.
+
+\begin{equation}
+\tau_d = \frac{3}{2} \cdot \frac{Q_d}{b \cdot h}
+\label{eq:3.23}
+\end{equation}
+
+A tensão máxima de cisalhamento ocorre, portanto, no centro da seção circular, isto é, na posição correspondente a $y = 0$. Nessa condição, a expressão da tensão máxima de cisalhamento pode ser simplificada, resultando na Equação \eqref{eq:3.55}, na qual a tensão de cisalhamento de cálculo é função direta do esforço cortante de cálculo e inversamente proporcional à área da seção transversal circular, $A$ \parencite{Moraes2023}.
+
+\begin{equation}
+\tau_{\max} =
+\frac{4}{3} \cdot \frac{Q_d}{\pi R^{2}}
+=
+\frac{16}{3} \cdot \frac{Q_d}{\pi D^{2}}
+=
+\frac{4}{3} \cdot \frac{Q_d}{A}
+\label{eq:3.55}
+\end{equation}
+
+Onde,
+
+\begin{tabular}{ll}
+$\tau_d$ & Tensão de cisalhamento de cálculo (kPa); \\
+$f_{v0,d}$ & Valor de cálculo da resistência ao cisalhamento paralelo às fibras (kPa); \\
+$Q_d$ & Esforço cortante de cálculo (kN); \\
+$S$ & Momento estático da seção em relação ao eixo de interesse ($m^3$); \\
+$I$ & Momento de inércia da seção transversal ($m^4$); \\
+$b$ & Largura da seção transversal (m); \\
+$h$ & Altura da seção transversal (m); \\
+$R$ & Raio da seção transversal circular (m); \\
+$D$ & Diâmetro da seção transversal circular (m); \\
+$A$ & Área da seção transversal ($m^2$); \\
+\end{tabular}
+
+\subsection{Combinações de ações para o Estado Limite de Serviço (ELS)}
+
+Com o intuito de garantir a usabilidade e evitar que as estruturas de madeira apresentem deformações ou deslocamentos excessivos, que possam comprometer a utilização da construção, aspectos estéticos ou ocasionar vibrações excessivas, a NBR 7190 \parencite{NBR7190-1:2022} estabelece que as estruturas devem ser verificadas no Estado Limite de Serviço (ELS), o qual está associado aos critérios de deformabilidade, vibrações, durabilidade e utilização da estrutura.
+
+Na avaliação de estruturas de cobertura, os deslocamentos máximos podem ser combinados e posteriormente comparados com os valores limites estabelecidos em norma. A NBR 7190 \parencite{NBR7190-1:2022} prevê duas hipóteses de verificação, considerando os deslocamentos instantâneos ($\delta_{\mathrm{inst}}$) e os deslocamentos finais ou efetivos ($\delta_{\mathrm{fin}}$).
+
+Considerando que a madeira apresenta comportamento distinto de outros materiais estruturais, especialmente em função da deformação ao longo do tempo (fluência), a NBR 7190 \parencite{NBR7190-1:2022} estabelece que as verificações relativas ao ELS devem ser realizadas adotando-se a combinação rara de serviço, conforme a NBR 8681 \parencite{NBR8681:2025}, para a avaliação das flechas instantâneas ($\delta_{\mathrm{inst}}$). Os deslocamentos instantâneos, desconsiderando os efeitos da fluência, correspondem às deformações imediatas da estrutura, também denominadas flechas, e são calculados conforme a Equação \eqref{eq:flecha_inst}.
+
+\begin{equation}
+\delta_{\mathrm{inst}} =
+\sum_{i=1}^{m} \delta_{\mathrm{inst},G_i,k}
++ \delta_{\mathrm{inst},Q_1,k}
++ \sum_{j=2}^{n} \delta_{\mathrm{inst},Q_j,k} \cdot \psi_{1,j}
+\label{eq:flecha_inst}
+\end{equation}
+
+Onde,
+
+\begin{tabular}{ll}
+$\delta_{\mathrm{inst},G_i,k}$ & Flechas instantâneas decorrentes das ações permanentes (peso próprio);\\
+$\delta_{\mathrm{inst},Q_1,k}$ & Flecha instantânea associada à ação variável principal;\\
+$\delta_{\mathrm{inst},Q_j,k}$ & Flechas instantâneas decorrentes das ações variáveis secundárias;\\
+$\psi_{1,j}$ & Fator de redução correspondente à combinação frequente.
+\end{tabular}
+\\
+
+Para a avaliação das flechas finais ($\delta_{\mathrm{fin}}$), a NBR 7190 \parencite{NBR7190-1:2022} estabelece que devem ser considerados a combinação quase permanente de ações e os efeitos da fluência, conforme a Equação \eqref{eq:flecha_fin}.
+
+\begin{equation}
+\delta_{\mathrm{fin}} =
+\sum_{i=1}^{m} \delta_{\mathrm{fin},G_i,k}
++ \sum_{j=1}^{n} \delta_{\mathrm{fin},Q_j,k}
+\label{eq:flecha_fin}
+\end{equation}
+
+Onde,
+
+\begin{tabular}{ll}
+$\delta_{\mathrm{fin},G_i,k}$ & Flechas finais associadas às ações permanentes;\\
+$\delta_{\mathrm{fin},Q_j,k}$ & Flechas finais associadas às ações variáveis, calculadas conforme as Equa-\\ 
+& ções~\eqref{eq:flecha_fin_G} e~\eqref{eq:flecha_fin_Q}.
+\end{tabular}
+
+
+\begin{equation}
+\delta_{\mathrm{fin},G_i,k}
+=
+\delta_{\mathrm{inst},G_i,k}
++ \delta_{\mathrm{creep}}
+=
+\delta_{\mathrm{inst},G_i,k} \cdot (1 + \varphi)
+\label{eq:flecha_fin_G}
+\end{equation}
+
+\begin{equation}
+\delta_{\mathrm{fin},Q_j,k}
+=
+\delta_{\mathrm{inst},Q_j,k}
++ \delta_{\mathrm{creep}}
+=
+\delta_{\mathrm{inst},Q_j,k} \cdot \psi_{2} \cdot (1 + \varphi)
+\label{eq:flecha_fin_Q}
+\end{equation}
+
+Onde,
+
+\begin{tabular}{ll}
+$\delta_{\mathrm{creep}}$ & Parcela da flecha associada aos efeitos da fluência da madeira;\\
+$\varphi$ & Coeficiente de fluência da madeira, definido conforme o Quadro \ref{qua:fluencia}.
+\end{tabular}
+\\
+
+Segundo a NBR 7190 \parencite{NBR7190-1:2022}, a madeira possui características distintas de outros materiais de construção, como, por exemplo, a significativa deformação ao longo do tempo (fluência). Em razão dessa condição, torna-se necessária a aplicação do coeficiente de fluência ($\varphi$) na estimativa dos deslocamentos finais ou efetivos, conforme as Equação \eqref{eq:flecha_fin_G} e \eqref{eq:flecha_fin_Q}. Esse coeficiente é definido em função do material e da classe de umidade à qual o sistema estrutural está exposto. Classes de umidade mais elevadas resultam em flechas mais acentuadas, conforme evidenciado pelos valores do coeficiente de fluência apresentados no Quadro \ref{qua:fluencia}.
+
+\clearpage
+\begin{quadro}[htpb!]
+    \centering
+    % Define o nome como Quadro para este elemento específico
+    \renewcommand{\tablename}{Quadro}
+    
+    % Configura o negrito e o tamanho 11pt para a Legenda (no topo)
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Coeficiente de fluência ($\varphi$).}
+    \label{qua:fluencia}
+
+    % Definição do quadro (formato fechado) com tamanho 11pt
+    \fontsize{11pt}{13.2pt}\selectfont
+    \begin{tabular}{|>{\centering\arraybackslash}m{6.0cm}|>{\centering\arraybackslash}m{2.5cm}|>{\centering\arraybackslash}m{2.5cm}|>{\centering\arraybackslash}m{2.5cm}|}
+        \hline
+        \multirow{\textbf{Materiais}} & \multicolumn{3}{c|}{\textbf{Classe de umidade}} \\ \cline{2-4} 
+         & \textbf{(1)} & \textbf{(2 e 3)} & \textbf{(4)} \\ \hline
+        Madeira serrada, MLC, MLCC, LVL e roliça & 0,6 & 0,8 & 2,0\textsuperscript{a} \\ \hline
+        Compensado estrutural & 0,8 & 1,0 & 2,5 \\ \hline
+        OSB estrutural & 1,5 & 2,25 & -- \\ \hline
+    \end{tabular}
+
+    % Notas e Fonte com tamanho 11pt
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textsuperscript{a} Não é permitido o uso de MLCC para a classe de umidade 4.}
+    
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Adaptado da NBR 7190 \parencite{NBR7190-1:2022}.}
+\end{quadro}
+
+
+\subsection{Limites para flechas na verificação do Estado Limite de Serviço (ELS)}
+
+Na verificação do Estado Limite de Serviço (ELS), a NBR 7190 \parencite{NBR7190-1:2022} estabelece valores limites para as flechas, considerando-se a flecha instantânea ($\delta_{\mathrm{inst}}$) e a flecha final ($\delta_{\mathrm{fin}}$). Esses valores limites dependem da configuração estática da estrutura e encontram-se apresentados no Quadro \ref{qua:flechas_limites}.
+
+\begin{quadro}[htpb!]
+    \centering
+    % Define o nome como Quadro para este elemento específico
+    \renewcommand{\tablename}{Quadro}
+    
+    % Configura o negrito e o tamanho 11pt para a Legenda (no topo)
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Flechas limites para elementos correntes fletidos.}
+    \label{qua:flechas_limites}
+
+    % Definição do quadro (formato fechado) com tamanho 11pt
+    \fontsize{11pt}{13.2pt}\selectfont
+    \begin{tabular}{|>{\centering\arraybackslash}m{5.0cm}|>{\centering\arraybackslash}m{3.5cm}|>{\centering\arraybackslash}m{3.5cm}|}
+        \hline
+        \textbf{Tipo} & $\boldsymbol{\delta_{inst}}$ & $\boldsymbol{\delta_{fin}}$ \\ \hline
+        Vigas biapoiadas ou contínuas & $L/300$ a $L/500$ & $L/150$ a $L/300$ \\ \hline
+        Vigas em balanço & $L/150$ a $L/250$ & $L/75$ a $L/150$ \\ \hline
+    \end{tabular}
+
+    % Fonte com tamanho 11pt e termo em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Adaptado da NBR 7190 \parencite{NBR7190-1:2022}.}
+\end{quadro}
+
+
+
+
+
+

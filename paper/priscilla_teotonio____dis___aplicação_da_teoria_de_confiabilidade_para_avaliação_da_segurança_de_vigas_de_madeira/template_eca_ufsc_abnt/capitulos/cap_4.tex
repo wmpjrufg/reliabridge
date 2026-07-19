@@ -1,0 +1,1015 @@
+% ----------------------------------------------------------
+\chapter{Resultados}
+% ----------------------------------------------------------
+
+\section{Solução via interface}
+
+Como principal resultado deste trabalho, foi desenvolvida uma plataforma computacional para o dimensionamento de pontes de madeira, capaz de realizar a verificação completa dos elementos estruturais, em conformidade com as diretrizes da NBR 7190 \parencite{NBR7190-1:2022} e da NBR 7188 \parencite{nbr7188}. A plataforma está disponível em \url{reliabridge.streamlit.app/}, nos idiomas Português e Inglês.
+
+O software foi desenvolvido em \textit{Python}, adotando uma arquitetura cliente-servidor. No lado do cliente, a interface web, construída com a biblioteca \textit{Streamlit}, oferece ao usuário uma experiência intuitiva para inserção de dados e visualização dos resultados. A interface é organizada em módulos, permitindo a navegação sequencial entre as etapas de dimensionamento, projeto dos elementos estruturais e análise dos resultados.
+
+A escolha da linguagem \textit{Python} baseia-se em seu amplo ecossistema de bibliotecas voltadas a análises numéricas e probabilísticas, aliado à sua ampla aceitação na comunidade acadêmica e científica. Além disso, trata-se de uma linguagem livre e de código aberto, o que possibilita acesso gratuito, transparência e facilidade de reprodução dos resultados. Essas características garantem a facilidade na reprodução dos resultados e manutenção, além do elevado potencial de evolução do sistema desenvolvido.
+
+\subsection{Início}
+
+A Figura~\ref{fig:tela_inicial} apresenta a tela inicial da plataforma computacional, 
+na qual o usuário tem acesso ao texto de apresentação da plataformata, aos módulos de dimensionamento e a opção de selecionar o idioma da interface, com opções disponíveis em Português e Inglês.
+
+\begin{figure}[htpb!]
+    \centering
+    % Configura o negrito e o tamanho 11pt para a Legenda no topo
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Tela inicial da plataforma computacional.}
+    \label{fig:tela_inicial}
+
+    % Imagem centralizada
+    \includegraphics[width=0.85\textwidth]{template_eca_ufsc_abnt/figuras/Tela inicial.png}
+
+    % Fonte com tamanho 11pt e "Fonte:" em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{figure}
+
+\subsection{Dimensionamento via otimização}
+
+No módulo de dimensionamento, a plataforma fornece estimativas iniciais das dimensões dos principais elementos estruturais, considerando parâmetros geométricos, características dos materiais e carregamentos atuantes. Através da otimização multiobjetivo, o programa gera a fronteira de Pareto, apresentando as soluções viáveis, dado as funções objetivo. 
+
+Esse módulo solicita ao usuário as variáveis de entrada necessárias ao funcionamento da plataforma computacional, contemplando parâmetros geométricos, propriedades dos materiais e ações atuantes na estrutura. Entre os parâmetros geométricos, destacam-se o comprimento das longarinas, a largura da pista, o diâmetro ou base e a altura das seções transversais, bem como o espaçamento entre longarinas e a distância entre eixos do veículo-tipo.
+
+No que se refere às propriedades dos materiais, são definidos aspectos como a classe de resistência da madeira, a classe de carregamento e as condições de umidade. Adicionalmente, o usuário informa o tipo da seção transversal e os coeficientes normativos considerados no dimensionamento. Por fim, são inseridas as ações atuantes na estrutura, incluindo cargas permanentes e cargas móveis.
+
+A Figura~\ref{fig:predimensionamento} ilustra a interface do módulo de  dimensionamento, no qual são definidos os principais parâmetros iniciais do sistema estrutural.
+
+\begin{figure}[htpb!]
+    \centering
+    % Configura o negrito e o tamanho 11pt para a Legenda no topo
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Módulo de dimensionamento da programa.}
+    \label{fig:predimensionamento}
+
+    % Imagem centralizada
+    \includegraphics[width=0.9\textwidth]{template_eca_ufsc_abnt/figuras/Pré dimensionamento.png}
+
+    % Fonte com tamanho 11pt e "Fonte:" em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{figure}
+
+Após a inserção dos dados da ponte que se deseja analisar, todas as informações fornecidas pelo usuário são automaticamente processadas pelo sistema e organizadas de forma a compor o conjunto completo de variáveis de entrada do problema.
+
+Dessa forma, para dar início ao processamento e à geração dos resultados de desempenho estrutural, basta o usuário clicar no botão "Gerar desempenho estrutural via NSGA-II para pré-dimensionamento", conforme ilustrado na Figura~\ref{fig:botaopredimensionamento}, onde, conforme o fluxograma apresentado neste trabalho, os dados inseridos são encaminhados para a etapa de otimização, na qual passam a ser utilizados pelo algoritmo metaheurístico NSGA-II.
+
+\clearpage
+\begin{figure}[htpb!]
+
+    \centering
+    % Configura o negrito e o tamanho 11pt para a Legenda no topo
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Botão de dimensionamento.}
+    \label{fig:botaopredimensionamento}
+
+    % Imagem centralizada
+    \includegraphics[width=0.9\textwidth]{template_eca_ufsc_abnt/figuras/Botaopredimensionamento.png}
+
+    % Fonte com tamanho 11pt e "Fonte:" em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{figure}
+
+Como resultado, o programa gera uma tabela contendo as soluções viáveis a partir da otimização multiobjetivo via NSGA-II, bem como um gráfico da fronteira eficiente. Além disso, a ferramenta permite ao usuário realizar o \textit{download} da tabela com os dados de entrada (\texttt{beam\_data.xlsx}), dos resultados do pré-dimensionamento (\texttt{pre\_sizing\_results\_optimized.xlsx}) e da fronteira de Pareto (\texttt{pareto\_frontier.png}). As Figuras~\ref{fig:20} e~\ref{fig:10} apresentam os resultados obtidos na aba "Dimensionamento".
+
+\begin{figure}[htpb!]
+    \centering
+    % Configura o negrito e o tamanho 11pt para a Legenda no topo
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Soluções viáveis da fronteira eficiente.}
+    \label{fig:20}
+
+    % Imagem centralizada
+    \includegraphics[width=0.9\textwidth]{template_eca_ufsc_abnt/figuras/Tabela_fronteira_eficiente.png}
+
+    % Fonte com tamanho 11pt e "Fonte:" em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{figure}
+
+\clearpage
+\begin{figure}[htpb!]
+    \centering
+    % Configura o negrito e o tamanho 11pt para a Legenda no topo
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Fronteira eficiente.}
+    \label{fig:10}
+
+    % Imagem centralizada
+    \includegraphics[width=0.9\textwidth]{template_eca_ufsc_abnt/figuras/imagemfronteiraeficiente.png}
+
+    % Fonte com tamanho 11pt e "Fonte:" em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{figure}
+
+\subsection{Projeto dos elementos}
+
+No módulo de projeto dos elementos estruturais, o usuário pode realizar a verificação completa e detalhada da seção selecionada. Nessa etapa, são definidos parâmetros como o tipo de seção da longarina e do tabuleiro, diâmetro das longarinas, espaçamento entre longarinas e a base e a altura da seção transversal do tabuleiro. 
+
+A partir dessas informações, o sistema realiza automaticamente as rotinas de dimensionamento e avaliação estrutural, possibilitando a análise da flexão, cisalhamento e flecha. Adicionalmente, são verificadas de forma sistemática as restrições normativas associadas aos estados limites último e de serviço, garantindo a conformidade da solução com os critérios estabelecidos pelas normas técnicas aplicáveis.
+
+Dessa forma, o módulo permite ao usuário validar o desempenho estrutural da configuração adotada e gerar um relatório completo da seção analisada, no qual são apresentados os resultados dos esforços solicitantes, das verificações realizadas, dos parâmetros adotados e dos critérios de dimensionamento empregados.
+
+A Figura~\ref{fig:projeto_elementos} apresenta a interface do módulo de projeto dos elementos estruturais, na qual são definidos os parâmetros geométricos e de carregamento empregados no processo de dimensionamento e análise detalhada.
+
+\clearpage
+\begin{figure}[htpb!]
+    \centering
+    % Configura o negrito e o tamanho 11pt para a Legenda no topo
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Módulo de projeto dos elementos estruturais.}
+    \label{fig:projeto_elementos}
+
+    % Imagem centralizada
+    \includegraphics[width=0.9\textwidth]{template_eca_ufsc_abnt/figuras/Projeto dos elementos.png}
+
+    % Fonte com tamanho 11pt e "Fonte:" em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{figure}
+
+Nesta etapa, o usuário insere os dados da ponte e, além disso, deve anexar a planilha denominada \texttt{beam\_data.xlsx}, disponível na pasta contida no arquivo \texttt{.zip} gerado após o processamento na etapa de "Pré-dimensionamento", conforme ilustrado na Figura~\ref{fig:189}.
+
+\begin{figure}[htpb!]
+    \centering
+    % Configura o negrito e o tamanho 11pt para a Legenda no topo
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Anexo do arquivo para projeto.}
+    \label{fig:189}
+
+    % Imagem centralizada
+    \includegraphics[width=0.9\textwidth]{template_eca_ufsc_abnt/figuras/projetodoselementoscomvalores.png}
+
+    % Fonte com tamanho 11pt e "Fonte:" em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{figure}
+
+A plataforma realiza automaticamente o cálculo das propriedades geométricas das seções, bem como a determinação dos esforços solicitantes, incluindo momentos fletores, esforços cortantes e flechas, considerando ações permanentes e variáveis. 
+
+A partir dos esforços obtidos, são realizadas as verificações de Estado Limite Último (ELU), abrangendo os critérios de flexão simples e cisalhamento, bem como as verificações de Estado Limite de Serviço (ELS), para a avaliação das flechas. Os resultados são apresentados de forma clara e organizada, permitindo ao usuário identificar rapidamente se os elementos atendem aos critérios normativos de segurança e desempenho estrutural.
+
+Por fim, são todos apresentados na interface todos os resultados das verificações da longarina e tabuleiro, conforme apresentado nas Figuras \ref{fig:999}, \ref{fig:998} e  \ref{fig:997}. Além disso, também é possível emitir um relatório que apresenta todos esses resultados, conforme o Apêndice A.
+
+\begin{figure}[htpb!]
+    \centering
+    % Configura o negrito e o tamanho 11pt para a Legenda no topo
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Resultado do projeto dos elementos estruturais.}
+    \label{fig:999}
+
+    % Imagem centralizada
+    \includegraphics[width=0.9\textwidth]{template_eca_ufsc_abnt/figuras/resultadoprojetodoselementos.png}
+
+    % Fonte com tamanho 11pt e "Fonte:" em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{figure}
+
+\begin{figure}[htpb!]
+    \centering
+    % Configura o negrito e o tamanho 11pt para a Legenda no topo
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Verificação da longarina.}
+    \label{fig:998}
+
+    % Imagem centralizada
+    \includegraphics[width=0.9\textwidth]{template_eca_ufsc_abnt/figuras/Relatório longarina.png}
+
+    % Fonte com tamanho 11pt e "Fonte:" em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{figure}
+
+\clearpage
+\begin{figure}[htpb!]
+    \centering
+    % Configura o negrito e o tamanho 11pt para a Legenda no topo
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Verificação da tabuleiro.}
+    \label{fig:997}
+
+    % Imagem centralizada
+    \includegraphics[width=0.9\textwidth]{template_eca_ufsc_abnt/figuras/Relatório tabuleiro.png}
+
+    % Fonte com tamanho 11pt e "Fonte:" em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{figure}
+
+Logo, o caráter paramétrico da ferramenta possibilita a avaliação rápida de diferentes combinações geométricas e de carregamento, tornando a plataforma adequada para estudos comparativos entre soluções viáveis. Dessa forma, o sistema contribui para a automatização do processo de projeto de pontes de madeira, reduzindo significativamente o tempo de cálculo e a probabilidade de erros associados a procedimentos manuais.
+
+\section{Teste da função objetivo}
+
+Para a avaliação do desempenho estrutural do sistema proposto, foram consideradas pontes de madeira hipotéticas, as quais foram analisadas quanto à segurança estrutural. As propriedades geométricas, mecânicas e de carregamento adotadas encontram-se apresentadas na Tabela \ref{tab:parametros_fixos}.
+
+\clearpage
+\begin{table}[htpb!]
+    \centering
+    % Configura o negrito e o tamanho 11pt para a Legenda (no topo)
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Parâmetros geométricos, mecânicos e coeficientes adotados nas análises.}
+    \label{tab:parametros_fixos}
+
+    % Definição da tabela formato aberto (padrão IBGE)
+    \fontsize{11pt}{13.2pt}\selectfont
+    \begin{tabular}{lc}
+        \toprule
+        \textbf{Parâmetro} & \textbf{Valor} \\ \midrule
+        Diâmetro equivalente da longarina, $d_{eq}$ (cm) & 60 \\
+        Espaçamento entre as longarinas, $esp$ (cm) & 120 \\
+        Largura do tabuleiro, $b_w$ (cm) & 10 \\
+        Altura do tabuleiro, $h$ (cm) & 30 \\
+        Comprimento das longarinas, $L$ (cm) & 500 \\
+        Largura da pista, $b_{w,\text{pista}}$ (cm) & 900 \\
+        Tipo de seção da longarina & Circular \\
+        Tipo de seção do tabuleiro & Retangular \\
+        Carga permanente distribuída, $p_{gk}$ (kPa) & 1 \\
+        Distância entre eixos, $a$ (m) & 1{,}5 \\
+        Classe de carregamento & Permanente \\
+        Classe da madeira & Madeira natural \\
+        Classe de umidade & 1 \\
+        Coeficiente parcial das ações permanentes, $\gamma_g$ & 1{,}35 \\
+        Coeficiente parcial das ações variáveis, $\gamma_q$ & 1{,}50 \\
+        Coeficiente de minoração (tensões normais), $\gamma_{wf}$ & 1{,}40 \\
+        Coeficiente de minoração (cisalhamento), $\gamma_{wc}$ & 1{,}80 \\
+        Fator de combinação quase permanente, $\psi_2$ & 0{,}30 \\
+        Coeficiente de fluência, $\phi$ & 0{,}60 \\
+        Densidade da longarina (kg/m$^3$) & 620 \\
+        Resistência característica à flexão - longarina (MPa) & 50 \\
+        Resistência característica ao cisalhamento - longarina (MPa) & 4 \\
+        Módulo de elasticidade à flexão - longarina (GPa) & 14 \\
+        Densidade do tabuleiro (kg/m$^3$) & 620 \\
+        Resistência característica à flexão - tabuleiro (MPa) & 50 \\ \bottomrule
+    \end{tabular}
+
+    % Fonte com tamanho 11pt e termo em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{table}
+
+Com o objetivo de permitir uma análise comparativa, foram definidos dois cenários de carregamento, mantendo-se constantes todos os demais parâmetros do modelo. No primeiro cenário, representado pela Ponte 01, foi adotado o trem-tipo TB-240, enquanto no segundo cenário, correspondente à Ponte 02, utilizou-se o trem-tipo TB-450. Dessa forma, as pontes analisadas diferenciam-se exclusivamente em relação ao modelo de carga móvel rodoviária empregado, conforme a Tabela \ref{tab:carregamento_variavel}.
+
+\begin{table}[htpb!]
+    \centering
+    % Configura o negrito e o tamanho 11pt para a Legenda (no topo)
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Cargas móveis para cada trem-tipo.}
+    \label{tab:carregamento_variavel}
+
+    % Definição da tabela formato aberto (padrão IBGE)
+    \fontsize{11pt}{13.2pt}\selectfont
+    \begin{tabular}{lcc}
+        \toprule
+        \textbf{Parâmetro} & \textbf{TB-240 - Ponte 01} & \textbf{TB-450 - Ponte 02} \\ \midrule
+        Carga concentrada por roda, $p_{rodak}$ (kN) & 40 & 75 \\
+        Carga variável distribuída, $p_{qk}$ (kPa)   & 4  & 5  \\ \bottomrule
+    \end{tabular}
+
+    % Fonte com tamanho 11pt e termo em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{table}
+
+\subsection{Dimensionamento da longarina}
+
+Este exemplo ilustra o processo de dimensionamento de uma longarina de madeira com seção circular, submetida a uma combinação de ações permanentes e variáveis. Esse processo de dimensionamento e verificação foi o mesmo empregado na rotina de otimização empregada no software. O propósito da análise é verificar a segurança do elemento estrutural frente aos Estados Limites Últimos (ELU) e aos Estados Limites de Serviço (ELS), em conformidade com os critérios estabelecidos pela NBR 7190 \cite{NBR7190-1:2022}. 
+
+O procedimento é apresentado de forma detalhada, contemplando todas as etapas de cálculo necessárias para o atendimento aos requisitos normativos. Os dados de entrada compreendem a geometria da viga, as características dos carregamentos atuantes, as propriedades mecânicas da madeira e os coeficientes de ponderação associados às ações e às resistências. 
+
+Sendo assim, o procedimento inicia-se pela determinação das propriedades geométricas da seção transversal circular, sendo essenciais para as verificações estruturais subsequentes, logo, são obtidas conforme as expressões a seguir.
+
+A área da seção transversal é dada pela Equação \eqref{eq:A}.
+
+\begin{equation}
+A = \frac{\pi \cdot d^2}{4}
+  = \frac{\pi \cdot (0{,}60)^2}{4}
+  = 0{,}282\, \text{m}^2
+  \label{eq:A}
+\end{equation}
+
+Para seções circulares, os momentos de inércia em relação aos eixos principais são idênticos, conforme a Equação \eqref{eq:I}.
+
+\begin{equation}
+I_x = I_y = \frac{\pi \cdot d^4}{64}
+          = \frac{\pi \cdot (0{,}60)^4}{64}
+          = 0{,}006\,\text{m}^4
+\label{eq:I}
+\end{equation}
+
+O módulo resistente também é o mesmo nos dois eixos devido à simetria da seção, segundo a Equação \eqref{eq:W}.
+
+\begin{equation}
+W_x = W_y = \frac{I_x}{d/2}
+          = \frac{0{,}0064}{0{,}30}
+          = 0{,}021\,\text{m}^3
+\label{eq:W}
+\end{equation}
+
+Os raios de giração nos dois eixos são apresentados na Equação \eqref{eq:r}.
+
+\begin{equation}
+r_x = r_y = \sqrt{\frac{I_x}{A}}
+          = \sqrt{\frac{0{,}0064}{0{,}2827}}
+          = 0{,}15\,\text{m}
+\label{eq:r}
+\end{equation}
+
+Concluída essa etapa, procede-se ao ajuste das resistências de cálculo da madeira por meio dos coeficientes de modificação.
+
+De acordo com o tipo de carregamento e com as condições ambientais às quais a estrutura estará submetida, adotam-se os coeficientes estabelecidos pela NBR 7190 \cite{NBR7190-1:2022}, que permitem incorporar os efeitos da duração das ações e da classe de umidade na avaliação da resistência do material. Neste exemplo foram adotados $k_{\text{mod1}} = 0{,}60$ e $k_{\text{mod2}} = 1{,}00$. Dessa forma, o $k_{mod}$ utilizado no exemplo é dado pela Equação \eqref{eq:4.6}.
+
+\begin{equation}
+k_{\text{mod}} = k_{\text{mod1}} \cdot k_{\text{mod2}} 
+               = 0{,}60 \cdot 1{,}00 
+               = 0{,}60
+\label{eq:4.6}
+\end{equation}
+
+Com os coeficientes de modificação definidos, procede-se ao cálculo das resistências de cálculo da madeira. 
+
+A resistência de cálculo em relação à flexão é apresentada na Equação \eqref{eq:fmd}
+
+\begin{equation}
+f_{md} = k_{\text{mod}} \cdot \frac{f_{mk}}{\gamma_{wf}}
+       = 0{,}60 \cdot \frac{50}{1{,}40}
+       = 21{,}43\ \text{MPa}
+\label{eq:fmd}
+\end{equation}
+
+A resistência de cálculo em relação ao cisalhamento está apresentada na Equação \eqref{eq:cisalhamento}
+
+\begin{equation}
+f_{vd} = k_{\text{mod}} \cdot \frac{f_{vk}}{\gamma_{wv}}
+       = 0{,}60 \cdot \frac{4{,}0}{1{,}80}
+       = 1{,}333\ \text{MPa}
+\label{eq:cisalhamento}       
+\end{equation}
+
+Após a definição da resistência de cálculo, procede-se à determinação dos esforços solicitantes atuantes na longarina. Inicialmente, avalia-se o momento fletor decorrente da ação permanente distribuída ao longo do vão.
+
+Inicialmente, determina-se o peso próprio do tabuleiro e da longarina, a ser utilizado nas equações de carregamento.
+
+O peso próprio do tabuleiro é dado segundo a Equação \eqref{eq:pptab}.
+
+\begin{equation}
+pp_{\text{tab}} = \rho_{\text{tab}} \cdot h_{\text{tab}} \cdot g
+               = 620 \cdot 0{,}30 \cdot 9{,}81
+               = 1{,}824\ \text{kN/m}^2
+\label{eq:pptab}               
+\end{equation}
+
+A carga distribuída proveniente do tabuleiro sobre a longarina é calculada conforme a Equação \eqref{eq:pptabpg}
+
+\begin{equation}
+P_{\text{tab+pg}} = (pp_{\text{tab}} + p_{gk}) \cdot esp_{\text{tab}}
+                  = (1{,}824 + 1{,}0) \cdot 1{,}20
+                  = 3{,}388\ \text{kN/m}
+\label{eq:pptabpg}                  
+\end{equation}
+
+O peso próprio da longarina é dado pela Equação \eqref{eq:pplon}.
+
+\begin{equation}
+pp_{\text{lon}} = \rho_{\text{lon}} \cdot A \cdot g
+                = 620 \cdot 0{,}2827 \cdot 9{,}81
+                = 1{,}719\ \text{kN/m}
+\label{eq:pplon}            
+\end{equation}
+
+Por fim, a carga permanente total atuante na longarina resultou no valor apresentado na Equação \eqref{eq:qlon}.
+\begin{equation}
+Q_{\text{lon}} = P_{\text{lon}} + pp_{\text{lon}}
+               = 3{,}3888 + 1{,}7191
+               = 5{,}108\ \text{kN/m}
+\label{eq:qlon}               
+\end{equation}
+
+No caso de cargas distribuídas uniformemente em vigas biapoiadas, o valor do momento fletor máximo é obtido pela Equação \eqref{eq:mgk}.
+
+\begin{equation}
+M_{gk} = \frac{Q_{lon} \cdot L^2}{8}
+       = \frac{5{,}108 \cdot 5{,}0^2}{8}
+       = 15{,}962,\text{kN·m}
+\label{eq:mgk}
+\end{equation}
+
+Em seguida, procede-se à avaliação do momento fletor devido às ações variáveis. Para estruturas do tipo ponte, adota-se a modelagem correspondente ao trem-tipo especificado pela norma. No presente estudo, considerou-se uma ponte situada em estrada vicinal, para a qual a NBR 7190:2022 estabelece a utilização do modelo de carregamento TB-240.
+
+Parâmetro geométrico é calculado segundo a Equação \eqref{eq:c}.
+\begin{equation}
+c = \frac{L - 4\cdot a}{2}
+  = \frac{5{,}0 - 4\cdot(1{,}5)}{2}
+  = - 0{,}5\,\text{m}
+\label{eq:c}
+\end{equation}
+
+Logo, o momento devido às rodas é dado conforme a Equação \eqref{eq:rodas}.
+\begin{equation}
+M_{qk,\text{rodas}} = \frac{3 \cdot p_{\text{rodak}} \cdot L}{4} - p_{\text{rodak}} a
+                    = \frac{3\cdot40\cdot5{,}0}{4} - 40\cdot1{,}5
+                    = 90{,}00\,\text{kN·m}
+\label{eq:rodas}
+\end{equation}
+
+% Momento devido à multidão:
+% \begin{equation}
+% M_{qk,\text{mult}} = p_{qk}\frac{c^2}{2}
+%                    = 4\times\frac{0{,}5^2}{2}
+%                    = 90{,}5,\text{kN·m}     
+% \end{equation}
+
+O coeficiente de impacto vertical é aplicado para considerar os efeitos dinâmicos das cargas móveis atuantes sobre a estrutura, sendo calculado conforme a Equação \eqref{eq:CIV}.
+
+\begin{equation}
+CIV = 1 + 1{,}06 \cdot\frac{20}{L+50}
+    = 1 + 1{,}06 \cdot \frac{20}{5{,}0 + 50}
+    = 1{,}35
+\label{eq:CIV}
+\end{equation}
+
+Sendo assim, o momento variável corrigido aplicado na combinação é dado pela Equação \eqref{eq:mgkcorr}.
+\begin{equation}
+M_{qk,\text{corrigido}} = M_{qk} \cdot [1 + 0{,}75 \cdot (CIV-1)]
+                  = 90{,}00[1 + 0{,}75 \cdot (1{,}35 - 1{,}00)]
+                  = 113{,}625\,\text{kN·m}
+\label{eq:mgkcorr}                  
+\end{equation}
+
+Logo, realiza-se a combinação última das ações permanentes e variáveis, conforme a NBR~8681 \parencite{NBR8681:2025}, para obtenção do momento solicitante de cálculo no Estado Limite Último, conforme a Equação \eqref{eq:msd}.
+
+\begin{equation}
+M_{sd} = \gamma_g \cdot M_{gk} + \gamma_q \cdot M_{qk,\text{imp}}
+       = 1{,}35\cdot15{,}962 + 1{,}50\cdot 113{,}625
+       = 191{,}99\,\text{kN·m}
+\label{eq:msd}
+\end{equation}
+
+Com os valores solicitantes e resistentes calculados, realiza-se a verificação comparando a tensão normal máxima solicitante com a resistência de cálculo da madeira à flexão, garantindo a segurança no Estado Limite Último.
+
+A tensão normal máxima na direção $x$ é determinada pela Equação \eqref{eq:sigmax}.
+\begin{equation}
+\sigma_x = \frac{M_{sd}}{W_x}
+         = \frac{191{,}99}{0{,}0212}
+         = 9\,053{,}52\ \text{kN/m}^2
+\label{eq:sigmax}
+\end{equation}
+
+A verificação à flexão é realizada por meio da função limite é calculada conforme a Equação \eqref{eq:gsigma}.
+\begin{equation}
+g = \frac{\sigma_x}{f_{md}} - 1
+  = \frac{9\,053{,}52}{21\,428{,}57} - 1
+  = -0{,}57
+\label{eq:gsigma}
+\end{equation}
+
+Como $g < 0$, o elemento é considerado \textbf{SEGURO}.
+
+Avalia-se também a segurança da longarina quanto ao cisalhamento paralelo às fibras, comparando a tensão solicitante com a resistência de cálculo ao cisalhamento.
+
+A cortante máxima decorrente da carga permanente distribuída na longarina é calculada conforme a Equação \eqref{eq:qg}.
+\begin{equation}
+Q_g = \frac{Q_{\text{lon}} \cdot L}{2}
+    = \frac{5{,}108 \cdot 5{,}0}{2}
+    = 12{,}7699\ \text{kN}
+\label{eq:qg}
+\end{equation}
+
+A cortante máxima associada às cargas móveis é determinada a partir do modelo de carregamento adotado. Para o caso analisado, obtém-se o valor conforme a Equação \eqref{eq:qq}.
+
+\begin{equation}
+Q_q = \frac{p_{\text{rodak}}}{L} \cdot \left(6 \cdot a + 3 \cdot (L - 3 \cdot a - 2 \cdot d)\right)
+    + \frac{p_{qk} \cdot (L - 3 \cdot a - 2 \cdot d)^2}{2 \cdot L}
+\end{equation}
+\begin{equation}
+Q_q = 40 \cdot \left[6 \cdot(1{,}5) + 3 \cdot (5{,}0 - 3 \cdot (1{,}5) - 2 \cdot(0{,}6))\right]
+    + \frac{4{,}0 \cdot ((5{,}0 - 3 \cdot (1{,}5) - 2 \cdot (0{,}6))^2}{2 \cdot 5{,}0}
+\end{equation}
+\begin{equation}
+Q_q = 55{,}396\ \text{kN}
+\label{eq:qq}
+\end{equation}
+
+A correção do esforço cortante devido aos efeitos dinâmicos é realizada por meio do coeficiente de impacto vertical, segundo a Equação \eqref{eq:qqcorr}.
+\begin{equation}
+Q_{q,\text{corrigido}} = Q_q \cdot \left[1 + 0{,}75 \cdot (CIV - 1)\right]
+                 = 55{,}396 \cdot \left[1 + 0{,}75 \cdot (1{,}35 - 1)\right]
+                 = 69{,}937\ \text{kN}
+\label{eq:qqcorr}
+\end{equation}
+
+O esforço cortante solicitante de cálculo é obtido pela combinação das ações permanentes e variáveis, conforme a Equação \eqref{eq:vsd}.
+
+\begin{equation}
+V_{sd} = \gamma_g \cdot Q_g + \gamma_q \cdot Q_{q,\text{aux}}
+       = 1{,}35 \cdot 12{,}7699 + 1{,}50 \cdot 69{,}937
+       = 122{,}15\ \text{kN}
+\label{eq:vsd}
+\end{equation}
+
+Tensão de cisalhamento, segundo a NBR 7190 \parencite{NBR7190-1:2022} é apresentada na Equação \eqref{eq:tausd}.
+
+\begin{equation}
+\tau_{sd} = \frac{4}{3} \cdot\frac{V_{sd}}{A}
+          = \frac{4}{3} \cdot\frac{122{,}15}{0{,}2827}
+          = 576{,}02\ \text{kN/m}^2
+\label{eq:tausd}
+\end{equation}
+
+A verificação do cisalhamento é realizada por meio da função limite definida segundo a Equação \eqref{eq:gtau}.
+
+\begin{equation}
+g = \frac{\tau_{sd}}{f_{vd}} - 1
+  = \frac{576{,}02}{1333{,}33} - 1
+  = -0{,}57
+\label{eq:gtau}
+\end{equation}
+
+Como $g < 0$, o elemento é considerado \textbf{SEGURO}.
+
+Nesta etapa verifica-se o atendimento aos Estados Limites de Serviço, comparando a flecha máxima calculada com o limite admissível prescrito pela norma.
+
+A flecha máxima decorrente da carga permanente distribuída é calculada pela Equação \eqref{eq:deltamaxg}.
+\begin{equation}
+\delta_{\text{max},g} = \frac{5 \cdot Q_{\text{lon}} \cdot L^4}{384 \cdot E_{\text{med}} \cdot I_x}
+                      = \frac{5 \cdot 5{,}108\cdot 5{,}0^4}
+       {384 \cdot 14 \cdot 10^9 \cdot 0{,}0064}
+                      = 0{,}000467\ \text{m}
+\label{eq:deltamaxg}
+\end{equation}
+
+A flecha máxima devido à carga concentrada de roda é dada pela Equação \eqref{eq:flechamax}.
+
+\begin{equation}
+\delta_{\text{max},q}
+= \frac{P_{\text{rodak}}}{48 \cdot E_{\text{med}} \cdot I_x}
+\left[
+L^3 + 2 \cdot \left(\frac{L - 2 \cdot a}{2}\right)
+\left(
+3 \cdot L^2 - 4 \cdot \left(\frac{L - 2 \cdot a}{2}\right)^2
+\right)
+\right]
+\end{equation}
+\begin{equation}
+\delta_{\text{max},q}
+= \frac{40 \cdot 10^3}{48 \cdot 14 \cdot 10^9 \cdot 0{,}0064}
+\left[
+5,0^3 + 2 \cdot (\frac{5{,}0 - 2 \cdot 1,5}{2})
+\left(
+3 \cdot 5{,}0^2 - 4 \cdot (\frac{5{,}0 - 2 \cdot 1,5}{2})^2
+\right)
+\right]
+\end{equation}
+
+\begin{equation}
+\delta_{\text{max},q} = 0{,}0025\ \text{m}
+\label{eq:flechamax}
+\end{equation}
+
+A correção da flecha variável considerando fluência e combinação quase permanente é dada pela Equação \eqref{eq:corrfle}.
+
+\begin{equation}
+\delta_{q,\text{aux}} = \psi_2 \cdot (1 + \phi) \cdot \delta_{\text{max},q}
+                      = 0{,}30 \cdot (1 + 0{,}60) \cdot 0{,}0025
+                      = 0{,}0022\ \text{m}
+\label{eq:corrfle}
+\end{equation}
+
+Logo, a flecha total de cálculo resulta no valor apresentado na Equação \eqref{eq:dsd}.
+\begin{equation}
+\delta_{sd,1} = \delta_{\text{max},g} + \delta_{q,\text{aux}}
+              = 0{,}000467 + 0{,}0022
+              = 0{,}00167 \ \text{m}
+\label{eq:dsd}
+\end{equation}
+
+O limite normativo considerando a combinação de ações é calculado conforme a Equação \eqref{eq:lim}.
+
+\begin{equation}
+\delta_{\text{lim},1} = \frac{L}{250}
+                      = \frac{5{,}0}{250}
+                      = 0{,}020\ \text{m}
+\label{eq:lim}                      
+\end{equation}
+
+A função limite é calculada segundo a Equação \eqref{eq:gf}.
+\begin{equation}
+g = \frac{\delta_{sd,1}}{\delta_{\text{lim},1}} - 1
+    = \frac{0{,}00167}{0{,}020} - 1
+    = -0{,}916
+\label{eq:gf}
+\end{equation}
+
+Como $g < 0$, o elemento é considerado \textbf{SEGURO}.
+
+O limite normativo considerando apenas a flecha variável é calculado na Equação \eqref{eq:lim2}.
+\begin{equation}
+\delta_{\text{lim},2} = \frac{L}{360}
+                      = \frac{5{,}0}{360}
+                      = 0{,}0138\ \text{m}
+\label{eq:lim2}                      
+\end{equation}
+
+Portanto, a função limite correspondente é dada pela Equação \eqref{eq:g2}.
+
+\begin{equation}
+g = \frac{\delta_{\text{max},q}}{\delta_{\text{lim},2}} - 1
+    = \frac{0{,}0025}{0{,}01389} - 1
+    = -0{,}820
+\label{eq:g2}
+\end{equation}
+
+Como $g < 0$, o elemento é considerado \textbf{SEGURO}.
+
+\subsection{Dimensionamento do tabuleiro}
+
+Nesta seção é exemplificado a verificação estrutural de um tabuleiro de ponte em madeira, onde o dimensionamento analisa a capacidade da seção transversal retangular frente aos esforços de flexão gerados por cargas permanentes e variáveis (veículos e multidão). Esse processo de dimensionamento e verificação foi o mesmo empregado na rotina de otimização empregada no software.
+
+Para o dimensionamento do tabuleiro, adota-se um vão de 1{,}20~m, correspondente ao comprimento de influência considerado na análise.
+
+Dessa forma, inicialmente determina-se resistência de cálculo à flexão segundo a Equação \eqref{eq:fmdtab}.
+
+\begin{equation}
+f_{md} = k_{mod} \cdot \frac{f_{mk}}{\gamma_{wc}} = 0,60 \cdot \frac{50\,MPa}{1,4} = 21,43\, \text{MPa}
+\label{eq:fmdtab}
+\end{equation}
+
+Após isso, determina-se a momento máximo permanente do tabuleiro, conforme a Equação \eqref{eq:Mmaxgtab}.
+
+\begin{equation}
+P_{tab} = (\rho \cdot h \cdot g + p_{gk}) \cdot b = (620 \cdot 0,30 \cdot 9,81 + 1,0) \cdot 0,10 = 0,2824\, \text{kN/m}
+\end{equation}
+
+\begin{equation}
+M_{max,g} = \frac{P_{tab} \cdot l^2}{8} = \frac{0,2824 \cdot 1,20^2}{8} = 0,0508\, \text{kN.m}
+\label{eq:Mmaxgtab}
+\end{equation}
+
+Além do peso próprio, o tabuleiro é solicitado por cargas móveis (veículos). Para representar o efeito dinâmico do movimento sobre a estrutura, aplica-se o Coeficiente de Impacto Vertical (CIV), que majora o momento fletor da carga de roda, conforme calculado na Equação \eqref{eq:mrqk}.
+
+\begin{equation}
+M_{rq,k} = \frac{P_{rodak}}{4} \cdot (L - a_{r}) = \frac{40}{4} \cdot (1,20 - 0,45) = 7,5\, \text{kN.m}
+\label{eq:mrqk}
+\end{equation}
+
+Após isso, realiza-se as correções conforme a Equação \eqref{eq:mqaux}.
+
+\begin{equation}
+M_{q,aux} = M_{rq,k} + 0,75 \cdot (CIV - 1) \cdot M_{rq,k}
+\end{equation}
+\begin{equation}
+M_{q,aux} = 7,5 + 0,75 \cdot (1,35 - 1) \cdot 7,5 = 9,4688\,\text{kN.m}
+\label{eq:mqaux}
+\end{equation}
+
+Em seguida, realiza-se a combinação para obter o momento solicitante de cálculo, segundo a Equação \eqref{eq:msd2}.
+
+\begin{equation}
+M_{sd} = M_{max,g} \cdot \gamma_g + M_{q,aux} \cdot \gamma_q
+\end{equation}
+\begin{equation}
+M_{sd} = 0,0508 \cdot 1,35 + 9,4688 \cdot 1,50 = 14,27175\, \text{kN.m}
+\label{eq:msd2}
+\end{equation}
+
+ A partir deste, determinamos a tensão máxima atuante na fibra mais externa da madeira, conforme a Equação \eqref{eq:sgx}.
+
+\begin{equation}
+\sigma_x = \frac{M_{sd}}{W_x} = \frac{14,27175}{0,0015} = 9514,5\,kN/m^2 = 9,5145\, \text{MPa}
+\label{eq:sgx}
+\end{equation}
+
+Para concluir a verificação, compara-se a tensão atuante com a capacidade resistente do material, conforme a Equação \eqref{eq:gtab}.
+
+\begin{equation}
+g = \frac{\sigma_x}{f_{md}} - 1
+  = \frac{9,5145}{21,43} - 1 = -0,556
+\label{eq:gtab}
+\end{equation}
+
+Como o índice $g$ resultou em um valor negativo $-0,556$, a tensão solicitante é inferior à resistência de cálculo. Portanto, a estrutura é considerada segura para os esforços de flexão analisados.
+
+\section{Otimização Multiobjetivo}
+
+Para exemplificar a aplicação da ferramenta, as pontes do trabalho foram otimizadas por meio da interface do software, adotando-se os intervalos das variáveis de projeto indicados na Tabela~\ref{tab:intervalos_variaveis}.
+
+\begin{table}[htpb!]
+    \centering
+    % Configura o negrito e o tamanho 11pt para a Legenda (no topo)
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Intervalos adotados para as variáveis de projeto.}
+    \label{tab:intervalos_variaveis}
+
+    % Definição da tabela formato aberto (padrão IBGE)
+    \fontsize{11pt}{13.2pt}\selectfont
+    \begin{tabular}{lcc}
+        \toprule
+        \textbf{Variável} & \textbf{Valor mínimo} & \textbf{Valor máximo} \\ \midrule
+        $d$     & 30 & 150 \\
+        $eps$ & 30 & 200 \\
+        $b_w$     & 5  & 60  \\
+        $h_s$     & 5  & 60  \\ \bottomrule
+    \end{tabular}
+
+    % Fonte com tamanho 11pt e termo em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{table}
+
+
+Prosseguindo o processo de dimensionamento da Ponte 01, o programa gera soluções viáveis otimizadas adequadas as variáveis de entrada como resultado após a otimização. A Tabela \ref{tab:solucoesviaveis} apresenta algumas das soluções da fronteira eficiente.
+
+\begin{table}[htpb!]
+    \centering
+
+    % Configuração da legenda (título da tabela)
+    \captionsetup{
+        labelfont={bf,small},
+        font={small},
+        labelsep=endash
+    }
+    \caption{Soluções viáveis para a Ponte 01.}
+    \label{tab:solucoesviaveis}
+
+    % Tamanho da fonte da tabela
+    \fontsize{11pt}{11pt}\selectfont
+    \setlength{\tabcolsep}{2pt}
+    \begin{tabular}{ccccccccccc}
+        \toprule
+        \textbf{$d$ [cm]} &
+        \textbf{esp [cm]} &
+        \textbf{$b_w$ [cm]} &
+        \textbf{$h$ [cm]} &
+        \textbf{Área [m$^2$]} &
+        \textbf{$\dfrac{\delta_{\text{total}}}{L/250}$ [-]} &
+        \textbf{Flex. long.} &
+        \textbf{Cis. long.} &
+        \textbf{Flecha long.} &
+        \textbf{Flex. tab.} \\
+        \midrule
+        46.630 & 196.401 & 5.000 & 59.912 & 0.201 & 0.292 & -0.000 & -0.115 & -0.507 & -0.550 \\
+        43.735 & 30.787 & 5.000 & 5.000 & 0.153 & 0.234 & -0.000 & -0.175 & -0.363 & -5.219 \\
+        45.304 & 159.626 & 5.000 & 34.926 & 0.179 & 0.268 & -0.000 & -0.143 & -0.447 & -0.000 \\
+        46.618 & 196.296 & 5.000 & 59.439 & 0.200 & 0.291 & -0.000 & -0.116 & -0.506 & -0.543 \\
+        46.599 & 200.000 & 5.000 & 57.693 & 0.199 & 0.291 & -0.000 & -0.116 & -0.506 & -0.504 \\
+        45.257 & 154.592 & 5.000 & 35.086 & 0.178 & 0.267 & -0.000 & -0.144 & -0.444 & -0.053 \\
+        46.268 & 200.000 & 5.000 & 49.071 & 0.193 & 0.286 & -0.000 & -0.123 & -0.491 & -0.314 \\
+        45.584 & 176.665 & 5.000 & 37.901 & 0.182 & 0.274 & -0.000 & -0.137 & -0.460 & -0.025 \\
+        44.721 & 118.709 & 5.000 & 28.028 & 0.171 & 0.256 & -0.001 & -0.156 & -0.417 & -0.003 \\
+        45.890 & 195.999 & 5.000 & 40.148 & 0.185 & 0.279 & -0.001 & -0.131 & -0.474 & -0.003 \\
+        43.886 & 51.207 & 5.000 & 10.166 & 0.156 & 0.237 & -0.000 & -0.172 & -0.372 & -0.361 \\
+        45.672 & 178.776 & 5.000 & 39.758 & 0.184 & 0.275 & -0.000 & -0.135 & -0.464 & -0.099 \\
+        44.160 & 76.360 & 5.000 & 18.268 & 0.162 & 0.244 & -0.000 & -0.167 & -0.387 & -0.002 \\
+        45.737 & 186.919 & 5.000 & 38.886 & 0.184 & 0.276 & -0.000 & -0.134 & -0.467 & -0.001 \\
+        44.225 & 80.681 & 5.000 & 19.692 & 0.163 & 0.245 & -0.001 & -0.166 & -0.391 & -0.022 \\
+        45.178 & 151.123 & 5.000 & 33.599 & 0.177 & 0.266 & -0.000 & -0.146 & -0.440 & -0.000 \\
+        46.304 & 200.000 & 5.000 & 49.724 & 0.193 & 0.286 & -0.001 & -0.123 & -0.493 & -0.332 \\
+        45.395 & 165.560 & 5.000 & 35.825 & 0.180 & 0.270 & -0.000 & -0.141 & -0.451 & -0.001 \\
+        \bottomrule
+    \end{tabular}
+
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{11pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{table}
+
+
+Além da tabela, pode-se analisar a fronteira eficiente pela Figura~\ref{fig:fronteira_eficiente} que ilustra a relação entre a área total de madeira e a flecha total adimensional das soluções pertencentes à fronteira eficiente para a Ponte~01. Observa-se uma tendência crescente entre as variáveis, evidenciando o compromisso típico de problemas de otimização estrutural entre rigidez e economia de material.
+
+\clearpage
+\begin{figure}[htpb!]
+    \centering
+    % Configura o negrito e o tamanho 11pt para a Legenda no topo
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Fronteira eficiente - Ponte 01.}
+    \label{fig:fronteira_eficiente}
+
+    % Imagem centralizada
+    \includegraphics[width=0.5\textwidth]{template_eca_ufsc_abnt/figuras/z_fronteira_eficiente.png}
+
+    % Fonte com tamanho 11pt e "Fonte:" em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{figure}
+
+Analisando a figura, observa-se que para valores de flecha adimensional da ordem de $0{,}24$, correspondentes a soluções mais rígidas, a área total de madeira é de $0{,}16~\text{m}^2$. Por outro lado, soluções associadas a flechas adimensionais próximas de $0{,}29$, que se aproximam do limite admissível de serviço, demandam uma área total de madeira da ordem de $0{,}200~\text{m}^2$.
+
+% Comparando-se os a fronteira eficiente em relação ao mínimo e máximo, verifica-se que o aumento da flecha adimensional de aproximadamente $20\%$ resulta em um acréscimo de cerca de $25\%$ no consumo de madeira em relação à solução mais econômica. Esse comportamento evidencia que soluções estruturalmente mais rígidas exigem um maior volume de material, enquanto soluções que operam mais próximas do limite admissível de deslocamentos permitem uma redução significativa no consumo de madeira.
+
+Além disso, para a demonstração da eficiência da ferramenta proposta, empregou-se o método de Monte Carlo para ilustrar o conjunto de soluções dominadas obtidas a partir de um dimensionamento sem estratégia de otimização. A Figura~\ref{fig:monte_carlo} apresenta a comparação entre as soluções geradas pelo método de Monte Carlo e as obtidas por meio do algoritmo de otimização, evidenciando a superioridade do método otimizado na identificação de soluções mais eficientes.
+
+\begin{figure}[htpb!]
+    \centering
+    % Configura o negrito e o tamanho 11pt para a Legenda no topo
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Comparação entre os métodos - Ponte 01.}
+    \label{fig:monte_carlo}
+
+    % Imagem centralizada
+    \includegraphics[width=0.5\textwidth]{template_eca_ufsc_abnt/figuras/z_fronteira_eficiente_vs_monte_carlo.png}
+
+    % Fonte com tamanho 11pt e "Fonte:" em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{figure}
+
+% Ilustrando as soluções vamos pegar a solução xxxx e mostrar que ela pe dominada em relação a uma solução obtida via NSGA-II.
+
+Nesse contexto, a otimização multiobjetiva mostrou-se capaz de gerar soluções que exploram de forma eficiente o limite de serviço, permitindo ao projetista selecionar configurações estruturalmente seguras e, ao mesmo tempo, economicamente mais vantajosas, de acordo com os critérios de projeto adotados.
+
+% A Tabela~\ref{tab:comparacao_mc_fronteira} apresenta a comparação entre uma solução viável obtida pelo método de Monte Carlo e uma solução pertencente à fronteira eficiente determinada pelo algoritmo de otimização multiobjetivo. Observa-se que a solução obtida via Monte Carlo apresenta uma área total de madeira significativamente maior, da ordem de $0{,}69~\text{m}^2$, enquanto a solução da fronteira eficiente utiliza aproximadamente $0{,}20~\text{m}^2$, representando uma redução superior a $70\%$ no consumo de material.
+
+% \begin{table}[htpb!]
+%     \centering
+%     % Configura o negrito e o tamanho 11pt para a Legenda (no topo)
+%     \captionsetup{
+%         labelfont={bf,small}, 
+%         font={small},
+%         labelsep=endash
+%     }
+%     \caption{Comparação entre uma solução obtida pelo método de Monte Carlo e uma solução pertencente à fronteira eficiente.}
+%     \label{tab:comparacao_mc_fronteira}
+
+%     % Definição da tabela formato aberto (padrão IBGE) com ajuste de espaçamento
+%     \fontsize{11pt}{13.2pt}\selectfont
+%     \setlength{\tabcolsep}{2pt} % Ajusta o espaço entre colunas para caber na página
+%     \begin{tabular}{lcccccccccc}
+%         \toprule
+%         \textbf{Método} & \textbf{$d$ (cm)} & \textbf{$esp$ (cm)} & \textbf{$bw$ (cm)} & \textbf{$h$ (cm)} & \textbf{Área (m$^2$)} & \textbf{$\delta$ (-)} & \textbf{Flex. v.} & \textbf{Cis. v.} & \textbf{$\delta$ v.} & \textbf{Flex. t.} \\ \midrule
+%         Monte Carlo & 75,23 & 102,47 & 56,55 & 43,10 & 0,6883 & 0,0361 & -0,779 & -0,745 & -0,927 & -0,970 \\
+%         Fronteira eficiente & 46,63 & 196,40 & 5,00 & 59,91 & 0,2010 & 0,2920 & -0,000 & -0,115 & -0,507 & -0,550 \\ \bottomrule
+%     \end{tabular}
+
+%     % Fonte com tamanho 11pt e termo em negrito
+%     \vspace{0.1cm}
+%     \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+% \end{table}
+
+% Em termos de desempenho em serviço, a solução de Monte Carlo apresenta uma flecha adimensional muito inferior ao limite admissível, com $\delta = 0{,}036$, evidenciando um comportamento excessivamente conservador. Em contrapartida, a solução da fronteira eficiente apresenta $\delta = 0{,}292$, valor significativamente mais próximo do limite normativo, caracterizando uma utilização mais racional da capacidade deformacional da estrutura.
+
+Dessa forma, a partir da análise é notório a limitação do método de Monte Carlo na identificação de soluções estruturalmente eficientes, enquanto a otimização multiobjetivo se mostra eficaz na redução do consumo de material e na maximização do desempenho estrutural em termos de flechas, fornecendo ao projetista soluções mais equilibradas do ponto de vista técnico e econômico.
+
+Por fim, o processo foi repetido para a Ponte 02, onde utiliza-se o TB-450 como trem tipo e os resultados são ilustrados nas Figuras \ref{fig:fronteira_eficiente2} e \ref{fig:monte_carlo2}. A partir das figuras, observa-se que os resultados obtidos para a Ponte 02 apresentam comportamento qualitativamente semelhante aos verificados na Ponte 01. De modo geral, a tendência de variação das áreas e das flechas manteve-se consistente, indicando que o modelo computacional responde de maneira coerente à alteração do trem-tipo. Em termos estruturais, verificou-se padrão similar de distribuição dos esforços e influência do coeficiente de impacto vertical, mantendo-se a relação entre rigidez, consumo de material e deslocamentos máximos. Dessa forma, confirma-se a robustez da metodologia adotada, independentemente da configuração de carregamento considerada.
+
+\begin{figure}[htpb!]
+    \centering
+    % Configura o negrito e o tamanho 11pt para a Legenda no topo
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Fronteira eficiente - Ponte 02.}
+    \label{fig:fronteira_eficiente2}
+
+    % Imagem centralizada
+    \includegraphics[width=0.5\textwidth]{template_eca_ufsc_abnt/figuras/z_fronteira_eficiente _viga2.png}
+
+    % Fonte com tamanho 11pt e "Fonte:" em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{figure}
+
+\clearpage
+\begin{figure}[htpb!]
+    \centering
+    % Configura o negrito e o tamanho 11pt para a Legenda no topo
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Comparação entre os métodos - Ponte 02.}
+    \label{fig:monte_carlo2}
+
+    % Imagem centralizada
+    \includegraphics[width=0.5\textwidth]{template_eca_ufsc_abnt/figuras/z_fronteira_eficiente_vs_monte_carlo_viga2.png}
+
+    % Fonte com tamanho 11pt e "Fonte:" em negrito
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+\end{figure}
+
+
+
+\subsection{Análise entre as soluções da Ponte 1 e da Ponte 2}
+
+% Considerando os intervalos de área total de madeira associados às soluções pertencentes à fronteira eficiente de cada ponte, observa-se uma diferença no consumo de material entre os dois cenários analisados. Ressalta-se que ambas as estruturas possuem a mesma configuração geométrica e propriedades mecânicas, diferenciando-se exclusivamente pelo trem-tipo adotado, o que evidencia a influência direta do carregamento móvel nos resultados da otimização.
+
+% A Ponte~1, submetida ao trem-tipo TB-240, apresenta áreas totais de madeira variando aproximadamente entre $0{,}16~\text{m}^2$ e $0{,}20~\text{m}^2$. Já a Ponte~2, dimensionada para o trem-tipo TB-450, apresenta áreas situadas entre $0{,}23~\text{m}^2$ e $0{,}27~\text{m}^2$, refletindo a maior intensidade das ações móveis consideradas e a necessidade de maior rigidez estrutural para atender aos estados limites últimos e de serviço.
+
+% Ao se comparar os valores médios desses intervalos, verifica-se que a área média da Ponte~2 é da ordem de $0{,}25~\text{m}^2$, enquanto a da Ponte~1 é aproximadamente $0{,}18~\text{m}^2$. Isso representa um aumento percentual de cerca de $39\%$ no consumo de madeira da Ponte~2 em relação à Ponte~1. Esse aumento evidencia o impacto direto do aumento das solicitações provenientes do trem-tipo TB-450 sobre o dimensionamento ótimo das seções transversais.
+
+% Quando se analisam os limites inferiores dos intervalos, a Ponte~2 apresenta uma área mínima cerca de $44\%$ superior à da Ponte~1 ($0{,}23~\text{m}^2$ contra $0{,}16~\text{m}^2$). De forma análoga, considerando os limites superiores, observa-se um acréscimo aproximado de $35\%$ na área total de madeira da Ponte~2 em relação à Ponte~1 ($0{,}27~\text{m}^2$ frente a $0{,}20~\text{m}^2$). Esses resultados indicam que, ao longo de toda a fronteira eficiente, a influência do trem-tipo mais carregado conduz sistematicamente a soluções com maior volume de material.
+
+% Do ponto de vista do desempenho em serviço, esse aumento percentual de material na Ponte~2 reflete-se em uma redução relativa do fator de flecha normalizado $\delta_{total}/(L/250)$, indicando um comportamento estrutural mais rígido e menor sensibilidade às deformações verticais. Em contrapartida, a Ponte~1, ao operar com seções mais esbeltas, apresenta valores do fator de flecha mais próximos do limite admissível, caracterizando uma utilização mais eficiente do material, porém com menor margem de rigidez global. Esse comportamento evidencia o compromisso típico de problemas multiobjetivo entre economia de material e controle de deslocamentos.
+
+% Dessa forma, a análise percentual evidencia que a adoção do trem-tipo TB-450 implica um acréscimo da ordem de $35\%$ a $44\%$ no consumo de madeira quando comparado ao cenário TB-240, resultado diretamente associado ao aumento das solicitações de projeto. Esses resultados confirmam a coerência estrutural do modelo de otimização e reforçam a capacidade da abordagem multiobjetivo em quantificar o impacto do carregamento adotado nas decisões de dimensionamento, fornecendo subsídios técnicos relevantes para a escolha da solução ótima em projetos de pontes de madeira.
+
+Considerando os intervalos de área total de madeira associados às soluções pertencentes à fronteira eficiente de cada ponte, observa-se uma diferença significativa no consumo de material entre os dois cenários analisados. Ressalta-se que ambas as estruturas possuem a mesma configuração geométrica e propriedades mecânicas, diferenciando-se exclusivamente pelo trem-tipo adotado, o que evidencia a influência direta do carregamento móvel nos resultados da otimização.
+
+A Tabela~\ref{tab:comparacao_areas} apresenta um resumo comparativo das áreas totais de madeira obtidas para cada cenário, incluindo os valores mínimos, máximos e médios, bem como os acréscimos percentuais observados na Ponte~2 em relação à Ponte~1.
+
+\begin{table}[htpb!]
+    \centering
+    % Configura o negrito e o tamanho 11pt para a legenda (no topo)
+    \captionsetup{
+        labelfont={bf,small}, 
+        font={small},
+        labelsep=endash
+    }
+    \caption{Comparação das áreas totais de madeira para os diferentes cenários de carregamento}
+    \label{tab:comparacao_areas}
+
+    % Tamanho da fonte da tabela
+    \fontsize{11pt}{13.2pt}\selectfont
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{Cenário} & \textbf{Mínimo (m²)} & \textbf{Máximo (m²)} & \textbf{Média (m²)} \\ 
+        \midrule
+        Ponte 01 (TB-240) & 0,16 & 0,20 & 0,18 \\
+        Ponte 02 (TB-450) & 0,23 & 0,27 & 0,25 \\
+        \midrule
+        \textbf{Acréscimo (\%)} & \textbf{+44\%} & \textbf{+35\%} & \textbf{+39\%} \\
+        \bottomrule
+    \end{tabular}
+
+    % Fonte no padrão do seu modelo
+    \vspace{0.1cm}
+    \par {\fontsize{11pt}{13.2pt}\selectfont \textbf{Fonte:} Própria autora (2026).}
+
+\end{table}
+
+Observa-se que a Ponte~1, submetida ao trem-tipo TB-240, apresenta áreas totais variando entre $0{,}16~\text{m}^2$ e $0{,}20~\text{m}^2$, enquanto a Ponte~2, dimensionada para o trem-tipo TB-450, apresenta valores entre $0{,}23~\text{m}^2$ e $0{,}27~\text{m}^2$. Esse comportamento reflete diretamente a maior intensidade das ações móveis consideradas no segundo cenário, o que exige maior rigidez estrutural para o atendimento simultâneo aos estados limites últimos e de serviço.
+
+A partir dos valores apresentados na Tabela~\ref{tab:comparacao_areas}, verifica-se que o aumento do carregamento móvel resulta em um acréscimo expressivo no consumo de material ao longo de toda a fronteira eficiente, com incrementos variando entre $35\%$ e $44\%$, e valor médio de aproximadamente $39\%$. Esse resultado evidencia o impacto direto do trem-tipo mais severo no dimensionamento ótimo das seções transversais.
+
+Do ponto de vista do desempenho em serviço, esse aumento de material na Ponte~2 contribui para a redução relativa do fator de flecha normalizado $\delta_{total}/(L/250)$, indicando maior rigidez global e menor sensibilidade às deformações verticais. Em contrapartida, a Ponte~1, ao utilizar seções mais esbeltas, apresenta valores de flecha mais próximos do limite admissível, caracterizando uma solução estrutural mais eficiente em termos de economia de material, porém com menor margem de rigidez.
+
+Dessa forma, os resultados apresentados confirmam que a adoção do trem-tipo TB-450 implica um aumento sistemático no consumo de madeira, consequência direta da elevação das solicitações de projeto. Essa tendência demonstra a coerência física e estrutural dos resultados obtidos e reforça a capacidade da abordagem de otimização multiobjetivo em quantificar, de forma objetiva, o impacto do carregamento móvel nas decisões de dimensionamento.
