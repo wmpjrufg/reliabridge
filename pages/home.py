@@ -180,17 +180,17 @@ except Exception:
 # TÍTULO
 # -----------------------------------------------------------
 st.markdown(
-    f"""
-    <h1 style="text-align:center;margin-bottom:0">
-    {t["title"]}
-    </h1>
+                f"""
+                <h1 style="text-align:center;margin-bottom:0">
+                {t["title"]}
+                </h1>
 
-    <h4 style="text-align:center;color:gray;margin-top:0">
-    {t["subtitle"]}
-    </h4>
-    """,
-    unsafe_allow_html=True
-)
+                <h4 style="text-align:center;color:gray;margin-top:0">
+                {t["subtitle"]}
+                </h4>
+                """,
+                unsafe_allow_html=True
+            )
 
 st.divider()
 
