@@ -34,6 +34,23 @@ lang = st.session_state.get("lang", "pt")
 textos = textos_pre_sizing_l()
 t = textos.get(lang, textos["pt"])
 
+CLASSE_CARREGAMENTO_MAP = {
+    "permanent": "permanente",
+    "long-term": "longa duração",
+    "medium-term": "média duração",
+    "short-term": "curta duração",
+    "instantaneous": "instantânea",
+}
+CLASSE_MADEIRA_MAP = {
+    "solid timber": "madeira natural",
+    "engineered timber": "madeira recomposta",
+}
+
+
+def normalizar_opcao(valor: str, mapa: dict[str, str]) -> str:
+    valor_normalizado = str(valor).strip().lower()
+    return mapa.get(valor_normalizado, valor_normalizado)
+
 st.header(t["titulo"])
 with st.container():
     st.markdown(t["pre"])
@@ -57,7 +74,7 @@ with st.form("form_geometria", clear_on_submit=False):
     col1, col2 = st.columns(2)
     with col1:
         tipo_secao_longarina = st.selectbox(t["entrada_tipo_secao_longarina"], t["tipo_secao_longarina"], key="tipo_secao_longarina")
-        if tipo_secao_longarina.lower() == "circular":
+        if str(tipo_secao_longarina).lower() == "circular":
             d_cm_min = st.number_input(t["diametro_minimo"], min_value=1.0, key="d_cm_min")
             d_cm_max = st.number_input(t["diametro_maximo"], min_value=1.0, key="d_cm_max")
         else:
@@ -67,7 +84,7 @@ with st.form("form_geometria", clear_on_submit=False):
 
     with col2:
         tipo_secao_tabuleiro = st.selectbox(t["tipo_secao_tabuleiro"], t["tipo_secao_tabuleiro_opcoes"], key="tipo_secao_tabuleiro")
-        if tipo_secao_tabuleiro.lower() == "retangular":
+        if str(tipo_secao_tabuleiro).lower() in ["retangular", "rectangular"]:
             bw_min  = st.number_input(t["largura_viga_tabuleiro_min"], key="bw_min")
             bw_max  = st.number_input(t["largura_viga_tabuleiro_max"], key="bw_max")
             h_min   = st.number_input(t["altura_viga_tabuleiro_min"], key="h_min")
@@ -76,6 +93,18 @@ with st.form("form_geometria", clear_on_submit=False):
             bw_min = bw_max = h_min = h_max = None
         n_min_tab = st.number_input(t["espaço_min_tabuleiros"], value=0.0, min_value=0.0, key="n_min_tab")
         n_max_tab = st.number_input(t["espaço_max_tabuleiros"], value=0.0, min_value=0.0, key="n_max_tab")
+
+    st.divider()
+
+    st.subheader(t["robustez_t"])
+    perc_robustez = st.number_input(
+        t["percentual_robustez"],
+        min_value=0.0,
+        value=5.0,
+        step=0.1,
+        format="%.2f",
+        key="perc_robustez",
+    )
 
     st.divider()
 
@@ -164,8 +193,8 @@ dados_projeto = {
                     f"{t['carga_roda']} (kN)": p_rodak,
                     f"{t['carga_multidao']} (kPa)": p_qk,
                     f"{t['distancia_eixos']} (m)": a,
-                    f"{t['classe_carregamento']}": classe_carregamento_raw.lower(),
-                    f"{t['classe_madeira']}": classe_madeira_raw.lower(),
+                    f"{t['classe_carregamento']}": normalizar_opcao(classe_carregamento_raw, CLASSE_CARREGAMENTO_MAP),
+                    f"{t['classe_madeira']}": normalizar_opcao(classe_madeira_raw, CLASSE_MADEIRA_MAP),
                     f"{t['classe_umidade']}": classe_umidade,
                     f"{t['gamma_g']}": gamma_g,
                     f"{t['gamma_q']}": gamma_q,
@@ -173,6 +202,7 @@ dados_projeto = {
                     f"{t['gamma_wf']}": gamma_wf,
                     f"{t['psi2']}": psi_2,
                     f"{t['considerar_fluencia']}": fluencia,
+                    f"{t['percentual_robustez']}": perc_robustez,
                     f"{t['densidade_long']} (kg/m³)": densidade_long,
                     f"{t['f_mk']} (MPa)": f_mk_mpa,
                     f"{t['f_vk']} (MPa)": f_vk_mpa,
@@ -210,7 +240,7 @@ if submitted_design:
     # ------------------------------------------------------------
     # Variáveis de otimização - Longarinas
     # ------------------------------------------------------------
-    if tipo_secao_longarina.lower() == "circular":
+    if str(tipo_secao_longarina).lower() == "circular":
         if d_cm_min is None or d_cm_min <= 0:
             erros.append(f"- {t['diametro_minimo']}")
         if d_cm_max is None or d_cm_max <= 0:
@@ -223,7 +253,7 @@ if submitted_design:
     # ------------------------------------------------------------
     # Variáveis de otimização - Tabuleiro
     # ------------------------------------------------------------
-    if tipo_secao_tabuleiro.lower() == "retangular":
+    if str(tipo_secao_tabuleiro).lower() in ["retangular", "rectangular"]:
         if bw_min is None or bw_min <= 0:
             erros.append(f"- {t['largura_viga_tabuleiro_min']}")
         if bw_max is None or bw_max <= 0:
@@ -266,6 +296,8 @@ if submitted_design:
         erros.append(f"- {t['psi2']}")
     if fluencia <= 0:
         erros.append(f"- {t['considerar_fluencia']}")
+    if perc_robustez < 0:
+        erros.append(f"- {t['percentual_robustez']}")
 
     # ------------------------------------------------------------
     # Propriedades da madeira
@@ -302,7 +334,11 @@ if submitted_design:
     n_p_tab  = [float(n_min_tab),  float(n_max_tab)]
 
     # NSGA-II
-    res_nsga = chamando_nsga2(dados_projeto, ds, bws, hs, n_p_long, n_p_tab, t)
+    try:
+        res_nsga = chamando_nsga2(dados_projeto, ds, bws, hs, n_p_long, n_p_tab, t)
+    except ValueError as exc:
+        st.error(str(exc))
+        st.stop()
 
     # padroniza DataFrame final (PT/EN)
     if lang == "pt":
@@ -311,30 +347,36 @@ if submitted_design:
                                         "esp_cm": res_nsga["esp [cm]"].tolist(),
                                         "bw_cm": res_nsga["bw [cm]"].tolist(),
                                         "h_cm": res_nsga["h [cm]"].tolist(),
-                                        "area_m2": res_nsga["area [m²]"].tolist(),
-                                        "deflecção": res_nsga["delta [-]"].tolist(),
+                                        "esp_tab_cm": res_nsga["esp tab [cm]"].tolist(),
+                                        "of_area_m2": res_nsga["area [m²]"].tolist(),
+                                        "of_fator_flecha": res_nsga["delta [-]"].tolist(),
                                         "longarina_g_m": res_nsga["flex lim beam [(Ms-Mr)/Mr]"].tolist(),
                                         "longarina_g_v": res_nsga["cis lim beam [(Vs-Vr)/Vr]"].tolist(),
                                         "longarina_g_f": res_nsga["delta lim beam [(ps-pr)/pr]"].tolist(),
                                         "tabuleiro_g_m": res_nsga["flex lim deck [(Ms-Mr)/Mr]"].tolist(),
+                                        "longarina_g_esp": res_nsga["spacing beam"].tolist(),
+                                        "tabuleiro_g_esp": res_nsga["spacing deck"].tolist(),
                                     })
-        x = df_resultados["area_m2"].to_numpy()
-        y = df_resultados["deflecção"].to_numpy()
+        x = df_resultados["of_area_m2"].to_numpy()
+        y = df_resultados["of_fator_flecha"].to_numpy()
     else:
         df_resultados = pd.DataFrame({
                                         "d_cm": res_nsga["d [cm]"].tolist(),
                                         "esp_cm": res_nsga["esp [cm]"].tolist(),
                                         "bw_cm": res_nsga["bw [cm]"].tolist(),
                                         "h_cm": res_nsga["h [cm]"].tolist(),
-                                        "area_m2": res_nsga["area [m²]"].tolist(),
-                                        "deflection": res_nsga["delta [-]"].tolist(),
+                                        "deck_spacing_cm": res_nsga["esp tab [cm]"].tolist(),
+                                        "of_area_m2": res_nsga["area [m²]"].tolist(),
+                                        "of_deflection_factor": res_nsga["delta [-]"].tolist(),
                                         "beam_g_m": res_nsga["flex lim beam [(Ms-Mr)/Mr]"].tolist(),
                                         "beam_g_v": res_nsga["cis lim beam [(Vs-Vr)/Vr]"].tolist(),
                                         "beam_g_f": res_nsga["delta lim beam [(ps-pr)/pr]"].tolist(),
                                         "deck_g_m": res_nsga["flex lim deck [(Ms-Mr)/Mr]"].tolist(),
+                                        "beam_g_spacing": res_nsga["spacing beam"].tolist(),
+                                        "deck_g_spacing": res_nsga["spacing deck"].tolist(),
                                     })
-        x = df_resultados["area_m2"].to_numpy()
-        y = df_resultados["deflection_m"].to_numpy()
+        x = df_resultados["of_area_m2"].to_numpy()
+        y = df_resultados["of_deflection_factor"].to_numpy()
 
     # Excel dos resultados
     excel_bytes_resultados = montar_excel_df(df_resultados)
@@ -370,7 +412,7 @@ if st.session_state.get("has_results", False):
     st.subheader(t["gerador_desempenho"])
     st.dataframe(st.session_state["df_resultados"], use_container_width=True)
 
-    st.subheader("Fronteira eficiente – Pré-dimensionamento")
+    st.subheader(t["fronteira_head"])
     col_left, col_center, col_right = st.columns([1, 2, 1])
     with col_center:
         st.image(st.session_state["fig_png"])

@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import os
 import io
+import unicodedata
 from io import BytesIO
 from scipy import stats as st
 
@@ -64,30 +65,40 @@ def restringir_espaco(esp: float, esp_min: float, esp_max: float, comp: float, l
         Espaçamento uniforme corrigido resultante.
     """
    
-    n_cont        = (comp + esp) / (largura_peca + esp)
-    candidatos    = sorted(set([int(np.floor(n_cont)), int(np.ceil(n_cont))]))
-    pior_g        = -np.inf
-    pior_n        = None
-    pior_esp_corr = None
+    if esp < 0 or esp_max <= 0 or comp <= 0 or largura_peca <= 0:
+        return np.inf, 0, np.nan
+
+    n_cont = (comp + esp) / (largura_peca + esp)
+    candidatos = sorted(set([int(np.floor(n_cont)), int(np.ceil(n_cont))]))
+    melhor_g = np.inf
+    melhor_n = None
+    melhor_esp_corr = None
+    melhor_chave = (True, np.inf, np.inf)
 
     for n in candidatos:
         if n < 2:
             continue
         sobra = comp - n * largura_peca
         if sobra < 0:
-            g = np.inf
-            esp_corr = None
-        else:
-            esp_corr = sobra / (n - 1)
+            continue
+
+        esp_corr = sobra / (n - 1)
         # restrições normalizadas
-        g_min = (esp_min - esp_corr) / esp_min
+        g_min = (esp_min - esp_corr) / esp_min if esp_min > 0 else -np.inf
         g_max = (esp_corr - esp_max) / esp_max
         g = max(g_min, g_max)
 
-        if g > pior_g:
-            pior_g = g
+        chave = (g > 0.0, max(g, 0.0), abs(esp_corr - esp))
+        if chave < melhor_chave:
+            melhor_chave = chave
+            melhor_g = g
+            melhor_n = n
+            melhor_esp_corr = esp_corr
 
-    return pior_g, (candidatos[0]+candidatos[1])/2
+    if melhor_n is None:
+        return np.inf, 0, np.nan
+
+    return melhor_g, melhor_n, melhor_esp_corr
 
 
 def beta_from_pf(pf: float) -> float:
@@ -988,6 +999,8 @@ def textos_pre_sizing_l() -> dict:
                                     - **dimensões das pranchas do tabuleiro**;
                                     - **número de peças do tabuleiro**.
 
+                                    O **percentual de robustez** representa a variação considerada nas variáveis de projeto durante a otimização. Por exemplo, ao informar **5%**, cada solução candidata é avaliada também com pequenas perturbações de até ±5% nas variáveis, permitindo buscar geometrias menos sensíveis a variações dimensionais e incertezas de execução. O valor **0%** corresponde a uma otimização determinística, sem perturbações.
+
                                     Os **valores iniciais da quantidade de peças** apresentadas no formulário são calculados automaticamente com base nas **dimensões mínimas informadas pelo usuário**, como o diâmetro das longarinas e as dimensões das seções do tabuleiro. Esses valores podem ser **ajustados manualmente**, caso o usuário deseje explorar outras configurações de projeto.
 
                                     Além disso, o usuário poderá definir:
@@ -1030,6 +1043,8 @@ def textos_pre_sizing_l() -> dict:
                         "gamma_wf": "γwf - Flexão",
                         "psi2": "ψ2",
                         "considerar_fluencia": "Coeficiente para fluência Tabela 20 NBR 7190",
+                        "robustez_t": "Robustez da otimização",
+                        "percentual_robustez": "Percentual de robustez",
                         "densidade_long": "Densidade da madeira (kg/m³) da longarina",
                         "f_mk": "Resistência característica à flexão (MPa) da longarina",
                         "f_vk": "Resistência característica ao cisalhamento (MPa) da longarina",
@@ -1037,6 +1052,7 @@ def textos_pre_sizing_l() -> dict:
                         "densidade_tab": "Densidade da madeira (kg/m³) do tabuleiro",
                         "f_mk_tab": "Resistência característica à flexão (MPa) do tabuleiro",
                         "gerador_desempenho": "Gerar desempenho estrutural via NSGA-II para pré-dimensionamento",
+                        "fronteira_head": "Fronteira eficiente – Pré-dimensionamento",
                         "geometria_t": "Dados de geometria",
                         "variaveis_otimizacao": "Variáveis de otimização",
                         "cargas_projeto": "Cargas atuantes no projeto",
@@ -1069,6 +1085,8 @@ def textos_pre_sizing_l() -> dict:
                             - **number of stringers**;
                             - **deck plank dimensions**;
                             - **number of deck elements**.
+
+                            The **robustness percentage** represents the variation considered in the design variables during optimization. For example, when **5%** is entered, each candidate solution is also evaluated with small perturbations of up to ±5% in the variables, helping identify geometries that are less sensitive to dimensional variation and construction uncertainty. A value of **0%** corresponds to deterministic optimization, without perturbations.
 
                             The **initial values for the number of elements** displayed in the form are automatically calculated based on the **minimum dimensions provided by the user**, such as the stringer diameter and the deck section dimensions. These values can be **manually adjusted** if the user wishes to explore alternative design configurations.
 
@@ -1112,6 +1130,8 @@ def textos_pre_sizing_l() -> dict:
                     "gamma_wf": "γwf - Bending",
                     "psi2": "ψ2",
                     "considerar_fluencia": "Creep coefficient - Table 20 of NBR 7190",
+                    "robustez_t": "Optimization robustness",
+                    "percentual_robustez": "Robustness percentage",
                     "densidade_long": "Timber density (kg/m³) of the stringer",
                     "f_mk": "Characteristic bending strength (MPa) of the stringer",
                     "f_vk": "Characteristic shear strength (MPa) of the stringer",
@@ -1119,6 +1139,7 @@ def textos_pre_sizing_l() -> dict:
                     "densidade_tab": "Timber density (kg/m³) of the deck",
                     "f_mk_tab": "Characteristic bending strength (MPa) of the deck",
                     "gerador_desempenho": "Generate structural performance via NSGA-II for preliminary design",
+                    "fronteira_head": "Efficient frontier – Preliminary design",
                     "geometria_t": "Geometry data",
                     "variaveis_otimizacao": "Optimization variables",
                     "cargas_projeto": "Design loads",
@@ -1357,7 +1378,7 @@ class ProjetoOtimo(ElementwiseProblem):
                     n_max_long: float,
                     n_min_tab: float,
                     n_max_tab: float,
-                    n_checagens: int = 10,
+                    n_checagens: int = 30,
                     perc_robustez: float = 5.0
                 ):
         """Inicialização das variáveis do problema de otimização/confiabilidade estrutural.
@@ -1430,6 +1451,7 @@ class ProjetoOtimo(ElementwiseProblem):
         self.n_max_tab              = int(n_max_tab)
         self.n_checagens            = int(n_checagens)
         self.perc_robustez          = float(perc_robustez)
+        self.multiplicadores_robustez = self._criar_multiplicadores_robustez()
         xl = np.array([d_min, bw_min, h_min, n_min_long, n_min_tab], dtype=float)
         xu = np.array([d_max, bw_max, h_max, n_max_long, n_max_tab], dtype=float)
 
@@ -1441,6 +1463,15 @@ class ProjetoOtimo(ElementwiseProblem):
                             xu           = xu,
                             elementwise_evaluation=True
                         )
+
+    def _criar_multiplicadores_robustez(self) -> np.ndarray:
+        rho = self.perc_robustez / 100.0
+        if rho <= 0.0 or self.n_checagens <= 1:
+            return np.ones((1, 5), dtype=float)
+
+        rng = np.random.default_rng(1)
+        xi = rng.uniform(-1.0, 1.0, size=(self.n_checagens, 5))
+        return 1.0 + rho * xi
 
     def calcular_objetivos_restricoes_otimizacao(self, d: float, bw: float, h: float, n_long: float, n_tab: float) -> tuple[list, list, dict, dict, dict, dict, dict, dict, dict]:
         """Determina os objetivos e restrições do problema de otimização.
@@ -1472,8 +1503,8 @@ class ProjetoOtimo(ElementwiseProblem):
         esp_max_long    = self.n_max_long / 100.0                # [m]
         esp_min_tab     = self.n_min_tab / 100.0                 # [m]
         esp_max_tab     = self.n_max_tab / 100.0                 # [m]
-        n_long          = float(n_long)
-        n_tab           = float(n_tab)
+        esp_long        = float(n_long) / 100.0                  # [m]
+        esp_tab         = float(n_tab) / 100.0                   # [m]
         f_mk_long       = self.f_mk_long *1E3                    # [kPa]
         f_vk_long       = self.f_vk_long * 1E3                   # [kPa]
         e_modflex_long  = self.e_modflex_long * 1E6              # [kPa]
@@ -1482,16 +1513,16 @@ class ProjetoOtimo(ElementwiseProblem):
         densidade_tab   = self.densidade_tab * 9.81 / 1000.0     # [kN/m3]
 
         # Armazena o geometria
-        geo_tab = {"b_w": bw, "h": h}
+        geo_tab  = {"b_w": bw, "h": h}
         geo_long = {"d": d}
 
         # Restrição de preenchimento do espaço disponível para longarina e tabuleiro
-        g5, num_longs = restringir_espaco(n_long, esp_min_long, esp_max_long, bw_pista, d)
-        g6, num_tabss = restringir_espaco(n_tab, esp_min_tab, esp_max_tab, l, bw)
+        g5, num_longs, esp_long_corr = restringir_espaco(esp_long, esp_min_long, esp_max_long, bw_pista, d)
+        g6, num_tabss, esp_tab_corr  = restringir_espaco(esp_tab, esp_min_tab, esp_max_tab, l, bw)
 
         # Carga permanente do tabuleiro que atua na longarina
         carga_area_tab = (densidade_tab * num_tabss * (h * bw * bw_pista)) / (bw_pista * l)  # [kPa]            
-        p_gk_long      = (self.p_gk + carga_area_tab) * n_long                               # [kN/m]
+        p_gk_long      = (self.p_gk + carga_area_tab) * esp_long_corr                        # [kN/m]
         props_long     = prop_madeiras(geo_long)
         area_long      = props_long[0]
         pp_gk_long     = peso_proprio_longarina(densidade_long, area_long)                   # [kN/m]
@@ -1521,14 +1552,23 @@ class ProjetoOtimo(ElementwiseProblem):
 
         # Carga permanente do tabuleiro que atua no tabuleiro
         p_gtabk = (carga_area_tab + self.p_gk) * bw
-        relat_carga = {"pp_tab [kPa]": carga_area_tab, "p_gtabk [kN/m]": p_gtabk, "pp_gk_long [kN/m]": pp_gk_long, "p_glongk [kN/m]": p_gk_long}
+        relat_carga = {
+                            "pp_tab [kPa]": carga_area_tab,
+                            "p_gtabk [kN/m]": p_gtabk,
+                            "pp_gk_long [kN/m]": pp_gk_long,
+                            "p_glongk [kN/m]": p_gk_long,
+                            "num_longs": num_longs,
+                            "num_tabs": num_tabss,
+                            "esp_long_corr [m]": esp_long_corr,
+                            "esp_tab_corr [m]": esp_tab_corr,
+                        }
 
         # Avaliação do flexão tabuleiro
         res_m_tab, relat_t = checagem_completa_tabuleiro_madeira_flexao(
                                                                             geo_tab,
                                                                             p_gtabk,
                                                                             self.p_rodak,
-                                                                            n_long,
+                                                                            esp_long_corr,
                                                                             self.classe_carregamento.lower(),
                                                                             self.classe_madeira.lower(),
                                                                             self.classe_umidade,
@@ -1561,8 +1601,10 @@ class ProjetoOtimo(ElementwiseProblem):
 
         # Cálculo dos objetivos e restrições para avaliação robusta (média de várias checagens para cada indivíduo)
         dados = []
-        for _ in range(self.n_checagens):
-            f, g, *_ = self.calcular_objetivos_restricoes_otimizacao(d, bw, h, esp_long, esp_tab)
+        x_nominal = np.array([d, bw, h, esp_long, esp_tab], dtype=float)
+        for multiplicador in self.multiplicadores_robustez:
+            x_perturbado = x_nominal * multiplicador
+            f, g, *_ = self.calcular_objetivos_restricoes_otimizacao(*x_perturbado)
             resultado = {'f1': f[0], 'f2': f[1], 'g1': g[0], 'g2': g[1], 'g3': g[2], 'g4': g[3], 'g5': g[4], 'g6': g[5]}
             dados.append(resultado)
         df = pd.DataFrame(dados)
@@ -1572,26 +1614,68 @@ class ProjetoOtimo(ElementwiseProblem):
         out["F"] = np.array(f, dtype=float)
         out["G"] = np.array(g, dtype=float)
 
-    # def _evaluate(self, x, out, *args, **kwargs):
-        
-    #     # Geometria da longarina e espaçamento entre longarinas
-    #     d = float(x[0])
 
-    #     # Geometria do tabuleiro
-    #     bw = float(x[1])
-    #     h = float(x[2])
-
-    #     # Espaçamento de longarinas e vigas do tabuleiro
-    #     esp_long = float(x[3])
-    #     esp_tab = float(x[4])
-
-    #     # Cálculo dos objetivos e restrições
-    #     f, g, _, _, _, _, _, _, _ = self.calcular_objetivos_restricoes_otimizacao(d, bw, h, esp_long, esp_tab)
-    #     out["F"] = np.array(f, dtype=float)
-    #     out["G"] = np.array(g, dtype=float)
+def _normalizar_chave_excel(chave: str) -> str:
+    chave = unicodedata.normalize("NFKC", str(chave))
+    return " ".join(chave.lower().split())
 
 
-def chamando_nsga2(dados: dict, ds: list, bws: list, hs: list, n_long: list, n_tab: list, t: dict) -> pd.DataFrame:
+def _valor_dados(dados: dict, *nomes: str, default=None):
+    for nome in nomes:
+        if nome in dados and pd.notna(dados[nome]):
+            return dados[nome]
+
+    dados_normalizados = {
+        _normalizar_chave_excel(chave): valor
+        for chave, valor in dados.items()
+        if pd.notna(valor)
+    }
+    for nome in nomes:
+        nome_normalizado = _normalizar_chave_excel(nome)
+        if nome_normalizado in dados_normalizados:
+            return dados_normalizados[nome_normalizado]
+
+    if default is not None:
+        return default
+    raise KeyError(f"Nenhuma destas chaves foi encontrada nos dados: {nomes}")
+
+
+def normalizar_dados_pre_sizing(dados: dict, t: dict) -> dict:
+    """Converte uma linha do Excel para as chaves esperadas pelo pré-dimensionamento atual."""
+
+    return {
+        t["entrada_comprimento"]: _valor_dados(dados, t["entrada_comprimento"], "l (cm)", "Comprimento das longarinas (cm)"),
+        t["pista"]: _valor_dados(dados, t["pista"], "Largura da pista disponível para longarinas (cm)"),
+        f"{t['carga_permanente']} (kPa)": _valor_dados(
+            dados,
+            f"{t['carga_permanente']} (kPa)",
+            t["carga_permanente"],
+            "Carga permanente atuante no tabuleiro (kPa) excluso peso próprio",
+            "p_gk (kPa)",
+        ),
+        f"{t['carga_roda']} (kN)": _valor_dados(dados, f"{t['carga_roda']} (kN)", t["carga_roda"], "p_rodak (kN)"),
+        f"{t['carga_multidao']} (kPa)": _valor_dados(dados, f"{t['carga_multidao']} (kPa)", t["carga_multidao"], "Carga de multidão (kPa)", "p_qk (kPa)"),
+        f"{t['distancia_eixos']} (m)": _valor_dados(dados, f"{t['distancia_eixos']} (m)", t["distancia_eixos"], "a (m)"),
+        t["classe_carregamento"]: _valor_dados(dados, t["classe_carregamento"], "classe_carregamento"),
+        t["classe_madeira"]: _valor_dados(dados, t["classe_madeira"], "classe_madeira"),
+        t["classe_umidade"]: _valor_dados(dados, t["classe_umidade"], "classe_umidade"),
+        t["gamma_g"]: _valor_dados(dados, t["gamma_g"], "gamma_g"),
+        t["gamma_q"]: _valor_dados(dados, t["gamma_q"], "gamma_q"),
+        t["gamma_wf"]: _valor_dados(dados, t["gamma_wf"], "gamma_wf"),
+        t["gamma_wc"]: _valor_dados(dados, t["gamma_wc"], "gamma_wc"),
+        t["psi2"]: _valor_dados(dados, t["psi2"], "psi_2"),
+        t["considerar_fluencia"]: _valor_dados(dados, t["considerar_fluencia"], "phi"),
+        t["percentual_robustez"]: _valor_dados(dados, t["percentual_robustez"], default=5.0),
+        f"{t['densidade_long']} (kg/m³)": _valor_dados(dados, f"{t['densidade_long']} (kg/m³)", t["densidade_long"], "densidade longarina (kg/m³)"),
+        f"{t['densidade_tab']} (kg/m³)": _valor_dados(dados, f"{t['densidade_tab']} (kg/m³)", t["densidade_tab"], "densidade tabuleiro (kg/m³)"),
+        f"{t['f_mk']} (MPa)": _valor_dados(dados, f"{t['f_mk']} (MPa)", t["f_mk"], "resistência característica à flexão longarina (MPa)"),
+        f"{t['f_vk']} (MPa)": _valor_dados(dados, f"{t['f_vk']} (MPa)", t["f_vk"], "resistência característica ao cisalhamento longarina (MPa)"),
+        f"{t['e_modflex']} (GPa)": _valor_dados(dados, f"{t['e_modflex']} (GPa)", t["e_modflex"], "módulo de elasticidade à flexão longarina (GPa)"),
+        f"{t['f_mk_tab']} (MPa)": _valor_dados(dados, f"{t['f_mk_tab']} (MPa)", t["f_mk_tab"], "resistência característica à flexão tabuleiro (MPa)"),
+    }
+
+
+def chamando_nsga2(dados: dict, ds: list, bws: list, hs: list, n_long: list, n_tab: list, t: dict, verbose: bool = True) -> pd.DataFrame:
     """Função para chamar o algoritmo NSGA-II para otimização do projeto estrutural.
 
     :param dados: Dados de entrada do projeto
@@ -1603,9 +1687,30 @@ def chamando_nsga2(dados: dict, ds: list, bws: list, hs: list, n_long: list, n_t
     :param t: Dicionário de textos para nomenclatura dos dados de entrada
     """
 
-    # Instanciando o problema de otimização, construindo a estrutura exemplo
-    problem = ProjetoOtimo(
+    dados = normalizar_dados_pre_sizing(dados, t)
+    label_percentual_robustez = t.get("percentual_robustez")
+    perc_robustez             = float(dados.get(label_percentual_robustez, 5.0))
 
+    pop_size    = 75
+    n_gen       = 300
+    n_checagens = 30
+
+    if verbose:
+        print("[ReliaBridge][NSGA-II] Iniciando otimização de pré-dimensionamento.", flush=True)
+        print(
+                    "[ReliaBridge][NSGA-II] "
+                    f"pop={pop_size}, gerações={n_gen}, robustez={perc_robustez:g}%, "
+                    f"checagens={n_checagens}",
+                    flush=True,
+                )
+        print(
+                    "[ReliaBridge][NSGA-II] Limites: "
+                    f"d={ds} cm, bw={bws} cm, h={hs} cm, esp_long={n_long} cm, esp_tab={n_tab} cm.",
+                    flush=True,
+                )
+
+    # Instanciando o problema de otimização, construindo a estrutura exemplo
+    problem_b = ProjetoOtimo(
                                 bw_pista            = dados[f"{t['pista']}"],
                                 l                   = dados[f"{t['entrada_comprimento']}"],
                                 p_gk                = dados[f"{t['carga_permanente']} (kPa)"],
@@ -1621,16 +1726,12 @@ def chamando_nsga2(dados: dict, ds: list, bws: list, hs: list, n_long: list, n_t
                                 gamma_wc            = dados[f"{t['gamma_wc']}"],
                                 psi2                = dados[f"{t['psi2']}"],
                                 phi                 = dados[f"{t['considerar_fluencia']}"],
-
                                 densidade_long      = dados[f"{t['densidade_long']} (kg/m³)"],
                                 densidade_tab       = dados[f"{t['densidade_tab']} (kg/m³)"],
-
                                 f_mk_long           = dados[f"{t['f_mk']} (MPa)"],
                                 f_vk_long           = dados[f"{t['f_vk']} (MPa)"],
                                 e_modflex_long      = dados[f"{t['e_modflex']} (GPa)"],
-
                                 f_mk_tab            = dados[f"{t['f_mk_tab']} (MPa)"],
-
                                 d_min               = ds[0],
                                 d_max               = ds[1],
                                 bw_min              = bws[0],
@@ -1641,76 +1742,100 @@ def chamando_nsga2(dados: dict, ds: list, bws: list, hs: list, n_long: list, n_t
                                 n_max_long          = n_long[1],
                                 n_min_tab           = n_tab[0],
                                 n_max_tab           = n_tab[1],
+                                n_checagens         = n_checagens,
+                                perc_robustez       = perc_robustez,
                         )
 
-    algorithm   = NSGA2(pop_size=500, sampling=FloatRandomSampling(), crossover=SBX(prob=0.9, eta=15), mutation=PM(eta=20), eliminate_duplicates=True)
-    termination = get_termination("n_gen", 400)
-    res         = minimize(problem, algorithm, termination, seed=1, save_history=False, verbose=False)
+    algorithm   = NSGA2(pop_size=pop_size, sampling=FloatRandomSampling(), crossover=SBX(prob=0.9, eta=15), mutation=PM(eta=20), eliminate_duplicates=True)
+    termination = get_termination("n_gen", n_gen)
+    res         = minimize(problem_b, algorithm, termination, seed=1, save_history=False, verbose=verbose)
     F_nsga      = res.F
     G_nsga      = res.G
     X_nsga      = res.X
+
+    if X_nsga is None or F_nsga is None or G_nsga is None:
+        if verbose:
+            print("[ReliaBridge][NSGA-II] Finalizado sem solução viável.", flush=True)
+        raise ValueError(
+            "Nenhuma solução viável foi encontrada pelo NSGA-II. "
+            "Revise os limites geométricos, espaçamentos, carregamentos ou reduza o percentual de robustez."
+        )
+
+    if verbose:
+        print(f"[ReliaBridge][NSGA-II] Finalizado com {len(X_nsga)} soluções retornadas.", flush=True)
     
     return pd.DataFrame(
                             {
                                 "d [cm]": X_nsga[:, 0],
-                                "esp [cm]": X_nsga[:, 1],
-                                "bw [cm]": X_nsga[:, 2],
-                                "h [cm]": X_nsga[:, 3],
+                                "bw [cm]": X_nsga[:, 1],
+                                "h [cm]": X_nsga[:, 2],
+                                "esp [cm]": X_nsga[:, 3],
+                                "esp tab [cm]": X_nsga[:, 4],
                                 "area [m²]": F_nsga[:, 0],
                                 "delta [-]": -F_nsga[:, 1], 
                                 "flex lim beam [(Ms-Mr)/Mr]": G_nsga[:, 0], 
                                 "cis lim beam [(Vs-Vr)/Vr]": G_nsga[:, 1], 
                                 "delta lim beam [(ps-pr)/pr]": G_nsga[:, 2],
                                 "flex lim deck [(Ms-Mr)/Mr]": G_nsga[:, 3],
+                                "spacing beam": G_nsga[:, 4],
+                                "spacing deck": G_nsga[:, 5],
                             }
                         )
 
 
 if __name__ == "__main__":
-    df = pd.read_excel("beam_data_02.xlsx")
+    df = pd.read_excel("beam_data_01.xlsx")
     df = df.to_dict(orient="records")
-    df = df[0] 
-    ds = [30, 150]
-    bws = [5, 60]
-    hs = [5, 60]
-    esp_l = [30, 200]
-    esp_t = [5, 60]
-    problem = ProjetoOtimo(
-                                l=df["l (cm)"],
-                                p_gk=df["p_gk (kPa)"],
-                                p_rodak=df["p_rodak (kN)"],
-                                p_qk=df["p_qk (kPa)"],
-                                a=df["a (m)"],
-                                classe_carregamento=df["classe_carregamento"],
-                                classe_madeira=df["classe_madeira"],
-                                classe_umidade=df["classe_umidade"],
-                                gamma_g=df["gamma_g"],
-                                gamma_q=df["gamma_q"],
-                                gamma_wf=df["gamma_wf"],
-                                gamma_wc=df["gamma_wc"],
-                                psi2=df["psi_2"],
-                                phi=df["phi"],
-                                densidade_long=df["densidade longarina (kg/m³)"],
-                                densidade_tab=df["densidade tabuleiro (kg/m³)"],
-                                f_mk_long=df["resistência característica à flexão longarina (MPa)"],
-                                f_vk_long=df["resistência característica ao cisalhamento longarina (MPa)"],
-                                e_modflex_long=df["módulo de elasticidade à flexão longarina (GPa)"],
-                                f_mk_tab=df["resistência característica à flexão tabuleiro (MPa)"],
+    df = df[0]
+
+    t = textos_pre_sizing_l()["pt"]
+    dados = normalizar_dados_pre_sizing(df, t)
+    ds       = [30, 150]
+    bws      = [5, 60]
+    hs       = [5, 60]
+    n_p_long = [30, 200]
+    n_p_tab  = [5, 60]
+
+    problem_b = ProjetoOtimo(
+                                bw_pista=dados[t["pista"]],
+                                l=dados[t["entrada_comprimento"]],
+                                p_gk=dados[f"{t['carga_permanente']} (kPa)"],
+                                p_rodak=dados[f"{t['carga_roda']} (kN)"],
+                                p_qk=dados[f"{t['carga_multidao']} (kPa)"],
+                                a=dados[f"{t['distancia_eixos']} (m)"],
+                                classe_carregamento=dados[t["classe_carregamento"]],
+                                classe_madeira=dados[t["classe_madeira"]],
+                                classe_umidade=dados[t["classe_umidade"]],
+                                gamma_g=dados[t["gamma_g"]],
+                                gamma_q=dados[t["gamma_q"]],
+                                gamma_wf=dados[t["gamma_wf"]],
+                                gamma_wc=dados[t["gamma_wc"]],
+                                psi2=dados[t["psi2"]],
+                                phi=dados[t["considerar_fluencia"]],
+                                densidade_long=dados[f"{t['densidade_long']} (kg/m³)"],
+                                densidade_tab=dados[f"{t['densidade_tab']} (kg/m³)"],
+                                f_mk_long=dados[f"{t['f_mk']} (MPa)"],
+                                f_vk_long=dados[f"{t['f_vk']} (MPa)"],
+                                e_modflex_long=dados[f"{t['e_modflex']} (GPa)"],
+                                f_mk_tab=dados[f"{t['f_mk_tab']} (MPa)"],
                                 d_min=ds[0],
                                 d_max=ds[1],
-                                esp_min=esps[0],
-                                esp_max=esps[1],
                                 bw_min=bws[0],
                                 bw_max=bws[1],
                                 h_min=hs[0],
                                 h_max=hs[1],
+                                n_min_long=n_p_long[0],
+                                n_max_long=n_p_long[1],
+                                n_min_tab=n_p_tab[0],
+                                n_max_tab=n_p_tab[1],
+                                perc_robustez=dados[t["percentual_robustez"]],
                             )
 
     # 2) Define uma solução manual
-    x_manual = np.array([[45., 120.0, 10., 30.]])   # d, esp, bw, h
+    x_manual = np.array([[55., 15., 30., 120.0, 10.]])   # d, bw, h, n_long, n_tab
 
     # 3) Avalia
-    out = problem.evaluate(x_manual, return_values_of=["F", "G"])
+    out = problem_b.evaluate(x_manual, return_values_of=["F", "G"])
 
     # 4) Imprime resultados
     f = out[0]
