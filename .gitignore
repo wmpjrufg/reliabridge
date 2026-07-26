@@ -91,5 +91,6 @@ Desktop.ini
 # Regras específicas deste projeto
 # =============================================================================
 _vault/
+.claude/
 *.txt
 !requirements.txt

@@ -35,6 +35,15 @@
   \colorbox{red!8}{\parbox{0.98\linewidth}{%
     \color{red}\small\textbf{[SUGESTAO DE ALTO IMPACTO]}\ #1}}%
   \par\medskip}
+
+% Marcadores de conteudo pendente (numeros, frases, figuras/tabelas a preencher
+% apos rodar as analises finais). Uso inline: \tofill{valor ou frase}.
+% Uso em bloco (paragrafo, lista ou instrucao mais longa): ambiente fillblock.
+% NOTA: nao usar o nome \fill -- e o registrador de "glue" nativo do LaTeX,
+% usado em \extracolsep\fill nas tabelas deste documento; redefini-lo quebraria
+% todas as tabelas.
+\newcommand{\tofill}[1]{\textcolor{red}{#1}}
+\newenvironment{fillblock}{\color{red}}{\color{black}}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 %\usepackage{orcidlink}
 \usepackage[title]{appendix}

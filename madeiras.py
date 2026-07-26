@@ -12,14 +12,14 @@ import unicodedata
 from io import BytesIO
 from scipy import stats as st
 
-from UQpy.distributions import TruncatedNormal
-from UQpy.distributions.collection.GeneralizedExtreme import GeneralizedExtreme
+from UQpy.run_model.RunModel import RunModel
 from UQpy.run_model.model_execution.PythonModel import PythonModel
-from UQpy.run_model import RunModel
-from UQpy.reliability import FORM
-from UQpy.sampling import MonteCarloSampling, LatinHypercubeSampling
-import matplotlib.pyplot as plt
+from UQpy.distributions import Uniform
+from UQpy.distributions.collection.JointIndependent import JointIndependent
 import matplotlib as mpl
+mpl.use("Agg")
+from UQpy.sensitivity.SobolSensitivity import SobolSensitivity
+import matplotlib.pyplot as plt
 mpl.rcParams.update({
                         'font.family': 'serif',
                         'mathtext.fontset': 'cm',
@@ -176,6 +176,85 @@ def fronteira_pareto(x: list, y: list, label_x: str, label_y: str) -> Figure:
     ### Plot data
     ax.scatter(x, y, alpha=alpha_scatter, color=color_scatter, s=size_scatter)
 
+    return fig
+
+
+def plot_sobol_total_indices(
+    total_order: pd.DataFrame,
+    label_x: str = "Constraints",
+    label_y: str = "Variables",
+    x_labels: list[str] | None = None,
+    y_labels: list[str] | None = None,
+) -> Figure:
+    """Plota os indices totais de Sobol em mapa de calor."""
+
+    df = total_order.set_index("variavel")
+    valores = np.clip(df.to_numpy(dtype=float), 0.0, None)
+
+    fig, ax = plt.subplots(figsize=(12, 5.2))
+    vmax = max(1.0, float(np.nanmax(valores))) if valores.size else 1.0
+    cmap = mpl.colors.LinearSegmentedColormap.from_list(
+        "sobol_light",
+        ["#f8fbff", "#deebf7", "#bdd7e7", "#9ecae1", "#6baed6"],
+    )
+    im = ax.imshow(valores, aspect="auto", cmap=cmap, vmin=0.0, vmax=vmax)
+
+    ax.set_xticks(np.arange(df.shape[1]))
+    nomes_x = x_labels if x_labels is not None and len(x_labels) == df.shape[1] else df.columns
+    nomes_y = y_labels if y_labels is not None and len(y_labels) == df.shape[0] else df.index
+
+    ax.set_xticklabels(nomes_x, rotation=35, ha="right", fontsize=8)
+    ax.set_yticks(np.arange(df.shape[0]))
+    ax.set_yticklabels(nomes_y, fontsize=9)
+    ax.set_xlabel(label_x)
+    ax.set_ylabel(label_y)
+
+    for i in range(df.shape[0]):
+        for j in range(df.shape[1]):
+            texto = f"{valores[i, j]:.2f}"
+            ax.text(j, i, texto, ha="center", va="center", color="black", fontsize=10)
+
+    cbar = fig.colorbar(im, ax=ax, fraction=0.03, pad=0.02)
+    cbar.set_label("ST")
+    fig.tight_layout()
+    return fig
+
+
+def plot_boxplot_variaveis_fronteira(
+    df_resultados: pd.DataFrame,
+    colunas: list[str],
+    labels: list[str],
+    label_y: str = "cm",
+) -> Figure:
+    """Plota a dispersao das variaveis de projeto presentes na fronteira."""
+
+    dados = [df_resultados[coluna].dropna().to_numpy(dtype=float) for coluna in colunas]
+
+    fig, ax = plt.subplots(figsize=(10, 4.8))
+    box = ax.boxplot(
+        dados,
+        labels=labels,
+        patch_artist=True,
+        showmeans=True,
+        meanline=False,
+        widths=0.55,
+        medianprops={"color": "#111827", "linewidth": 1.6},
+        meanprops={"marker": "o", "markerfacecolor": "#ef4444", "markeredgecolor": "#991b1b", "markersize": 5},
+        boxprops={"linewidth": 1.2, "color": "#334155"},
+        whiskerprops={"linewidth": 1.1, "color": "#475569"},
+        capprops={"linewidth": 1.1, "color": "#475569"},
+        flierprops={"marker": "o", "markerfacecolor": "#bfdbfe", "markeredgecolor": "#2563eb", "markersize": 4, "alpha": 0.75},
+    )
+
+    cores = ["#dbeafe", "#dcfce7", "#fef3c7", "#fee2e2", "#e0e7ff"]
+    for patch, cor in zip(box["boxes"], cores):
+        patch.set_facecolor(cor)
+
+    ax.set_ylabel(label_y)
+    ax.grid(True, axis="y", linestyle="-", linewidth=0.5, alpha=0.35)
+    ax.tick_params(axis="x", labelsize=9)
+    ax.tick_params(axis="y", labelsize=9)
+    fig.tight_layout()
     return fig
 
 
@@ -1053,6 +1132,22 @@ def textos_pre_sizing_l() -> dict:
                         "f_mk_tab": "Resistência característica à flexão (MPa) do tabuleiro",
                         "gerador_desempenho": "Gerar desempenho estrutural via NSGA-II para pré-dimensionamento",
                         "fronteira_head": "Fronteira eficiente – Pré-dimensionamento",
+                        "fronteira_variaveis_head": "Variação das variáveis de projeto na fronteira",
+                        "fronteira_variaveis_info": "O boxplot resume como as variáveis de projeto aparecem nas soluções da fronteira eficiente.",
+                        "fronteira_variaveis_y": "Valor (cm)",
+                        "fronteira_variaveis_labels": ["d", "bw", "h", "Esp. long.", "Esp. tab."],
+                        "sobol_head": "Sensibilidade global das restrições - Índice total de Sobol",
+                        "sobol_info": "Use esta análise para identificar quais variáveis de entrada mais influenciam cada restrição no intervalo informado. A análise roda com 10.000 amostras base; valores maiores indicam maior contribuição para a variação da restrição.",
+                        "sobol_n_samples": "Número base de amostras Sobol",
+                        "sobol_button": "Executar análise de Sobol",
+                        "sobol_spinner": "Executando análise de Sobol com UQpy...",
+                        "sobol_total_order": "Índice total de Sobol (ST)",
+                        "sobol_axis_constraints": "Restrições",
+                        "sobol_axis_variables": "Variáveis",
+                        "sobol_constraint_labels": ["Flexão long.", "Cisalh. long.", "Flecha long.", "Flexão tab.", "Esp. long.", "Esp. tab."],
+                        "sobol_variable_labels": ["d", "bw", "h", "Esp. long.", "Esp. tab."],
+                        "sobol_download": "Baixar índices totais de Sobol",
+                        "sobol_next_step": "Sugestão: depois desta leitura das restrições, a próxima etapa natural é fazer uma ciência de dados básica da fronteira eficiente, observando correlações, agrupamentos e soluções mais equilibradas.",
                         "geometria_t": "Dados de geometria",
                         "variaveis_otimizacao": "Variáveis de otimização",
                         "cargas_projeto": "Cargas atuantes no projeto",
@@ -1076,37 +1171,37 @@ def textos_pre_sizing_l() -> dict:
                             The user must provide:
 
                             - **geometric criteria** for the bridge design;
-                            - **mechanical properties of the timber** used in the **stringers** and **deck**;
+                            - **mechanical properties of the timber** used in the **girders** and **deck**;
                             - **loads acting** on the structure.
 
                             In this parametric tool, the main **design variables** considered in the optimization process are:
 
-                            - **stringer diameter**;
-                            - **number of stringers**;
+                            - **girder diameter**;
+                            - **number of girders**;
                             - **deck plank dimensions**;
                             - **number of deck elements**.
 
                             The **robustness percentage** represents the variation considered in the design variables during optimization. For example, when **5%** is entered, each candidate solution is also evaluated with small perturbations of up to ±5% in the variables, helping identify geometries that are less sensitive to dimensional variation and construction uncertainty. A value of **0%** corresponds to deterministic optimization, without perturbations.
 
-                            The **initial values for the number of elements** displayed in the form are automatically calculated based on the **minimum dimensions provided by the user**, such as the stringer diameter and the deck section dimensions. These values can be **manually adjusted** if the user wishes to explore alternative design configurations.
+                            The **initial values for the number of elements** displayed in the form are automatically calculated based on the **minimum dimensions provided by the user**, such as the girder diameter and the deck section dimensions. These values can be **manually adjusted** if the user wishes to explore alternative design configurations.
 
                             In addition, the user may define:
 
-                            - the **minimum spacing between stringers**;
+                            - the **minimum spacing between girders**;
                             - the **maximum spacing between deck elements**.
 
                             At the end of the optimization process, an **efficient frontier (Pareto frontier)** will be obtained, containing the structurally feasible solutions identified by the algorithm. The user will then be able to **download a spreadsheet** containing all configurations that successfully met the optimization criteria.
 
                             If no feasible solution is found, the **input parameters can be adjusted**, and the optimization process can be executed again. The input data remain **stored in cache**, allowing the analysis to continue without the need to re-enter the information. It is worth noting that the processing time may vary depending on the number of solutions and the internet speed. Tests on common office machines indicate that the process can take between 1 to 5 minutes.
                             """,
-                    "entrada_comprimento": "Stringer length (cm)",
-                    "pista": "Available roadway width for stringers (cm)",
+                    "entrada_comprimento": "Girder length (cm)",
+                    "pista": "Available roadway width for girders (cm)",
                     "entrada_tipo_secao_longarina": "Section type",
                     "tipo_secao_longarina": ["Circular"],
                     "diametro_minimo": "Minimum equivalent diameter (cm)",
                     "diametro_maximo": "Maximum equivalent diameter (cm)",
-                    "espaço_min_longarinas": "Minimum spacing between stringers (cm)",
-                    "espaço_max_longarinas": "Maximum spacing between stringers (cm)",
+                    "espaço_min_longarinas": "Minimum spacing between girders (cm)",
+                    "espaço_max_longarinas": "Maximum spacing between girders (cm)",
                     "tipo_secao_tabuleiro": "Deck section type",
                     "tipo_secao_tabuleiro_opcoes": ["Rectangular"],
                     "largura_viga_tabuleiro_min": "Minimum deck plank width (cm)",
@@ -1132,21 +1227,37 @@ def textos_pre_sizing_l() -> dict:
                     "considerar_fluencia": "Creep coefficient - Table 20 of NBR 7190",
                     "robustez_t": "Optimization robustness",
                     "percentual_robustez": "Robustness percentage",
-                    "densidade_long": "Timber density (kg/m³) of the stringer",
-                    "f_mk": "Characteristic bending strength (MPa) of the stringer",
-                    "f_vk": "Characteristic shear strength (MPa) of the stringer",
-                    "e_modflex": "Modulus of elasticity in bending (GPa) of the stringer",
+                    "densidade_long": "Timber density (kg/m³) of the girder",
+                    "f_mk": "Characteristic bending strength (MPa) of the girder",
+                    "f_vk": "Characteristic shear strength (MPa) of the girder",
+                    "e_modflex": "Modulus of elasticity in bending (GPa) of the girder",
                     "densidade_tab": "Timber density (kg/m³) of the deck",
                     "f_mk_tab": "Characteristic bending strength (MPa) of the deck",
                     "gerador_desempenho": "Generate structural performance via NSGA-II for preliminary design",
                     "fronteira_head": "Efficient frontier – Preliminary design",
+                    "fronteira_variaveis_head": "Design-variable variation along the frontier",
+                    "fronteira_variaveis_info": "The boxplot summarizes how the design variables appear across the efficient-frontier solutions.",
+                    "fronteira_variaveis_y": "Value (cm)",
+                    "fronteira_variaveis_labels": ["d", "bw", "h", "Girder spacing", "Deck spacing"],
+                    "sobol_head": "Global sensitivity of constraints - Total Sobol index",
+                    "sobol_info": "Use this analysis to identify which input variables most influence each constraint within the interval provided. The analysis runs with 10,000 base samples; larger values indicate a stronger contribution to the variation of the constraint.",
+                    "sobol_n_samples": "Sobol base sample size",
+                    "sobol_button": "Run Sobol analysis",
+                    "sobol_spinner": "Running Sobol analysis with UQpy...",
+                    "sobol_total_order": "Total Sobol index (ST)",
+                    "sobol_axis_constraints": "Constraints",
+                    "sobol_axis_variables": "Variables",
+                    "sobol_constraint_labels": ["Girder bending", "Girder shear", "Girder defl.", "Deck bending", "Girder spacing", "Deck spacing"],
+                    "sobol_variable_labels": ["d", "bw", "h", "Girder spacing", "Deck spacing"],
+                    "sobol_download": "Download total Sobol indices",
+                    "sobol_next_step": "Suggestion: after reading the constraints, the natural next step is a basic data-science analysis of the efficient frontier, looking at correlations, clusters, and the most balanced solutions.",
                     "geometria_t": "Geometry data",
                     "variaveis_otimizacao": "Optimization variables",
                     "cargas_projeto": "Design loads",
                     "classes_mad_carga": "Timber, load duration, and moisture classes",
                     "coeficientes_seguranca": "Safety factors",
                     "prop_madeira": "Timber properties",
-                    "longarina_t": "Stringer",
+                    "longarina_t": "Girder",
                     "tabuleiro_t": "Deck",
                     "restricoes_packing": "Element spacing constraints",
                     "botao_dados_down": "Download preliminary design data",
@@ -1675,6 +1786,54 @@ def normalizar_dados_pre_sizing(dados: dict, t: dict) -> dict:
     }
 
 
+def _criar_projeto_otimo_pre_sizing(
+    dados: dict,
+    ds: list,
+    bws: list,
+    hs: list,
+    n_long: list,
+    n_tab: list,
+    t: dict,
+    n_checagens: int,
+    perc_robustez: float,
+) -> ProjetoOtimo:
+    return ProjetoOtimo(
+                            bw_pista            = dados[f"{t['pista']}"],
+                            l                   = dados[f"{t['entrada_comprimento']}"],
+                            p_gk                = dados[f"{t['carga_permanente']} (kPa)"],
+                            p_rodak             = dados[f"{t['carga_roda']} (kN)"],
+                            p_qk                = dados[f"{t['carga_multidao']} (kPa)"],
+                            a                   = dados[f"{t['distancia_eixos']} (m)"],
+                            classe_carregamento = dados[f"{t['classe_carregamento']}"],
+                            classe_madeira      = dados[f"{t['classe_madeira']}"],
+                            classe_umidade      = dados[f"{t['classe_umidade']}"],
+                            gamma_g             = dados[f"{t['gamma_g']}"],
+                            gamma_q             = dados[f"{t['gamma_q']}"],
+                            gamma_wf            = dados[f"{t['gamma_wf']}"],
+                            gamma_wc            = dados[f"{t['gamma_wc']}"],
+                            psi2                = dados[f"{t['psi2']}"],
+                            phi                 = dados[f"{t['considerar_fluencia']}"],
+                            densidade_long      = _valor_dados(dados, f"{t['densidade_long']} (kg/m³)", f"{t['densidade_long']} (kg/mÂ³)"),
+                            densidade_tab       = _valor_dados(dados, f"{t['densidade_tab']} (kg/m³)", f"{t['densidade_tab']} (kg/mÂ³)"),
+                            f_mk_long           = dados[f"{t['f_mk']} (MPa)"],
+                            f_vk_long           = dados[f"{t['f_vk']} (MPa)"],
+                            e_modflex_long      = dados[f"{t['e_modflex']} (GPa)"],
+                            f_mk_tab            = dados[f"{t['f_mk_tab']} (MPa)"],
+                            d_min               = ds[0],
+                            d_max               = ds[1],
+                            bw_min              = bws[0],
+                            bw_max              = bws[1],
+                            h_min               = hs[0],
+                            h_max               = hs[1],
+                            n_min_long          = n_long[0],
+                            n_max_long          = n_long[1],
+                            n_min_tab           = n_tab[0],
+                            n_max_tab           = n_tab[1],
+                            n_checagens         = n_checagens,
+                            perc_robustez       = perc_robustez,
+                    )
+
+
 def chamando_nsga2(dados: dict, ds: list, bws: list, hs: list, n_long: list, n_tab: list, t: dict, verbose: bool = True) -> pd.DataFrame:
     """Função para chamar o algoritmo NSGA-II para otimização do projeto estrutural.
 
@@ -1693,7 +1852,7 @@ def chamando_nsga2(dados: dict, ds: list, bws: list, hs: list, n_long: list, n_t
 
     pop_size    = 75
     n_gen       = 300
-    n_checagens = 30
+    n_checagens = 15
 
     if verbose:
         print("[ReliaBridge][NSGA-II] Iniciando otimização de pré-dimensionamento.", flush=True)
@@ -1783,6 +1942,111 @@ def chamando_nsga2(dados: dict, ds: list, bws: list, hs: list, n_long: list, n_t
                         )
 
 
+def funcoes_sobol(entrada, params) -> np.ndarray:
+    """Modelo chamado pela UQpy para estimar Sobol das restricoes."""
+
+    d, bw, h, n_long, n_tab = np.asarray(entrada, dtype=float).reshape(-1)[:5]
+    projeto = params["projeto"]
+
+    try:
+        _, g, *_ = projeto.calcular_objetivos_restricoes_otimizacao(d, bw, h, n_long, n_tab)
+        return np.nan_to_num(np.array(g, dtype=float), nan=1.0e6, posinf=1.0e6, neginf=-1.0e6)
+    except Exception:
+        return np.full(6, 1.0e6, dtype=float)
+
+
+def chamar_sobol(
+                    dados: dict,
+                    ds: list,
+                    bws: list,
+                    hs: list,
+                    n_long: list,
+                    n_tab: list,
+                    t: dict,
+                    n_samples: int = 64,
+                    verbose: bool = True,
+                ) -> dict:
+    """Executa analise de sensibilidade Sobol das restricoes do pre-dimensionamento."""
+
+    dados = normalizar_dados_pre_sizing(dados, t)
+    n_samples = max(int(n_samples), 2)
+    params = {
+                    "dados": dados,
+                    "ds": [float(ds[0]), float(ds[1])],
+                    "bws": [float(bws[0]), float(bws[1])],
+                    "hs": [float(hs[0]), float(hs[1])],
+                    "n_long": [float(n_long[0]), float(n_long[1])],
+                    "n_tab": [float(n_tab[0]), float(n_tab[1])],
+                    "t": t,
+                }
+    params["projeto"] = _criar_projeto_otimo_pre_sizing(
+                                                            dados,
+                                                            params["ds"],
+                                                            params["bws"],
+                                                            params["hs"],
+                                                            params["n_long"],
+                                                            params["n_tab"],
+                                                            t,
+                                                            n_checagens=1,
+                                                            perc_robustez=0.0,
+                                                        )
+
+    if verbose:
+        print("[ReliaBridge][Sobol] Iniciando analise de sensibilidade.", flush=True)
+        print(
+            "[ReliaBridge][Sobol] "
+            f"amostras={n_samples}, variaveis=5, saidas=6 restricoes.",
+            flush=True,
+        )
+
+    model = PythonModel(
+                            model_script="madeiras.py",
+                            model_object_name="funcoes_sobol",
+                            var_names=["d_cm", "bw_cm", "h_cm", "esp_long_cm", "esp_tab_cm"],
+                            delete_files=True,
+                            params=params,
+                        )
+
+    runmodel_obj = RunModel(model=model)
+    dist_object = JointIndependent(
+        [
+            Uniform(params["ds"][0], params["ds"][1] - params["ds"][0]),
+            Uniform(params["bws"][0], params["bws"][1] - params["bws"][0]),
+            Uniform(params["hs"][0], params["hs"][1] - params["hs"][0]),
+            Uniform(params["n_long"][0], params["n_long"][1] - params["n_long"][0]),
+            Uniform(params["n_tab"][0], params["n_tab"][1] - params["n_tab"][0]),
+        ]
+    )
+
+    sobol = SobolSensitivity(runmodel_obj, dist_object, random_state=1)
+    sobol.run(n_samples=n_samples, estimate_second_order=False)
+
+    variaveis = ["d_cm", "bw_cm", "h_cm", "esp_long_cm", "esp_tab_cm"]
+    restricoes = [
+        "g_flexao_longarina",
+        "g_cisalhamento_longarina",
+        "g_flecha_longarina",
+        "g_flexao_tabuleiro",
+        "g_esp_longarina",
+        "g_esp_tabuleiro",
+    ]
+
+    def indices_para_df(indices: np.ndarray) -> pd.DataFrame:
+        valores = np.nan_to_num(np.asarray(indices, dtype=float), nan=0.0, posinf=0.0, neginf=0.0)
+        df = pd.DataFrame(valores, columns=restricoes)
+        df.insert(0, "variavel", variaveis)
+        return df
+
+    resultado = {
+        "total_order": indices_para_df(sobol.total_order_indices),
+        "n_samples": n_samples,
+    }
+
+    if verbose:
+        print("[ReliaBridge][Sobol] Analise finalizada.", flush=True)
+
+    return resultado
+    
 if __name__ == "__main__":
     df = pd.read_excel("beam_data_01.xlsx")
     df = df.to_dict(orient="records")

@@ -111,7 +111,7 @@ textos = {
         </p>
 
         <p>
-        The system enables the evaluation of the <b>safety</b> and <b>structural performance</b> of timber stringers by calculating the geometric properties of rectangular and circular cross-sections and determining internal forces such as <b>bending moments, shear forces, and support reactions</b>, while considering <b>permanent and variable loads</b>. In addition, the platform incorporates the vertical impact coefficient according to <b>NBR 7188:2024</b> and performs <b>Ultimate Limit State (ULS)</b> and <b>Serviceability Limit State (SLS)</b> verifications.
+        The system enables the evaluation of the <b>safety</b> and <b>structural performance</b> of timber girders by calculating the geometric properties of rectangular and circular cross-sections and determining internal forces such as <b>bending moments, shear forces, and support reactions</b>, while considering <b>permanent and variable loads</b>. In addition, the platform incorporates the vertical impact coefficient according to <b>NBR 7188:2024</b> and performs <b>Ultimate Limit State (ULS)</b> and <b>Serviceability Limit State (SLS)</b> verifications.
         </p>
 
         <p>
@@ -119,7 +119,7 @@ textos = {
         whose goal is to <b>minimize the volume of timber used</b> while <b>maximizing structural performance</b> in terms of deflection, within the limits established by technical standards. 
         The optimization process is performed using the <b>NSGA-II algorithm</b>, an evolutionary method widely applied to solve multi-objective 
         optimization problems, capable of generating a set of optimal solutions known as the <b>Pareto frontier</b>. 
-        To perform the analysis, the user must provide the geometric and mechanical properties of the timber used in the stringers and deck, the applied loads, and the admissible bounds of the design variables.
+        To perform the analysis, the user must provide the geometric and mechanical properties of the timber used in the girders and deck, the applied loads, and the admissible bounds of the design variables.
         </p>
 
         <p>

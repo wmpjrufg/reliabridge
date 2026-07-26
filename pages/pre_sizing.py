@@ -8,7 +8,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 
-from madeiras import textos_pre_sizing_l, montar_excel, montar_excel_df, chamando_nsga2, fronteira_pareto
+from madeiras import textos_pre_sizing_l, montar_excel, montar_excel_df, chamando_nsga2, chamar_sobol, fronteira_pareto, plot_sobol_total_indices, plot_boxplot_variaveis_fronteira
 
 
 # -----------------------------
@@ -20,7 +20,15 @@ def make_signature(d: dict) -> str:
 
 def invalidate_results():
     st.session_state["has_results"] = False
-    for k in ["df_resultados", "excel_bytes_resultados", "fig_png", "zip_bytes", "sig_last"]:
+    for k in [
+        "df_resultados",
+        "excel_bytes_resultados",
+        "fig_png",
+        "zip_bytes",
+        "sig_last",
+        "sobol_args",
+        "sobol_result",
+    ]:
         st.session_state.pop(k, None)
 
 if "has_results" not in st.session_state:
@@ -33,6 +41,7 @@ if "has_results" not in st.session_state:
 lang = st.session_state.get("lang", "pt")
 textos = textos_pre_sizing_l()
 t = textos.get(lang, textos["pt"])
+SOBOL_N_SAMPLES = 10000
 
 CLASSE_CARREGAMENTO_MAP = {
     "permanent": "permanente",
@@ -249,6 +258,8 @@ if submitted_design:
             erros.append(f"- {t['diametro_minimo']} > {t['diametro_maximo']}")
         if n_max_long is None or n_max_long <= 0:
             erros.append(f"- {t['espaço_max_longarinas']}")
+        if n_min_long is not None and n_max_long is not None and n_min_long > n_max_long:
+            erros.append(f"- {t['espaço_min_longarinas']} > {t['espaço_max_longarinas']}")
 
     # ------------------------------------------------------------
     # Variáveis de otimização - Tabuleiro
@@ -268,6 +279,8 @@ if submitted_design:
             erros.append(f"- {t['altura_viga_tabuleiro_min']} > {t['altura_viga_tabuleiro_max']}")
         if n_max_tab is None or n_max_tab <= 0:
             erros.append(f"- {t['espaço_max_tabuleiros']}")
+        if n_min_tab is not None and n_max_tab is not None and n_min_tab > n_max_tab:
+            erros.append(f"- {t['espaço_min_tabuleiros']} > {t['espaço_max_tabuleiros']}")
 
     # ------------------------------------------------------------
     # Cargas
@@ -402,6 +415,16 @@ if submitted_design:
     st.session_state["excel_bytes_resultados"] = excel_bytes_resultados
     st.session_state["fig_png"] = fig_png
     st.session_state["zip_bytes"] = zip_bytes
+    st.session_state["sobol_args"] = {
+        "dados": dados_projeto.copy(),
+        "ds": ds,
+        "bws": bws,
+        "hs": hs,
+        "n_long": n_p_long,
+        "n_tab": n_p_tab,
+        "t": t.copy(),
+    }
+    st.session_state.pop("sobol_result", None)
     st.session_state["has_results"] = True
 
 
@@ -416,6 +439,62 @@ if st.session_state.get("has_results", False):
     col_left, col_center, col_right = st.columns([1, 2, 1])
     with col_center:
         st.image(st.session_state["fig_png"])
+
+    st.subheader(t["fronteira_variaveis_head"])
+    st.caption(t["fronteira_variaveis_info"])
+    df_resultados_cached = st.session_state["df_resultados"]
+    coluna_esp_tab = "esp_tab_cm" if "esp_tab_cm" in df_resultados_cached.columns else "deck_spacing_cm"
+    fig_variaveis = plot_boxplot_variaveis_fronteira(
+        df_resultados_cached,
+        ["d_cm", "bw_cm", "h_cm", "esp_cm", coluna_esp_tab],
+        t["fronteira_variaveis_labels"],
+        t["fronteira_variaveis_y"],
+    )
+    st.pyplot(fig_variaveis, clear_figure=True)
+
+    st.subheader(t["sobol_head"])
+    st.caption(t["sobol_info"])
+
+    if st.button(t["sobol_button"], key="run_sobol"):
+        sobol_args = st.session_state.get("sobol_args")
+        if sobol_args is None:
+            st.warning(t.get("aviso_gerar_primeiro", "Sem resultados atuais. Clique em Gerar para processar."))
+        else:
+            try:
+                with st.spinner(t["sobol_spinner"]):
+                    st.session_state["sobol_result"] = chamar_sobol(
+                        sobol_args["dados"],
+                        sobol_args["ds"],
+                        sobol_args["bws"],
+                        sobol_args["hs"],
+                        sobol_args["n_long"],
+                        sobol_args["n_tab"],
+                        sobol_args["t"],
+                        n_samples=SOBOL_N_SAMPLES,
+                    )
+            except Exception as exc:
+                st.error(str(exc))
+
+    if "sobol_result" in st.session_state:
+        sobol_result = st.session_state["sobol_result"]
+        st.markdown(f"**{t['sobol_total_order']}**")
+        fig_sobol = plot_sobol_total_indices(
+            sobol_result["total_order"],
+            label_x=t["sobol_axis_constraints"],
+            label_y=t["sobol_axis_variables"],
+            x_labels=t["sobol_constraint_labels"],
+            y_labels=t["sobol_variable_labels"],
+        )
+        st.pyplot(fig_sobol, clear_figure=True)
+
+        sobol_export = sobol_result["total_order"].assign(indice="total_order")
+        st.download_button(
+            label=t["sobol_download"],
+            data=montar_excel_df(sobol_export),
+            file_name="sobol_constraints.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+        st.info(t["sobol_next_step"])
 
     st.download_button(
         label=t["botao_dados_down"],
