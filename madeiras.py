@@ -965,7 +965,26 @@ def textos_design() -> dict:
     textos = {
                 "pt": {
                         "titulo": "Projeto estrutural paramétrico de uma ponte de madeira",
-                        "pre": "Verificação dos elementos estruturais",
+                        "pre": """
+                                ### Instruções
+
+                                Nesta seção, o usuário deve carregar a planilha `beam_data.xlsx` gerada no **pré-dimensionamento** e informar a geometria da solução que deseja verificar:
+
+                                - diâmetro da longarina (`d`);
+                                - largura do tabuleiro (`bw`);
+                                - altura do tabuleiro (`h`);
+                                - espaçamento entre longarinas;
+                                - espaçamento entre peças do tabuleiro.
+
+                                A partir desses dados, o sistema verifica se a longarina e o tabuleiro atendem às funções de verificação de flexão, cisalhamento e flecha.
+
+                                O principal indicador exibido é `g_otimiz`. A interpretação é direta:
+
+                                - `g_otimiz <= 0`: a verificação atende;
+                                - `g_otimiz > 0`: a verificação não atende.
+
+                                Quanto mais próximo de zero e negativo, mais próximo a peça está do limite sem ultrapassá-lo. Valores positivos indicam violação da restrição.
+                                """,
                         "dados_pre": "Dados para dimensionamento",
                         "entrada_tipo_secao_longarina": "Tipo de seção",
                         "tipo_secao_longarina": ["Circular"],
@@ -975,6 +994,7 @@ def textos_design() -> dict:
                         "tipo_secao_tabuleiro_opcoes": ["Retangular"],
                         "largura_viga_tabuleiro": "Largura viga (cm) seção do tabuleiro",
                         "altura_viga_tabuleiro": "Altura viga (cm) seção do tabuleiro",
+                        "espaçamento_entre_tabuleiros": "Espaçamento entre peças do tabuleiro (cm)",
                         "planilha_head": "Planilha de dados do projeto",
                         "texto_up": "Faça upload do arquivo gerado no pré-dimensionamento (.xlsx)",
                         "aguardando_upload": "Aguardando upload da planilha de pré-dimensionamento.",
@@ -991,6 +1011,7 @@ def textos_design() -> dict:
                         "gerador_desempenho": "Gerar desempenho estrutural para pré-dimensionamento",
                         "resultado_relatorios": "Relatórios completos de cálculo",
                         "resultado_head": "Relatórios de dimensionamento",
+                        "resultado_intro": "Resumo das funções de verificação. O relatório em PDF apresenta as contas detalhadas.",
                         "verif_longarina_titulo": "Verificações da longarina",
                         "label_flexao": "Flexão",
                         "label_cisalhamento": "Cisalhamento",
@@ -1006,20 +1027,44 @@ def textos_design() -> dict:
                         "erro_sem_planilha": "Envie a planilha .xlsx para continuar.",
                         "erro_geo": "Preencha a geometria (longarina e tabuleiro) para continuar.",
                         "status_ok": "OK",
-                        "status_falha": "NÃO ATENDE"
+                        "status_falha": "NÃO ATENDE",
+                        "indicador_g": "Indicador g_otimiz",
+                        "g_atende": "Atende: g_otimiz <= 0.",
+                        "g_nao_atende": "Não atende: g_otimiz > 0.",
+                        "g_interpretacao": "Valores negativos indicam folga na verificação; valores positivos indicam violação da restrição.",
                     },
                 "en": {
                         "titulo": "Parametric structural design of a wooden bridge",
-                        "pre": "Verification of structural elements",
+                        "pre": """
+                                ### Instructions
+
+                                In this section, the user must upload the `beam_data.xlsx` spreadsheet generated in **pre-sizing** and enter the geometry of the solution to be checked:
+
+                                - girder diameter (`d`);
+                                - deck width (`bw`);
+                                - deck height (`h`);
+                                - spacing between girders;
+                                - spacing between deck elements.
+
+                                Based on these data, the system checks whether the girder and deck satisfy the bending, shear, and deflection verification functions.
+
+                                The main indicator displayed is `g_otimiz`. Its interpretation is direct:
+
+                                - `g_otimiz <= 0`: the verification passes;
+                                - `g_otimiz > 0`: the verification fails.
+
+                                The closer the value is to zero on the negative side, the closer the member is to its limit without exceeding it. Positive values indicate constraint violation.
+                                """,
                         "dados_pre": "Data for sizing",
                         "entrada_tipo_secao_longarina": "Section type",
                         "tipo_secao_longarina": ["Circular"],
-                        "diametro_longarina": "Equivalent beam diameter (cm) according to item 9.7 of NBR 7190",
-                        "espaçamento_entre_longarinas": "Spacing between beams (cm)",
+                        "diametro_longarina": "Equivalent girder diameter (cm) according to item 9.7 of NBR 7190",
+                        "espaçamento_entre_longarinas": "Spacing between girders (cm)",
                         "tipo_secao_tabuleiro": "Deck section type",
                         "tipo_secao_tabuleiro_opcoes": ["Rectangular"],
-                        "largura_viga_tabuleiro": "Beam width (cm) deck section",
-                        "altura_viga_tabuleiro": "Beam height (cm) deck section",
+                        "largura_viga_tabuleiro": "Deck plank width (cm)",
+                        "altura_viga_tabuleiro": "Deck plank height (cm)",
+                        "espaçamento_entre_tabuleiros": "Spacing between deck elements (cm)",
                         "planilha_head": "Upload data spreadsheet",
                         "texto_up": "Upload the file generated in the pre-sizing (.xlsx)",
                         "aguardando_upload": "Waiting for pre-sizing spreadsheet upload.",
@@ -1036,6 +1081,7 @@ def textos_design() -> dict:
                         "gerador_desempenho": "Generate structural performance for pre-sizing",
                         "resultado_relatorios":  "Complete calculation reports",
                         "resultado_head": "Full design report",
+                        "resultado_intro": "Summary of the verification functions. The PDF report presents the detailed calculations.",
                         "verif_longarina_titulo": "Girder checks",
                         "label_flexao": "Bending",
                         "label_cisalhamento": "Shear",
@@ -1050,7 +1096,11 @@ def textos_design() -> dict:
                         "erro_sem_planilha": "Send the .xlsx spreadsheet to continue.",
                         "erro_geo": "Fill in the geometry (beam and deck) to continue.",
                         "status_ok": "OK",
-                        "status_falha": "NOT OK"
+                        "status_falha": "NOT OK",
+                        "indicador_g": "g_otimiz indicator",
+                        "g_atende": "Passes: g_otimiz <= 0.",
+                        "g_nao_atende": "Fails: g_otimiz > 0.",
+                        "g_interpretacao": "Negative values indicate reserve in the verification; positive values indicate constraint violation.",
                     },
             }
     return textos
@@ -1074,22 +1124,22 @@ def textos_pre_sizing_l() -> dict:
                                     Nesta ferramenta paramétrica, as principais **variáveis de projeto** consideradas no processo de otimização são:
 
                                     - **diâmetro das longarinas**;
-                                    - **número de longarinas**;
+                                    - **espaçamento entre longarinas**;
                                     - **dimensões das pranchas do tabuleiro**;
-                                    - **número de peças do tabuleiro**.
+                                    - **espaçamento entre peças do tabuleiro**.
 
                                     O **percentual de robustez** representa a variação considerada nas variáveis de projeto durante a otimização. Por exemplo, ao informar **5%**, cada solução candidata é avaliada também com pequenas perturbações de até ±5% nas variáveis, permitindo buscar geometrias menos sensíveis a variações dimensionais e incertezas de execução. O valor **0%** corresponde a uma otimização determinística, sem perturbações.
 
-                                    Os **valores iniciais da quantidade de peças** apresentadas no formulário são calculados automaticamente com base nas **dimensões mínimas informadas pelo usuário**, como o diâmetro das longarinas e as dimensões das seções do tabuleiro. Esses valores podem ser **ajustados manualmente**, caso o usuário deseje explorar outras configurações de projeto.
+                                    Os **intervalos das variáveis de projeto** informados no formulário definem o espaço de busca utilizado pelo algoritmo. A partir desses limites, o processo de otimização explora diferentes combinações de dimensões e espaçamentos para encontrar soluções viáveis.
 
                                     Além disso, o usuário poderá definir:
 
-                                    - o **espaçamento mínimo entre longarinas**;
-                                    - o **espaçamento máximo entre peças do tabuleiro**.
+                                    - o **espaçamento mínimo e máximo entre longarinas**;
+                                    - o **espaçamento mínimo e máximo entre peças do tabuleiro**.
 
                                     Ao final do processo de otimização, será obtida uma **fronteira eficiente (fronteira de Pareto)** contendo as soluções estruturalmente viáveis encontradas pelo algoritmo. O usuário poderá então **baixar uma planilha** contendo todas as configurações que apresentaram desempenho satisfatório durante o processo de otimização.
 
-                                    Caso nenhuma solução viável seja encontrada, os **parâmetros de entrada poderão ser ajustados** e o processo de otimização poderá ser executado novamente. Os dados informados permanecem **armazenados em cache**, permitindo a continuidade das análises sem necessidade de reinserção das informações. Vale salientar que o tempo de processamento pode variar conforme a quantidade de soluções e a velocidade da internet. Testes em máquinas comuns de escritório indicamq que o processo pode levar entre 1 a 5 min.
+                                    Caso nenhuma solução viável seja encontrada, os **parâmetros de entrada poderão ser ajustados** e o processo de otimização poderá ser executado novamente. Os dados informados permanecem **armazenados em cache**, permitindo a continuidade das análises sem necessidade de reinserção das informações. Vale salientar que o tempo de processamento pode variar conforme os limites informados, o percentual de robustez e o desempenho do computador. Testes em máquinas comuns de escritório indicam que o processo pode levar de 1 a 5 minutos.
                                     """,
                         "entrada_comprimento": "Comprimento das longarinas (cm)",
                         "pista": "Largura da pista disponível para longarinas (cm)",
@@ -1177,22 +1227,22 @@ def textos_pre_sizing_l() -> dict:
                             In this parametric tool, the main **design variables** considered in the optimization process are:
 
                             - **girder diameter**;
-                            - **number of girders**;
+                            - **spacing between girders**;
                             - **deck plank dimensions**;
-                            - **number of deck elements**.
+                            - **spacing between deck elements**.
 
                             The **robustness percentage** represents the variation considered in the design variables during optimization. For example, when **5%** is entered, each candidate solution is also evaluated with small perturbations of up to ±5% in the variables, helping identify geometries that are less sensitive to dimensional variation and construction uncertainty. A value of **0%** corresponds to deterministic optimization, without perturbations.
 
-                            The **initial values for the number of elements** displayed in the form are automatically calculated based on the **minimum dimensions provided by the user**, such as the girder diameter and the deck section dimensions. These values can be **manually adjusted** if the user wishes to explore alternative design configurations.
+                            The **design-variable intervals** provided in the form define the search space used by the algorithm. Based on these limits, the optimization process explores different combinations of dimensions and spacing values to identify feasible solutions.
 
                             In addition, the user may define:
 
-                            - the **minimum spacing between girders**;
-                            - the **maximum spacing between deck elements**.
+                            - the **minimum and maximum spacing between girders**;
+                            - the **minimum and maximum spacing between deck elements**.
 
                             At the end of the optimization process, an **efficient frontier (Pareto frontier)** will be obtained, containing the structurally feasible solutions identified by the algorithm. The user will then be able to **download a spreadsheet** containing all configurations that successfully met the optimization criteria.
 
-                            If no feasible solution is found, the **input parameters can be adjusted**, and the optimization process can be executed again. The input data remain **stored in cache**, allowing the analysis to continue without the need to re-enter the information. It is worth noting that the processing time may vary depending on the number of solutions and the internet speed. Tests on common office machines indicate that the process can take between 1 to 5 minutes.
+                            If no feasible solution is found, the **input parameters can be adjusted**, and the optimization process can be executed again. The input data remain **stored in cache**, allowing the analysis to continue without the need to re-enter the information. It is worth noting that the processing time may vary depending on the specified bounds, the robustness percentage, and the computer performance. Tests on common office machines indicate that the process can take from 1 to 5 minutes.
                             """,
                     "entrada_comprimento": "Girder length (cm)",
                     "pista": "Available roadway width for girders (cm)",
@@ -1280,7 +1330,11 @@ def momento_max_carga_variavel_tabuleiro(p_rodak: float, esp: float, a_r: float 
 
 
 def gerar_relatorio_final(projeto, res, geo_real):
-    """Gera o relatório em Markdown com todos os detalhes do dimensionamento da peça de madeira.
+    """Gera o relatório de dimensionamento em Markdown.
+
+    A memória de cálculo (Seção 3) é emitida em LaTeX (display math), apresentando
+    para cada grandeza a fórmula simbólica, a substituição numérica e o resultado,
+    de modo a permitir a conferência manual passo a passo.
     """
 
     # Separando os Dados
@@ -1306,22 +1360,363 @@ def gerar_relatorio_final(projeto, res, geo_real):
             return str(val)
 
     # Verifica se a análise deu "OK".
-    # Se deu, coloca o check verde ✅. Se não, coloca o X vermelho ❌.
     def status_icon(dicio):
-        return "✅ APROVADO" if dicio.get("analise") == "OK" else "❌ REPROVADO"
+        return "**APROVADO**" if dicio.get("analise") == "OK" else "**REPROVADO**"
+
+    def f(val, decimals=4):
+        return fmt(val, 1.0, decimals)
+
+    def fmpa(val_kpa, decimals=3):
+        return fmt(val_kpa, 1000.0, decimals)
+
+    def eq(*linhas: str) -> str:
+        """Monta um bloco de equação LaTeX (display) com as linhas alinhadas pelo '='.
+
+        As linhas devem ser passadas como raw strings de LaTeX, já contendo o '&='
+        a partir da segunda. Ex.: eq(r"A &= \\frac{\\pi d^2}{4}", r"&= 0.28").
+        """
+        return "$$\n\\begin{aligned}\n" + " \\\\\n".join(linhas) + "\n\\end{aligned}\n$$\n"
+
+    l_m = projeto.l / 100.0
+    bw_pista_m = projeto.bw_pista / 100.0
+    d_m = float(geo_real["d"]) / 100.0
+    bw_m = float(geo_real["bw"]) / 100.0
+    h_m = float(geo_real["h"]) / 100.0
+    esp_long_m = float(geo_real["esp"]) / 100.0
+    esp_tab_m = float(geo_real.get("esp_tab", 0.0)) / 100.0
+    esp_long_corr = relat_carga.get("esp_long_corr [m]", esp_long_m)
+    esp_tab_corr = relat_carga.get("esp_tab_corr [m]", esp_tab_m)
+    dens_long_kn = projeto.densidade_long * 9.81 / 1000.0
+    dens_tab_kn = projeto.densidade_tab * 9.81 / 1000.0
+    m_qk_long_sem_impacto = relat_l.get("m_qk [kN.m]", 0.0) / relat_l.get("aux_ci", 1.0)
+    v_qk_long_sem_impacto = relat_l.get("v_qk [kN]", 0.0) / relat_l.get("aux_ci", 1.0)
+    c_momento = (l_m - 4.0 * projeto.a) / 2.0 if l_m > 6.0 else 0.0
+    e_cortante = l_m - 3.0 * projeto.a - 2.0 * d_m
+    b_flecha = (l_m - 2.0 * projeto.a) / 2.0
+    aux_flecha = l_m**3 + 2.0 * b_flecha * (3.0 * l_m**2 - 4.0 * b_flecha**2)
+    delta_total = res_f.get("delta_fluencia [m]")
+    delta_q = res_f.get("delta_qk [m]")
+    delta_g = relat_l.get("delta_gk [m]")
+    delta_lim_total = res_f.get("delta_lim_total [m]")
+    delta_lim_variavel = res_f.get("delta_lim_variavel [m]")
+
+    # ------------------------------------------------------------------
+    # Seção 3 — memória de cálculo (equações em LaTeX)
+    # ------------------------------------------------------------------
+    # As equações são montadas com raw strings concatenadas (e não f-strings)
+    # para evitar a duplicação de chaves que o LaTeX exigiria dentro de f-string.
+
+    memoria_detalhada = (
+        "\n# 3. Memória de Cálculo Detalhada\n\n"
+        "Para cada grandeza são apresentadas a fórmula simbólica, a substituição "
+        "numérica e o resultado, permitindo a conferência manual passo a passo.\n\n"
+
+        "## 3.1 Conversão de unidades\n\n"
+        "As dimensões são informadas em centímetros e convertidas para metros.\n\n"
+        + eq(
+            r"L &= \frac{" + fmt(projeto.l) + r"}{100} = " + f(l_m) + r"\ \text{m}",
+            r"B_{pista} &= \frac{" + fmt(projeto.bw_pista) + r"}{100} = " + f(bw_pista_m) + r"\ \text{m}",
+            r"d &= \frac{" + fmt(geo_real['d']) + r"}{100} = " + f(d_m) + r"\ \text{m}",
+            r"b_{w} &= \frac{" + fmt(geo_real['bw']) + r"}{100} = " + f(bw_m) + r"\ \text{m}",
+            r"h &= \frac{" + fmt(geo_real['h']) + r"}{100} = " + f(h_m) + r"\ \text{m}",
+            r"esp_{long} &= \frac{" + fmt(geo_real['esp']) + r"}{100} = " + f(esp_long_m) + r"\ \text{m}",
+            r"esp_{tab} &= \frac{" + fmt(geo_real.get('esp_tab', 0.0)) + r"}{100} = " + f(esp_tab_m) + r"\ \text{m}",
+        )
+
+        + "\n## 3.2 Propriedades geométricas da longarina (seção circular)\n\n"
+        + eq(
+            r"A &= \frac{\pi\,d^{2}}{4}",
+            r"&= \frac{\pi \cdot (" + f(d_m) + r")^{2}}{4}",
+            r"&= " + f(relat_l.get('area [m2]'), 6) + r"\ \text{m}^{2}",
+        )
+        + eq(
+            r"I_{x} &= \frac{\pi\,d^{4}}{64}",
+            r"&= \frac{\pi \cdot (" + f(d_m) + r")^{4}}{64}",
+            r"&= " + f(relat_l.get('i_x [m4]'), 8) + r"\ \text{m}^{4}",
+        )
+        + eq(
+            r"W_{x} &= \frac{I_{x}}{d/2}",
+            r"&= \frac{" + f(relat_l.get('i_x [m4]'), 8) + r"}{" + f(d_m) + r"/2}",
+            r"&= " + f(relat_l.get('w_x [m3]'), 8) + r"\ \text{m}^{3}",
+        )
+        + eq(
+            r"S_{x} &= A \cdot \frac{d}{2}",
+            r"&= " + f(relat_l.get('area [m2]'), 6) + r" \cdot \frac{" + f(d_m) + r"}{2}",
+            r"&= " + f(relat_l.get('s_x [m3]'), 8) + r"\ \text{m}^{3}",
+        )
+
+        + "\n## 3.3 Propriedades geométricas do tabuleiro (seção retangular)\n\n"
+        + eq(
+            r"A_{tab} &= b_{w} \cdot h",
+            r"&= " + f(bw_m) + r" \cdot " + f(h_m),
+            r"&= " + f(relat_t.get('area [m2]'), 6) + r"\ \text{m}^{2}",
+        )
+        + eq(
+            r"I_{x,tab} &= \frac{b_{w}\,h^{3}}{12}",
+            r"&= \frac{" + f(bw_m) + r" \cdot (" + f(h_m) + r")^{3}}{12}",
+            r"&= " + f(relat_t.get('i_x [m4]'), 8) + r"\ \text{m}^{4}",
+        )
+        + eq(
+            r"W_{x,tab} &= \frac{I_{x,tab}}{h/2}",
+            r"&= \frac{" + f(relat_t.get('i_x [m4]'), 8) + r"}{" + f(h_m) + r"/2}",
+            r"&= " + f(relat_t.get('w_x [m3]'), 8) + r"\ \text{m}^{3}",
+        )
+
+        + "\n## 3.4 Ajuste geométrico dos espaçamentos\n\n"
+        + "O número de peças é inteiro, de modo que o espaçamento informado é ajustado "
+        + "para preencher exatamente o espaço disponível.\n\n"
+        + eq(
+            r"n_{long} &= " + str(relat_carga.get('num_longs')) + r"\ \text{peças}",
+            r"esp_{long,corr} &= " + f(esp_long_corr) + r"\ \text{m} = " + fmt(esp_long_corr * 100.0) + r"\ \text{cm}",
+            r"n_{tab} &= " + str(relat_carga.get('num_tabs')) + r"\ \text{peças}",
+            r"esp_{tab,corr} &= " + f(esp_tab_corr) + r"\ \text{m} = " + fmt(esp_tab_corr * 100.0) + r"\ \text{cm}",
+        )
+
+        + "\n## 3.5 Cargas permanentes\n\n"
+        + "Conversão da densidade (kg/m³) em peso específico (kN/m³):\n\n"
+        + eq(
+            r"\gamma_{long} &= \frac{\rho_{long} \cdot 9{,}81}{1000}"
+            r" = \frac{" + fmt(projeto.densidade_long) + r" \cdot 9{,}81}{1000}"
+            r" = " + f(dens_long_kn) + r"\ \text{kN/m}^{3}",
+            r"\gamma_{tab} &= \frac{\rho_{tab} \cdot 9{,}81}{1000}"
+            r" = \frac{" + fmt(projeto.densidade_tab) + r" \cdot 9{,}81}{1000}"
+            r" = " + f(dens_tab_kn) + r"\ \text{kN/m}^{3}",
+        )
+        + "Peso próprio da longarina:\n\n"
+        + eq(
+            r"pp_{long} &= \gamma_{long} \cdot A",
+            r"&= " + f(dens_long_kn) + r" \cdot " + f(relat_l.get('area [m2]'), 6),
+            r"&= " + f(relat_carga.get('pp_gk_long [kN/m]')) + r"\ \text{kN/m}",
+        )
+        + "Peso próprio do tabuleiro, distribuído por área de pista:\n\n"
+        + eq(
+            r"pp_{tab} &= \frac{\gamma_{tab} \cdot n_{tab} \cdot (h \cdot b_{w} \cdot B_{pista})}{B_{pista} \cdot L}",
+            r"&= \frac{" + f(dens_tab_kn) + r" \cdot " + str(relat_carga.get('num_tabs'))
+            + r" \cdot (" + f(h_m) + r" \cdot " + f(bw_m) + r" \cdot " + f(bw_pista_m) + r")}"
+            + r"{" + f(bw_pista_m) + r" \cdot " + f(l_m) + r"}",
+            r"&= " + f(relat_carga.get('pp_tab [kPa]')) + r"\ \text{kPa}",
+        )
+        + "Carga permanente total sobre a longarina:\n\n"
+        + eq(
+            r"p_{g,long} &= (p_{gk} + pp_{tab}) \cdot esp_{long,corr} + pp_{long}",
+            r"&= (" + f(projeto.p_gk) + r" + " + f(relat_carga.get('pp_tab [kPa]')) + r") \cdot "
+            + f(esp_long_corr) + r" + " + f(relat_carga.get('pp_gk_long [kN/m]')),
+            r"&= " + f(relat_carga.get('p_glongk [kN/m]')) + r"\ \text{kN/m}",
+        )
+        + "Carga permanente sobre a peça do tabuleiro:\n\n"
+        + eq(
+            r"p_{g,tab} &= (p_{gk} + pp_{tab}) \cdot b_{w}",
+            r"&= (" + f(projeto.p_gk) + r" + " + f(relat_carga.get('pp_tab [kPa]')) + r") \cdot " + f(bw_m),
+            r"&= " + f(relat_carga.get('p_gtabk [kN/m]')) + r"\ \text{kN/m}",
+        )
+
+        + "\n## 3.6 Esforços solicitantes na longarina\n\n"
+        + "Coeficiente de impacto vertical (NBR 7188) e coeficiente auxiliar:\n\n"
+        + eq(
+            r"C_{i} &= " + f(relat_l.get('coeficiente_impacto_vertical'), 3),
+            r"aux_{ci} &= 1 + 0{,}75\,(C_{i} - 1)"
+            r" = 1 + 0{,}75 \cdot (" + f(relat_l.get('coeficiente_impacto_vertical'), 3) + r" - 1)"
+            r" = " + f(relat_l.get('aux_ci'), 3),
+        )
+        + "Momento fletor devido à carga permanente:\n\n"
+        + eq(
+            r"M_{gk} &= \frac{p_{g,long} \cdot L^{2}}{8}",
+            r"&= \frac{" + f(relat_carga.get('p_glongk [kN/m]')) + r" \cdot (" + f(l_m) + r")^{2}}{8}",
+            r"&= " + f(relat_l.get('m_gk [kN.m]')) + r"\ \text{kN}\cdot\text{m}",
+        )
+        + "Momento fletor devido à carga móvel:\n\n"
+        + eq(
+            r"c &= \frac{L - 4a}{2} = \frac{" + f(l_m) + r" - 4 \cdot " + f(projeto.a) + r"}{2} = " + f(c_momento) + r"\ \text{m}",
+        )
+        + eq(
+            r"M_{qk,0} &= \frac{3\,P_{roda}\,L}{4} - P_{roda}\,a + \frac{p_{qk}\,c^{2}}{2}",
+            r"&= \frac{3 \cdot " + f(projeto.p_rodak) + r" \cdot " + f(l_m) + r"}{4}"
+            r" - " + f(projeto.p_rodak) + r" \cdot " + f(projeto.a)
+            + r" + \frac{" + f(projeto.p_qk) + r" \cdot (" + f(c_momento) + r")^{2}}{2}",
+            r"&= " + f(m_qk_long_sem_impacto) + r"\ \text{kN}\cdot\text{m}",
+        )
+        + eq(
+            r"M_{qk} &= M_{qk,0} \cdot aux_{ci}",
+            r"&= " + f(m_qk_long_sem_impacto) + r" \cdot " + f(relat_l.get('aux_ci'), 3),
+            r"&= " + f(relat_l.get('m_qk [kN.m]')) + r"\ \text{kN}\cdot\text{m}",
+        )
+        + "Momento fletor de cálculo:\n\n"
+        + eq(
+            r"M_{sd} &= \gamma_{g}\,M_{gk} + \gamma_{q}\,M_{qk}",
+            r"&= " + f(projeto.gamma_g) + r" \cdot " + f(relat_l.get('m_gk [kN.m]'))
+            + r" + " + f(projeto.gamma_q) + r" \cdot " + f(relat_l.get('m_qk [kN.m]')),
+            r"&= " + f(res_m.get('m_sd [kN.m]')) + r"\ \text{kN}\cdot\text{m}",
+        )
+        + "Esforço cortante devido à carga permanente:\n\n"
+        + eq(
+            r"V_{gk} &= \frac{p_{g,long} \cdot L}{2}",
+            r"&= \frac{" + f(relat_carga.get('p_glongk [kN/m]')) + r" \cdot " + f(l_m) + r"}{2}",
+            r"&= " + f(relat_l.get('v_gk [kN]')) + r"\ \text{kN}",
+        )
+        + "Esforço cortante devido à carga móvel:\n\n"
+        + eq(
+            r"e &= L - 3a - 2d = " + f(l_m) + r" - 3 \cdot " + f(projeto.a)
+            + r" - 2 \cdot " + f(d_m) + r" = " + f(e_cortante) + r"\ \text{m}",
+        )
+        + eq(
+            r"V_{qk,0} &= \frac{P_{roda}}{L}\,(6a + 3e) + \frac{p_{qk}\,e^{2}}{2L}",
+            r"&= \frac{" + f(projeto.p_rodak) + r"}{" + f(l_m) + r"} \cdot (6 \cdot " + f(projeto.a)
+            + r" + 3 \cdot " + f(e_cortante) + r")"
+            + r" + \frac{" + f(projeto.p_qk) + r" \cdot (" + f(e_cortante) + r")^{2}}{2 \cdot " + f(l_m) + r"}",
+            r"&= " + f(v_qk_long_sem_impacto) + r"\ \text{kN}",
+        )
+        + eq(
+            r"V_{qk} &= V_{qk,0} \cdot aux_{ci}",
+            r"&= " + f(v_qk_long_sem_impacto) + r" \cdot " + f(relat_l.get('aux_ci'), 3),
+            r"&= " + f(relat_l.get('v_qk [kN]')) + r"\ \text{kN}",
+        )
+        + "Esforço cortante de cálculo:\n\n"
+        + eq(
+            r"V_{sd} &= \gamma_{g}\,V_{gk} + \gamma_{q}\,V_{qk}",
+            r"&= " + f(projeto.gamma_g) + r" \cdot " + f(relat_l.get('v_gk [kN]'))
+            + r" + " + f(projeto.gamma_q) + r" \cdot " + f(relat_l.get('v_qk [kN]')),
+            r"&= " + f(res_v.get('v_sd [kN]')) + r"\ \text{kN}",
+        )
+
+        + "\n## 3.7 Verificação à flexão da longarina\n\n"
+        + "Coeficiente de modificação, resultado do produto entre o fator de duração do "
+        + "carregamento e o fator de classe de umidade:\n\n"
+        + eq(
+            r"k_{mod} &= k_{mod,1} \cdot k_{mod,2}",
+            r"&= " + f(res_m.get('k_mod1'), 3) + r" \cdot " + f(res_m.get('k_mod2'), 3),
+            r"&= " + f(res_m.get('k_mod'), 3),
+        )
+        + eq(
+            r"f_{md} &= \frac{k_{mod} \cdot f_{mk}}{\gamma_{wf}}",
+            r"&= \frac{" + f(res_m.get('k_mod'), 3) + r" \cdot " + f(projeto.f_mk_long * 1000.0) + r"}{" + f(projeto.gamma_wf) + r"}",
+            r"&= " + f(res_m.get('f_md [kPa]')) + r"\ \text{kPa} = " + fmpa(res_m.get('f_md [kPa]')) + r"\ \text{MPa}",
+        )
+        + eq(
+            r"\sigma_{x,d} &= \frac{M_{sd}}{W_{x}}",
+            r"&= \frac{" + f(res_m.get('m_sd [kN.m]')) + r"}{" + f(relat_l.get('w_x [m3]'), 8) + r"}",
+            r"&= " + f(res_m.get('sigma_x [kPa]')) + r"\ \text{kPa} = " + fmpa(res_m.get('sigma_x [kPa]')) + r"\ \text{MPa}",
+        )
+        + eq(
+            r"g &= \frac{\sigma_{x,d} - f_{md}}{f_{md}}",
+            r"&= \frac{" + f(res_m.get('sigma_x [kPa]')) + r" - " + f(res_m.get('f_md [kPa]')) + r"}{" + f(res_m.get('f_md [kPa]')) + r"}",
+            r"&= " + f(res_m.get('g_otimiz [-]'), 4),
+        )
+        + "Resultado: " + status_icon(res_m) + " ($g \\leq 0$ indica segurança).\n"
+
+        + "\n## 3.8 Verificação ao cisalhamento da longarina\n\n"
+        + eq(
+            r"f_{vd} &= \frac{k_{mod} \cdot f_{vk}}{\gamma_{wc}}",
+            r"&= \frac{" + f(res_m.get('k_mod'), 3) + r" \cdot " + f(projeto.f_vk_long * 1000.0) + r"}{" + f(projeto.gamma_wc) + r"}",
+            r"&= " + f(res_v.get('f_vd [kPa]')) + r"\ \text{kPa} = " + fmpa(res_v.get('f_vd [kPa]')) + r"\ \text{MPa}",
+        )
+        + "Para a seção circular, a tensão tangencial máxima ocorre no centro da seção:\n\n"
+        + eq(
+            r"\tau_{sd} &= \frac{4}{3} \cdot \frac{V_{sd}}{A}",
+            r"&= \frac{4}{3} \cdot \frac{" + f(res_v.get('v_sd [kN]')) + r"}{" + f(relat_l.get('area [m2]'), 6) + r"}",
+            r"&= " + f(res_v.get('tau_sd [kPa]')) + r"\ \text{kPa} = " + fmpa(res_v.get('tau_sd [kPa]')) + r"\ \text{MPa}",
+        )
+        + eq(
+            r"g &= \frac{\tau_{sd} - f_{vd}}{f_{vd}}",
+            r"&= \frac{" + f(res_v.get('tau_sd [kPa]')) + r" - " + f(res_v.get('f_vd [kPa]')) + r"}{" + f(res_v.get('f_vd [kPa]')) + r"}",
+            r"&= " + f(res_v.get('g_otimiz [-]'), 4),
+        )
+        + "Resultado: " + status_icon(res_v) + ".\n"
+
+        + "\n## 3.9 Verificação de flecha da longarina\n\n"
+        + "Flecha devida à carga permanente (viga biapoiada, carga uniformemente distribuída):\n\n"
+        + eq(
+            r"\delta_{gk} &= \frac{5\,p_{g,long}\,L^{4}}{384\,E\,I_{x}}",
+            r"&= \frac{5 \cdot " + f(relat_carga.get('p_glongk [kN/m]')) + r" \cdot (" + f(l_m) + r")^{4}}"
+            + r"{384 \cdot " + f(projeto.e_modflex_long * 1000000.0) + r" \cdot " + f(relat_l.get('i_x [m4]'), 8) + r"}",
+            r"&= " + f(delta_g, 6) + r"\ \text{m}",
+        )
+        + "Flecha devida à carga móvel concentrada:\n\n"
+        + eq(
+            r"b &= \frac{L - 2a}{2} = \frac{" + f(l_m) + r" - 2 \cdot " + f(projeto.a) + r"}{2} = " + f(b_flecha) + r"\ \text{m}",
+        )
+        + eq(
+            r"aux &= L^{3} + 2b\,(3L^{2} - 4b^{2})",
+            r"&= (" + f(l_m) + r")^{3} + 2 \cdot " + f(b_flecha)
+            + r" \cdot \left(3 \cdot (" + f(l_m) + r")^{2} - 4 \cdot (" + f(b_flecha) + r")^{2}\right)",
+            r"&= " + f(aux_flecha) + r"\ \text{m}^{3}",
+        )
+        + eq(
+            r"\delta_{qk} &= \frac{P_{roda} \cdot aux}{48\,E\,I_{x}}",
+            r"&= \frac{" + f(projeto.p_rodak) + r" \cdot " + f(aux_flecha) + r"}"
+            + r"{48 \cdot " + f(projeto.e_modflex_long * 1000000.0) + r" \cdot " + f(relat_l.get('i_x [m4]'), 8) + r"}",
+            r"&= " + f(delta_q, 6) + r"\ \text{m}",
+        )
+        + "Flecha total, considerando a fluência:\n\n"
+        + eq(
+            r"\delta_{total} &= \delta_{gk} + \psi_{2}\,(1 + \varphi)\,\delta_{qk}",
+            r"&= " + f(delta_g, 6) + r" + " + f(projeto.psi2) + r" \cdot (1 + " + f(projeto.phi) + r") \cdot " + f(delta_q, 6),
+            r"&= " + f(delta_total, 6) + r"\ \text{m}",
+        )
+        + "Limites normativos e funções de estado limite:\n\n"
+        + eq(
+            r"\delta_{lim,total} &= \frac{L}{250} = \frac{" + f(l_m) + r"}{250} = " + f(delta_lim_total, 6) + r"\ \text{m}",
+            r"\delta_{lim,var} &= \frac{L}{360} = \frac{" + f(l_m) + r"}{360} = " + f(delta_lim_variavel, 6) + r"\ \text{m}",
+        )
+        + eq(
+            r"g_{total} &= \frac{\delta_{total} - \delta_{lim,total}}{\delta_{lim,total}}"
+            r" = \frac{" + f(delta_total, 6) + r" - " + f(delta_lim_total, 6) + r"}{" + f(delta_lim_total, 6) + r"}",
+            r"g_{var} &= \frac{\delta_{qk} - \delta_{lim,var}}{\delta_{lim,var}}"
+            r" = \frac{" + f(delta_q, 6) + r" - " + f(delta_lim_variavel, 6) + r"}{" + f(delta_lim_variavel, 6) + r"}",
+            r"g &= \max(g_{total},\ g_{var}) = " + f(res_f.get('g_otimiz [-]'), 4),
+        )
+        + "Resultado: " + status_icon(res_f) + ".\n"
+
+        + "\n## 3.10 Esforços e verificação à flexão do tabuleiro\n\n"
+        + "A peça do tabuleiro é verificada como viga biapoiada, vencendo o vão entre longarinas.\n\n"
+        + eq(
+            r"C_{i,tab} &= " + f(relat_t.get('coeficiente_impacto_vertical'), 3),
+            r"aux_{ci,tab} &= 1 + 0{,}75\,(C_{i,tab} - 1) = " + f(relat_t.get('aux_ci'), 3),
+        )
+        + eq(
+            r"M_{gk,tab} &= \frac{p_{g,tab} \cdot esp_{long,corr}^{2}}{8}",
+            r"&= \frac{" + f(relat_carga.get('p_gtabk [kN/m]')) + r" \cdot (" + f(esp_long_corr) + r")^{2}}{8}",
+            r"&= " + f(relat_t.get('m_gk [kN.m]')) + r"\ \text{kN}\cdot\text{m}",
+        )
+        + eq(
+            r"M_{qk,tab} &= \frac{P_{roda}}{4}\,(esp_{long,corr} - 0{,}45) \cdot aux_{ci,tab}",
+            r"&= \frac{" + f(projeto.p_rodak) + r"}{4} \cdot (" + f(esp_long_corr) + r" - 0{,}45) \cdot " + f(relat_t.get('aux_ci'), 3),
+            r"&= " + f(relat_t.get('m_qk [kN.m]')) + r"\ \text{kN}\cdot\text{m}",
+        )
+        + eq(
+            r"M_{sd,tab} &= \gamma_{g}\,M_{gk,tab} + \gamma_{q}\,M_{qk,tab}",
+            r"&= " + f(projeto.gamma_g) + r" \cdot " + f(relat_t.get('m_gk [kN.m]'))
+            + r" + " + f(projeto.gamma_q) + r" \cdot " + f(relat_t.get('m_qk [kN.m]')),
+            r"&= " + f(res_m_tab.get('m_sd [kN.m]')) + r"\ \text{kN}\cdot\text{m}",
+        )
+        + eq(
+            r"f_{md,tab} &= \frac{k_{mod} \cdot f_{mk,tab}}{\gamma_{wf}}",
+            r"&= \frac{" + f(res_m_tab.get('k_mod'), 3) + r" \cdot " + f(projeto.f_mk_tab * 1000.0) + r"}{" + f(projeto.gamma_wf) + r"}",
+            r"&= " + f(res_m_tab.get('f_md [kPa]')) + r"\ \text{kPa} = " + fmpa(res_m_tab.get('f_md [kPa]')) + r"\ \text{MPa}",
+        )
+        + eq(
+            r"\sigma_{x,d,tab} &= \frac{M_{sd,tab}}{W_{x,tab}}",
+            r"&= \frac{" + f(res_m_tab.get('m_sd [kN.m]')) + r"}{" + f(relat_t.get('w_x [m3]'), 8) + r"}",
+            r"&= " + f(res_m_tab.get('sigma_x [kPa]')) + r"\ \text{kPa} = " + fmpa(res_m_tab.get('sigma_x [kPa]')) + r"\ \text{MPa}",
+        )
+        + eq(
+            r"g_{tab} &= \frac{\sigma_{x,d,tab} - f_{md,tab}}{f_{md,tab}}",
+            r"&= \frac{" + f(res_m_tab.get('sigma_x [kPa]')) + r" - " + f(res_m_tab.get('f_md [kPa]')) + r"}{" + f(res_m_tab.get('f_md [kPa]')) + r"}",
+            r"&= " + f(res_m_tab.get('g_otimiz [-]'), 4),
+        )
+        + "Resultado: " + status_icon(res_m_tab) + ".\n"
+    )
 
     # Escrevendo o Relatório
 
     # Montagem do texto final. Usa f-strings (o f na frente das aspas)
     # para injetar os valores das variáveis direto no meio do texto.
-    
+
     md = f"""
-<div style="text-align: center">
-  <h1>RELIABRIDGE</h1>
-  <h2>Memorial de Cálculo Detalhado</h2>
-  <p><strong>Grupo de Pesquisa e Estudos em Engenharia - GPEE</strong></p>
-  <p>Data de emissão: {datetime.now().strftime('%d/%m/%Y')}</p>
-</div>
+# RELIABRIDGE — Memorial de Cálculo
+
+**Grupo de Pesquisa e Estudos em Engenharia — GPEE**
+
+Data de emissão: {datetime.now().strftime('%d/%m/%Y')}
 
 ---
 
@@ -1329,91 +1724,93 @@ def gerar_relatorio_final(projeto, res, geo_real):
 
 ---
 
-# 1. Dados de Entrada e Materiais
+# 1. Dados de Entrada
 
-| Parâmetro | Valor | Unidade | Descrição |
-| :--- | :---: | :---: | :--- |
-| *Vão ($l$)* | {fmt(projeto.l)} | cm | Comprimento do vão livre |
-| *Carga Perm. ($p_{{gk}}$)* | {fmt(projeto.p_gk)} | kN/m | Carga distribuída na longarina |
-| *Carga Roda ($P_{{rodak}}$)* | {fmt(projeto.p_rodak)} | kN | Carga pontual característica |
-| *Carga Multidão ($p_{{qk}}$)* | {fmt(projeto.p_qk)} | kPa | Carga distribuída de multidão |
-| *Classe Madeira* | {projeto.classe_madeira.title()} | - | Umidade: {projeto.classe_umidade} |
-| *$f_{{mk}}$ Longarina* | {projeto.f_mk_long} | MPa | Resistência característica flexão |
-| *$E_{{m}}$ Longarina* | {projeto.e_modflex_long} | GPa | Módulo de Elasticidade |
-| *Coef. Segurança* | $\\gamma_g={projeto.gamma_g}, \\gamma_q={projeto.gamma_q}$ | - | Majoradores de carga |
+Os valores abaixo reproduzem integralmente a planilha `beam_data.xlsx` gerada no pré-dimensionamento.
+
+## 1.1 Geometria geral
+
+| Parâmetro | Símbolo | Valor | Unidade |
+| :--- | :---: | :---: | :---: |
+| Vão teórico das longarinas | $L$ | {fmt(projeto.l)} | cm |
+| Largura da pista disponível | $B_{{pista}}$ | {fmt(projeto.bw_pista)} | cm |
+
+## 1.2 Ações
+
+| Parâmetro | Símbolo | Valor | Unidade |
+| :--- | :---: | :---: | :---: |
+| Carga permanente no tabuleiro (excluso peso próprio) | $p_{{gk}}$ | {fmt(projeto.p_gk)} | kPa |
+| Carga concentrada por roda | $P_{{rodak}}$ | {fmt(projeto.p_rodak)} | kN |
+| Carga de multidão | $p_{{qk}}$ | {fmt(projeto.p_qk)} | kPa |
+| Distância entre eixos do trem tipo | $a$ | {fmt(projeto.a)} | m |
+
+## 1.3 Classes normativas
+
+| Parâmetro | Valor |
+| :--- | :---: |
+| Classe de carregamento | {str(projeto.classe_carregamento).title()} |
+| Classe da madeira | {str(projeto.classe_madeira).title()} |
+| Classe de umidade | {projeto.classe_umidade} |
+
+## 1.4 Coeficientes parciais de segurança e de combinação
+
+| Parâmetro | Símbolo | Valor |
+| :--- | :---: | :---: |
+| Majoração das ações permanentes | $\\gamma_g$ | {fmt(projeto.gamma_g)} |
+| Majoração das ações variáveis | $\\gamma_q$ | {fmt(projeto.gamma_q)} |
+| Minoração da resistência à flexão | $\\gamma_{{wf}}$ | {fmt(projeto.gamma_wf)} |
+| Minoração da resistência ao cisalhamento | $\\gamma_{{wc}}$ | {fmt(projeto.gamma_wc)} |
+| Fator de combinação quase permanente | $\\psi_2$ | {fmt(projeto.psi2)} |
+| Coeficiente de fluência (Tabela 20, NBR 7190) | $\\varphi$ | {fmt(projeto.phi)} |
+
+## 1.5 Propriedades dos materiais
+
+| Elemento | Parâmetro | Símbolo | Valor | Unidade |
+| :--- | :--- | :---: | :---: | :---: |
+| Longarina | Densidade | $\\rho_{{long}}$ | {fmt(projeto.densidade_long)} | kg/m$^3$ |
+| Longarina | Resistência caract. à flexão | $f_{{mk}}$ | {fmt(projeto.f_mk_long)} | MPa |
+| Longarina | Resistência caract. ao cisalhamento | $f_{{vk}}$ | {fmt(projeto.f_vk_long)} | MPa |
+| Longarina | Módulo de elasticidade à flexão | $E_{{0,ef}}$ | {fmt(projeto.e_modflex_long)} | GPa |
+| Tabuleiro | Densidade | $\\rho_{{tab}}$ | {fmt(projeto.densidade_tab)} | kg/m$^3$ |
+| Tabuleiro | Resistência caract. à flexão | $f_{{mk,tab}}$ | {fmt(projeto.f_mk_tab)} | MPa |
 
 
 # 2. Geometria e Propriedades da Seção
 
-## 2.1 Dimensões Adotadas
-* *Longarina:* Seção {geo_real.get('tipo_secao_longarina', 'Circular')} com $d = {geo_real['d']}$ cm.
-* *Tabuleiro:* Seção Retangular com $b_w = {geo_real['bw']}$ cm e $h = {geo_real['h']}$ cm.
-* *Espaçamento:* {geo_real['esp']} cm entre longarinas.
+## 2.1 Dimensões adotadas
 
-## 2.2 Propriedades Geométricas Calculadas (Longarina)
+| Elemento | Parâmetro | Valor | Unidade |
+| :--- | :--- | :---: | :---: |
+| Longarina | Diâmetro ($d$) | {fmt(geo_real['d'])} | cm |
+| Longarina | Espaçamento informado | {fmt(geo_real['esp'])} | cm |
+| Longarina | Espaçamento ajustado | {fmt(esp_long_corr * 100.0)} | cm |
+| Longarina | Número de peças | {relat_carga.get('num_longs')} | - |
+| Tabuleiro | Largura ($b_w$) | {fmt(geo_real['bw'])} | cm |
+| Tabuleiro | Altura ($h$) | {fmt(geo_real['h'])} | cm |
+| Tabuleiro | Espaçamento informado | {fmt(geo_real.get('esp_tab', 0.0))} | cm |
+| Tabuleiro | Espaçamento ajustado | {fmt(esp_tab_corr * 100.0)} | cm |
+| Tabuleiro | Número de peças | {relat_carga.get('num_tabs')} | - |
 
-| Propriedade | Símbolo | Valor Calculado | Unidade |
+## 2.2 Propriedades geométricas da longarina
+
+| Propriedade | Símbolo | Valor | Unidade |
 | :--- | :---: | :---: | :---: |
-| *Área da Seção* | $A$ | {fmt(relat_l.get('area [m2]'), 0.0001)} | $cm^2$ |
-| *Módulo Resistente* | $W_x$ | {fmt(relat_l.get('w_x [m3]'), 0.000001)} | $cm^3$ |
-| *Momento de Inércia* | $I_x$ | {fmt(relat_l.get('i_x [m4]'), 0.00000001)} | $cm^4$ |
-| *Momento Estático* | $S_x$ | {fmt(relat_l.get('s_x [m3]'), 0.000001)} | $cm^3$ |
+| Área da seção | $A$ | {fmt(relat_l.get('area [m2]'), 0.0001)} | cm$^2$ |
+| Módulo resistente | $W_x$ | {fmt(relat_l.get('w_x [m3]'), 0.000001)} | cm$^3$ |
+| Momento de inércia | $I_x$ | {fmt(relat_l.get('i_x [m4]'), 0.00000001)} | cm$^4$ |
+| Momento estático | $S_x$ | {fmt(relat_l.get('s_x [m3]'), 0.000001)} | cm$^3$ |
 
+## 2.3 Propriedades geométricas do tabuleiro
 
-# 3. Detalhamento dos Esforços (Longarina)
-
-Aqui apresentamos os esforços característicos (sem coeficientes de segurança) e os fatores de impacto utilizados.
-
-| Esforço / Fator | Símbolo | Valor | Unidade/Obs |
-| :--- | :---: | :---: | :--- |
-| *Coef. Impacto Vertical* | $C_i$ | {fmt(relat_l.get('coeficiente_impacto_vertical'), 1, 3)} | Calculado via norma |
-| *Auxiliar Impacto* | $Aux_{{ci}}$ | {fmt(relat_l.get('aux_ci'), 1, 3)} | - |
-| *Momento Permanente* | $M_{{gk}}$ | {fmt(relat_l.get('m_gk [kN.m]'))} | kN.m |
-| *Momento Variável* | $M_{{qk}}$ | {fmt(relat_l.get('m_qk [kN.m]'))} | kN.m |
-| *Momento de Cálculo* | *$M_{{sd}}$* | *{fmt(relat_l.get('m_sd [kN.m]'))}* | *kN.m* (Majorado) |
-
-
-# 4. Verificação ELU: Longarina
-
-## 4.1 Flexão Simples
-*Status:* {status_icon(res_m)}
-
-* *Tensão Atuante ($\\sigma_{{x,d}}$):* {fmt(res_m.get('sigma_x [kPa]'), 1000)} MPa
-* *Resistência ($f_{{md}}$):* {fmt(res_m.get('f_md [kPa]'), 1000)} MPa
-* *Coeficientes de Modificação ($k_{{mod}}$):*
-    * $k_{{mod,1}} = {res_m.get('k_mod1')}$ (Carregamento)
-    * $k_{{mod,2}} = {res_m.get('k_mod2')}$ (Umidade)
-    * $k_{{mod,3}} = {fmt(float(res_m.get('k_mod', 0)) / (float(res_m.get('k_mod1', 1))*float(res_m.get('k_mod2', 1))), 1, 2)}$ (Categoria)
-    * *$k_{{mod, total}} = {res_m.get('k_mod')}$*
-
-## 4.2 Cisalhamento
-*Status:* {status_icon(res_v)}
-
-* *Cortante de Cálculo ($V_{{sd}}$):* {fmt(res_v.get('v_sd [kN]'))} kN
-* *Tensão Atuante ($\\tau_{{sd}}$):* {fmt(res_v.get('tau_sd [kPa]'), 1000)} MPa
-* *Resistência ($f_{{vd}}$):* {fmt(res_v.get('f_vd [kPa]'), 1000)} MPa
-
-
-# 5. Verificação ELS: Deformação (Flecha)
-
-*Status:* {status_icon(res_f)}
-
-| Componente | Valor Calculado | Limite Normativo | Análise |
+| Propriedade | Símbolo | Valor | Unidade |
 | :--- | :---: | :---: | :---: |
-| *Flecha Instantânea ($Q$)* | {fmt(res_f.get('delta_qk [m]'), 0.01)} cm | - | - |
-| *Flecha Fluência* | {fmt(res_f.get('delta_fluencia [m]'), 0.01)} cm | - | $\\phi = {projeto.phi}$ |
-| *Flecha Variável (Lim.)* | *{fmt(res_f.get('delta_lim_variavel [m]'), 0.01)} cm* | *{fmt(res_f.get('delta_lim [m]'), 0.01)} cm* | *{res_f.get('analise')}* |
-| *Flecha Total* | {fmt(res_f.get('delta_lim_total [m]'), 0.01)} cm | - | Informativo |
+| Área da seção | $A_{{tab}}$ | {fmt(relat_t.get('area [m2]'), 0.0001)} | cm$^2$ |
+| Módulo resistente | $W_{{x,tab}}$ | {fmt(relat_t.get('w_x [m3]'), 0.000001)} | cm$^3$ |
+| Momento de inércia | $I_{{x,tab}}$ | {fmt(relat_t.get('i_x [m4]'), 0.00000001)} | cm$^4$ |
 
+{memoria_detalhada}
 
-# 6. Tabuleiro: Verificação Local
-
-*Status Flexão:* {status_icon(res_m_tab)}
-
-* *Momento de Cálculo ($M_{{sd}}$):* {fmt(res_m_tab.get('m_sd [kN.m]'))} kN.m
-* *Tensão Atuante ($\\sigma_{{x,d}}$):* {fmt(res_m_tab.get('sigma_x [kPa]'), 1000)} MPa
-* *Resistência ($f_{{md}}$):* {fmt(res_m_tab.get('f_md [kPa]'), 1000)} MPa
-* *Coeficientes:* $k_{{mod}} = {res_m_tab.get('k_mod')}$ ($k_{{mod1}}={res_m_tab.get('k_mod1')}, k_{{mod2}}={res_m_tab.get('k_mod2')}$)
+---
 
 Relatório gerado automaticamente pelo sistema RELIABRIDGE em {datetime.now().strftime('%d/%m/%Y às %H:%M')}.
 """
@@ -1731,7 +2128,7 @@ def _normalizar_chave_excel(chave: str) -> str:
     return " ".join(chave.lower().split())
 
 
-def _valor_dados(dados: dict, *nomes: str, default=None):
+def valor_dados_pre_sizing(dados: dict, *nomes: str, default=None):
     for nome in nomes:
         if nome in dados and pd.notna(dados[nome]):
             return dados[nome]
@@ -1749,6 +2146,9 @@ def _valor_dados(dados: dict, *nomes: str, default=None):
     if default is not None:
         return default
     raise KeyError(f"Nenhuma destas chaves foi encontrada nos dados: {nomes}")
+
+
+_valor_dados = valor_dados_pre_sizing
 
 
 def normalizar_dados_pre_sizing(dados: dict, t: dict) -> dict:

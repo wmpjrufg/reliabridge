@@ -494,7 +494,6 @@ if st.session_state.get("has_results", False):
             file_name="sobol_constraints.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
-        st.info(t["sobol_next_step"])
 
     st.download_button(
         label=t["botao_dados_down"],

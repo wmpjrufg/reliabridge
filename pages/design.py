@@ -7,7 +7,15 @@ from datetime import datetime
 import streamlit as st
 import pandas as pd
 
-from madeiras import textos_design, ProjetoOtimo, gerar_relatorio_final, markdown_para_pdf
+from madeiras import (
+    textos_design,
+    textos_pre_sizing_l,
+    normalizar_dados_pre_sizing,
+    valor_dados_pre_sizing,
+    ProjetoOtimo,
+    gerar_relatorio_final,
+    markdown_para_pdf,
+)
 
 
 # -----------------------------
@@ -41,6 +49,42 @@ def status_global(prefixo: str, *blocos: dict) -> tuple[str, bool]:
     return f"{emoji} {prefixo} — {status_texto}", passou
 
 
+def render_verificacao(nome: str, resultado: dict, t_local: dict):
+    g = float(resultado.get("g_otimiz [-]", 0.0))
+    atende = g <= 0.0
+    status = t_local["status_ok"] if atende else t_local["status_falha"]
+    interpretacao = t_local["g_atende"] if atende else t_local["g_nao_atende"]
+
+    st.markdown(f"**{nome}**")
+    col1, col2 = st.columns([1, 2])
+    with col1:
+        st.metric(t_local["indicador_g"], f"{g:.4f}")
+    with col2:
+        st.markdown(f"**{status}**")
+        st.caption(interpretacao)
+        st.caption(t_local["g_interpretacao"])
+
+
+def normalizar_planilha_pre_sizing(row: pd.Series, lang_atual: str) -> tuple[dict, dict]:
+    dados_raw = row.to_dict()
+    textos_pre = textos_pre_sizing_l()
+    idiomas = [lang_atual, "pt", "en"]
+    idiomas = list(dict.fromkeys([idioma for idioma in idiomas if idioma in textos_pre]))
+    ultimo_erro = None
+
+    for idioma in idiomas:
+        t_pre = textos_pre[idioma]
+        try:
+            return normalizar_dados_pre_sizing(dados_raw, t_pre), t_pre
+        except KeyError as exc:
+            ultimo_erro = exc
+
+    raise KeyError(
+        "Não foi possível reconhecer as chaves da planilha de pré-dimensionamento. "
+        "Gere novamente o arquivo beam_data.xlsx no pre-sizing e tente carregar aqui."
+    ) from ultimo_erro
+
+
 # -----------------------------
 # UI text
 # -----------------------------
@@ -49,7 +93,7 @@ textos = textos_design()
 t = textos.get(lang, textos["pt"])
 
 st.header(t["titulo"])
-st.subheader(t["pre"])
+st.markdown(t["pre"])
 
 
 # ============================================================
@@ -82,6 +126,9 @@ with st.form("form_design", clear_on_submit=False):
         if str(tipo_secao_tabuleiro).lower() in ["retangular", "rectangular"]:
             bw_cm = st.number_input(t["largura_viga_tabuleiro"], step=1.0, key="input_bw_cm")
             h_cm = st.number_input(t["altura_viga_tabuleiro"], step=1.0, key="input_h_cm")
+            esp_tab_cm = st.number_input(t["espaçamento_entre_tabuleiros"], step=1.0, key="input_esp_tab_cm")
+        else:
+            esp_tab_cm = 0.0
 
     st.subheader(t["planilha_head"])
     uploaded_file = st.file_uploader(t["texto_up"], type=["xlsx"], key="uploaded_design_xlsx")
@@ -107,41 +154,62 @@ if submitted_design:
 
     # Se df tem 1 linha, usamos a primeira
     df0 = df.iloc[0]
+    try:
+        dados_pre, t_pre = normalizar_planilha_pre_sizing(df0, lang)
+    except KeyError as exc:
+        st.error(str(exc))
+        st.stop()
+
+    if any(float(valor) <= 0 for valor in [d_cm, esp_cm, bw_cm, h_cm, esp_tab_cm]):
+        st.error(t["erro_geo"])
+        st.stop()
 
     # Instancia o dimensionamento
     projeto_instancia = ProjetoOtimo(
-        l=df0["l (cm)"],
-        p_gk=df0["p_gk (kPa)"],
-        p_rodak=df0["p_rodak (kN)"],
-        p_qk=df0["p_qk (kPa)"],
-        a=df0["a (m)"],
-        classe_carregamento=df0["classe_carregamento"],
-        classe_madeira=df0["classe_madeira"],
-        classe_umidade=df0["classe_umidade"],
-        gamma_g=df0["gamma_g"],
-        gamma_q=df0["gamma_q"],
-        gamma_wc=df0["gamma_wc"],
-        gamma_wf=df0["gamma_wf"],
-        psi2=df0["psi_2"],
-        phi=df0["phi"],
-        densidade_long=df0["densidade longarina (kg/m³)"],
-        densidade_tab=df0["densidade tabuleiro (kg/m³)"],
-        f_mk_long=df0["resistência característica à flexão longarina (MPa)"],
-        f_vk_long=df0["resistência característica ao cisalhamento longarina (MPa)"],
-        e_modflex_long=df0["módulo de elasticidade à flexão longarina (GPa)"],
-        f_mk_tab=df0["resistência característica à flexão tabuleiro (MPa)"],
-        d_min=0, d_max=0, esp_min=0, esp_max=0, bw_min=0, bw_max=0, h_min=0, h_max=0
+        bw_pista=dados_pre[t_pre["pista"]],
+        l=dados_pre[t_pre["entrada_comprimento"]],
+        p_gk=dados_pre[f"{t_pre['carga_permanente']} (kPa)"],
+        p_rodak=dados_pre[f"{t_pre['carga_roda']} (kN)"],
+        p_qk=dados_pre[f"{t_pre['carga_multidao']} (kPa)"],
+        a=dados_pre[f"{t_pre['distancia_eixos']} (m)"],
+        classe_carregamento=dados_pre[t_pre["classe_carregamento"]],
+        classe_madeira=dados_pre[t_pre["classe_madeira"]],
+        classe_umidade=dados_pre[t_pre["classe_umidade"]],
+        gamma_g=dados_pre[t_pre["gamma_g"]],
+        gamma_q=dados_pre[t_pre["gamma_q"]],
+        gamma_wc=dados_pre[t_pre["gamma_wc"]],
+        gamma_wf=dados_pre[t_pre["gamma_wf"]],
+        psi2=dados_pre[t_pre["psi2"]],
+        phi=dados_pre[t_pre["considerar_fluencia"]],
+        densidade_long=valor_dados_pre_sizing(dados_pre, f"{t_pre['densidade_long']} (kg/m³)", f"{t_pre['densidade_long']} (kg/mÂ³)"),
+        densidade_tab=valor_dados_pre_sizing(dados_pre, f"{t_pre['densidade_tab']} (kg/m³)", f"{t_pre['densidade_tab']} (kg/mÂ³)"),
+        f_mk_long=valor_dados_pre_sizing(dados_pre, f"{t_pre['f_mk']} (MPa)"),
+        f_vk_long=valor_dados_pre_sizing(dados_pre, f"{t_pre['f_vk']} (MPa)"),
+        e_modflex_long=valor_dados_pre_sizing(dados_pre, f"{t_pre['e_modflex']} (GPa)"),
+        f_mk_tab=valor_dados_pre_sizing(dados_pre, f"{t_pre['f_mk_tab']} (MPa)"),
+        d_min=float(d_cm),
+        d_max=float(d_cm),
+        bw_min=float(bw_cm),
+        bw_max=float(bw_cm),
+        h_min=float(h_cm),
+        h_max=float(h_cm),
+        n_min_long=float(esp_cm),
+        n_max_long=float(esp_cm),
+        n_min_tab=float(esp_tab_cm),
+        n_max_tab=float(esp_tab_cm),
+        n_checagens=1,
+        perc_robustez=0.0,
     )
 
     # Calcula
     res_calculado = projeto_instancia.calcular_objetivos_restricoes_otimizacao(
-        d=float(d_cm), esp=float(esp_cm), bw=float(bw_cm), h=float(h_cm)
+        d=float(d_cm), bw=float(bw_cm), h=float(h_cm), n_long=float(esp_cm), n_tab=float(esp_tab_cm)
     )
 
     # Persistência total dos dados para evitar NameError
     st.session_state["projeto_obj"] = projeto_instancia
     st.session_state["res_design"] = res_calculado
-    st.session_state["geo_final"] = {'d': d_cm, 'esp': esp_cm, 'bw': bw_cm, 'h': h_cm}
+    st.session_state["geo_final"] = {'d': d_cm, 'esp': esp_cm, 'bw': bw_cm, 'h': h_cm, 'esp_tab': esp_tab_cm}
     st.session_state["has_results"] = True
 
 
@@ -155,26 +223,23 @@ if st.session_state.get("has_results", False):
     geo_final = st.session_state["geo_final"]
 
     st.subheader(t["resultado_head"])
+    st.caption(t["resultado_intro"])
 
     # Verificações — Longarina
     titulo_longarina, longarina_ok = status_global(t["verif_longarina_titulo"], res[2], res[3], res[4])
     with st.expander(titulo_longarina, expanded=not longarina_ok):
         col1, col2, col3 = st.columns(3)
         with col1:
-            st.markdown(f"**{t['label_flexao']}**")
-            st.json(res[2])
+            render_verificacao(t["label_flexao"], res[2], t)
         with col2:
-            st.markdown(f"**{t['label_cisalhamento']}**")
-            st.json(res[3])
+            render_verificacao(t["label_cisalhamento"], res[3], t)
         with col3:
-            st.markdown(f"**{t['label_flecha']}**")
-            st.json(res[4])
+            render_verificacao(t["label_flecha"], res[4], t)
 
     # Verificações — Tabuleiro
     titulo_tabuleiro, tabuleiro_ok = status_global(t["verif_tabuleiro_titulo"], res[6])
     with st.expander(titulo_tabuleiro, expanded=not tabuleiro_ok):
-        st.markdown(f"**{t['label_flexao']}**")
-        st.json(res[6])
+        render_verificacao(t["label_flexao"], res[6], t)
 
     # # Auditoria
     # with st.expander(t["resultado_relatorios"], expanded=False):
