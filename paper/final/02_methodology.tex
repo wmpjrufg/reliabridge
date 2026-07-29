@@ -49,21 +49,27 @@ Diferentemente da otimização monoobjetivo, o problema não conduz a uma única
 
 O vetor de variáveis de projeto é $\mathbf{x} = (d, b_w, h, n_{long}, n_{tab})^T$, composto pelo diâmetro da longarina circular ($d$), pela largura ($b_w$) e altura ($h$) da seção transversal das pranchas do tabuleiro, e pelos parâmetros de espaçamento das longarinas ($n_{long}$) e das peças do tabuleiro ($n_{tab}$). As propriedades da seção da longarina dependem diretamente de seu diâmetro, o qual influencia a rigidez, a resistência e o peso próprio. O espaçamento e as dimensões do tabuleiro condicionam a distribuição de esforços e os níveis de deformação do conjunto.
 
-O problema é formulado com duas funções objetivo antagônicas. A primeira consiste na minimização da área total de madeira, conforme a Equação~\eqref{eq:f1}.
+O problema é formulado com duas funções objetivo antagônicas, ambas de minimização. A primeira consiste na minimização do volume total de madeira, conforme a Equação~\eqref{eq:f1}.
 
 \begin{equation}
-f_1(\mathbf{x}) = A_{\mathrm{total}} = n_{long}\,A_{long}\,L + n_{tab}\,A_{tab}\,b_{w,\mathrm{pista}}
+f_1(\mathbf{x}) = V_{\mathrm{total}} = n_{long}\,A_{long}\,L + n_{tab}\,A_{tab}\,b_{w,\mathrm{pista}}
 \label{eq:f1}
 \end{equation}
 
-A segunda função objetivo visa maximizar o desempenho estrutural em serviço, expresso pela relação entre o deslocamento total e o deslocamento limite. Para manter a estrutura de minimização, essa função é definida com sinal negativo, conforme a Equação~\eqref{eq:f2}.
+Onde $A_{long} = \pi d^2/4$ e $A_{tab} = b_w h$ são as áreas das seções transversais da longarina e da prancha do tabuleiro, de modo que $f_1$ resulta em unidade de volume (m\textsuperscript{3}).
+
+A segunda função objetivo consiste na minimização da utilização do estado limite de serviço, expressa pela razão entre o deslocamento total e o deslocamento limite, conforme a Equação~\eqref{eq:f2}.
 
 \begin{equation}
-f_2(\mathbf{x}) = -\,\frac{\delta_{\mathrm{tot}}}{\delta_{\mathrm{lim}}} = -\,\frac{\delta_{\mathrm{tot}}}{L/250}
+f_2(\mathbf{x}) = \frac{\delta_{\mathrm{tot}}}{\delta_{\mathrm{lim}}} = \frac{\delta_{gk} + \psi_2\,(1+\varphi)\,\delta_{qk}}{L/250}
 \label{eq:f2}
 \end{equation}
 
-Onde $\delta_{\mathrm{tot}}$ é o deslocamento total no meio do vão da longarina sob a combinação das ações permanentes e variáveis, e $\delta_{\mathrm{lim}} = L/250$ é o limite admissível de deslocamento. Os objetivos são antagônicos, pois a redução da área tende a intensificar as deformações, enquanto o aumento da rigidez demanda maior quantidade de material.
+Onde $\delta_{\mathrm{tot}}$ é o deslocamento total no meio do vão da longarina sob a combinação quase permanente das ações, e $\delta_{\mathrm{lim}} = L/250$ é o limite admissível prescrito pela ABNT NBR 7190 \parencite{NBR7190-1:2022}. A função $f_2$ é adimensional e normalizada, sendo o valor unitário correspondente exatamente ao limite normativo.
+
+Os objetivos são antagônicos. A redução do volume exige a diminuição do diâmetro da longarina, o que reduz o momento de inércia com a quarta potência (Equação~\eqref{eq:icirc}) e intensifica os deslocamentos, elevando $f_2$. Inversamente, a redução dos deslocamentos exige o aumento da rigidez e, portanto, maior consumo de material. Nenhuma alteração nas variáveis de projeto melhora simultaneamente as duas funções, o que caracteriza um compromisso genuíno e conduz a uma fronteira de Pareto não degenerada.
+
+Ressalta-se que as ações do trem tipo são parâmetros fixos do problema, e não variáveis de decisão: o carregamento é prescrito pela ABNT NBR 7188 \parencite{nbr7188} e define o cenário de cada caso de estudo. O efeito do trem tipo sobre a solução ótima é avaliado pela comparação entre execuções independentes da otimização, conforme apresentado na Seção~\ref{sec:comparacao}.
 
 O problema está sujeito às restrições estruturais associadas aos estados limites último e de serviço. Para a longarina, impõem-se a restrição de tensão normal à flexão (Equação~\eqref{eq:g1}), a restrição de tensão de cisalhamento (Equação~\eqref{eq:g2}) e a restrição de deslocamentos (Equação~\eqref{eq:g3}). Para o tabuleiro, impõe-se a restrição de tensão normal à flexão (Equação~\eqref{eq:g4}).
 
@@ -175,7 +181,7 @@ Onde $\rho = 0{,}05$ corresponde ao desvio de 5\% aplicado a todas as variáveis
 
 Dessa forma, uma solução só é considerada viável e economicamente vantajosa se mantiver o atendimento às restrições, em média, mesmo quando suas variáveis de projeto oscilam dentro da faixa de $\pm 5\%$. Soluções posicionadas exatamente sobre o limite de uma restrição passam a apresentar violação em parte das realizações perturbadas, elevando o valor médio $\bar{g}_j$ e sendo, portanto, penalizadas pelo mecanismo de viabilidade do NSGA-II. O efeito prático é o deslocamento da fronteira eficiente para o interior do domínio viável, resultando em soluções com margem de segurança adicional em troca de um acréscimo controlado no consumo de material. O número de checagens $N_c$ controla a estabilidade da estimativa do valor médio: valores maiores reduzem a variância da avaliação, ao custo de maior esforço computacional.
 
-Para investigar esse efeito de forma sistemática, quatro níveis de desvio são avaliados, $\rho \in \{0\%,\ 2{,}5\%,\ 5\%,\ 10\%\}$, aplicados ao mesmo conjunto de variáveis de projeto e à mesma configuração de ponte. O nível $\rho = 0\%$ corresponde ao caso determinístico (sem robustez), empregado como referência para quantificar o acréscimo percentual de área associado a cada nível de robustez -- o custo da robustez --, enquanto $\rho = 5\%$ é o valor adotado como caso base ao longo deste trabalho, por refletir a ordem de grandeza da variabilidade dimensional usualmente admitida para peças de madeira roliça. Os resultados dessa análise de sensibilidade são apresentados na Seção~\ref{sec:custo_robustez}.
+Para investigar esse efeito de forma sistemática, quatro níveis de desvio são avaliados, $\rho \in \{0\%,\ 2{,}5\%,\ 5\%,\ 10\%\}$, aplicados ao mesmo conjunto de variáveis de projeto e à mesma configuração de ponte. O nível $\rho = 0\%$ corresponde ao caso determinístico (sem robustez), empregado como referência para quantificar o acréscimo percentual de volume associado a cada nível de robustez -- o custo da robustez --, enquanto $\rho = 5\%$ é o valor adotado como caso base ao longo deste trabalho, por refletir a ordem de grandeza da variabilidade dimensional usualmente admitida para peças de madeira roliça. Os resultados dessa análise de sensibilidade são apresentados na Seção~\ref{sec:custo_robustez}.
 
 A agregação por média, empregada nas Equações~\eqref{eq:fmed} e~\eqref{eq:gmed}, é a estratégia adotada neste trabalho. A comparação com uma formulação de pior caso, $\bar{g}_j = \max_c g_j(\tilde{\mathbf{x}}^{(c)})$, permanece como perspectiva de continuidade, discutida na Seção~\ref{sec:conclusoes}.
 

@@ -8,7 +8,22 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 
-from madeiras import textos_pre_sizing_l, montar_excel, montar_excel_df, chamando_nsga2, chamar_sobol, fronteira_pareto, plot_sobol_total_indices, plot_boxplot_variaveis_fronteira
+import matplotlib.pyplot as plt
+
+from madeiras import (
+    textos_pre_sizing_l,
+    montar_excel,
+    montar_excel_df,
+    chamando_nsga2,
+    chamar_sobol,
+    fronteira_pareto,
+    plot_sobol_total_indices,
+    plot_boxplot_variaveis_fronteira,
+    estatistica_descritiva_variaveis,
+    historico_hipervolume,
+    geracao_estabilizacao_hipervolume,
+    plot_convergencia_hipervolume,
+)
 
 
 # -----------------------------
@@ -23,13 +38,69 @@ def invalidate_results():
     for k in [
         "df_resultados",
         "excel_bytes_resultados",
+        "excel_bytes_entrada",
         "fig_png",
+        "boxplot_png",
+        "convergencia_png",
+        "sobol_png",
+        "df_estatistica",
+        "hist_hv",
+        "gen_estab",
         "zip_bytes",
         "sig_last",
         "sobol_args",
         "sobol_result",
     ]:
         st.session_state.pop(k, None)
+
+
+def figura_para_png(fig, dpi: int = 400) -> bytes:
+    """Serializa uma figura matplotlib em PNG e libera a memória associada."""
+    buffer = io.BytesIO()
+    fig.savefig(buffer, format="png", dpi=dpi, bbox_inches="tight")
+    plt.close(fig)
+    buffer.seek(0)
+    return buffer.getvalue()
+
+
+def montar_zip_pacote() -> bytes:
+    """Monta o pacote de download com planilhas e todas as figuras disponíveis.
+
+    As figuras são geradas no idioma corrente da interface, de modo que o pacote
+    saia inteiramente em português ou em inglês. É chamada novamente após a análise
+    de Sobol, para que o mapa de sensibilidade também entre no pacote.
+    """
+
+    itens = [
+        ("beam_data.xlsx", st.session_state.get("excel_bytes_entrada")),
+        ("pre_sizing_results_optimized.xlsx", st.session_state.get("excel_bytes_resultados")),
+        ("pareto_frontier.png", st.session_state.get("fig_png")),
+        ("design_variables_boxplot.png", st.session_state.get("boxplot_png")),
+        ("hypervolume_convergence.png", st.session_state.get("convergencia_png")),
+        ("sobol_total_indices.png", st.session_state.get("sobol_png")),
+    ]
+
+    df_estatistica = st.session_state.get("df_estatistica")
+    if df_estatistica is not None and not df_estatistica.empty:
+        itens.append(("design_variables_statistics.xlsx", montar_excel_df(df_estatistica)))
+
+    hist_hv = st.session_state.get("hist_hv")
+    if hist_hv is not None and not hist_hv.empty:
+        itens.append(("hypervolume_convergence.csv", hist_hv.to_csv(index=False).encode("utf-8")))
+
+    sobol_result = st.session_state.get("sobol_result")
+    if sobol_result is not None:
+        itens.append(
+            ("sobol_total_indices.xlsx", montar_excel_df(sobol_result["total_order"]))
+        )
+
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
+        for nome, conteudo in itens:
+            if conteudo:
+                zf.writestr(nome, conteudo)
+    buffer.seek(0)
+    return buffer.getvalue()
 
 if "has_results" not in st.session_state:
     st.session_state["has_results"] = False
@@ -346,12 +417,23 @@ if submitted_design:
     n_p_long = [float(n_min_long), float(n_max_long)]
     n_p_tab  = [float(n_min_tab),  float(n_max_tab)]
 
-    # NSGA-II
+    # NSGA-II (com histórico, para a curva de convergência do hipervolume)
     try:
-        res_nsga = chamando_nsga2(dados_projeto, ds, bws, hs, n_p_long, n_p_tab, t)
+        res_nsga, res_pymoo = chamando_nsga2(
+            dados_projeto, ds, bws, hs, n_p_long, n_p_tab, t, salvar_historico=True
+        )
     except ValueError as exc:
         st.error(str(exc))
         st.stop()
+
+    # Convergência do hipervolume. Falha aqui não deve derrubar o pré-dimensionamento,
+    # que é o resultado principal da tela.
+    hist_hv, gen_estab = None, None
+    try:
+        hist_hv = historico_hipervolume(res_pymoo)
+        gen_estab = geracao_estabilizacao_hipervolume(hist_hv)
+    except Exception as exc:
+        st.warning(f"Convergência não pôde ser calculada: {exc}")
 
     # padroniza DataFrame final (PT/EN)
     if lang == "pt":
@@ -361,7 +443,7 @@ if submitted_design:
                                         "bw_cm": res_nsga["bw [cm]"].tolist(),
                                         "h_cm": res_nsga["h [cm]"].tolist(),
                                         "esp_tab_cm": res_nsga["esp tab [cm]"].tolist(),
-                                        "of_area_m2": res_nsga["area [m²]"].tolist(),
+                                        "of_volume_m3": res_nsga["volume [m³]"].tolist(),
                                         "of_fator_flecha": res_nsga["delta [-]"].tolist(),
                                         "longarina_g_m": res_nsga["flex lim beam [(Ms-Mr)/Mr]"].tolist(),
                                         "longarina_g_v": res_nsga["cis lim beam [(Vs-Vr)/Vr]"].tolist(),
@@ -370,7 +452,7 @@ if submitted_design:
                                         "longarina_g_esp": res_nsga["spacing beam"].tolist(),
                                         "tabuleiro_g_esp": res_nsga["spacing deck"].tolist(),
                                     })
-        x = df_resultados["of_area_m2"].to_numpy()
+        x = df_resultados["of_volume_m3"].to_numpy()
         y = df_resultados["of_fator_flecha"].to_numpy()
     else:
         df_resultados = pd.DataFrame({
@@ -379,7 +461,7 @@ if submitted_design:
                                         "bw_cm": res_nsga["bw [cm]"].tolist(),
                                         "h_cm": res_nsga["h [cm]"].tolist(),
                                         "deck_spacing_cm": res_nsga["esp tab [cm]"].tolist(),
-                                        "of_area_m2": res_nsga["area [m²]"].tolist(),
+                                        "of_volume_m3": res_nsga["volume [m³]"].tolist(),
                                         "of_deflection_factor": res_nsga["delta [-]"].tolist(),
                                         "beam_g_m": res_nsga["flex lim beam [(Ms-Mr)/Mr]"].tolist(),
                                         "beam_g_v": res_nsga["cis lim beam [(Vs-Vr)/Vr]"].tolist(),
@@ -388,33 +470,51 @@ if submitted_design:
                                         "beam_g_spacing": res_nsga["spacing beam"].tolist(),
                                         "deck_g_spacing": res_nsga["spacing deck"].tolist(),
                                     })
-        x = df_resultados["of_area_m2"].to_numpy()
+        x = df_resultados["of_volume_m3"].to_numpy()
         y = df_resultados["of_deflection_factor"].to_numpy()
 
     # Excel dos resultados
     excel_bytes_resultados = montar_excel_df(df_resultados)
 
-    # Figura (salva como bytes PNG para re-render sem sumir)
-    fig = fronteira_pareto(x.tolist(), y.tolist(), t["tag_x_fig"], t["tag_y_fig"])
-    fig_buf = io.BytesIO()
-    fig.savefig(fig_buf, format="png", dpi=400, bbox_inches="tight")
-    fig_buf.seek(0)
-    fig_png = fig_buf.getvalue()
+    # Figuras. Todas são geradas com o dicionário de textos do idioma corrente,
+    # de modo que o pacote baixado sai inteiramente em português ou em inglês.
+    coluna_esp_tab = "esp_tab_cm" if "esp_tab_cm" in df_resultados.columns else "deck_spacing_cm"
+    colunas_variaveis = ["d_cm", "bw_cm", "h_cm", "esp_cm", coluna_esp_tab]
 
-    # ZIP (bytes)
-    zip_buffer = io.BytesIO()
-    with zipfile.ZipFile(zip_buffer, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
-        zf.writestr("beam_data.xlsx", excel_bytes)
-        zf.writestr("pre_sizing_results_optimized.xlsx", excel_bytes_resultados)
-        zf.writestr("pareto_frontier.png", fig_png)
-    zip_buffer.seek(0)
-    zip_bytes = zip_buffer.getvalue()
+    fig_png = figura_para_png(
+        fronteira_pareto(x.tolist(), y.tolist(), t["tag_x_fig"], t["tag_y_fig"])
+    )
+    boxplot_png = figura_para_png(
+        plot_boxplot_variaveis_fronteira(
+            df_resultados, colunas_variaveis,
+            t["fronteira_variaveis_labels"], t["fronteira_variaveis_y"],
+        )
+    )
+    convergencia_png = None
+    if hist_hv is not None:
+        convergencia_png = figura_para_png(
+            plot_convergencia_hipervolume(
+                {t["convergencia_serie"]: hist_hv},
+                label_x=t["convergencia_x"], label_y=t["convergencia_y"],
+            )
+        )
+
+    df_estatistica = estatistica_descritiva_variaveis(
+        df_resultados, colunas_variaveis,
+        t["fronteira_variaveis_labels"], t["estatistica_colunas"],
+    )
 
     # Persistência (para sobreviver a reruns)
     st.session_state["df_resultados"] = df_resultados
     st.session_state["excel_bytes_resultados"] = excel_bytes_resultados
     st.session_state["fig_png"] = fig_png
-    st.session_state["zip_bytes"] = zip_bytes
+    st.session_state["boxplot_png"] = boxplot_png
+    st.session_state["convergencia_png"] = convergencia_png
+    st.session_state["df_estatistica"] = df_estatistica
+    st.session_state["excel_bytes_entrada"] = excel_bytes
+    st.session_state["hist_hv"] = hist_hv
+    st.session_state["gen_estab"] = gen_estab
+    st.session_state["zip_bytes"] = montar_zip_pacote()
     st.session_state["sobol_args"] = {
         "dados": dados_projeto.copy(),
         "ds": ds,
@@ -435,22 +535,45 @@ if st.session_state.get("has_results", False):
     st.subheader(t["gerador_desempenho"])
     st.dataframe(st.session_state["df_resultados"], use_container_width=True)
 
-    st.subheader(t["fronteira_head"])
-    col_left, col_center, col_right = st.columns([1, 2, 1])
-    with col_center:
-        st.image(st.session_state["fig_png"])
+    # As figuras são reaproveitadas do PNG já gerado, e não redesenhadas a cada
+    # rerun: a tela mostra exatamente o mesmo arquivo que vai no pacote de download.
 
+    # --- Dispersão das variáveis de projeto (boxplot + estatística descritiva) ---
     st.subheader(t["fronteira_variaveis_head"])
     st.caption(t["fronteira_variaveis_info"])
-    df_resultados_cached = st.session_state["df_resultados"]
-    coluna_esp_tab = "esp_tab_cm" if "esp_tab_cm" in df_resultados_cached.columns else "deck_spacing_cm"
-    fig_variaveis = plot_boxplot_variaveis_fronteira(
-        df_resultados_cached,
-        ["d_cm", "bw_cm", "h_cm", "esp_cm", coluna_esp_tab],
-        t["fronteira_variaveis_labels"],
-        t["fronteira_variaveis_y"],
-    )
-    st.pyplot(fig_variaveis, clear_figure=True)
+    col_esq, col_meio, col_dir = st.columns([1, 4, 1])
+    with col_meio:
+        st.image(st.session_state["boxplot_png"])
+
+    st.markdown(f"**{t['estatistica_head']}**")
+    st.caption(t["estatistica_info"])
+    st.dataframe(st.session_state["df_estatistica"], use_container_width=True, hide_index=True)
+
+    # --- Fronteira eficiente ---
+    st.subheader(t["fronteira_head"])
+    col_esq, col_meio, col_dir = st.columns([1, 2, 1])
+    with col_meio:
+        st.image(st.session_state["fig_png"])
+
+    # --- Convergência do NSGA-II ---
+    hist_hv_cached = st.session_state.get("hist_hv")
+    convergencia_png_cached = st.session_state.get("convergencia_png")
+    if convergencia_png_cached is not None:
+        st.subheader(t["convergencia_head"])
+        st.caption(t["convergencia_info"])
+        col_esq, col_meio, col_dir = st.columns([1, 2, 1])
+        with col_meio:
+            st.image(convergencia_png_cached)
+
+        gen_estab_cached = st.session_state.get("gen_estab")
+        if gen_estab_cached and gen_estab_cached > 0 and hist_hv_cached is not None:
+            st.info(
+                t["convergencia_estabiliza"].format(
+                    hv=float(hist_hv_cached["hipervolume"].iloc[-1]),
+                    gen=gen_estab_cached,
+                    total=len(hist_hv_cached),
+                )
+            )
 
     st.subheader(t["sobol_head"])
     st.caption(t["sobol_info"])
@@ -472,20 +595,27 @@ if st.session_state.get("has_results", False):
                         sobol_args["t"],
                         n_samples=SOBOL_N_SAMPLES,
                     )
+                # Gera a figura e reconstrói o pacote, para que o mapa de Sobol
+                # também fique disponível no ZIP de download.
+                st.session_state["sobol_png"] = figura_para_png(
+                    plot_sobol_total_indices(
+                        st.session_state["sobol_result"]["total_order"],
+                        label_x=t["sobol_axis_constraints"],
+                        label_y=t["sobol_axis_variables"],
+                        x_labels=t["sobol_constraint_labels"],
+                        y_labels=t["sobol_variable_labels"],
+                    )
+                )
+                st.session_state["zip_bytes"] = montar_zip_pacote()
             except Exception as exc:
                 st.error(str(exc))
 
-    if "sobol_result" in st.session_state:
+    if "sobol_result" in st.session_state and st.session_state.get("sobol_png"):
         sobol_result = st.session_state["sobol_result"]
         st.markdown(f"**{t['sobol_total_order']}**")
-        fig_sobol = plot_sobol_total_indices(
-            sobol_result["total_order"],
-            label_x=t["sobol_axis_constraints"],
-            label_y=t["sobol_axis_variables"],
-            x_labels=t["sobol_constraint_labels"],
-            y_labels=t["sobol_variable_labels"],
-        )
-        st.pyplot(fig_sobol, clear_figure=True)
+        col_esq, col_meio, col_dir = st.columns([1, 4, 1])
+        with col_meio:
+            st.image(st.session_state["sobol_png"])
 
         sobol_export = sobol_result["total_order"].assign(indice="total_order")
         st.download_button(

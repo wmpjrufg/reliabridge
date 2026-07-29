@@ -25,6 +25,99 @@ mpl.rcParams.update({
                         'mathtext.fontset': 'cm',
                         'axes.unicode_minus': False
                     })
+
+# -----------------------------------------------------------------------------
+# Padrão visual único das figuras
+# -----------------------------------------------------------------------------
+# Todas as figuras da plataforma compartilham cor, tipografia e tamanhos, de modo
+# que possam ser usadas lado a lado em relatório e em artigo sem retrabalho.
+
+COR_PRIMARIA   = '#1f4e79'   # azul escuro, usado em linhas, pontos e contornos
+COR_SECUNDARIA = '#c00000'   # vermelho, reservado para destaque (ex.: média)
+COR_PREENCHE   = '#dbeafe'   # azul claro, preenchimento de caixas
+COR_TEXTO      = 'black'
+COR_GRADE      = 'gray'
+
+TAM_ROTULO = 10              # rótulos de eixo
+TAM_EIXO   = 10              # números dos eixos
+CM_POL     = 1 / 2.54
+
+# Dois formatos apenas: figuras de par de objetivos (quadradas) e figuras que
+# comparam variáveis lado a lado (largas).
+FIG_PADRAO = (11.0, 9.0)     # fronteira eficiente, convergência do hipervolume
+FIG_LARGA  = (18.0, 8.0)     # boxplot das variáveis, mapa de Sobol
+
+
+def _limites_arredondados(v_min: float, v_max: float, n_intervalos: int = 5) -> tuple[float, float, np.ndarray]:
+    """Calcula limites e marcações de eixo em valores redondos.
+
+    Garante que os dados fiquem integralmente dentro do intervalo e que a primeira
+    e a última marcação coincidam com as extremidades do eixo, evitando que a curva
+    ultrapasse o último número rotulado.
+
+    :param v_min: Menor valor dos dados
+    :param v_max: Maior valor dos dados
+    :param n_intervalos: Número desejado de intervalos entre marcações
+
+    :return: [0] limite inferior, [1] limite superior, [2] posições das marcações
+    """
+
+    v_min, v_max = float(v_min), float(v_max)
+    if not np.isfinite(v_min) or not np.isfinite(v_max):
+        return 0.0, 1.0, np.linspace(0.0, 1.0, n_intervalos + 1)
+
+    if np.isclose(v_max, v_min):
+        delta = abs(v_min) * 0.1 if abs(v_min) > 1e-12 else 0.5
+        v_min, v_max = v_min - delta, v_max + delta
+
+    bruto = (v_max - v_min) / max(int(n_intervalos), 1)
+    magnitude = 10.0 ** np.floor(np.log10(bruto))
+    for passo_norm in (1.0, 2.0, 2.5, 5.0, 10.0):
+        passo = passo_norm * magnitude
+        if passo >= bruto:
+            break
+
+    inferior = np.floor(v_min / passo) * passo
+    superior = np.ceil(v_max / passo) * passo
+    marcacoes = np.arange(inferior, superior + passo * 0.5, passo)
+
+    return float(inferior), float(superior), marcacoes
+
+
+def _aplicar_estilo_eixos(
+    ax,
+    label_x: str = "",
+    label_y: str = "",
+    arredondar_x: bool = True,
+    arredondar_y: bool = True,
+    n_intervalos: int = 5,
+) -> None:
+    """Aplica o padrão visual comum a um eixo: tipografia, grade e marcações redondas."""
+
+    ax.set_xlabel(label_x, fontsize=TAM_ROTULO, color=COR_TEXTO)
+    ax.set_ylabel(label_y, fontsize=TAM_ROTULO, color=COR_TEXTO)
+    ax.tick_params(axis='both', which='major', labelsize=TAM_EIXO, colors=COR_TEXTO)
+
+    # Zera as margens automáticas antes de ler os limites: interessa a extensão
+    # real dos dados, e não o intervalo já expandido em 5% pelo matplotlib, que
+    # produziria limites arredondados para fora do domínio físico da grandeza.
+    ax.margins(x=0, y=0)
+    ax.autoscale_view()
+
+    for eixo, arredondar in (('x', arredondar_x), ('y', arredondar_y)):
+        if not arredondar:
+            continue
+        v_min, v_max = (ax.get_xlim() if eixo == 'x' else ax.get_ylim())
+        inferior, superior, marcacoes = _limites_arredondados(v_min, v_max, n_intervalos)
+        if eixo == 'x':
+            ax.set_xlim(inferior, superior)
+            ax.set_xticks(marcacoes)
+        else:
+            ax.set_ylim(inferior, superior)
+            ax.set_yticks(marcacoes)
+
+    ax.grid(True, which='major', linestyle='-', linewidth=0.5, color=COR_GRADE, alpha=0.3)
+    ax.set_axisbelow(True)
 from matplotlib.figure import Figure
 from matplotlib.patches import Circle
 from pymoo.core.problem import ElementwiseProblem
@@ -34,6 +127,7 @@ from pymoo.operators.crossover.sbx import SBX
 from pymoo.operators.mutation.pm import PM
 from pymoo.termination import get_termination
 from pymoo.optimize import minimize
+from pymoo.indicators.hv import HV
 
 
 def restringir_espaco(esp: float, esp_min: float, esp_max: float, comp: float, largura_peca: float):
@@ -132,49 +226,21 @@ def plot_longarinas_circulares(n_longarinas: int, diametro_cm: float, espacament
 
 
 def fronteira_pareto(x: list, y: list, label_x: str, label_y: str) -> Figure:
-    ### Figure name and DPI
-    dpi = 600                                                       # Change as you wish
-    name = 'scatter'                                                # Change as you wish
+    """Plota a fronteira eficiente no espaço dos objetivos.
 
-    ### Chart dimensions (in centimeters)
-    b_cm = 10                                                       # Change as you wish
-    h_cm = 10                                                       # Change as you wish
-    inches_to_cm = 1 / 2.54
-    b_input = b_cm * inches_to_cm
-    h_input = h_cm * inches_to_cm
+    Segue o padrão visual comum (ver constantes no topo do módulo) e compartilha
+    o tamanho com a figura de convergência do hipervolume.
 
-    ### Axis and labels (For LateX font format use the dollar sign $)
-    size_label = 10                                                 # Change as you wish
-    color_label = 'black'                                           # or hexadecimal. Change as you wish
-    size_axis = 10                                                  # Change as you wish
-    color_axis = 'black'                                            # or hexadecimal. Change as you wish
+    :param x: Valores do primeiro objetivo (volume de madeira)
+    :param y: Valores do segundo objetivo (utilização do limite de serviço)
+    :param label_x: Rótulo do eixo horizontal
+    :param label_y: Rótulo do eixo vertical
+    """
 
-    ### Scatter
-    alpha_scatter = 1.0                                             # Change as you wish
-    color_scatter = 'blue'                                          # Change as you wish
-    size_scatter = 10                                               # Change as you wish
-
-    ### Grid
-    on_or_off = True
-    line_width_grid = 0.5                                           # Change as you wish
-    alpha_grid = 0.3                                                # Change as you wish
-    style_grid = '-'                                                # Change as you wish
-    color_grid = 'gray'                                             # or hexadecimal. Change as you wish
-
-    ### Figure
-    fig, ax = plt.subplots(figsize=(b_input, h_input))
-    ax.tick_params(axis='both', which='major', labelsize=size_axis, colors=color_axis)
-    ax.set_xlabel(label_x, fontsize=size_label, color=color_label)
-    ax.set_ylabel(label_y, fontsize=size_label+2, color=color_label)
-
-    ### Title. Do you need a title? Use the cell bellow:
-    # ax.set_title('Sine Wave Plot', fontsize=16)
-
-    ### Config grid
-    plt.grid(on_or_off, which='both', linestyle=style_grid, linewidth=line_width_grid, color=color_grid, alpha=alpha_grid)
-
-    ### Plot data
-    ax.scatter(x, y, alpha=alpha_scatter, color=color_scatter, s=size_scatter)
+    fig, ax = plt.subplots(figsize=(FIG_PADRAO[0] * CM_POL, FIG_PADRAO[1] * CM_POL))
+    ax.scatter(x, y, alpha=1.0, color=COR_PRIMARIA, s=14, edgecolors='none')
+    _aplicar_estilo_eixos(ax, label_x, label_y)
+    fig.tight_layout()
 
     return fig
 
@@ -186,36 +252,50 @@ def plot_sobol_total_indices(
     x_labels: list[str] | None = None,
     y_labels: list[str] | None = None,
 ) -> Figure:
-    """Plota os indices totais de Sobol em mapa de calor."""
+    """Plota os índices totais de Sobol em mapa de calor.
+
+    Compartilha o tamanho com o boxplot das variáveis de projeto.
+
+    :param total_order: DataFrame com coluna 'variavel' e uma coluna por restrição
+    :param label_x: Rótulo do eixo horizontal
+    :param label_y: Rótulo do eixo vertical
+    :param x_labels: Rótulos das restrições
+    :param y_labels: Rótulos das variáveis
+    """
 
     df = total_order.set_index("variavel")
     valores = np.clip(df.to_numpy(dtype=float), 0.0, None)
 
-    fig, ax = plt.subplots(figsize=(12, 5.2))
+    fig, ax = plt.subplots(figsize=(FIG_LARGA[0] * CM_POL, FIG_LARGA[1] * CM_POL))
     vmax = max(1.0, float(np.nanmax(valores))) if valores.size else 1.0
     cmap = mpl.colors.LinearSegmentedColormap.from_list(
-        "sobol_light",
-        ["#f8fbff", "#deebf7", "#bdd7e7", "#9ecae1", "#6baed6"],
+        "sobol_azul",
+        ["#ffffff", "#dbeafe", "#93b8d8", "#4a7fb0", COR_PRIMARIA],
     )
     im = ax.imshow(valores, aspect="auto", cmap=cmap, vmin=0.0, vmax=vmax)
 
-    ax.set_xticks(np.arange(df.shape[1]))
     nomes_x = x_labels if x_labels is not None and len(x_labels) == df.shape[1] else df.columns
     nomes_y = y_labels if y_labels is not None and len(y_labels) == df.shape[0] else df.index
 
-    ax.set_xticklabels(nomes_x, rotation=35, ha="right", fontsize=8)
+    ax.set_xticks(np.arange(df.shape[1]))
+    ax.set_xticklabels(nomes_x, rotation=30, ha="right", fontsize=TAM_EIXO - 1)
     ax.set_yticks(np.arange(df.shape[0]))
-    ax.set_yticklabels(nomes_y, fontsize=9)
-    ax.set_xlabel(label_x)
-    ax.set_ylabel(label_y)
+    ax.set_yticklabels(nomes_y, fontsize=TAM_EIXO - 1)
+    ax.set_xlabel(label_x, fontsize=TAM_ROTULO, color=COR_TEXTO)
+    ax.set_ylabel(label_y, fontsize=TAM_ROTULO, color=COR_TEXTO)
+    ax.tick_params(axis='both', which='major', colors=COR_TEXTO, length=0)
 
+    # Texto claro sobre célula escura, escuro sobre clara, para manter legibilidade
     for i in range(df.shape[0]):
         for j in range(df.shape[1]):
-            texto = f"{valores[i, j]:.2f}"
-            ax.text(j, i, texto, ha="center", va="center", color="black", fontsize=10)
+            valor = valores[i, j]
+            cor_texto = 'white' if valor > 0.6 * vmax else COR_TEXTO
+            ax.text(j, i, f"{valor:.2f}", ha="center", va="center", color=cor_texto, fontsize=TAM_EIXO - 1)
 
     cbar = fig.colorbar(im, ax=ax, fraction=0.03, pad=0.02)
-    cbar.set_label("ST")
+    cbar.set_label("$S_T$", fontsize=TAM_ROTULO, color=COR_TEXTO)
+    cbar.ax.tick_params(labelsize=TAM_EIXO - 1, colors=COR_TEXTO)
+
     fig.tight_layout()
     return fig
 
@@ -226,11 +306,19 @@ def plot_boxplot_variaveis_fronteira(
     labels: list[str],
     label_y: str = "cm",
 ) -> Figure:
-    """Plota a dispersao das variaveis de projeto presentes na fronteira."""
+    """Plota a dispersão das variáveis de projeto presentes na fronteira.
+
+    Compartilha o tamanho com o mapa de Sobol.
+
+    :param df_resultados: DataFrame com as soluções da fronteira
+    :param colunas: Colunas do DataFrame a representar
+    :param labels: Rótulos legíveis, na mesma ordem de `colunas`
+    :param label_y: Rótulo do eixo vertical
+    """
 
     dados = [df_resultados[coluna].dropna().to_numpy(dtype=float) for coluna in colunas]
 
-    fig, ax = plt.subplots(figsize=(10, 4.8))
+    fig, ax = plt.subplots(figsize=(FIG_LARGA[0] * CM_POL, FIG_LARGA[1] * CM_POL))
     box = ax.boxplot(
         dados,
         labels=labels,
@@ -238,22 +326,21 @@ def plot_boxplot_variaveis_fronteira(
         showmeans=True,
         meanline=False,
         widths=0.55,
-        medianprops={"color": "#111827", "linewidth": 1.6},
-        meanprops={"marker": "o", "markerfacecolor": "#ef4444", "markeredgecolor": "#991b1b", "markersize": 5},
-        boxprops={"linewidth": 1.2, "color": "#334155"},
-        whiskerprops={"linewidth": 1.1, "color": "#475569"},
-        capprops={"linewidth": 1.1, "color": "#475569"},
-        flierprops={"marker": "o", "markerfacecolor": "#bfdbfe", "markeredgecolor": "#2563eb", "markersize": 4, "alpha": 0.75},
+        medianprops={"color": COR_PRIMARIA, "linewidth": 1.6},
+        meanprops={"marker": "o", "markerfacecolor": COR_SECUNDARIA, "markeredgecolor": COR_SECUNDARIA, "markersize": 4},
+        boxprops={"linewidth": 1.1, "color": COR_PRIMARIA},
+        whiskerprops={"linewidth": 1.0, "color": COR_PRIMARIA},
+        capprops={"linewidth": 1.0, "color": COR_PRIMARIA},
+        flierprops={"marker": "o", "markerfacecolor": COR_PREENCHE, "markeredgecolor": COR_PRIMARIA, "markersize": 4, "alpha": 0.8},
     )
 
-    cores = ["#dbeafe", "#dcfce7", "#fef3c7", "#fee2e2", "#e0e7ff"]
-    for patch, cor in zip(box["boxes"], cores):
-        patch.set_facecolor(cor)
+    for patch in box["boxes"]:
+        patch.set_facecolor(COR_PREENCHE)
 
-    ax.set_ylabel(label_y)
-    ax.grid(True, axis="y", linestyle="-", linewidth=0.5, alpha=0.35)
-    ax.tick_params(axis="x", labelsize=9)
-    ax.tick_params(axis="y", labelsize=9)
+    # O eixo x é categórico: arredondar apenas o eixo y
+    _aplicar_estilo_eixos(ax, "", label_y, arredondar_x=False)
+    ax.grid(False, axis='x')
+
     fig.tight_layout()
     return fig
 
@@ -1186,6 +1273,27 @@ def textos_pre_sizing_l() -> dict:
                         "fronteira_variaveis_info": "O boxplot resume como as variáveis de projeto aparecem nas soluções da fronteira eficiente.",
                         "fronteira_variaveis_y": "Valor (cm)",
                         "fronteira_variaveis_labels": ["d", "bw", "h", "Esp. long.", "Esp. tab."],
+                        "estatistica_head": "Estatística descritiva das variáveis de projeto",
+                        "estatistica_info": "Resumo numérico do boxplot acima. Amplitude pequena indica que a fronteira converge para um valor praticamente fixo daquela variável; amplitude grande indica que é por ela que se obtém o compromisso entre os objetivos.",
+                        "estatistica_colunas": {
+                                                "variavel": "Variável",
+                                                "n": "N",
+                                                "media": "Média",
+                                                "desvio": "Desvio padrão",
+                                                "cv": "CV (%)",
+                                                "minimo": "Mínimo",
+                                                "q1": "1º quartil",
+                                                "mediana": "Mediana",
+                                                "q3": "3º quartil",
+                                                "maximo": "Máximo",
+                                                "amplitude": "Amplitude",
+                                            },
+                        "convergencia_head": "Convergência do NSGA-II – Hipervolume",
+                        "convergencia_info": "O hipervolume mede a região do espaço de objetivos dominada pela fronteira. O crescimento indica que o algoritmo está de fato melhorando as soluções; a estabilização indica que o número de gerações adotado é suficiente.",
+                        "convergencia_x": "Geração",
+                        "convergencia_y": "Hipervolume normalizado [-]",
+                        "convergencia_serie": "Pré-dimensionamento",
+                        "convergencia_estabiliza": "Hipervolume final de {hv:.4f}, estabilizado (dentro de 1%) a partir da geração {gen} de {total}.",
                         "sobol_head": "Sensibilidade global das restrições - Índice total de Sobol",
                         "sobol_info": "Use esta análise para identificar quais variáveis de entrada mais influenciam cada restrição no intervalo informado. A análise roda com 10.000 amostras base; valores maiores indicam maior contribuição para a variação da restrição.",
                         "sobol_n_samples": "Número base de amostras Sobol",
@@ -1289,6 +1397,27 @@ def textos_pre_sizing_l() -> dict:
                     "fronteira_variaveis_info": "The boxplot summarizes how the design variables appear across the efficient-frontier solutions.",
                     "fronteira_variaveis_y": "Value (cm)",
                     "fronteira_variaveis_labels": ["d", "bw", "h", "Girder spacing", "Deck spacing"],
+                    "estatistica_head": "Descriptive statistics of the design variables",
+                    "estatistica_info": "Numerical summary of the boxplot above. A small range means the frontier converges to a nearly fixed value of that variable; a large range means it is the variable through which the trade-off between objectives is obtained.",
+                    "estatistica_colunas": {
+                                                "variavel": "Variable",
+                                                "n": "N",
+                                                "media": "Mean",
+                                                "desvio": "Std. deviation",
+                                                "cv": "CV (%)",
+                                                "minimo": "Minimum",
+                                                "q1": "1st quartile",
+                                                "mediana": "Median",
+                                                "q3": "3rd quartile",
+                                                "maximo": "Maximum",
+                                                "amplitude": "Range",
+                                            },
+                    "convergencia_head": "NSGA-II convergence – Hypervolume",
+                    "convergencia_info": "The hypervolume measures the region of the objective space dominated by the frontier. Its growth shows that the algorithm is effectively improving the solutions; its stabilization shows that the adopted number of generations is sufficient.",
+                    "convergencia_x": "Generation",
+                    "convergencia_y": "Normalized hypervolume [-]",
+                    "convergencia_serie": "Preliminary design",
+                    "convergencia_estabiliza": "Final hypervolume of {hv:.4f}, stabilized (within 1%) from generation {gen} of {total}.",
                     "sobol_head": "Global sensitivity of constraints - Total Sobol index",
                     "sobol_info": "Use this analysis to identify which input variables most influence each constraint within the interval provided. The analysis runs with 10,000 base samples; larger values indicate a stronger contribution to the variation of the constraint.",
                     "sobol_n_samples": "Sobol base sample size",
@@ -1990,7 +2119,7 @@ class ProjetoOtimo(ElementwiseProblem):
         :param n_long: Espaçamento entre longarinas
         :param n_tab: Espaçamento entre peças do tabuleiro
 
-        :return:    [0] Lista com os objetivos. f0 área total de madeira [m³], f1 desempenho da longarina na verificação de flecha (aqui o valor já vem corrigido para maximização)
+        :return:    [0] Lista com os objetivos, ambos de minimização. f1 volume total de madeira [m³], f2 utilização do limite de serviço da longarina (delta_total / delta_lim), adimensional
                     [1] Lista com as restrições
                     [2] Dicionário com resultados da verificação de flexão da longarina
                     [3] Dicionário com resultados da verificação de cisalhamento da longarina
@@ -2090,7 +2219,7 @@ class ProjetoOtimo(ElementwiseProblem):
         props_tab = prop_madeiras(geo_tab)
         area_tab = props_tab[0]
         f1 = num_longs * area_long * l + num_tabss * area_tab * bw_pista
-        f2 = -res_f_total["of [-]"]
+        f2 = res_f_total["of [-]"]
         g1 = res_m["g_otimiz [-]"]
         g2 = res_v["g_otimiz [-]"]
         g3 = res_f_total["g_otimiz [-]"]
@@ -2234,7 +2363,20 @@ def _criar_projeto_otimo_pre_sizing(
                     )
 
 
-def chamando_nsga2(dados: dict, ds: list, bws: list, hs: list, n_long: list, n_tab: list, t: dict, verbose: bool = True) -> pd.DataFrame:
+def chamando_nsga2(
+                    dados: dict,
+                    ds: list,
+                    bws: list,
+                    hs: list,
+                    n_long: list,
+                    n_tab: list,
+                    t: dict,
+                    verbose: bool = True,
+                    salvar_historico: bool = False,
+                    pop_size: int = 75,
+                    n_gen: int = 300,
+                    n_checagens: int = 15,
+                ):
     """Função para chamar o algoritmo NSGA-II para otimização do projeto estrutural.
 
     :param dados: Dados de entrada do projeto
@@ -2244,15 +2386,25 @@ def chamando_nsga2(dados: dict, ds: list, bws: list, hs: list, n_long: list, n_t
     :param n_long: Espaço mínimo e máximo de longarinas
     :param n_tab: Espaço mínimo e máximo de vigas do tabuleiro
     :param t: Dicionário de textos para nomenclatura dos dados de entrada
+    :param verbose: Imprime o progresso da otimização
+    :param salvar_historico: Armazena a população de cada geração, permitindo o
+                             cálculo da curva de hipervolume. Aumenta o consumo de
+                             memória, por isso é desligado por padrão na aplicação.
+    :param pop_size: Tamanho da população do NSGA-II
+    :param n_gen: Número de gerações
+    :param n_checagens: Número de checagens da avaliação robusta por indivíduo
+
+    :return: DataFrame com a fronteira eficiente. Se salvar_historico for True,
+             retorna a tupla (DataFrame, objeto de resultado do pymoo).
     """
 
     dados = normalizar_dados_pre_sizing(dados, t)
     label_percentual_robustez = t.get("percentual_robustez")
     perc_robustez             = float(dados.get(label_percentual_robustez, 5.0))
 
-    pop_size    = 75
-    n_gen       = 300
-    n_checagens = 15
+    pop_size    = int(pop_size)
+    n_gen       = int(n_gen)
+    n_checagens = int(n_checagens)
 
     if verbose:
         print("[ReliaBridge][NSGA-II] Iniciando otimização de pré-dimensionamento.", flush=True)
@@ -2307,7 +2459,7 @@ def chamando_nsga2(dados: dict, ds: list, bws: list, hs: list, n_long: list, n_t
 
     algorithm   = NSGA2(pop_size=pop_size, sampling=FloatRandomSampling(), crossover=SBX(prob=0.9, eta=15), mutation=PM(eta=20), eliminate_duplicates=True)
     termination = get_termination("n_gen", n_gen)
-    res         = minimize(problem_b, algorithm, termination, seed=1, save_history=False, verbose=verbose)
+    res         = minimize(problem_b, algorithm, termination, seed=1, save_history=salvar_historico, verbose=verbose)
     F_nsga      = res.F
     G_nsga      = res.G
     X_nsga      = res.X
@@ -2323,23 +2475,210 @@ def chamando_nsga2(dados: dict, ds: list, bws: list, hs: list, n_long: list, n_t
     if verbose:
         print(f"[ReliaBridge][NSGA-II] Finalizado com {len(X_nsga)} soluções retornadas.", flush=True)
     
-    return pd.DataFrame(
+    df_fronteira = pd.DataFrame(
                             {
                                 "d [cm]": X_nsga[:, 0],
                                 "bw [cm]": X_nsga[:, 1],
                                 "h [cm]": X_nsga[:, 2],
                                 "esp [cm]": X_nsga[:, 3],
                                 "esp tab [cm]": X_nsga[:, 4],
-                                "area [m²]": F_nsga[:, 0],
-                                "delta [-]": -F_nsga[:, 1], 
-                                "flex lim beam [(Ms-Mr)/Mr]": G_nsga[:, 0], 
-                                "cis lim beam [(Vs-Vr)/Vr]": G_nsga[:, 1], 
+                                "volume [m³]": F_nsga[:, 0],
+                                "delta [-]": F_nsga[:, 1],
+                                "flex lim beam [(Ms-Mr)/Mr]": G_nsga[:, 0],
+                                "cis lim beam [(Vs-Vr)/Vr]": G_nsga[:, 1],
                                 "delta lim beam [(ps-pr)/pr]": G_nsga[:, 2],
                                 "flex lim deck [(Ms-Mr)/Mr]": G_nsga[:, 3],
                                 "spacing beam": G_nsga[:, 4],
                                 "spacing deck": G_nsga[:, 5],
                             }
                         )
+
+    if salvar_historico:
+        return df_fronteira, res
+
+    return df_fronteira
+
+
+def historico_hipervolume(res, ponto_referencia: np.ndarray | None = None) -> pd.DataFrame:
+    """Calcula a evolução do hipervolume ao longo das gerações do NSGA-II.
+
+    Exige que a otimização tenha sido executada com ``save_history=True``.
+
+    Os objetivos são normalizados pelo ponto ideal e pelo nadir observados ao longo
+    de toda a execução, de modo que o hipervolume resulte adimensional e comparável
+    entre execuções de escalas diferentes. O ponto de referência padrão é
+    (1,1; 1,1) no espaço normalizado, prática usual para problemas biobjetivo.
+
+    :param res: Objeto de resultado retornado por ``pymoo.optimize.minimize``
+    :param ponto_referencia: Ponto de referência no espaço normalizado. Se None, usa [1.1, 1.1]
+
+    :return: DataFrame com colunas 'geracao', 'hipervolume', 'n_solucoes' e
+             'n_avaliacoes'. Gerações sem nenhuma solução viável recebem
+             hipervolume igual a zero.
+    """
+
+    if not getattr(res, "history", None):
+        raise ValueError(
+            "O resultado não possui histórico. Execute a otimização com save_history=True."
+        )
+
+    # Frente não dominada (apenas soluções viáveis) de cada geração
+    frentes = []
+    for algoritmo in res.history:
+        opt = algoritmo.opt
+        f_geracao = None
+        if opt is not None and len(opt) > 0:
+            viaveis = opt.get("feasible")
+            f_todas = np.atleast_2d(np.asarray(opt.get("F"), dtype=float))
+            if viaveis is not None:
+                mascara = np.asarray(viaveis, dtype=bool).reshape(-1)
+                f_todas = f_todas[mascara]
+            if f_todas.size > 0:
+                f_geracao = f_todas
+        frentes.append(f_geracao)
+
+    validas = [f for f in frentes if f is not None]
+    if not validas:
+        raise ValueError("Nenhuma geração apresentou solução viável; hipervolume indefinido.")
+
+    empilhado = np.vstack(validas)
+    ideal = empilhado.min(axis=0)
+    nadir = empilhado.max(axis=0)
+    amplitude = np.where(nadir - ideal > 0.0, nadir - ideal, 1.0)
+
+    ref = np.array([1.1, 1.1]) if ponto_referencia is None else np.asarray(ponto_referencia, dtype=float)
+    indicador = HV(ref_point=ref)
+
+    linhas = []
+    for i, (algoritmo, f_geracao) in enumerate(zip(res.history, frentes), start=1):
+        if f_geracao is None:
+            hv, n_sol = 0.0, 0
+        else:
+            f_norm = (f_geracao - ideal) / amplitude
+            hv, n_sol = float(indicador(f_norm)), int(f_geracao.shape[0])
+        linhas.append(
+            {
+                "geracao": i,
+                "hipervolume": hv,
+                "n_solucoes": n_sol,
+                "n_avaliacoes": int(getattr(algoritmo.evaluator, "n_eval", 0)),
+            }
+        )
+
+    return pd.DataFrame(linhas)
+
+
+def geracao_estabilizacao_hipervolume(historico: pd.DataFrame, tolerancia: float = 0.01) -> int:
+    """Primeira geração a partir da qual o hipervolume permanece dentro de `tolerancia` do valor final.
+
+    Leitura objetiva de "a partir daqui o algoritmo não melhora mais". Se o valor
+    resultante for próximo do total de gerações, o número de gerações adotado está
+    curto; se for muito baixo, há esforço computacional sobrando.
+
+    :param historico: DataFrame retornado por historico_hipervolume
+    :param tolerancia: Tolerância relativa ao hipervolume final (0.01 = 1%)
+    """
+
+    hv = historico["hipervolume"].to_numpy(dtype=float)
+    if hv.size == 0 or hv[-1] <= 0.0:
+        return -1
+
+    acima = hv >= hv[-1] * (1.0 - tolerancia)
+    for i in range(acima.size):
+        if acima[i:].all():
+            return int(historico["geracao"].iloc[i])
+
+    return int(historico["geracao"].iloc[-1])
+
+
+def estatistica_descritiva_variaveis(
+    df_resultados: pd.DataFrame,
+    colunas: list[str],
+    labels: list[str],
+    nomes_colunas: dict | None = None,
+) -> pd.DataFrame:
+    """Resume as variáveis de projeto presentes na fronteira eficiente.
+
+    Complementa o boxplot com os valores numéricos correspondentes.
+
+    :param df_resultados: DataFrame com as soluções da fronteira
+    :param colunas: Colunas do DataFrame a resumir
+    :param labels: Rótulos legíveis, na mesma ordem de `colunas`
+    :param nomes_colunas: Tradução dos cabeçalhos da tabela de saída
+    """
+
+    padrao = {
+        "variavel": "Variável", "n": "N", "media": "Média", "desvio": "Desvio padrão",
+        "cv": "CV (%)", "minimo": "Mínimo", "q1": "1º quartil", "mediana": "Mediana",
+        "q3": "3º quartil", "maximo": "Máximo", "amplitude": "Amplitude",
+    }
+    nomes = {**padrao, **(nomes_colunas or {})}
+
+    linhas = []
+    for coluna, label in zip(colunas, labels):
+        if coluna not in df_resultados.columns:
+            continue
+        serie = pd.to_numeric(df_resultados[coluna], errors="coerce").dropna()
+        if serie.empty:
+            continue
+        media = float(serie.mean())
+        desvio = float(serie.std(ddof=1)) if serie.size > 1 else 0.0
+        linhas.append(
+            {
+                nomes["variavel"]: label,
+                nomes["n"]: int(serie.size),
+                nomes["media"]: round(media, 2),
+                nomes["desvio"]: round(desvio, 2),
+                nomes["cv"]: round(100.0 * desvio / media, 2) if abs(media) > 1e-12 else float("nan"),
+                nomes["minimo"]: round(float(serie.min()), 2),
+                nomes["q1"]: round(float(serie.quantile(0.25)), 2),
+                nomes["mediana"]: round(float(serie.median()), 2),
+                nomes["q3"]: round(float(serie.quantile(0.75)), 2),
+                nomes["maximo"]: round(float(serie.max()), 2),
+                nomes["amplitude"]: round(float(serie.max() - serie.min()), 2),
+            }
+        )
+
+    return pd.DataFrame(linhas)
+
+
+def plot_convergencia_hipervolume(
+    historicos: dict[str, pd.DataFrame],
+    label_x: str = "Geração",
+    label_y: str = "Hipervolume normalizado [-]",
+) -> Figure:
+    """Plota a evolução do hipervolume ao longo das gerações.
+
+    :param historicos: Dicionário {rótulo da série: DataFrame de historico_hipervolume}.
+                       Permite sobrepor várias execuções (ex.: Ponte 01 e Ponte 02,
+                       ou diferentes níveis de robustez) na mesma figura.
+    :param label_x: Rótulo do eixo horizontal
+    :param label_y: Rótulo do eixo vertical
+    """
+
+    # Série única usa a cor primária; múltiplas séries se distinguem pelo traço,
+    # mantendo a mesma cor, conforme o padrão visual do conjunto de figuras.
+    estilos = ['-', '--', '-.', ':', (0, (3, 1, 1, 1))]
+
+    fig, ax = plt.subplots(figsize=(FIG_PADRAO[0] * CM_POL, FIG_PADRAO[1] * CM_POL))
+
+    for i, (rotulo, df) in enumerate(historicos.items()):
+        ax.plot(
+            df["geracao"].to_numpy(),
+            df["hipervolume"].to_numpy(),
+            linestyle=estilos[i % len(estilos)],
+            color=COR_PRIMARIA,
+            linewidth=1.4,
+            label=rotulo,
+        )
+
+    _aplicar_estilo_eixos(ax, label_x, label_y)
+
+    if len(historicos) > 1:
+        ax.legend(fontsize=TAM_EIXO - 1, frameon=False)
+
+    fig.tight_layout()
+    return fig
 
 
 def funcoes_sobol(entrada, params) -> np.ndarray:

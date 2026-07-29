@@ -97,7 +97,7 @@ A otimização robusta multiobjetivo da Ponte~01 ($\rho = 5\%$) gerou um conjunt
 \setlength{\tabcolsep}{3pt}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}ccccccc@{\extracolsep{\fill}}}
 \toprule
-$d$ (cm) & $b_w$ (cm) & $h$ (cm) & $esp_{long}$ (cm) & Área (m\textsuperscript{2}) & $\delta_{\mathrm{tot}}/(L/250)$ & $g_{\max}$ \\
+$d$ (cm) & $b_w$ (cm) & $h$ (cm) & $esp_{long}$ (cm) & Volume (m\textsuperscript{3}) & $\delta_{\mathrm{tot}}/(L/250)$ & $g_{\max}$ \\
 \midrule
 \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
 \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
@@ -108,12 +108,12 @@ $d$ (cm) & $b_w$ (cm) & $h$ (cm) & $esp_{long}$ (cm) & Área (m\textsuperscript{
 \end{tabular*}
 \begin{tablenotes}
 \footnotesize
-\item \tofill{[A PREENCHER] Selecionar de 5 a 7 soluções da fronteira final, cobrindo do extremo de menor área ao extremo de menor flecha adimensional. $g_{\max}$ é o maior valor entre $g_1$ a $g_6$ para a solução (deve ser $\leq 0$ para viabilidade).}
+\item \tofill{[A PREENCHER] Selecionar de 5 a 7 soluções da fronteira final, cobrindo do extremo de menor volume ao extremo de menor flecha adimensional. $g_{\max}$ é o maior valor entre $g_1$ a $g_6$ para a solução (deve ser $\leq 0$ para viabilidade).}
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
-A fronteira eficiente é apresentada na Figura~\ref{fig:fronteira01}, relacionando a área total de madeira com a flecha total adimensional.
+A fronteira eficiente é apresentada na Figura~\ref{fig:fronteira01}, relacionando o volume total de madeira com a utilizacao do limite de servico.
 
 \begin{figure}[!ht]
     \centering
@@ -122,7 +122,7 @@ A fronteira eficiente é apresentada na Figura~\ref{fig:fronteira01}, relacionan
     \label{fig:fronteira01}
 \end{figure}
 
-\tofill{[A PREENCHER] Descrever a tendência observada entre área e flecha adimensional ao longo da fronteira (faixa de área nos dois extremos da fronteira, em m\textsuperscript{2}).}
+\tofill{[A PREENCHER] Descrever a tendência observada entre volume e utilizacao do limite de servico ao longo da fronteira (faixa de volume nos dois extremos da fronteira, em m\textsuperscript{3}).}
 
 Para demonstrar a eficiência do processo de otimização, emprega-se o método de Monte Carlo para gerar um conjunto de soluções obtidas por amostragem aleatória, sem estratégia de otimização. A Figura~\ref{fig:mc01} compara as soluções aleatórias com a fronteira eficiente.
 
@@ -166,14 +166,14 @@ O processo foi repetido para a Ponte~02, com vão de 8{,}0~m e trem tipo TB-450.
     \label{fig:mc02}
 \end{figure}
 
-\tofill{[A PREENCHER] Descrever se o comportamento qualitativo (tendência área x flecha, superioridade frente ao Monte Carlo) se mantém em relação à Ponte 01, e destacar diferenças relevantes decorrentes do vão maior e do trem tipo mais severo.}
+\tofill{[A PREENCHER] Descrever se o comportamento qualitativo (tendência volume x utilizacao, superioridade frente ao Monte Carlo) se mantém em relação à Ponte 01, e destacar diferenças relevantes decorrentes do vão maior e do trem tipo mais severo.}
 
 \subsection{Análise comparativa entre os cenários}\label{sec:comparacao}
 
-A Tabela~\ref{tab:comparacao} resume as áreas totais de madeira obtidas para cada cenário, incluindo valores mínimos, máximos e médios ao longo da fronteira eficiente, bem como o acréscimo percentual da Ponte~02 em relação à Ponte~01.
+A Tabela~\ref{tab:comparacao} resume os volumes totais de madeira obtidos para cada cenário, incluindo valores mínimos, máximos e médios ao longo da fronteira eficiente, bem como o acréscimo percentual da Ponte~02 em relação à Ponte~01.
 
 \begin{table}[!ht]
-\caption{Comparação das áreas totais de madeira para os dois casos de estudo.\label{tab:comparacao}}
+\caption{Comparação dos volumes totais de madeira para os dois casos de estudo.\label{tab:comparacao}}
 \begin{threeparttable}
 \begin{tabular*}{\columnwidth}{@{\extracolsep\fill}lccc@{\extracolsep\fill}}
 \toprule
@@ -189,7 +189,7 @@ Acréscimo (\%) & \tofill{--} & \tofill{--} & \tofill{--} \\
 \end{table}
 
 \begin{fillblock}
-\noindent\textbf{[A PREENCHER]} Como o vão e o trem tipo variam simultaneamente entre os dois casos, o acréscimo de área reportado na Tabela~\ref{tab:comparacao} reflete o efeito combinado dos dois fatores, e não apenas do carregamento móvel (diferentemente da versão anterior deste trabalho, em que a geometria era mantida fixa). Discutir separadamente, de forma qualitativa, a contribuição esperada de cada fator: o aumento do vão eleva o momento fletor com $L^2$ (ação permanente) e aproximadamente de forma linear a quadrática (ação variável, conforme a extensão do trem tipo em relação ao vão -- Equações~\eqref{eq:mqk30} e~\eqref{eq:mqk45}), enquanto o trem tipo mais severo eleva diretamente a carga por roda e a carga de multidão. Relacionar o acréscimo total observado com essas duas contribuições.
+\noindent\textbf{[A PREENCHER]} Como o vão e o trem tipo variam simultaneamente entre os dois casos, o acréscimo de volume reportado na Tabela~\ref{tab:comparacao} reflete o efeito combinado dos dois fatores, e não apenas do carregamento móvel (diferentemente da versão anterior deste trabalho, em que a geometria era mantida fixa). Discutir separadamente, de forma qualitativa, a contribuição esperada de cada fator: o aumento do vão eleva o momento fletor com $L^2$ (ação permanente) e aproximadamente de forma linear a quadrática (ação variável, conforme a extensão do trem tipo em relação ao vão -- Equações~\eqref{eq:mqk30} e~\eqref{eq:mqk45}), enquanto o trem tipo mais severo eleva diretamente a carga por roda e a carga de multidão. Relacionar o acréscimo total observado com essas duas contribuições.
 \end{fillblock}
 
 \subsection{Custo da robustez}\label{sec:custo_robustez}
@@ -206,11 +206,11 @@ Para quantificar esse efeito, a Ponte~01 foi reotimizada para quatro níveis de 
 \end{figure}
 
 \begin{table}[!ht]
-\caption{Acréscimo percentual de área em relação ao caso determinístico ($\rho = 0\%$), para três níveis pareados de flecha adimensional.\label{tab:custo_robustez}}
+\caption{Acréscimo percentual de volume em relação ao caso determinístico ($\rho = 0\%$), para três níveis pareados de flecha adimensional.\label{tab:custo_robustez}}
 \begin{threeparttable}
 \begin{tabular*}{\columnwidth}{@{\extracolsep\fill}lccccccc@{\extracolsep\fill}}
 \toprule
-$\delta_{\mathrm{tot}}/(L/250)$ & $A(0\%)$ & $A(2{,}5\%)$ & $\Delta$ & $A(5\%)$ & $\Delta$ & $A(10\%)$ & $\Delta$ \\
+$\delta_{\mathrm{tot}}/(L/250)$ & $V(0\%)$ & $V(2{,}5\%)$ & $\Delta$ & $V(5\%)$ & $\Delta$ & $V(10\%)$ & $\Delta$ \\
 \midrule
 \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--\%} & \tofill{--} & \tofill{--\%} & \tofill{--} & \tofill{--\%} \\
 \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--\%} & \tofill{--} & \tofill{--\%} & \tofill{--} & \tofill{--\%} \\
@@ -219,7 +219,7 @@ $\delta_{\mathrm{tot}}/(L/250)$ & $A(0\%)$ & $A(2{,}5\%)$ & $\Delta$ & $A(5\%)$ 
 \end{tabular*}
 \begin{tablenotes}
 \footnotesize
-\item Área em m\textsuperscript{2}; $\Delta$ = acréscimo percentual em relação a $A(0\%)$, para o mesmo nível de $\delta_{\mathrm{tot}}/(L/250)$.
+\item Volume em m\textsuperscript{3}; $\Delta$ = acréscimo percentual em relação a $V(0\%)$, para o mesmo nível de $\delta_{\mathrm{tot}}/(L/250)$.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -230,7 +230,7 @@ $\delta_{\mathrm{tot}}/(L/250)$ & $A(0\%)$ & $A(2{,}5\%)$ & $\Delta$ & $A(5\%)$ 
 
 \subsection{Validação por simulação de Monte Carlo independente}\label{sec:validacao_mc}
 
-Para verificar empiricamente o ganho de robustez, seleciona-se uma solução da fronteira determinística ($\rho = 0\%$) e uma solução de área equivalente da fronteira robusta ($\rho = 5\%$), ambas da Ponte~01 (Seção~\ref{sec:custo_robustez}). Para cada uma, geram-se $10^4$ realizações perturbadas, $\tilde{\mathbf{x}} = \mathbf{x}\,(1+\rho\,\boldsymbol{\xi})$, com $\boldsymbol{\xi}\sim\mathcal{U}(-1,1)$ e semente aleatória distinta da utilizada na otimização, e avalia-se o percentual de realizações que violam cada uma das seis restrições do modelo, bem como a probabilidade de violação do sistema (violação de ao menos uma restrição).
+Para verificar empiricamente o ganho de robustez, seleciona-se uma solução da fronteira determinística ($\rho = 0\%$) e uma solução de volume equivalente da fronteira robusta ($\rho = 5\%$), ambas da Ponte~01 (Seção~\ref{sec:custo_robustez}). Para cada uma, geram-se $10^4$ realizações perturbadas, $\tilde{\mathbf{x}} = \mathbf{x}\,(1+\rho\,\boldsymbol{\xi})$, com $\boldsymbol{\xi}\sim\mathcal{U}(-1,1)$ e semente aleatória distinta da utilizada na otimização, e avalia-se o percentual de realizações que violam cada uma das seis restrições do modelo, bem como a probabilidade de violação do sistema (violação de ao menos uma restrição).
 
 \begin{table}[!ht]
 \caption{Percentual de realizações perturbadas que violam cada restrição ($10^4$ amostras, $\rho = 5\%$).\label{tab:validacao_mc}}
