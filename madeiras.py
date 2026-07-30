@@ -2374,8 +2374,8 @@ def chamando_nsga2(
                     verbose: bool = True,
                     salvar_historico: bool = False,
                     pop_size: int = 75,
-                    n_gen: int = 300,
-                    n_checagens: int = 15,
+                    n_gen: int = 150,
+                    n_checagens: int = 30,
                 ):
     """Função para chamar o algoritmo NSGA-II para otimização do projeto estrutural.
 
