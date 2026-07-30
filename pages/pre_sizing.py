@@ -189,13 +189,45 @@ with st.container():
     st.divider()
 
     st.subheader(t["cargas_projeto"])
+
+    VEICULOS_PADRAO = {
+        "TB240": {"roda": 40.0, "multidao": 4.0, "eixos": 2.0},
+        "TB450": {"roda": 75.0, "multidao": 5.0, "eixos": 2.0}
+        
+    }
+
+    if "p_rodak" not in st.session_state:
+        st.session_state["p_rodak"] = 0.0
+        st.session_state["p_qk"] = 0.0
+        st.session_state["a"] = 0.0
+
+    def atualizar_valores_veiculo():
+        v = st.session_state["sel_veiculo"]
+        if v in VEICULOS_PADRAO:
+            st.session_state["p_rodak"] = VEICULOS_PADRAO[v]["roda"]
+            st.session_state["p_qk"] = VEICULOS_PADRAO[v]["multidao"]
+            st.session_state["a"] = VEICULOS_PADRAO[v]["eixos"]
+
+    def set_custom_veiculo():
+        st.session_state["sel_veiculo"] = t.get("veiculo_personalizado", "Personalizado")
+
+    opcoes_veiculos = [t.get("veiculo_personalizado", "Personalizado")] + list(VEICULOS_PADRAO.keys())
+
+    st.selectbox(
+        t.get("veiculo_tipo", "Veículo Tipo"),
+        options=opcoes_veiculos,
+        index=0, # Padrão que vem selecionado (Personalizado)
+        key="sel_veiculo",
+        on_change=atualizar_valores_veiculo
+    )
+
     col1, col2 = st.columns(2)
     with col1:
-        p_gk    = st.number_input(t["carga_permanente"], key="p_gk")
-        p_rodak = st.number_input(t["carga_roda"], key="p_rodak")
+        p_rodak = st.number_input(t["carga_roda"], step=10.0, key="p_rodak", on_change=set_custom_veiculo)
+        a       = st.number_input(t["distancia_eixos"], step=0.5, key="a", on_change=set_custom_veiculo)
     with col2:
-        p_qk = st.number_input(t["carga_multidao"], key="p_qk")
-        a    = st.number_input(t["distancia_eixos"], key="a")
+        p_qk    = st.number_input(t["carga_multidao"], step=1.0, key="p_qk", on_change=set_custom_veiculo)
+        p_gk    = st.number_input(t["carga_permanente"], step=1.0, key="p_gk")
 
     st.divider()
 
