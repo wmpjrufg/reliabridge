@@ -31,6 +31,7 @@ textos = {
         "logo_ufcat": "imgs/ufcat.png",
         "logo_ufscar": "imgs/ufscar.png",
         "logo_pucgo": "imgs/pucgo.png",
+        "logo_ufu": "imgs/ufu.png",
 
         "erro_imagem": "Arquivo de imagem não encontrado.",
 
@@ -90,6 +91,7 @@ textos = {
         "logo_ufcat": "imgs/ufcat.png",
         "logo_ufscar": "imgs/ufscar.png",
         "logo_pucgo": "imgs/pucgo.png",
+        "logo_ufu": "imgs/ufu.png",
 
         "erro_imagem": "Image file not found.",
 
@@ -162,7 +164,7 @@ with st.sidebar:
 # -----------------------------------------------------------
 try:
 
-    col1, col2, col3 = st.columns([1,1,1])
+    col1, col2, col3, col4 = st.columns([1,1,1,1], vertical_alignment="center", gap="xlarge")
 
     with col1:
         st.image(t["logo_ufcat"], width=160)
@@ -172,6 +174,9 @@ try:
 
     with col3:
         st.image(t["logo_pucgo"], width=160)
+        
+    with col4:
+        st.image(t["logo_ufu"], width=160)
 
 except Exception:
     st.warning(t["erro_imagem"])

@@ -139,7 +139,7 @@ with st.container():
 # ============================================================
 # 1) FORM PARA ENTRADA DE DADOS
 # ============================================================
-with st.form("form_geometria", clear_on_submit=False):
+with st.container():
 
     st.subheader(t["geometria_t"])
     col1, col2 = st.columns(2)
@@ -238,7 +238,56 @@ with st.form("form_geometria", clear_on_submit=False):
 
     st.subheader(t["prop_madeira"])
 
+    CLASSES_MADEIRA = {
+        "D20": {"densidade": 500.0,  "f_mk": 25.97, "f_vk": 4.0, "e_mod": 10.0},
+        "D30": {"densidade": 625.0,  "f_mk": 38.96, "f_vk": 5.0, "e_mod": 12.0},
+        "D40": {"densidade": 750.0,  "f_mk": 51.95, "f_vk": 6.0, "e_mod": 14.5},
+        "D50": {"densidade": 850.0,  "f_mk": 64.94, "f_vk": 7.0, "e_mod": 16.5},
+        "D60": {"densidade": 1000.0, "f_mk": 77.92, "f_vk": 8.0, "e_mod": 19.5}
+    }
+
+    if "densidade_long" not in st.session_state:
+        st.session_state["densidade_long"] = 0.0
+        st.session_state["f_mk_mpa"] = 0.0
+        st.session_state["f_vk_mpa"] = 0.0
+        st.session_state["e_modflex_gpa"] = 0.0
+
+    if "densidade_tab" not in st.session_state:
+        st.session_state["densidade_tab"] = 0.0
+        st.session_state["f_mk_mpa_tab"] = 0.0
+
+    def atualizar_valores_long():
+        c = st.session_state["sel_classe_long"]
+        if c in CLASSES_MADEIRA:
+            st.session_state["densidade_long"] = CLASSES_MADEIRA[c]["densidade"]
+            st.session_state["f_mk_mpa"] = CLASSES_MADEIRA[c]["f_mk"]
+            st.session_state["f_vk_mpa"] = CLASSES_MADEIRA[c]["f_vk"]
+            st.session_state["e_modflex_gpa"] = CLASSES_MADEIRA[c]["e_mod"]
+
+    def atualizar_valores_tab():
+        c = st.session_state["sel_classe_tab"]
+        if c in CLASSES_MADEIRA:
+            st.session_state["densidade_tab"] = CLASSES_MADEIRA[c]["densidade"]
+            st.session_state["f_mk_mpa_tab"] = CLASSES_MADEIRA[c]["f_mk"]
+
+    def set_custom_long():
+        st.session_state["sel_classe_long"] = t.get("classe_personalizada", "Personalizado")
+
+    def set_custom_tab():
+        st.session_state["sel_classe_tab"] = t.get("classe_personalizada", "Personalizado")
+
+    opcoes_classes = [t.get("classe_personalizada", "Personalizado")] + list(CLASSES_MADEIRA.keys())
+    
     st.markdown(f"**{t['longarina_t']}**")
+    
+    st.selectbox(
+        t.get("classe_resistencia_long", "Classe de Resistência (NBR 7190)"),
+        options=opcoes_classes,
+        index=0, # Padrão que vem selecionado (D60)
+        key="sel_classe_long",
+        on_change=atualizar_valores_long
+    )
+    
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         densidade_long = st.number_input(t["densidade_long"], step=1.0, key="densidade_long")
@@ -250,15 +299,24 @@ with st.form("form_geometria", clear_on_submit=False):
         e_modflex_gpa = st.number_input(t["e_modflex"], step=0.1, key="e_modflex_gpa")
 
     st.markdown(f"**{t['tabuleiro_t']}**")
+
+    st.selectbox(
+        t.get("classe_resistencia_tab", "Classe de Resistência (NBR 7190)"),
+        options=opcoes_classes,
+        index=0, # Padrão que vem selecionado (D60)
+        key="sel_classe_tab",
+        on_change=atualizar_valores_tab
+    )
+
     col1, col2 = st.columns(2)
     with col1:
-        densidade_tab = st.number_input(t["densidade_tab"], step=1.0, key="densidade_tab")
+        densidade_tab = st.number_input(t["densidade_tab"], step=10.0, key="densidade_tab", on_change=set_custom_tab)
     with col2:
-        f_mk_mpa_tab = st.number_input(t["f_mk_tab"], step=0.1, key="f_mk_mpa_tab")
+        f_mk_mpa_tab = st.number_input(t["f_mk_tab"], step=1.0, key="f_mk_mpa_tab", on_change=set_custom_tab)
 
     st.divider()
 
-    submitted_design = st.form_submit_button(t["gerador_desempenho"])
+    submitted_design = st.button(t["gerador_desempenho"], type="primary", use_container_width=True)
 
 
 # ============================================================
@@ -578,37 +636,36 @@ if st.session_state.get("has_results", False):
     st.subheader(t["sobol_head"])
     st.caption(t["sobol_info"])
 
-    if st.button(t["sobol_button"], key="run_sobol"):
-        sobol_args = st.session_state.get("sobol_args")
-        if sobol_args is None:
-            st.warning(t.get("aviso_gerar_primeiro", "Sem resultados atuais. Clique em Gerar para processar."))
-        else:
-            try:
-                with st.spinner(t["sobol_spinner"]):
-                    st.session_state["sobol_result"] = chamar_sobol(
-                        sobol_args["dados"],
-                        sobol_args["ds"],
-                        sobol_args["bws"],
-                        sobol_args["hs"],
-                        sobol_args["n_long"],
-                        sobol_args["n_tab"],
-                        sobol_args["t"],
-                        n_samples=SOBOL_N_SAMPLES,
-                    )
-                # Gera a figura e reconstrói o pacote, para que o mapa de Sobol
-                # também fique disponível no ZIP de download.
-                st.session_state["sobol_png"] = figura_para_png(
-                    plot_sobol_total_indices(
-                        st.session_state["sobol_result"]["total_order"],
-                        label_x=t["sobol_axis_constraints"],
-                        label_y=t["sobol_axis_variables"],
-                        x_labels=t["sobol_constraint_labels"],
-                        y_labels=t["sobol_variable_labels"],
-                    )
+    sobol_args = st.session_state.get("sobol_args")
+    if sobol_args is None:
+        st.warning(t.get("aviso_gerar_primeiro", "Sem resultados atuais. Clique em Gerar para processar."))
+    else:
+        try:
+            with st.spinner(t["sobol_spinner"]):
+                st.session_state["sobol_result"] = chamar_sobol(
+                    sobol_args["dados"],
+                    sobol_args["ds"],
+                    sobol_args["bws"],
+                    sobol_args["hs"],
+                    sobol_args["n_long"],
+                    sobol_args["n_tab"],
+                    sobol_args["t"],
+                    n_samples=SOBOL_N_SAMPLES,
                 )
-                st.session_state["zip_bytes"] = montar_zip_pacote()
-            except Exception as exc:
-                st.error(str(exc))
+            # Gera a figura e reconstrói o pacote, para que o mapa de Sobol
+            # também fique disponível no ZIP de download.
+            st.session_state["sobol_png"] = figura_para_png(
+                plot_sobol_total_indices(
+                    st.session_state["sobol_result"]["total_order"],
+                    label_x=t["sobol_axis_constraints"],
+                    label_y=t["sobol_axis_variables"],
+                    x_labels=t["sobol_constraint_labels"],
+                    y_labels=t["sobol_variable_labels"],
+                )
+            )
+            st.session_state["zip_bytes"] = montar_zip_pacote()
+        except Exception as exc:
+            st.error(str(exc))
 
     if "sobol_result" in st.session_state and st.session_state.get("sobol_png"):
         sobol_result = st.session_state["sobol_result"]
