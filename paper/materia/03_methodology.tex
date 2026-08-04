@@ -17,7 +17,7 @@ O fluxo metodológico consolidado, ilustrado na Figura~\ref{fig:fluxograma}, é 
 
 \subsection{Definição do modelo de teste e propriedades dos materiais}\label{sec:modelo_teste}
 
-Para testar a ferramenta e demonstrar a aplicação direta do algoritmo implementado, selecionou-se como caso de estudo prático uma ponte típica de estrada vicinal (doravante denominada Ponte 01), com vão teórico curto de $L = 5{,}0$~m e dimensionada para suportar o tráfego do trem tipo mínimo TB-240 estipulado pela ABNT NBR 7188 \parencite{nbr7188}. Essa configuração é representativa de acessos rurais e vias locais, nas quais a demanda por projetos econômicos e duráveis em madeira é proeminente.
+Para testar a ferramenta e demonstrar a aplicação direta do algoritmo implementado, adotou-se como objeto de estudo a ponte de estrada vicinal de pista simples, dimensionada para suportar o tráfego do trem tipo TB-240 estipulado pela ABNT NBR 7188 \parencite{nbr7188}. Essa configuração é representativa de acessos rurais e vias locais, nas quais a demanda por projetos econômicos e duráveis em madeira é proeminente. Em vez de um único caso isolado, o trabalho explora uma matriz de configurações que combina quatro vãos teóricos com as cinco classes de resistência normativas, conforme detalhado na Seção~\ref{sec:casos}, de modo a permitir a leitura do efeito isolado de cada fator.
 
 A modelagem mecânica dos elementos estruturais acompanha rigorosamente as prescrições normativas brasileiras. As variações de características do material e a definição das propriedades adotadas nas simulações foram estabelecidas em conformidade com a ABNT NBR 7190-3:2022. As propriedades elásticas e as classes de resistência de base para espécies de florestas nativas (D20 a D60), derivadas de ensaios em corpos de prova isentos de defeitos, estão dispostas na Tabela~\ref{tab:classes_madeira}.
 
@@ -59,7 +59,19 @@ O modelo é matematicamente parametrizado: a partir de um vetor de entrada do us
 
 \subsection{Formulação das restrições e otimização robusta}\label{sec:formulacao}
 
-No ambiente do NSGA-II, o projeto é convertido em um vetor de variáveis matemáticas $\mathbf{x} = (d, b_w, h, n_{long}, n_{tab})^T$, contendo o diâmetro da longarina ($d$), dimensões da prancha ($b_w, h$) e as quantidades de peças associadas ao espaçamento transversal. As duas funções objetivo consistem na minimização da área total de madeira consumida ($f_1$) e na otimização do desempenho de serviço, expresso pela restrição inversa do deslocamento adimensional ($f_2$).
+No ambiente do NSGA-II, o projeto é convertido em um vetor de variáveis matemáticas $\mathbf{x} = (d,\ b_w,\ h,\ esp_{long},\ esp_{tab})^T$, contendo o diâmetro da longarina ($d$), as dimensões da prancha do tabuleiro ($b_w$, $h$), o espaçamento entre longarinas ($esp_{long}$) e o espaçamento entre as peças do tabuleiro ($esp_{tab}$). A partir dos espaçamentos e da largura da pista, o número de peças de cada família é determinado internamente pela rotina de acomodação geométrica, que também origina as restrições $g_5$ e $g_6$.
+
+As duas funções objetivo são ambas de minimização. A primeira, $f_1$, é o volume total de madeira consumido pela superestrutura, conforme a Equação~\eqref{eq:f1}, em que $n_{long}$ e $n_{tab}$ são as quantidades de longarinas e de peças do tabuleiro efetivamente acomodadas, $A_{long}$ e $A_{tab}$ as respectivas áreas de seção transversal e $b_{w,\mathrm{pista}}$ a largura da pista. A segunda, $f_2$, é a utilização do limite de serviço de deslocamento da longarina, definida na Equação~\eqref{eq:f2} como a razão entre a flecha total, já incluída a parcela de fluência, e o deslocamento limite normativo $L/250$. Minimizar $f_2$ equivale a maximizar o desempenho em serviço, e as duas funções são antagônicas: reduzir o volume de madeira aumenta necessariamente a flecha relativa.
+
+\begin{equation}
+f_1(\mathbf{x}) = V_{\mathrm{total}} = n_{long}\,A_{long}\,L + n_{tab}\,A_{tab}\,b_{w,\mathrm{pista}}
+\label{eq:f1}
+\end{equation}
+
+\begin{equation}
+f_2(\mathbf{x}) = \frac{\delta_{\mathrm{tot}}}{L/250}
+\label{eq:f2}
+\end{equation}
 
 As soluções geradas devem satisfazer um conjunto rígido de seis equações de restrição normalizadas $g_j \leq 0$: tensão normal de flexão da longarina ($g_1$), cisalhamento da longarina ($g_2$), deformação limitante por flecha na longarina considerando a fluência ($g_3$), tensão normal à flexão no tabuleiro sob as rodas do trem tipo ($g_4$) e limites normativos estipulados para os espaçamentos mínimo e máximo das peças da superestrutura ($g_5$ e $g_6$).
 
@@ -98,12 +110,12 @@ r_x = r_y = \sqrt{\frac{I_x}{A}}
 Para as pranchas retangulares do tabuleiro, de largura $b_w$ e altura $h$, a área e o momento de inércia em relação ao eixo de flexão são dados pelas Equações~\eqref{eq:arearet} e~\eqref{eq:iret}.
 
 \begin{equation}
-A = b_w,h
+A = b_w\,h
 \label{eq:arearet}
 \end{equation}
 
 \begin{equation}
-I_x = \frac{b_w,h^3}{12}
+I_x = \frac{b_w\,h^3}{12}
 \label{eq:iret}
 \end{equation}
 
@@ -119,7 +131,7 @@ G = \gamma \cdot A
 A carga móvel rodoviária avaliada consiste no trem tipo TB-240 \parencite{nbr7188}, representado por um veículo com três eixos e seis rodas, cada roda transmitindo 40~kN, e carga de multidão distribuída. Os efeitos dinâmicos são incorporados pelo coeficiente de impacto vertical ($CIV$), determinado pelas Equações~\eqref{eq:civ1} e~\eqref{eq:civ2}, sendo $LIV$ o comprimento característico da estrutura.
 
 \begin{equation}
-CIV = 1{,}35, \qquad \text{para } L \leq 10{,}0\ \text{m}
+CIV = 1{,}35 \qquad \text{para } L \leq 10{,}0\ \text{m}
 \label{eq:civ1}
 \end{equation}
 
@@ -133,37 +145,37 @@ CIV = 1 + 1{,}06\left(\frac{20}{LIV + 50}\right), \qquad \text{para } 10{,}0 < L
 O momento fletor e o esforço cortante máximos devido à carga permanente, assim como a flecha estática, são quantificados pelas premissas clássicas de estática para vigas biapoiadas (Equações \eqref{eq:mgk}, \eqref{eq:qgk} e \eqref{eq:flechag}). Para o dimensionamento elástico referente à carga variável, adota-se o balanço da posição da roda gerando o momento $M_{qk}$ dependente da extensão de vão (Equações \eqref{eq:mqk30} e \eqref{eq:mqk45}), assim como a força de corte admissível na extremidade (Equação \eqref{eq:qqk}) e o deslocamento de serviço instantâneo (Equação \eqref{eq:flechaq}).
 
 \begin{equation}
-M_{gk} = \frac{q,L^2}{8}
+M_{gk} = \frac{q\,L^2}{8}
 \label{eq:mgk}
 \end{equation}
 
 \begin{equation}
-M_{qk} = \frac{3,P,L}{4} - P,a, \qquad \text{para } 3,\text{m} < L \leq 6,\text{m}
+M_{qk} = \frac{3\,P\,L}{4} - P\,a, \qquad \text{para } 3\,\text{m} < L \leq 6\,\text{m}
 \label{eq:mqk30}
 \end{equation}
 
 \begin{equation}
-M_{qk} = \left(\frac{3,P,L}{4} - P,a\right) + \frac{q,c^2}{2}, \qquad \text{para } L > 6,\text{m}
+M_{qk} = \left(\frac{3\,P\,L}{4} - P\,a\right) + \frac{q\,c^2}{2}, \qquad \text{para } L > 6\,\text{m}
 \label{eq:mqk45}
 \end{equation}
 
 \begin{equation}
-Q_{gk} = \frac{g,L}{2}
+Q_{gk} = \frac{g\,L}{2}
 \label{eq:qgk}
 \end{equation}
 
 \begin{equation}
-Q_{qk} = \frac{P}{L},(6a + 3e) + \frac{q,e^2}{2,L}
+Q_{qk} = \frac{P}{L}\,(6a + 3e) + \frac{q\,e^2}{2\,L}
 \label{eq:qqk}
 \end{equation}
 
 \begin{equation}
-\delta_{gk} = \frac{5,g,L^4}{384,E_{0,\mathrm{ef}},I}
+\delta_{gk} = \frac{5\,g\,L^4}{384\,E_{0,\mathrm{ef}}\,I}
 \label{eq:flechag}
 \end{equation}
 
 \begin{equation}
-\delta_{qk} = \frac{P}{48,E_{0,\mathrm{ef}},I}\left[L^3 + 2,b\left(3L^2 - 4b^2\right)\right]
+\delta_{qk} = \frac{P}{48\,E_{0,\mathrm{ef}}\,I}\left[L^3 + 2\,b\left(3L^2 - 4b^2\right)\right]
 \label{eq:flechaq}
 \end{equation}
 
@@ -172,19 +184,19 @@ Q_{qk} = \frac{P}{L},(6a + 3e) + \frac{q,e^2}{2,L}
 No estado limite último (ELU), a formulação emprega as combinações da ABNT NBR 8681 \parencite{NBR8681:2025}, de acordo com a Equação~\eqref{eq:comb}. A tensão de resistência subjacente às simulações é ponderada na Equação~\eqref{eq:xd} utilizando o coeficiente global de modificação estrutural ($k_{mod} = k_{mod,1}\,k_{mod,2}$) e os fatores estipulados de minoração de propriedades $\gamma_m$.
 
 \begin{equation}
-F_d = \sum_{i=1}^{m}\gamma_{gi},F_{Gi,k} + \gamma_{q1},F_{Q1,k} + \sum_{j=2}^{n}\gamma_{qj},\psi_{0j},F_{Qj,k}
+F_d = \sum_{i=1}^{m}\gamma_{gi}\,F_{Gi,k} + \gamma_{q1}\,F_{Q1,k} + \sum_{j=2}^{n}\gamma_{qj}\,\psi_{0j}\,F_{Qj,k}
 \label{eq:comb}
 \end{equation}
 
 \begin{equation}
-X_d = k_{mod},\frac{X_k}{\gamma_m}
+X_d = k_{mod}\,\frac{X_k}{\gamma_m}
 \label{eq:xd}
 \end{equation}
 
 As avaliações processadas de flexão e de cisalhamento da seção limitam os índices a limiares coesos e estruturalmente eficientes (Equações \eqref{eq:verflexao} e \eqref{eq:vercis}).
 
 \begin{equation}
-\frac{\sigma_{Mx,d}}{f_{m,d}} = \frac{M_d}{W,f_{m,d}} \leq 1
+\frac{\sigma_{Mx,d}}{f_{m,d}} = \frac{M_d}{W\,f_{m,d}} \leq 1
 \label{eq:verflexao}
 \end{equation}
 

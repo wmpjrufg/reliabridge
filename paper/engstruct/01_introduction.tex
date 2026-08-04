@@ -1,0 +1,26 @@
+\section{Introduction}\label{sec:introduction}
+
+Timber design codes worldwide organise the enormous natural variability of wood into a small number of strength classes. A class is a bin: species whose properties fall within a given interval are assigned to it, and from that point onward the designer works not with the species but with a single set of tabulated values. The mechanism is indispensable, because it makes design tractable without species-by-species testing, and it is common to ABNT NBR 7190-3 in Brazil, to EN 338 in Europe and, in a different form, to the species-group tables of North American practice.
+
+Every class system must choose an indexing property, that is, the property whose value determines the bin. ABNT NBR 7190-3 indexes hardwood classes on the characteristic compressive strength parallel to grain, $f_{c0,k}$, and EN 338 indexes its hardwood classes on the characteristic bending strength, $f_{m,k}$. In both cases the indexing property is a \emph{strength}. The tabulated modulus of elasticity is not the criterion of assignment; it is a value that follows from the assignment, inherited by the species by virtue of the bin it landed in.
+
+This distinction is inconsequential only if strength and stiffness are strongly correlated within the species population being classified. When they are not, the class becomes a good predictor of resistance and a poor predictor of deformation, and the error is invisible to the designer, who has no reason to question a tabulated value prescribed by the code.
+
+The distinction matters most where deformation governs. In short-span timber bridges on low-volume roads, built from round timber and designed for the deflection limit $L/250$, the serviceability criterion is frequently more restrictive than the ultimate limit states. Moreover, the three verifications scale differently with span: the utilisation of the shear check decreases with span, the bending check grows approximately linearly, and the deflection check grows approximately with the square of the span. The governing verification therefore migrates as the span increases, and with it migrates the material property that actually determines the design. A class system indexed on strength is progressively less appropriate as the governing criterion shifts towards stiffness.
+
+\begin{fillblock}
+\noindent\textbf{[A PREENCHER -- revisão de literatura]} Este é o parágrafo que o revisor do Engineering Structures vai ler com mais atenção, porque é onde a lacuna é declarada. Cobrir, de forma sucinta e com referências:
+\begin{itemize}[nosep]
+\item trabalhos que caracterizaram experimentalmente espécies tropicais e discutiram a adequação do enquadramento normativo;
+\item trabalhos sobre correlação entre resistência e rigidez em madeiras, incluindo os que propõem classificação por rigidez ou por métodos não destrutivos;
+\item trabalhos de otimização estrutural de elementos e sistemas de madeira, situando o uso de algoritmos evolutivos multiobjetivo;
+\item trabalhos sobre pontes de madeira para vias de baixo volume de tráfego.
+\end{itemize}
+Fechar com a lacuna explícita: o efeito estrutural do erro de representação de rigidez introduzido pelo enquadramento em classe não foi quantificado, tampouco sua dependência do vão.
+\end{fillblock}
+
+This study quantifies that effect. Mechanical properties measured on 40 Brazilian tropical hardwood species are assigned to the strength classes of ABNT NBR 7190-3, and the resulting representation error in stiffness is characterised. The structural consequence is then evaluated by designing round-timber bridge superstructures over a range of theoretical spans, twice for each species: once using its measured properties and once using the tabulated properties of its assigned class. The difference between the two designs is the cost of class assignment, and its variation with span is the central result.
+
+The specific objectives are: (i) to characterise, for a population of 40 tropical hardwood species, the scatter of the bending modulus of elasticity within each strength class, and to compare it against the step between adjacent classes; (ii) to determine how often, and in which direction, the class assigned by strength disagrees with the class implied by measured stiffness; (iii) to quantify the resulting error in timber consumption by robust multiobjective optimisation of the superstructure; and (iv) to establish how that error varies with span as the governing verification migrates from strength to stiffness.
+
+The scope is limited to the superstructure of single-span simply supported bridges composed of round-timber stringers and rectangular deck planks. Connections, abutments, piers and foundations are outside the scope, as is dynamic analysis beyond the code-prescribed vertical impact coefficient.

@@ -1,0 +1,110 @@
+\section{Methodology}\label{sec:methodology}
+
+The structural consequence of the representation error characterised in Section~\ref{sec:representacao} is evaluated by designing bridge superstructures twice for each species: once using its measured properties and once using the tabulated properties of its assigned class. The difference between the two designs, expressed as a percentage of timber volume, is the cost of class assignment. Because the design is obtained by optimisation rather than by arbitration of cross sections, the comparison is free of the designer's judgement and depends only on the material properties supplied.
+
+\subsection{Structural system and parametric model}\label{sec:system}
+
+The structural system consists of longitudinal rectangular deck planks continuously supported on circular round-timber stringers, regularly spaced across the carriageway, as illustrated in Figure~\ref{fig:system}. The superstructure is single-span and simply supported. Permanent actions comprise the self-weight of the members and an additional distributed load on the deck; variable actions comprise the wheel loads of the design vehicle and a uniformly distributed crowd load. Load transfer from the deck to the stringers is treated analytically as distributed loading along the span.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.5\textwidth]{figuras/caminhao.png}
+\caption{Conceptual representation of the bridge structural system.}
+\label{fig:system}
+\end{figure}
+
+The model is fully parametric: from the design vector and the carriageway width, the number of members of each family, all cross-sectional properties, the permanent actions, the internal forces, the deflections and the six limit-state functions are recomputed for any candidate solution. The implementation is the open-access computational platform described in \parencite{ReliaBridge2026}, developed in Python with the \texttt{pymoo} library for multiobjective optimisation \parencite{blank2020} and \texttt{UQpy} for global sensitivity analysis \parencite{Olivier2020}.
+
+\begin{fillblock}
+\noindent\textbf{[NOTA DE REDAÇÃO -- não apagar sem ler]} Esta subseção deve permanecer curta, no máximo meia página, citando o artigo da plataforma para os detalhes de implementação. O Engineering Structures não publica apresentação de software: se o texto for lido como ``desenvolvemos uma ferramenta e a aplicamos'', o artigo é rejeitado por novidade incremental. A contribuição declarada tem de ser o achado sobre o enquadramento em classe, e a plataforma é apenas o instrumento que o produz. Resistir à tentação de detalhar a interface.
+\end{fillblock}
+
+\subsection{Design verification according to ABNT NBR 7190}\label{sec:verificacao}
+
+\begin{fillblock}
+\noindent\textbf{[A PREENCHER]} Transportar desta seção o núcleo do dimensionamento já redigido no artigo da plataforma: propriedades geométricas das seções circular e retangular, ações permanentes e trem tipo com o coeficiente de impacto vertical, esforços solicitantes e deslocamentos, combinações da ABNT NBR 8681 e as verificações de flexão, cisalhamento e flecha. Manter todas as equações, pois o leitor internacional precisa poder auditar a formulação sem recorrer à norma brasileira.
+
+Acrescentar um parágrafo curto, ausente do artigo em português e essencial aqui, observando que a formulação adotada é equivalente em estrutura à do EN 1995-1-1, diferindo nos coeficientes parciais e nos fatores de modificação, de modo que os resultados são transponíveis. Isso desarma antecipadamente a objeção de que se trata de um estudo restrito a uma norma nacional.
+\end{fillblock}
+
+\begin{table}[!ht]
+\caption{Tabulated properties of the ABNT NBR 7190-3 strength classes for hardwoods from native forests.\label{tab:classes_madeira}}
+\begin{threeparttable}
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lccccc@{\extracolsep{\fill}}}
+\toprule
+Class & $f_{c0,k}$ (MPa) & $f_{m,k}$ (MPa) & $f_{v0,k}$ (MPa) & $E_{c0,med}$ (MPa) & Density at 12\% (kg/m\textsuperscript{3}) \\
+\midrule
+D20 & 20 & 26.0 & 4 & 10\,000 & 500 \\
+D30 & 30 & 39.0 & 5 & 12\,000 & 625 \\
+D40 & 40 & 51.9 & 6 & 14\,500 & 750 \\
+D50 & 50 & 64.9 & 7 & 16\,500 & 850 \\
+D60 & 60 & 77.9 & 8 & 19\,500 & 1\,000 \\
+\bottomrule
+\end{tabular*}
+\begin{tablenotes}
+\footnotesize
+\item Values from ABNT NBR 7190-3:2022 at 12\% moisture content. Characteristic bending strength obtained as $f_{m,k} = f_{c0,k}/0.77$, the normative relation for hardwoods.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\subsection{Robust multiobjective optimisation}\label{sec:optimisation}
+
+The design of each superstructure is obtained by robust multiobjective optimisation. The design vector is $\mathbf{x} = (d,\ b_w,\ h,\ esp_{long},\ esp_{tab})^T$, and the two objective functions, both minimised, are the total timber volume of the superstructure and the utilisation of the serviceability deflection limit, $\delta_{\mathrm{tot}}/(L/250)$. Six normalised inequality constraints apply: bending and shear of the stringer, deflection of the stringer including creep, bending of the deck plank under the wheel load, and minimum and maximum member spacing.
+
+The problem is solved with the NSGA-II algorithm. Robustness is incorporated natively into the search: each candidate is evaluated over $N_c$ perturbed realisations, $\tilde{\mathbf{x}} = \mathbf{x}\,(1+\rho\,\boldsymbol{\xi})$ with $\boldsymbol{\xi}\sim\mathcal{U}(-1,1)$, and the objectives and constraints are aggregated by their expected value, so that only solutions tolerant to dimensional deviation remain on the efficient frontier. This addresses the dimensional variability of round timber, which is a defining feature of the material and would otherwise leave the optimal designs exactly on the feasibility boundary.
+
+\begin{fillblock}
+\noindent\textbf{[A PREENCHER]} Transportar do artigo da plataforma a formulação completa: equações do problema multiobjetivo, mecanismo de ordenação não dominada e distância de aglomeração, equação da perturbação e das agregações por média, e a tabela de parâmetros do NSGA-II. Manter o algoritmo em pseudocódigo, que é bem recebido em revista de otimização estrutural.
+\end{fillblock}
+
+\subsection{Comparison protocol}\label{sec:protocolo}
+
+For every combination of species and span, two independent optimisation runs are performed under identical algorithm settings and identical random seed:
+
+\begin{enumerate}[nosep]
+\item \textbf{Species-based design}, using the measured properties of the species: density, characteristic bending strength, characteristic shear strength and measured bending modulus of elasticity.
+\item \textbf{Class-based design}, using the tabulated properties of the class to which the species is assigned (Table~\ref{tab:classes_madeira}).
+\end{enumerate}
+
+From each frontier the minimum-volume solution is extracted, and the cost of class assignment is defined by Equation~\eqref{eq:deltaV}, where $V_{class}$ and $V_{species}$ are the timber volumes of the class-based and species-based designs. A positive $\Delta V$ indicates that the class assignment leads to more material than the species actually requires; a negative value indicates that the class-based design is lighter than the species can safely support, that is, unconservative.
+
+\begin{equation}
+\Delta V = \frac{V_{class} - V_{species}}{V_{species}} \times 100\%
+\label{eq:deltaV}
+\end{equation}
+
+Because both designs are produced by the same algorithm with the same seed and the same convergence settings, the difference is attributable solely to the material properties supplied, and not to the optimiser.
+
+\subsection{Span range}\label{sec:vaos}
+
+The comparison is carried out over the theoretical spans listed in Table~\ref{tab:vaos}. The range is deliberately wider than that typical of a single design situation, because the span is not a secondary parameter of this study but the mechanism under investigation: the three verifications scale differently with span, so that the governing criterion, and with it the material property that determines the design, migrates as the span increases.
+
+\begin{table}[!ht]
+\caption{Fixed parameters and span range of the comparison.\label{tab:vaos}}
+\begin{threeparttable}
+\begin{tabular*}{\columnwidth}{@{\extracolsep\fill}lc@{\extracolsep\fill}}
+\toprule
+Parameter & Value \\
+\midrule
+Theoretical spans, $L$ (m) & 3.0; 5.0; 8.0; 10.0 \\
+Carriageway width, $b_{w,\mathrm{pista}}$ (m) & 4.5 \\
+Design vehicle (ABNT NBR 7188) & TB-240 \\
+Wheel load, $p_{rodak}$ (kN) & 40 \\
+Crowd load, $p_{qk}$ (kPa) & 4 \\
+Additional permanent load, $p_{gk}$ (kPa) & 1 \\
+Axle spacing, $a$ (m) & 1.5 \\
+Service class / load-duration class & 1 / permanent \\
+Partial factors $\gamma_g$ / $\gamma_q$ & 1.35 / 1.50 \\
+Material partial factors $\gamma_{wf}$ / $\gamma_{wc}$ & 1.40 / 1.80 \\
+Combination factor $\psi_2$ / creep coefficient $\varphi$ & 0.30 / 0.60 \\
+Robustness deviation, $\rho$ (\%) & 5.0 \\
+\bottomrule
+\end{tabular*}
+\begin{tablenotes}
+\footnotesize
+\item \tofill{[ATENÇÃO] Os vãos de 8{,}0 e 10{,}0~m ultrapassam 6~m e portanto empregam a segunda expressão de momento devido à carga móvel, que inclui a parcela de multidão. Verificar que a transição entre as duas formulações está corretamente implementada antes de rodar o lote, e mencioná-la no texto ao discutir as curvas, para que uma eventual mudança de inclinação entre 5 e 8~m não seja atribuída ao material.}
+\item \tofill{[DECIDIR] O total de execuções é 40 espécies $\times$ 4 vãos $\times$ 2 bases de propriedades = 320 rodadas do NSGA-II. Cronometrar uma rodada antes de iniciar o lote. Caso o tempo por rodada inviabilize o total, reduzir para dois vãos, 3{,}0 e 10{,}0~m, que são os que sustentam o argumento da migração do critério governante, mantendo os vãos intermediários apenas para um subconjunto de espécies.}
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

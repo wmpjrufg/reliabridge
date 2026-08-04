@@ -8,14 +8,14 @@ import streamlit as st
 import pandas as pd
 
 from madeiras import (
-    textos_design,
-    textos_pre_sizing_l,
-    normalizar_dados_pre_sizing,
-    valor_dados_pre_sizing,
-    ProjetoOtimo,
-    gerar_relatorio_final,
-    markdown_para_pdf,
-)
+                            textos_design,
+                            textos_pre_sizing_l,
+                            normalizar_dados_pre_sizing,
+                            valor_dados_pre_sizing,
+                            ProjetoOtimo,
+                            gerar_relatorio_final,
+                            markdown_para_pdf,
+                        )
 
 
 # -----------------------------

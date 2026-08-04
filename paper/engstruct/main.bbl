@@ -1,0 +1,303 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{apa/apasortcite//global/global/global}
+    \entry{blank2020}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=bc00b22eadc38e0f33edb0f8fe7e9f13}{%
+           family={Blank},
+           familyi={B\bibinitperiod},
+           given={Julian},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=b11d1da0cc2920eef235d484e6b858ef}{%
+           family={Deb},
+           familyi={D\bibinitperiod},
+           given={Kalyanmoy},
+           giveni={K\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
+      \strng{fullhash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
+      \strng{fullhashraw}{b6fe2478ad222b8f2d893e70ceaf9a8c}
+      \strng{bibnamehash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
+      \strng{authorbibnamehash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
+      \strng{authornamehash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
+      \strng{authorfullhash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
+      \strng{authorfullhashraw}{b6fe2478ad222b8f2d893e70ceaf9a8c}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Access}
+      \field{title}{Pymoo: Multi-objective optimization in {Python}}
+      \field{volume}{8}
+      \field{year}{2020}
+      \field{pages}{89497\bibrangedash 89509}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1109/ACCESS.2020.2990567
+      \endverb
+    \endentry
+    \entry{Olivier2020}{article}{}{}
+      \name{author}{6}{}{%
+        {{un=0,uniquepart=base,hash=8604a0f68a53c59c9a2cb1971291be26}{%
+           family={Olivier},
+           familyi={O\bibinitperiod},
+           given={Audrey},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=bb2d0e4c97336d56f3a8385e840ba05d}{%
+           family={Giovanis},
+           familyi={G\bibinitperiod},
+           given={Dimitris\bibnamedelima G.},
+           giveni={D\bibinitperiod\bibinitdelim G\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=1453c7332916a4517d64bb21e03b00cc}{%
+           family={Aakash},
+           familyi={A\bibinitperiod},
+           given={B.\bibnamedelimi S.},
+           giveni={B\bibinitperiod\bibinitdelim S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=da31eb93a162d57d897f5bcccaef95a3}{%
+           family={Chauhan},
+           familyi={C\bibinitperiod},
+           given={Mohit},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=8e65e760d607e122a221c7a36c186a3b}{%
+           family={Vandanapu},
+           familyi={V\bibinitperiod},
+           given={Lohit},
+           giveni={L\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=1ab2ff706f5d5efe8b15d637000c8fa9}{%
+           family={Shields},
+           familyi={S\bibinitperiod},
+           given={Michael\bibnamedelima D.},
+           giveni={M\bibinitperiod\bibinitdelim D\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{bfcd442e1f50b644392b7148938c54fc}
+      \strng{fullhash}{a5b2731d0c764f75675fc970b5d16b6c}
+      \strng{fullhashraw}{a5b2731d0c764f75675fc970b5d16b6c}
+      \strng{bibnamehash}{a5b2731d0c764f75675fc970b5d16b6c}
+      \strng{authorbibnamehash}{a5b2731d0c764f75675fc970b5d16b6c}
+      \strng{authornamehash}{bfcd442e1f50b644392b7148938c54fc}
+      \strng{authorfullhash}{a5b2731d0c764f75675fc970b5d16b6c}
+      \strng{authorfullhashraw}{a5b2731d0c764f75675fc970b5d16b6c}
+      \field{sortinit}{O}
+      \field{sortinithash}{2cd7140a07aea5341f9e2771efe90aae}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Computational Science}
+      \field{title}{{UQpy}: A general purpose {Python} package and development environment for uncertainty quantification}
+      \field{volume}{47}
+      \field{year}{2020}
+      \field{pages}{101204}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1016/j.jocs.2020.101204
+      \endverb
+    \endentry
+    \entry{ReliaBridge2026}{misc}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=c145ae842ca1d3bd87dc22e9ab38c230}{%
+           family={{ReliaBridge}},
+           familyi={R\bibinitperiod}}}%
+      }
+      \strng{namehash}{c145ae842ca1d3bd87dc22e9ab38c230}
+      \strng{fullhash}{c145ae842ca1d3bd87dc22e9ab38c230}
+      \strng{fullhashraw}{c145ae842ca1d3bd87dc22e9ab38c230}
+      \strng{bibnamehash}{c145ae842ca1d3bd87dc22e9ab38c230}
+      \strng{authorbibnamehash}{c145ae842ca1d3bd87dc22e9ab38c230}
+      \strng{authornamehash}{c145ae842ca1d3bd87dc22e9ab38c230}
+      \strng{authorfullhash}{c145ae842ca1d3bd87dc22e9ab38c230}
+      \strng{authorfullhashraw}{c145ae842ca1d3bd87dc22e9ab38c230}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Acesso em: 5 fev. 2026}
+      \field{title}{ReliaBridge: plataforma de dimensionamento e análise de pontes de madeira}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://reliabridge.streamlit.app/
+      \endverb
+      \verb{url}
+      \verb https://reliabridge.streamlit.app/
+      \endverb
+    \endentry
+  \enddatalist
+  \datalist[entry]{apa/global//global/global/global}
+    \entry{blank2020}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=bc00b22eadc38e0f33edb0f8fe7e9f13}{%
+           family={Blank},
+           familyi={B\bibinitperiod},
+           given={Julian},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=b11d1da0cc2920eef235d484e6b858ef}{%
+           family={Deb},
+           familyi={D\bibinitperiod},
+           given={Kalyanmoy},
+           giveni={K\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
+      \strng{fullhash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
+      \strng{fullhashraw}{b6fe2478ad222b8f2d893e70ceaf9a8c}
+      \strng{bibnamehash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
+      \strng{authorbibnamehash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
+      \strng{authornamehash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
+      \strng{authorfullhash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
+      \strng{authorfullhashraw}{b6fe2478ad222b8f2d893e70ceaf9a8c}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Access}
+      \field{title}{Pymoo: Multi-objective optimization in {Python}}
+      \field{volume}{8}
+      \field{year}{2020}
+      \field{pages}{89497\bibrangedash 89509}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1109/ACCESS.2020.2990567
+      \endverb
+    \endentry
+    \entry{Olivier2020}{article}{}{}
+      \name{author}{6}{}{%
+        {{un=0,uniquepart=base,hash=8604a0f68a53c59c9a2cb1971291be26}{%
+           family={Olivier},
+           familyi={O\bibinitperiod},
+           given={Audrey},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=bb2d0e4c97336d56f3a8385e840ba05d}{%
+           family={Giovanis},
+           familyi={G\bibinitperiod},
+           given={Dimitris\bibnamedelima G.},
+           giveni={D\bibinitperiod\bibinitdelim G\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=1453c7332916a4517d64bb21e03b00cc}{%
+           family={Aakash},
+           familyi={A\bibinitperiod},
+           given={B.\bibnamedelimi S.},
+           giveni={B\bibinitperiod\bibinitdelim S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=da31eb93a162d57d897f5bcccaef95a3}{%
+           family={Chauhan},
+           familyi={C\bibinitperiod},
+           given={Mohit},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=8e65e760d607e122a221c7a36c186a3b}{%
+           family={Vandanapu},
+           familyi={V\bibinitperiod},
+           given={Lohit},
+           giveni={L\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=1ab2ff706f5d5efe8b15d637000c8fa9}{%
+           family={Shields},
+           familyi={S\bibinitperiod},
+           given={Michael\bibnamedelima D.},
+           giveni={M\bibinitperiod\bibinitdelim D\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{bfcd442e1f50b644392b7148938c54fc}
+      \strng{fullhash}{a5b2731d0c764f75675fc970b5d16b6c}
+      \strng{fullhashraw}{a5b2731d0c764f75675fc970b5d16b6c}
+      \strng{bibnamehash}{a5b2731d0c764f75675fc970b5d16b6c}
+      \strng{authorbibnamehash}{a5b2731d0c764f75675fc970b5d16b6c}
+      \strng{authornamehash}{bfcd442e1f50b644392b7148938c54fc}
+      \strng{authorfullhash}{a5b2731d0c764f75675fc970b5d16b6c}
+      \strng{authorfullhashraw}{a5b2731d0c764f75675fc970b5d16b6c}
+      \field{sortinit}{O}
+      \field{sortinithash}{2cd7140a07aea5341f9e2771efe90aae}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Computational Science}
+      \field{title}{{UQpy}: A general purpose {Python} package and development environment for uncertainty quantification}
+      \field{volume}{47}
+      \field{year}{2020}
+      \field{pages}{101204}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1016/j.jocs.2020.101204
+      \endverb
+    \endentry
+    \entry{ReliaBridge2026}{misc}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=c145ae842ca1d3bd87dc22e9ab38c230}{%
+           family={{ReliaBridge}},
+           familyi={R\bibinitperiod}}}%
+      }
+      \strng{namehash}{c145ae842ca1d3bd87dc22e9ab38c230}
+      \strng{fullhash}{c145ae842ca1d3bd87dc22e9ab38c230}
+      \strng{fullhashraw}{c145ae842ca1d3bd87dc22e9ab38c230}
+      \strng{bibnamehash}{c145ae842ca1d3bd87dc22e9ab38c230}
+      \strng{authorbibnamehash}{c145ae842ca1d3bd87dc22e9ab38c230}
+      \strng{authornamehash}{c145ae842ca1d3bd87dc22e9ab38c230}
+      \strng{authorfullhash}{c145ae842ca1d3bd87dc22e9ab38c230}
+      \strng{authorfullhashraw}{c145ae842ca1d3bd87dc22e9ab38c230}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Acesso em: 5 fev. 2026}
+      \field{title}{ReliaBridge: plataforma de dimensionamento e análise de pontes de madeira}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://reliabridge.streamlit.app/
+      \endverb
+      \verb{url}
+      \verb https://reliabridge.streamlit.app/
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

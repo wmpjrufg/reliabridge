@@ -1,0 +1,33 @@
+\section{Conclusões}\label{sec:conclusoes}
+
+Este trabalho apresentou uma abordagem de projeto inteligente para pontes de madeira roliça de estradas vicinais, na qual a modelagem paramétrica dos elementos estruturais foi integralmente acoplada a uma rotina de otimização robusta multiobjetivo em conformidade com a ABNT NBR 7190. A metodologia foi implementada em uma plataforma computacional de acesso livre e aplicada a uma matriz de vinte configurações, combinando quatro vãos teóricos e as cinco classes de resistência de madeiras de florestas nativas, todas sob o trem tipo TB-240.
+
+\begin{fillblock}
+\noindent\textbf{[A PREENCHER -- conclusão sobre a plataforma]} Sintetizar o desempenho da ferramenta: capacidade de percorrer a matriz completa, tempo médio de processamento por célula, e o fato de que o dimensionamento passa a ser obtido sem arbitramento inicial de seções por parte do projetista. Evitar adjetivos não sustentados por medida; preferir números.
+\end{fillblock}
+
+\begin{fillblock}
+\noindent\textbf{[A PREENCHER -- conclusão sobre a otimização frente à amostragem aleatória]} Reportar, com número, o ganho da fronteira eficiente sobre as soluções obtidas por amostragem aleatória sem estratégia de otimização, para um mesmo nível de desempenho em serviço (Seção~\ref{sec:mc_projeto}). Registrar também a taxa de viabilidade da amostragem aleatória, que dimensiona a dificuldade do problema.
+\end{fillblock}
+
+\begin{fillblock}
+\noindent\textbf{[A PREENCHER -- conclusão sobre o custo da robustez]} Este é o resultado de maior originalidade e merece a conclusão mais assertiva do trabalho. Declarar a faixa percentual de acréscimo de volume de madeira exigida por cada nível de desvio $\rho$ em relação ao dimensionamento determinístico (Seção~\ref{sec:custo_robustez}), e a correspondente redução da probabilidade de violação verificada por simulação independente (Seção~\ref{sec:validacao_mc}). A frase-chave é a que converte tolerância dimensional em consumo de material.
+\end{fillblock}
+
+\begin{fillblock}
+\noindent\textbf{[A PREENCHER -- conclusão sobre a varredura paramétrica]} Sintetizar os três achados da Seção~\ref{sec:varredura}: o expoente de crescimento do consumo com o vão; a existência ou não de uma classe de resistência a partir da qual o ganho deixa de compensar o acréscimo de densidade, indicando-a por vão; e a migração da verificação governante ao longo da faixa de vãos, com a consequência prática de que a propriedade determinante do material muda de resistência para rigidez conforme o vão cresce.
+\end{fillblock}
+
+\begin{fillblock}
+\noindent\textbf{[A PREENCHER -- conclusão sobre a sensibilidade global]} Indicar a variável de projeto com maior índice de Sobol de efeito total e traduzir o resultado em recomendação de controle de execução: quais dimensões exigem controle rigoroso na seleção das peças roliças e na montagem, e quais admitem tolerância mais folgada.
+\end{fillblock}
+
+\subsection*{Limitações e trabalhos futuros}
+
+O escopo deste trabalho restringe-se à superestrutura de pontes de vão único simplesmente apoiadas. O dimensionamento das ligações, dos encontros, dos pilares e das fundações não foi contemplado e constitui a extensão mais imediata da plataforma.
+
+A agregação das restrições sob perturbação foi feita pelo operador de esperança matemática, isto é, pela média das realizações. Uma formulação alternativa, mais conservadora, consiste em agregar pelo pior caso, $\bar{g}_j = \max_c g_j$, o que eliminaria a violação residual observada na validação por simulação independente ao custo de fronteiras mais recuadas. A comparação entre as duas estratégias de agregação é uma frente natural de continuidade.
+
+A robustez tratada neste trabalho é de natureza geométrica: perturbam-se as dimensões nominais das peças. A variabilidade das propriedades mecânicas da madeira e das ações não foi incorporada ao processo de busca. A conexão com análises de confiabilidade estrutural, por meio de FORM ou de simulação de Monte Carlo, permitiria quantificar o índice de confiabilidade das soluções da fronteira e é o desdobramento de maior potencial científico.
+
+Finalmente, o trabalho restringiu-se ao trem tipo TB-240 e às classes normativas de resistência. A extensão a trens tipo mais severos e, sobretudo, a substituição das classes normativas por propriedades experimentais de espécies nativas específicas permitiria avaliar em que medida o enquadramento em classe representa adequadamente o material efetivamente disponível na região da obra. A validação contra o projeto de uma ponte vicinal efetivamente executada permanece como a verificação mais desejável e ainda pendente.

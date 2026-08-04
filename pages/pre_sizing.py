@@ -11,19 +11,19 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from madeiras import (
-    textos_pre_sizing_l,
-    montar_excel,
-    montar_excel_df,
-    chamando_nsga2,
-    chamar_sobol,
-    fronteira_pareto,
-    plot_sobol_total_indices,
-    plot_boxplot_variaveis_fronteira,
-    estatistica_descritiva_variaveis,
-    historico_hipervolume,
-    geracao_estabilizacao_hipervolume,
-    plot_convergencia_hipervolume,
-)
+                            textos_pre_sizing_l,
+                            montar_excel,
+                            montar_excel_df,
+                            chamando_nsga2,
+                            chamar_sobol,
+                            fronteira_pareto,
+                            plot_sobol_total_indices,
+                            plot_boxplot_variaveis_fronteira,
+                            estatistica_descritiva_variaveis,
+                            historico_hipervolume,
+                            geracao_estabilizacao_hipervolume,
+                            plot_convergencia_hipervolume,
+                        )
 
 
 # -----------------------------
@@ -510,8 +510,8 @@ if submitted_design:
     # NSGA-II (com histórico, para a curva de convergência do hipervolume)
     try:
         res_nsga, res_pymoo = chamando_nsga2(
-            dados_projeto, ds, bws, hs, n_p_long, n_p_tab, t, salvar_historico=True
-        )
+                                                    dados_projeto, ds, bws, hs, n_p_long, n_p_tab, t, salvar_historico=True
+                                                )
     except ValueError as exc:
         st.error(str(exc))
         st.stop()

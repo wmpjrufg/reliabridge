@@ -1,0 +1,35 @@
+\begin{appendices}
+
+\section{Demonstração manual do dimensionamento}\label{ap:demonstracao}
+
+Este apêndice reproduz, passo a passo e por cálculo manual, a verificação de uma solução da fronteira eficiente da célula de referência C-13, de modo a permitir a conferência independente da implementação computacional. A conferência manual é a única verificação ponta a ponta do modelo estrutural e deve ser feita antes do fechamento do texto.
+
+\begin{fillblock}
+\noindent\textbf{[A PREENCHER]} Seguir o roteiro abaixo, apresentando cada etapa com a equação, a substituição numérica e o resultado.
+
+\begin{enumerate}
+\item \textbf{Solução escolhida.} Declarar $d$, $b_w$, $h$, $esp_{long}$ e $esp_{tab}$ da solução selecionada da Tabela~\ref{tab:solucoes_ref}, preferencialmente uma solução intermediária da fronteira, e os números de longarinas e de peças de tabuleiro resultantes da acomodação na pista de 4{,}5~m.
+
+\item \textbf{Propriedades geométricas.} Calcular $A$, $I_x$ e $W_x$ da longarina circular pelas Equações~\eqref{eq:areacirc} a~\eqref{eq:wcirc}, e $A$ e $I_x$ da prancha do tabuleiro pelas Equações~\eqref{eq:arearet} e~\eqref{eq:iret}.
+
+\item \textbf{Resistências de cálculo.} Determinar $k_{mod,1}$ e $k_{mod,2}$ para classe de carregamento permanente, madeira natural e classe de umidade 1, obter $k_{mod}$, e aplicar a Equação~\eqref{eq:xd} para chegar a $f_{m,d}$ e $f_{v0,d}$ a partir dos valores característicos da classe D40 da Tabela~\ref{tab:classes_madeira}.
+
+\item \textbf{Ações.} Calcular o peso próprio das longarinas e do tabuleiro pela Equação~\eqref{eq:permanente}, somar a carga permanente adicional $p_{gk}$, e determinar o coeficiente de impacto vertical pela Equação~\eqref{eq:civ1}, aplicável por ser $L \leq 10$~m.
+
+\item \textbf{Esforços solicitantes e deslocamentos.} Obter $M_{gk}$ e $M_{qk}$ pelas Equações~\eqref{eq:mgk} e~\eqref{eq:mqk30}, os cortantes pelas Equações~\eqref{eq:qgk} e~\eqref{eq:qqk}, e as flechas pelas Equações~\eqref{eq:flechag} e~\eqref{eq:flechaq}. Combinar segundo a Equação~\eqref{eq:comb} e incluir a parcela de fluência com $\varphi$ e $\psi_2$ da Tabela~\ref{tab:parametros}.
+
+\item \textbf{Verificações.} Aplicar as Equações~\eqref{eq:verflexao} e~\eqref{eq:vercis} e a verificação de flecha contra $L/250$, apresentando o grau de utilização de cada uma.
+
+\item \textbf{Síntese comparativa.} Montar uma tabela com as seis funções limite $g_1$ a $g_6$ obtidas manualmente ao lado das obtidas pela plataforma, com a diferença relativa entre elas. Diferenças superiores a uma fração de por cento indicam divergência entre o memorial e a implementação e devem ser investigadas antes da submissão.
+\end{enumerate}
+\end{fillblock}
+
+\section{Relatório de verificação dos elementos}\label{ap:relatorio}
+
+A plataforma gera automaticamente um memorial de cálculo completo para qualquer configuração verificada, contendo a conversão de unidades, as propriedades geométricas das seções, as ações atuantes, os esforços solicitantes, os deslocamentos e o resultado de cada verificação normativa, com indicação explícita de atendimento ou não atendimento.
+
+\begin{fillblock}
+\noindent\textbf{[A PREENCHER]} Anexar aqui o memorial exportado pela plataforma para a mesma solução utilizada na demonstração manual do Apêndice~\ref{ap:demonstracao}, de modo que os dois possam ser confrontados diretamente pelo leitor.
+\end{fillblock}
+
+\end{appendices}

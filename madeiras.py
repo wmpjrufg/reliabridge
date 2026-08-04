@@ -85,13 +85,13 @@ def _limites_arredondados(v_min: float, v_max: float, n_intervalos: int = 5) -> 
 
 
 def _aplicar_estilo_eixos(
-    ax,
-    label_x: str = "",
-    label_y: str = "",
-    arredondar_x: bool = True,
-    arredondar_y: bool = True,
-    n_intervalos: int = 5,
-) -> None:
+                                ax,
+                                label_x: str = "",
+                                label_y: str = "",
+                                arredondar_x: bool = True,
+                                arredondar_y: bool = True,
+                                n_intervalos: int = 5,
+                            ) -> None:
     """Aplica o padrão visual comum a um eixo: tipografia, grade e marcações redondas."""
 
     ax.set_xlabel(label_x, fontsize=TAM_ROTULO, color=COR_TEXTO)
@@ -2326,16 +2326,16 @@ def normalizar_dados_pre_sizing(dados: dict, t: dict) -> dict:
 
 
 def _criar_projeto_otimo_pre_sizing(
-    dados: dict,
-    ds: list,
-    bws: list,
-    hs: list,
-    n_long: list,
-    n_tab: list,
-    t: dict,
-    n_checagens: int,
-    perc_robustez: float,
-) -> ProjetoOtimo:
+                                        dados: dict,
+                                        ds: list,
+                                        bws: list,
+                                        hs: list,
+                                        n_long: list,
+                                        n_tab: list,
+                                        t: dict,
+                                        n_checagens: int,
+                                        perc_robustez: float,
+                                    ) -> ProjetoOtimo:
     return ProjetoOtimo(
                             bw_pista            = dados[f"{t['pista']}"],
                             l                   = dados[f"{t['entrada_comprimento']}"],

@@ -1,0 +1,50 @@
+\section{Species population and class assignment}\label{sec:materials}
+
+\begin{fillblock}
+\noindent\textbf{[VERIFICAR ANTES DE PUBLICAR]} Todos os números desta seção foram calculados a partir dos valores \emph{médios} reportados na fonte experimental, convertidos em valores característicos por $f_k = 0{,}70\,f_m$ para compressão e flexão e $f_k = 0{,}54\,f_m$ para cisalhamento, conforme a ABNT NBR 7190-1:2022. O enquadramento em classe -- e portanto a composição de cada bin -- depende dessa conversão. Se o artigo-fonte já reportar valores característicos, ou adotar outro fator, refazer o cálculo e atualizar as Tabelas~\ref{tab:especies},~\ref{tab:dispersao} e~\ref{tab:discordancia} e todos os percentuais citados no texto. A conclusão sobre a dispersão intraclasse é robusta à escolha do fator, mas a lista nominal de espécies por classe não é.
+\end{fillblock}
+
+\subsection{Experimental data}\label{sec:dados}
+
+The mechanical properties used in this study were measured on 40 Brazilian tropical hardwood species and are reported in \tofill{[CITAR o artigo-fonte]}. The species cover a wide range of the hardwood spectrum, with apparent density at 12\% moisture content ranging from 512 to 1163~kg/m\textsuperscript{3} and compressive strength parallel to grain from 33 to 94~MPa, and are therefore representative of the material effectively available for construction in the northern and central regions of Brazil. Table~\ref{tab:especies} lists the species, the properties relevant to the present analysis and the resulting strength class.
+
+\begin{fillblock}
+\noindent\textbf{[A PREENCHER]} Descrever sucintamente o programa experimental da fonte: norma de ensaio adotada, número de corpos de prova por espécie, procedência do material e teor de umidade de referência. Registrar também se a fonte reporta desvio-padrão por espécie; em caso positivo, incluir uma coluna adicional na Tabela~\ref{tab:especies} e discutir a variabilidade intraespécie na Seção~\ref{sec:limitacoes}, pois um revisor certamente perguntará por ela.
+\end{fillblock}
+
+\input{tabelas/tab_especies}
+
+\subsection{Class assignment rule}\label{sec:enquadramento}
+
+ABNT NBR 7190-3 defines five strength classes for hardwoods from native forests, D20 to D60, each identified by a characteristic compressive strength parallel to grain and carrying a tabulated mean modulus of elasticity, a shear strength and a reference density. A species is assigned to the highest class whose characteristic compressive strength does not exceed its own. The tabulated properties of the assigned class are those the designer is required to adopt, and they are reproduced in Table~\ref{tab:classes_madeira} of Section~\ref{sec:methodology}.
+
+Two features of this rule matter for what follows. First, the indexing property is a strength, so the assignment carries no information about how stiff the species actually is. Second, the tabulated modulus of elasticity increases by 14 to 21\% from one class to the next, which sets the resolution of the system in stiffness: a species can only be represented to within that granularity, even in the best case.
+
+\subsection{How well does the class represent the species?}\label{sec:representacao}
+
+Table~\ref{tab:dispersao} compares, for each class, the range of measured bending modulus of elasticity among the species assigned to it against the step separating adjacent classes.
+
+\input{tabelas/tab_dispersao}
+
+The result is unambiguous. In classes D30 and D40, which together hold 23 of the 40 species, the measured stiffness scatters by 70 and 74\% respectively, while the step between neighbouring classes is only 14 to 21\%. Within-class scatter therefore exceeds the resolution of the class system by a factor of approximately four. Moving a species one class up changes its tabulated stiffness by about one fifth, whereas two species sharing the same class may differ in real stiffness by more than two thirds.
+
+Table~\ref{tab:discordancia} makes the same point species by species, by comparing the class assigned by characteristic compressive strength against the class that the measured modulus of elasticity would imply.
+
+\input{tabelas/tab_discordancia}
+
+Twenty-three of the 40 species, that is 58\% of the population, fall in a different class under the two criteria, and two species differ by two full classes. The extreme cases are instructive. Angelim-pedra (\textit{Hymenolobium petraeum}) is assigned to class D40 by its characteristic compressive strength of 40.6~MPa, but its measured bending modulus of 10\,755~MPa lies below the value tabulated for class D30. Goiabão (\textit{Planchonella pachycarpa}) is assigned to class D30 by a characteristic strength of 34.3~MPa, yet its measured modulus of 18\,367~MPa exceeds the value tabulated for class D50. The code therefore ranks Angelim-pedra one class above Goiabão, while in stiffness Goiabão is three class levels above Angelim-pedra, and 71\% stiffer in absolute terms.
+
+The direction of the error is not uniform. Fourteen species, 35\% of the population, are less stiff than the class prescribes; for these, class-based design underestimates deflection and is therefore unconservative with respect to the serviceability limit state. The remaining 26 species are stiffer than prescribed, and for these the class assignment merely wastes material.
+
+It is worth contrasting this with the corresponding error in strength. Because the normative relation $f_{m,k} = f_{c0,k}/0{,}77$ is markedly conservative for these species, the class systematically underestimates their bending strength, by \tofill{2} to \tofill{92}\% and always in the safe direction. The class machinery thus protects strength generously and stiffness poorly, which is the reverse of what the designer would reasonably assume.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figuras/E_vs_fc0.png}
+    \caption{Measured bending modulus of elasticity against characteristic compressive strength for the 40 species, with the strength-class boundaries and the tabulated modulus of each class overlaid.}
+    \label{fig:E_vs_fc0}
+\end{figure}
+
+\begin{fillblock}
+\noindent\textbf{[A PREENCHER -- figura]} Gerar a Figura~\ref{fig:E_vs_fc0} como dispersão de $E_{M0}$ contra $f_{c0,k}$, um ponto por espécie, com linhas verticais nos limites de classe (20, 30, 40, 50 e 60~MPa) e segmentos horizontais no valor de $E$ tabelado de cada classe. A distância vertical entre cada ponto e o segmento da sua faixa é o erro de representação de rigidez daquela espécie, e a figura torna esse erro imediatamente visível. Anotar no gráfico as duas espécies extremas discutidas no texto. Reportar no eixo ou na legenda o coeficiente de determinação da regressão $E_{M0}$ contra $f_{c0}$, que vale \tofill{0{,}70}.
+\end{fillblock}
