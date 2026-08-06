@@ -1,7 +1,5 @@
 """Contém funções para cálculo e verificação de estruturas de madeira."""
 import markdown
-from xhtml2pdf import pisa
-from weasyprint import HTML
 from matplotlib.mathtext import math_to_image
 from matplotlib.font_manager import FontProperties
 import base64
@@ -16,13 +14,36 @@ import unicodedata
 from io import BytesIO
 from scipy import stats as st
 
-from UQpy.run_model.RunModel import RunModel
-from UQpy.run_model.model_execution.PythonModel import PythonModel
-from UQpy.distributions import Uniform
-from UQpy.distributions.collection.JointIndependent import JointIndependent
+# -----------------------------------------------------------------------------
+# Dependências opcionais (bibliotecas com libs de sistema ou pesadas).
+# Estas importações são tolerantes a falha para que a plataforma carregue mesmo
+# em ambientes sem as libs nativas (ex.: 'libgobject' do WeasyPrint no
+# Streamlit Cloud). O recurso associado só falha se for efetivamente usado.
+# -----------------------------------------------------------------------------
+try:
+    from weasyprint import HTML  # geração de PDF do relatório
+    _WEASYPRINT_DISPONIVEL = True
+except Exception as _erro_weasyprint:  # pragma: no cover - depende do ambiente
+    HTML = None
+    _WEASYPRINT_DISPONIVEL = False
+    print(f"[ReliaBridge] WeasyPrint indisponível, geração de PDF desativada: {_erro_weasyprint}", flush=True)
+
+try:
+    # Módulo de confiabilidade/sensibilidade (desativado por ora). Mantido como
+    # dependência opcional para não impedir o carregamento das demais páginas.
+    from UQpy.run_model.RunModel import RunModel
+    from UQpy.run_model.model_execution.PythonModel import PythonModel
+    from UQpy.distributions import Uniform
+    from UQpy.distributions.collection.JointIndependent import JointIndependent
+    from UQpy.sensitivity.SobolSensitivity import SobolSensitivity
+    _UQPY_DISPONIVEL = True
+except Exception as _erro_uqpy:  # pragma: no cover - depende do ambiente
+    RunModel = PythonModel = Uniform = JointIndependent = SobolSensitivity = None
+    _UQPY_DISPONIVEL = False
+    print(f"[ReliaBridge] UQpy indisponível, módulo de confiabilidade desativado: {_erro_uqpy}", flush=True)
+
 import matplotlib as mpl
 mpl.use("Agg")
-from UQpy.sensitivity.SobolSensitivity import SobolSensitivity
 import matplotlib.pyplot as plt
 mpl.rcParams.update({
                         'font.family': 'serif',
@@ -2103,6 +2124,9 @@ def markdown_para_pdf(conteudo_md, output_filename=None):
         <body>{corpo_html}</body>
         </html>
         """
+        if not _WEASYPRINT_DISPONIVEL or HTML is None:
+            print("GERAÇÃO DE PDF INDISPONÍVEL: WeasyPrint não está instalado neste ambiente.", flush=True)
+            return None
         pdf_bytes = HTML(string=documento_html).write_pdf()
         if not pdf_bytes:
             raise RuntimeError("o conversor retornou um PDF vazio")
@@ -2894,6 +2918,12 @@ def chamar_sobol(
                     verbose: bool = True,
                 ) -> dict:
     """Executa analise de sensibilidade Sobol das restricoes do pre-dimensionamento."""
+
+    if not _UQPY_DISPONIVEL:
+        raise RuntimeError(
+            "Módulo de confiabilidade/sensibilidade indisponível: a biblioteca UQpy "
+            "não está instalada neste ambiente."
+        )
 
     dados = normalizar_dados_pre_sizing(dados, t)
     n_samples = max(int(n_samples), 2)
