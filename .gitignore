@@ -88,6 +88,45 @@ Thumbs.db
 Desktop.ini
 
 # =============================================================================
+# LaTeX (arquivos de compilação)
+# =============================================================================
+*.aux
+*.lof
+*.lot
+*.toc
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.bcf
+*.run.xml
+*.bbl
+*.blg
+*.bbl-SAVE-ERROR
+*.bcf-SAVE-ERROR
+*.nav
+*.snm
+*.vrb
+*.xdv
+*.dvi
+*.loq
+*.out.ps
+*.idx
+*.ilg
+*.ind
+*.glo
+*.gls
+*.glg
+*.acn
+*.acr
+*.alg
+*.brf
+*.pdfsync
+*.markdown.in
+*.markdown.lua
+
+# =============================================================================
 # Regras específicas deste projeto
 # =============================================================================
 _vault/
