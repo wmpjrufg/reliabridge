@@ -10,6 +10,46 @@ import pandas as pd
 
 import matplotlib.pyplot as plt
 
+
+def exibir_dataframe_html(df: pd.DataFrame, esconder_indice: bool = False) -> None:
+    """Exibe uma tabela sem passar pela serializacao nativa do PyArrow."""
+    tabela = df.to_html(
+        index=not esconder_indice,
+        border=0,
+        classes="reliabridge-dataframe",
+        justify="right",
+        escape=True,
+    )
+    st.html(
+        f"""
+        <style>
+        .reliabridge-table-wrapper {{
+            max-width: 100%;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }}
+        table.reliabridge-dataframe {{
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+            white-space: nowrap;
+        }}
+        table.reliabridge-dataframe th,
+        table.reliabridge-dataframe td {{
+            border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+            padding: 0.35rem 0.65rem;
+            text-align: right;
+        }}
+        table.reliabridge-dataframe th {{
+            background: rgba(128, 128, 128, 0.08);
+            position: sticky;
+            top: 0;
+        }}
+        </style>
+        <div class="reliabridge-table-wrapper">{tabela}</div>
+        """
+    )
+
 from madeiras import (
                             textos_pre_sizing_l,
                             montar_excel,
@@ -54,7 +94,7 @@ def invalidate_results():
         st.session_state.pop(k, None)
 
 
-def figura_para_png(fig, dpi: int = 400) -> bytes:
+def figura_para_png(fig, dpi: int = 200) -> bytes:
     """Serializa uma figura matplotlib em PNG e libera a memória associada."""
     buffer = io.BytesIO()
     fig.savefig(buffer, format="png", dpi=dpi, bbox_inches="tight")
@@ -112,7 +152,7 @@ if "has_results" not in st.session_state:
 lang = st.session_state.get("lang", "pt")
 textos = textos_pre_sizing_l()
 t = textos.get(lang, textos["pt"])
-SOBOL_N_SAMPLES = 10000
+SOBOL_N_SAMPLES = 20000
 
 CLASSE_CARREGAMENTO_MAP = {
     "permanent": "permanente",
@@ -386,7 +426,18 @@ excel_bytes = montar_excel(dados_projeto)
 # ============================================================
 # 3) INVALIDAÇÃO AUTOMÁTICA (se inputs mudarem)
 # ============================================================
-sig_now = make_signature(dados_projeto)
+sig_now = make_signature(
+    {
+        "dados_projeto": dados_projeto,
+        "limites_otimizacao": {
+            "d_cm": [d_cm_min, d_cm_max],
+            "bw_cm": [bw_min, bw_max],
+            "h_cm": [h_min, h_max],
+            "esp_long_cm": [n_min_long, n_max_long],
+            "esp_tab_cm": [n_min_tab, n_max_tab],
+        },
+    }
+)
 sig_last = st.session_state.get("sig_last")
 
 if st.session_state.get("has_results", False) and (sig_last is not None) and (sig_now != sig_last):
@@ -623,7 +674,7 @@ if submitted_design:
 # ============================================================
 if st.session_state.get("has_results", False):
     st.subheader(t["gerador_desempenho"])
-    st.dataframe(st.session_state["df_resultados"], use_container_width=True)
+    exibir_dataframe_html(st.session_state["df_resultados"])
 
     # As figuras são reaproveitadas do PNG já gerado, e não redesenhadas a cada
     # rerun: a tela mostra exatamente o mesmo arquivo que vai no pacote de download.
@@ -637,7 +688,7 @@ if st.session_state.get("has_results", False):
 
     st.markdown(f"**{t['estatistica_head']}**")
     st.caption(t["estatistica_info"])
-    st.dataframe(st.session_state["df_estatistica"], use_container_width=True, hide_index=True)
+    exibir_dataframe_html(st.session_state["df_estatistica"], esconder_indice=True)
 
     # --- Fronteira eficiente ---
     st.subheader(t["fronteira_head"])
@@ -665,6 +716,7 @@ if st.session_state.get("has_results", False):
                 )
             )
 
+
     st.subheader(t["sobol_head"])
     st.caption(t["sobol_info"])
 
@@ -672,6 +724,15 @@ if st.session_state.get("has_results", False):
     if sobol_args is None:
         st.warning(t.get("aviso_gerar_primeiro", "Sem resultados atuais. Clique em Gerar para processar."))
     else:
+        st.caption(
+            "Intervalos usados no Sobol: "
+            f"d={sobol_args['ds']} cm; bw={sobol_args['bws']} cm; "
+            f"h={sobol_args['hs']} cm; esp. long.={sobol_args['n_long']} cm; "
+            f"esp. tab.={sobol_args['n_tab']} cm."
+        )
+        # Nunca mantenha um mapa anterior se a nova análise falhar.
+        st.session_state.pop("sobol_result", None)
+        st.session_state.pop("sobol_png", None)
         try:
             with st.spinner(t["sobol_spinner"]):
                 st.session_state["sobol_result"] = chamar_sobol(
@@ -702,6 +763,11 @@ if st.session_state.get("has_results", False):
     if "sobol_result" in st.session_state and st.session_state.get("sobol_png"):
         sobol_result = st.session_state["sobol_result"]
         st.markdown(f"**{t['sobol_total_order']}**")
+        st.caption(
+            "Modelo Sobol executado: "
+            f"{sobol_result.get('model_version', 'versão antiga/sem identificação')} · "
+            f"{sobol_result.get('n_samples', '?')} amostras base"
+        )
         col_esq, col_meio, col_dir = st.columns([1, 4, 1])
         with col_meio:
             st.image(st.session_state["sobol_png"])

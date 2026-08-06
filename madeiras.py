@@ -1,13 +1,17 @@
 """Contém funções para cálculo e verificação de estruturas de madeira."""
 import markdown
 from xhtml2pdf import pisa
-import pypandoc
+from weasyprint import HTML
+from matplotlib.mathtext import math_to_image
+from matplotlib.font_manager import FontProperties
+import base64
 import tempfile
 from datetime import datetime
 import numpy as np
 import pandas as pd
 import os
 import io
+import re
 import unicodedata
 from io import BytesIO
 from scipy import stats as st
@@ -120,6 +124,7 @@ def _aplicar_estilo_eixos(
     ax.set_axisbelow(True)
 from matplotlib.figure import Figure
 from matplotlib.patches import Circle
+from pymoo.core.callback import Callback
 from pymoo.core.problem import ElementwiseProblem
 from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.operators.sampling.rnd import FloatRandomSampling
@@ -128,6 +133,35 @@ from pymoo.operators.mutation.pm import PM
 from pymoo.termination import get_termination
 from pymoo.optimize import minimize
 from pymoo.indicators.hv import HV
+
+
+class HistoricoFronteiraCallback(Callback):
+    """Guarda somente a frente viavel necessaria para calcular o hipervolume."""
+
+    def __init__(self):
+        super().__init__()
+        self.frentes = []
+
+    def notify(self, algorithm):
+        opt = algorithm.opt
+        f_geracao = None
+
+        if opt is not None and len(opt) > 0:
+            f_todas = np.atleast_2d(np.asarray(opt.get("F"), dtype=float))
+            viaveis = opt.get("feasible")
+            if viaveis is not None:
+                mascara = np.asarray(viaveis, dtype=bool).reshape(-1)
+                f_todas = f_todas[mascara]
+            if f_todas.size > 0:
+                # A copia desacopla os poucos objetivos do estado do algoritmo.
+                f_geracao = f_todas.copy()
+
+        self.frentes.append(
+            {
+                "F": f_geracao,
+                "n_avaliacoes": int(getattr(algorithm.evaluator, "n_eval", 0)),
+            }
+        )
 
 
 def restringir_espaco(esp: float, esp_min: float, esp_max: float, comp: float, largura_peca: float):
@@ -1956,37 +1990,130 @@ Relatório gerado automaticamente pelo sistema RELIABRIDGE em {datetime.now().st
     return md
 
 
-def markdown_para_pdf(conteudo_md, output_filename=None):
-    extra_args = [
-        '--pdf-engine=xelatex',
-        '-V', 'geometry:margin=2cm',
-    ]
+def _converter_formulas_markdown(conteudo_md: str) -> tuple[str, dict[str, str]]:
+    """Substitui LaTeX por marcadores e devolve fórmulas SVG correspondentes."""
+    formulas: dict[str, str] = {}
 
-    try:
-        # Cria arquivo temporário
-        with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
-            tmp_path = tmp.name
-
-        # Tenta converter
-        pypandoc.convert_text(
-            conteudo_md,
-            'pdf',
-            format='md',
-            outputfile=tmp_path,
-            extra_args=extra_args
+    def formula_para_svg(expressao: str, tamanho: float) -> str:
+        expressao = expressao.strip().replace("&", "")
+        expressao = re.sub(r"\\text\{([^{}]*)\}", r"\\mathrm{\1}", expressao)
+        buffer = BytesIO()
+        math_to_image(
+            f"${expressao}$",
+            buffer,
+            prop=FontProperties(family="serif", size=tamanho),
+            format="svg",
+            dpi=150,
+            color="black",
         )
+        dados = base64.b64encode(buffer.getvalue()).decode("ascii")
+        return f'data:image/svg+xml;base64,{dados}'
 
-        if os.path.exists(tmp_path) and os.path.getsize(tmp_path) > 0:
-            with open(tmp_path, "rb") as f:
-                pdf_bytes = f.read()
-            os.unlink(tmp_path) # Deleta o temp
-            return pdf_bytes
+    def registrar(expressao: str, display: str) -> str:
+        expressao = re.sub(r"\\begin\{aligned\}|\\end\{aligned\}", "", expressao)
+        chave = f"RELIAFORMULA{len(formulas)}TOKEN"
+        if display == "block":
+            linhas = [linha.strip() for linha in expressao.split(r"\\") if linha.strip()]
+            imagens = "".join(
+                f'<img src="{formula_para_svg(linha, 13)}" alt="fórmula matemática">'
+                for linha in linhas
+            )
+            formulas[chave] = f'<span class="formula-block">{imagens}</span>'
         else:
-            print("ERRO: O arquivo PDF foi criado mas está vazio (0 bytes).")
-            return None
+            formulas[chave] = (
+                f'<img class="formula-inline" src="{formula_para_svg(expressao, 11)}" '
+                'alt="fórmula matemática">'
+            )
+        return chave
+
+    # Blocos devem ser retirados antes das expressões inline para que os dois
+    # cifrões de abertura/fechamento não sejam confundidos.
+    sem_blocos = re.sub(
+        r"\$\$(.*?)\$\$",
+        lambda match: registrar(match.group(1), "block"),
+        conteudo_md,
+        flags=re.DOTALL,
+    )
+    sem_formulas = re.sub(
+        r"(?<!\$)\$([^$\n]+?)\$(?!\$)",
+        lambda match: registrar(match.group(1), "inline"),
+        sem_blocos,
+    )
+    return sem_formulas, formulas
+
+
+def markdown_para_pdf(conteudo_md, output_filename=None):
+    """Converte o memorial Markdown em PDF sem depender de Pandoc/LaTeX."""
+    try:
+        conteudo_processado, formulas = _converter_formulas_markdown(conteudo_md)
+        corpo_html = markdown.markdown(
+            conteudo_processado,
+            extensions=["tables", "fenced_code"],
+        )
+        for chave, mathml in formulas.items():
+            corpo_html = corpo_html.replace(chave, mathml)
+        documento_html = f"""
+        <!doctype html>
+        <html lang="pt-BR">
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @page {{ size: A4; margin: 2cm; }}
+            body {{
+              font-family: "DejaVu Serif", serif;
+              font-size: 10pt;
+              line-height: 1.45;
+              color: #111;
+            }}
+            h1 {{ font-size: 18pt; color: #1f4e79; page-break-after: avoid; }}
+            h2 {{ font-size: 14pt; color: #1f4e79; page-break-after: avoid; }}
+            h3 {{ font-size: 12pt; page-break-after: avoid; }}
+            table {{
+              width: 100%;
+              border-collapse: collapse;
+              margin: 0.5rem 0 1rem;
+              font-size: 8.5pt;
+            }}
+            thead {{ display: table-header-group; }}
+            tr {{ page-break-inside: avoid; }}
+            th, td {{ border: 0.5pt solid #999; padding: 4px 6px; }}
+            th {{ background: #dbeafe; color: #111; }}
+            code {{ font-family: "DejaVu Sans Mono", monospace; font-size: 8.5pt; }}
+            .formula-block {{
+              display: block;
+              margin: 0.6rem auto;
+              text-align: center;
+              page-break-inside: avoid;
+            }}
+            .formula-block img {{
+              display: block;
+              max-width: 100%;
+              height: auto;
+              margin: 0.18rem auto;
+            }}
+            .formula-inline {{
+              display: inline-block;
+              height: 1.15em;
+              width: auto;
+              vertical-align: -0.28em;
+            }}
+            hr {{ border: 0; border-top: 0.5pt solid #999; margin: 1rem 0; }}
+          </style>
+        </head>
+        <body>{corpo_html}</body>
+        </html>
+        """
+        pdf_bytes = HTML(string=documento_html).write_pdf()
+        if not pdf_bytes:
+            raise RuntimeError("o conversor retornou um PDF vazio")
+
+        if output_filename is not None:
+            with open(output_filename, "wb") as arquivo_pdf:
+                arquivo_pdf.write(pdf_bytes)
+        return pdf_bytes
 
     except Exception as e:
-        print(f"ERRO CRÍTICO NO PANDOC: {e}")
+        print(f"ERRO NA GERAÇÃO DO PDF COM WEASYPRINT: {e}", flush=True)
         return None
 
 
@@ -2120,7 +2247,15 @@ class ProjetoOtimo(ElementwiseProblem):
         xi = rng.uniform(-1.0, 1.0, size=(self.n_checagens, 5))
         return 1.0 + rho * xi
 
-    def calcular_objetivos_restricoes_otimizacao(self, d: float, bw: float, h: float, n_long: float, n_tab: float) -> tuple[list, list, dict, dict, dict, dict, dict, dict, dict]:
+    def calcular_objetivos_restricoes_otimizacao(
+        self,
+        d: float,
+        bw: float,
+        h: float,
+        n_long: float,
+        n_tab: float,
+        disposicao_continua: bool = False,
+    ) -> tuple[list, list, dict, dict, dict, dict, dict, dict, dict]:
         """Determina os objetivos e restrições do problema de otimização.
 
         :param d: Diâmetro da longarina [cm]
@@ -2163,9 +2298,29 @@ class ProjetoOtimo(ElementwiseProblem):
         geo_tab  = {"b_w": bw, "h": h}
         geo_long = {"d": d}
 
-        # Restrição de preenchimento do espaço disponível para longarina e tabuleiro
-        g5, num_longs, esp_long_corr = restringir_espaco(esp_long, esp_min_long, esp_max_long, bw_pista, d)
-        g6, num_tabss, esp_tab_corr  = restringir_espaco(esp_tab, esp_min_tab, esp_max_tab, l, bw)
+        # O otimizador usa uma disposição construtiva com número inteiro de peças.
+        # Para sensibilidade global, a aproximação contínua evita degraus artificiais:
+        # o espaçamento amostrado é usado diretamente e o número equivalente de
+        # peças pode ser fracionário. O caminho padrão do pymoo permanece intacto.
+        if disposicao_continua:
+            num_longs = (bw_pista + esp_long) / (d + esp_long)
+            num_tabss = (l + esp_tab) / (bw + esp_tab)
+            esp_long_corr = esp_long
+            esp_tab_corr = esp_tab
+
+            g5_min = (esp_min_long - esp_long) / esp_min_long if esp_min_long > 0 else -np.inf
+            g5_max = (esp_long - esp_max_long) / esp_max_long
+            g6_min = (esp_min_tab - esp_tab) / esp_min_tab if esp_min_tab > 0 else -np.inf
+            g6_max = (esp_tab - esp_max_tab) / esp_max_tab
+            g5 = max(g5_min, g5_max)
+            g6 = max(g6_min, g6_max)
+        else:
+            g5, num_longs, esp_long_corr = restringir_espaco(
+                esp_long, esp_min_long, esp_max_long, bw_pista, d
+            )
+            g6, num_tabss, esp_tab_corr = restringir_espaco(
+                esp_tab, esp_min_tab, esp_max_tab, l, bw
+            )
 
         # Carga permanente do tabuleiro que atua na longarina
         carga_area_tab = (densidade_tab * num_tabss * (h * bw * bw_pista)) / (bw_pista * l)  # [kPa]            
@@ -2236,6 +2391,23 @@ class ProjetoOtimo(ElementwiseProblem):
         g4 = res_m_tab["g_otimiz [-]"]
 
         return [f1, f2], [g1, g2, g3, g4, g5, g6], res_m, res_v, res_f_total, relat_l, res_m_tab, relat_t, relat_carga
+
+    def calcular_estados_limite_sobol(
+        self, d: float, bw: float, h: float, esp_long: float, esp_tab: float
+    ) -> np.ndarray:
+        """Avalia estados-limite contínuos, sem penalidades do otimizador."""
+        _, restricoes, *_ = self.calcular_objetivos_restricoes_otimizacao(
+            d,
+            bw,
+            h,
+            esp_long,
+            esp_tab,
+            disposicao_continua=True,
+        )
+        valores = np.asarray(restricoes, dtype=float)
+        if valores.shape != (6,) or not np.all(np.isfinite(valores)):
+            raise ValueError(f"estados-limite nao finitos: {valores.tolist()}")
+        return valores
     
     def _evaluate(self, x, out, *args, **kwargs):
         
@@ -2383,7 +2555,7 @@ def chamando_nsga2(
                     t: dict,
                     verbose: bool = True,
                     salvar_historico: bool = False,
-                    pop_size: int = 75,
+                    pop_size: int = 50,
                     n_gen: int = 150,
                     n_checagens: int = 30,
                 ):
@@ -2397,9 +2569,9 @@ def chamando_nsga2(
     :param n_tab: Espaço mínimo e máximo de vigas do tabuleiro
     :param t: Dicionário de textos para nomenclatura dos dados de entrada
     :param verbose: Imprime o progresso da otimização
-    :param salvar_historico: Armazena a população de cada geração, permitindo o
-                             cálculo da curva de hipervolume. Aumenta o consumo de
-                             memória, por isso é desligado por padrão na aplicação.
+    :param salvar_historico: Armazena somente as frentes viáveis de cada geração,
+                             permitindo calcular a curva de hipervolume sem manter
+                             cópias completas do algoritmo em memória.
     :param pop_size: Tamanho da população do NSGA-II
     :param n_gen: Número de gerações
     :param n_checagens: Número de checagens da avaliação robusta por indivíduo
@@ -2469,7 +2641,16 @@ def chamando_nsga2(
 
     algorithm   = NSGA2(pop_size=pop_size, sampling=FloatRandomSampling(), crossover=SBX(prob=0.9, eta=15), mutation=PM(eta=20), eliminate_duplicates=True)
     termination = get_termination("n_gen", n_gen)
-    res         = minimize(problem_b, algorithm, termination, seed=1, save_history=salvar_historico, verbose=verbose)
+    callback_historico = HistoricoFronteiraCallback() if salvar_historico else None
+    res = minimize(
+        problem_b,
+        algorithm,
+        termination,
+        seed=1,
+        save_history=False,
+        callback=callback_historico,
+        verbose=verbose,
+    )
     F_nsga      = res.F
     G_nsga      = res.G
     X_nsga      = res.X
@@ -2504,7 +2685,9 @@ def chamando_nsga2(
                         )
 
     if salvar_historico:
-        return df_fronteira, res
+        # O pymoo copia o algoritmo antes de executar. O callback efetivamente
+        # preenchido pertence, portanto, ao algoritmo presente no resultado.
+        return df_fronteira, res.algorithm.callback
 
     return df_fronteira
 
@@ -2512,7 +2695,8 @@ def chamando_nsga2(
 def historico_hipervolume(res, ponto_referencia: np.ndarray | None = None) -> pd.DataFrame:
     """Calcula a evolução do hipervolume ao longo das gerações do NSGA-II.
 
-    Exige que a otimização tenha sido executada com ``save_history=True``.
+    Exige o callback compacto retornado por ``chamando_nsga2`` quando
+    ``salvar_historico=True``.
 
     Os objetivos são normalizados pelo ponto ideal e pelo nadir observados ao longo
     de toda a execução, de modo que o hipervolume resulte adimensional e comparável
@@ -2527,25 +2711,15 @@ def historico_hipervolume(res, ponto_referencia: np.ndarray | None = None) -> pd
              hipervolume igual a zero.
     """
 
-    if not getattr(res, "history", None):
+    registros = getattr(res, "frentes", None)
+    if not registros:
         raise ValueError(
-            "O resultado não possui histórico. Execute a otimização com save_history=True."
+            "O resultado não possui histórico compacto de frentes. "
+            "Execute a otimização com salvar_historico=True."
         )
 
     # Frente não dominada (apenas soluções viáveis) de cada geração
-    frentes = []
-    for algoritmo in res.history:
-        opt = algoritmo.opt
-        f_geracao = None
-        if opt is not None and len(opt) > 0:
-            viaveis = opt.get("feasible")
-            f_todas = np.atleast_2d(np.asarray(opt.get("F"), dtype=float))
-            if viaveis is not None:
-                mascara = np.asarray(viaveis, dtype=bool).reshape(-1)
-                f_todas = f_todas[mascara]
-            if f_todas.size > 0:
-                f_geracao = f_todas
-        frentes.append(f_geracao)
+    frentes = [registro["F"] for registro in registros]
 
     validas = [f for f in frentes if f is not None]
     if not validas:
@@ -2560,7 +2734,7 @@ def historico_hipervolume(res, ponto_referencia: np.ndarray | None = None) -> pd
     indicador = HV(ref_point=ref)
 
     linhas = []
-    for i, (algoritmo, f_geracao) in enumerate(zip(res.history, frentes), start=1):
+    for i, (registro, f_geracao) in enumerate(zip(registros, frentes), start=1):
         if f_geracao is None:
             hv, n_sol = 0.0, 0
         else:
@@ -2571,7 +2745,7 @@ def historico_hipervolume(res, ponto_referencia: np.ndarray | None = None) -> pd
                 "geracao": i,
                 "hipervolume": hv,
                 "n_solucoes": n_sol,
-                "n_avaliacoes": int(getattr(algoritmo.evaluator, "n_eval", 0)),
+                "n_avaliacoes": int(registro["n_avaliacoes"]),
             }
         )
 
@@ -2698,10 +2872,14 @@ def funcoes_sobol(entrada, params) -> np.ndarray:
     projeto = params["projeto"]
 
     try:
-        _, g, *_ = projeto.calcular_objetivos_restricoes_otimizacao(d, bw, h, n_long, n_tab)
-        return np.nan_to_num(np.array(g, dtype=float), nan=1.0e6, posinf=1.0e6, neginf=-1.0e6)
-    except Exception:
-        return np.full(6, 1.0e6, dtype=float)
+        return projeto.calcular_estados_limite_sobol(d, bw, h, n_long, n_tab)
+    except Exception as exc:
+        raise ValueError(
+            "Amostra invalida durante o Sobol: "
+            f"d={d:.6g} cm, bw={bw:.6g} cm, h={h:.6g} cm, "
+            f"esp_long={n_long:.6g} cm, esp_tab={n_tab:.6g} cm. "
+            f"Causa: {exc}"
+        ) from exc
 
 
 def chamar_sobol(
@@ -2789,6 +2967,7 @@ def chamar_sobol(
     resultado = {
         "total_order": indices_para_df(sobol.total_order_indices),
         "n_samples": n_samples,
+        "model_version": "estados-limite-continuos-v1",
     }
 
     if verbose:

@@ -18,6 +18,36 @@ from madeiras import (
                         )
 
 
+def exibir_dataframe_html(df: pd.DataFrame, esconder_indice: bool = False) -> None:
+    """Exibe uma tabela sem usar a serializacao nativa do PyArrow."""
+    tabela = df.to_html(
+        index=not esconder_indice,
+        border=0,
+        classes="reliabridge-dataframe",
+        justify="right",
+        escape=True,
+    )
+    st.html(
+        f"""
+        <style>
+        .reliabridge-table-wrapper {{ max-width: 100%; overflow-x: auto; margin-bottom: 1rem; }}
+        table.reliabridge-dataframe {{
+            width: 100%; border-collapse: collapse; font-size: 0.875rem; white-space: nowrap;
+        }}
+        table.reliabridge-dataframe th,
+        table.reliabridge-dataframe td {{
+            border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+            padding: 0.35rem 0.65rem; text-align: right;
+        }}
+        table.reliabridge-dataframe th {{
+            background: rgba(128, 128, 128, 0.08); position: sticky; top: 0;
+        }}
+        </style>
+        <div class="reliabridge-table-wrapper">{tabela}</div>
+        """
+    )
+
+
 # -----------------------------
 # Helpers: assinatura + invalidação
 # -----------------------------
@@ -27,8 +57,8 @@ def make_signature(d: dict) -> str:
 
 
 def invalidate_results():
-    st.session_state["has_results"] = False
-    for k in ["res_design", "projeto_obj", "geo_final", "sig_last"]:
+    st.session_state["design_has_results"] = False
+    for k in ["res_design", "projeto_obj", "geo_final", "design_sig_last"]:
         st.session_state.pop(k, None)
 
 
@@ -92,14 +122,17 @@ lang = st.session_state.get("lang", "pt")
 textos = textos_design()
 t = textos.get(lang, textos["pt"])
 
+if "design_has_results" not in st.session_state:
+    st.session_state["design_has_results"] = False
+
 st.header(t["titulo"])
 st.markdown(t["pre"])
 
 
 # ============================================================
-# 1) form para dados do dimensionamento
+# 1) dados do dimensionamento
 # ============================================================
-with st.form("form_design", clear_on_submit=False):
+with st.container(border=True):
 
     st.subheader(t["dados_pre"])
     colA, colB = st.columns(2)
@@ -137,11 +170,35 @@ with st.form("form_design", clear_on_submit=False):
     if uploaded_file is not None:
         df = pd.read_excel(uploaded_file)
         st.success(t["planilha_sucesso"])
-        st.dataframe(df, use_container_width=True)
+        exibir_dataframe_html(df)
     else:
         st.info(t["aguardando_upload"])
 
-    submitted_design = st.form_submit_button(t["gerador_projeto"])
+    submitted_design = st.button(t["gerador_projeto"], key="submit_design")
+
+
+arquivo_hash = None
+if uploaded_file is not None:
+    arquivo_hash = hashlib.sha256(uploaded_file.getvalue()).hexdigest()
+
+design_sig_now = make_signature(
+    {
+        "tipo_secao_longarina": tipo_secao_longarina,
+        "d_cm": d_cm,
+        "esp_cm": esp_cm,
+        "tipo_secao_tabuleiro": tipo_secao_tabuleiro,
+        "bw_cm": bw_cm,
+        "h_cm": h_cm,
+        "esp_tab_cm": esp_tab_cm,
+        "arquivo_hash": arquivo_hash,
+    }
+)
+
+if (
+    st.session_state.get("design_has_results", False)
+    and st.session_state.get("design_sig_last") != design_sig_now
+):
+    invalidate_results()
 
 
 # ============================================================
@@ -210,13 +267,21 @@ if submitted_design:
     st.session_state["projeto_obj"] = projeto_instancia
     st.session_state["res_design"] = res_calculado
     st.session_state["geo_final"] = {'d': d_cm, 'esp': esp_cm, 'bw': bw_cm, 'h': h_cm, 'esp_tab': esp_tab_cm}
-    st.session_state["has_results"] = True
+    st.session_state["design_sig_last"] = design_sig_now
+    st.session_state["design_has_results"] = True
 
 
 # ============================================================
 # 3) DISPLAY & REPORT
 # ============================================================
-if st.session_state.get("has_results", False):
+chaves_resultado_design = ("res_design", "projeto_obj", "geo_final")
+design_marcado_como_pronto = st.session_state.get("design_has_results", False)
+design_completo = all(chave in st.session_state for chave in chaves_resultado_design)
+if design_marcado_como_pronto and not design_completo:
+    invalidate_results()
+tem_resultado_design = design_marcado_como_pronto and design_completo
+
+if tem_resultado_design:
     # Recupera os dados da sessão
     res = st.session_state["res_design"]
     projeto_persistido = st.session_state["projeto_obj"]

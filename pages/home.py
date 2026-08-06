@@ -1,4 +1,9 @@
+from pathlib import Path
+
 import streamlit as st
+
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 # -----------------------------------------------------------
 # CONFIGURAÇÃO DA PÁGINA
@@ -164,22 +169,22 @@ with st.sidebar:
 # -----------------------------------------------------------
 try:
 
-    col1, col2, col3, col4 = st.columns([1,1,1,1], vertical_alignment="center", gap="xlarge")
+    col1, col2, col3, col4 = st.columns([1,1,1,1], vertical_alignment="center", gap="large")
 
     with col1:
-        st.image(t["logo_ufcat"], width=160)
+        st.image(PROJECT_ROOT / t["logo_ufcat"], width=160)
 
     with col2:
-        st.image(t["logo_ufscar"], width=160)
+        st.image(PROJECT_ROOT / t["logo_ufscar"], width=160)
 
     with col3:
-        st.image(t["logo_pucgo"], width=160)
+        st.image(PROJECT_ROOT / t["logo_pucgo"], width=160)
         
     with col4:
-        st.image(t["logo_ufu"], width=160)
+        st.image(PROJECT_ROOT / t["logo_ufu"], width=160)
 
-except Exception:
-    st.warning(t["erro_imagem"])
+except Exception as exc:
+    st.warning(f"{t['erro_imagem']} ({exc})")
 
 # -----------------------------------------------------------
 # TÍTULO
