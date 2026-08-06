@@ -54,7 +54,8 @@ textos = {
         <b>Prof. Wanderlei M. Pereira Junior</b>, <b>Priscilla Silva Teotônio</b>,
         <b>Pedro Henrique Gomes Duarte</b>, <b>Prof. Wellington A. da Silva</b>,
         <b>Prof. André Luís Christoforo</b>, <b>Matheus Henrique Morato de Moraes</b>,
-        <b>João Paulo M. Lopes</b>, <b>Enzo Moura Rezende</b> e <b>Profa. Maria José Pereira Dantas</b>.
+        <b>João Paulo M. Lopes</b>, <b>Enzo Moura Rezende</b>, <b>Profa. Maria José Pereira Dantas</b>
+        e <b>Prof. Fran Sérgio Lobato</b>.
         </p>
 
         <p>
@@ -114,7 +115,8 @@ textos = {
         <b>Prof. Wanderlei M. Pereira Junior</b>, <b>Priscilla Silva Teotônio</b>,
         <b>Pedro Henrique Gomes Duarte</b>, <b>Prof. Wellington A. da Silva</b>,
         <b>Prof. André Luís Christoforo</b>, <b>Matheus Henrique Morato de Moraes</b>,
-        <b>João Paulo M. Lopes</b>, <b>Enzo Moura Rezende</b> and <b>Profa. Maria José Pereira Dantas</b>.
+        <b>João Paulo M. Lopes</b>, <b>Enzo Moura Rezende</b>, <b>Profa. Maria José Pereira Dantas</b>
+        and <b>Prof. Fran Sérgio Lobato</b>.
         </p>
 
         <p>
