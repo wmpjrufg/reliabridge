@@ -1,6 +1,6 @@
-% Language setting -- artigo em ingles. Os blocos \tofill e fillblock permanecem
-% em portugues por serem instrucoes internas de preenchimento, nao texto final.
-\usepackage[english]{babel}
+% Language setting -- versao de trabalho em portugues. Ver vault/02_paper_engstruct.md:
+% a submissao ao Engineering Structures exige retraducao para o ingles.
+\usepackage[brazil]{babel}
 
 % Set page size and margins
 \usepackage[a4paper,top=2cm,bottom=2cm,left=2.5cm,right=2.5cm,marginparwidth=1.75cm]{geometry}
@@ -16,7 +16,7 @@
 %\renewcommand{\doiprefix}{https://doi.org/}
 
 % Add additional APA 7th edition requirements
-%\DeclareLanguageMapping{brazil}{brazilian-apa} % nao se aplica ao artigo em ingles
+\DeclareLanguageMapping{brazil}{brazilian-apa} % Set language mapping
 \DeclareFieldFormat[article]{volume}{\apanum{#1}} % Format volume number
 
 % Modify 'and' to '&' in the bibliography

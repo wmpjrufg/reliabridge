@@ -1,27 +1,27 @@
-\section{Results and discussion}\label{sec:results}
+\section{Resultados e discussão}\label{sec:results}
 
-\subsection{Which verification governs, and where}\label{sec:governante}
+\subsection{Qual verificação governa, e onde}\label{sec:governante}
 
-The premise of this study is that the governing verification migrates with span, and that the material property determining the design migrates with it. This premise is verified first, because everything that follows depends on it.
+A premissa deste estudo é que a verificação governante migra com o vão, e que a propriedade do material que determina o dimensionamento migra com ela. Essa premissa é verificada em primeiro lugar, porque tudo o que se segue depende dela.
 
 \begin{table}[!ht]
-\caption{Governing verification of the minimum-volume solution, by span and strength class.\label{tab:governante}}
+\caption{Verificação governante da solução de volume mínimo, por vão e classe de resistência.\label{tab:governante}}
 \begin{threeparttable}
 \begin{tabular*}{\columnwidth}{@{\extracolsep\fill}lccccc@{\extracolsep\fill}}
 \toprule
- & \multicolumn{5}{c}{Strength class} \\
+ & \multicolumn{5}{c}{Classe de resistência} \\
 \cmidrule{2-6}
-Span $L$ (m) & D20 & D30 & D40 & D50 & D60 \\
+Vão $L$ (m) & D20 & D30 & D40 & D50 & D60 \\
 \midrule
-3.0 & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
-5.0 & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
-8.0 & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
-10.0 & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
+3,0 & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
+5,0 & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
+8,0 & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
+10,0 & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
 \bottomrule
 \end{tabular*}
 \begin{tablenotes}
 \footnotesize
-\item Entries: S = shear of the stringer; B = bending of the stringer; D = deflection of the stringer; DB = bending of the deck plank. The governing verification is the one with the largest normalised limit-state function in the minimum-volume solution.
+\item Legenda: C = cisalhamento da longarina; F = flexão da longarina; D = deslocamento da longarina; FT = flexão da peça do tabuleiro. A verificação governante é aquela com a maior função de estado limite normalizada na solução de volume mínimo.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -32,31 +32,31 @@ Span $L$ (m) & D20 & D30 & D40 & D50 & D60 \\
 Este resultado precisa ser reportado com honestidade em duas direções. Se a migração ocorrer conforme esperado, ela é o mecanismo do artigo e deve ser declarada explicitamente aqui, com a consequência de que o erro de enquadramento de rigidez só se manifesta estruturalmente na região em que a flecha governa. Se a flecha governar em toda a faixa de vãos, o argumento continua válido -- e até mais forte, pois significa que a rigidez sempre importa -- porém a dependência do vão deixa de ser o eixo do artigo e o texto deve ser reescrito em torno da magnitude do erro, não da sua variação. Se, ao contrário, a flecha nunca governar, o efeito estrutural será pequeno e isso precisa ser dito: nesse caso o achado do artigo passa a ser que o erro de representação de rigidez existe mas tem consequência limitada nesta tipologia, o que é um resultado negativo publicável, mas exige reescrever a introdução e o resumo.
 \end{fillblock}
 
-\subsection{Cost of class assignment}\label{sec:custo_enquadramento}
+\subsection{Custo do enquadramento em classe}\label{sec:custo_enquadramento}
 
-For each species and span, Table~\ref{tab:custo_enquadramento} reports the timber volume of the species-based design, that of the class-based design and the resulting error $\Delta V$ defined in Equation~\eqref{eq:deltaV}.
+Para cada espécie e vão, a Tabela~\ref{tab:custo_enquadramento} reporta o volume de madeira do projeto pela espécie, o do projeto pela classe e o erro $\Delta V$ resultante, definido na Equação~\eqref{eq:deltaV}.
 
 \begin{table}[!ht]
-\caption{Timber volume of the species-based and class-based designs and the resulting class-assignment error, by species.\label{tab:custo_enquadramento}}
+\caption{Volume de madeira dos projetos pela espécie e pela classe e o erro de enquadramento resultante, por espécie.\label{tab:custo_enquadramento}}
 \begin{threeparttable}
 \footnotesize
 \setlength{\tabcolsep}{3pt}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llcrrrrrr@{\extracolsep{\fill}}}
 \toprule
-\# & Species & Class & \multicolumn{2}{c}{$L = 3.0$~m} & \multicolumn{2}{c}{$L = 5.0$~m} & \multicolumn{2}{c}{$L = 10.0$~m} \\
+\# & Espécie & Classe & \multicolumn{2}{c}{$L = 3{,}0$~m} & \multicolumn{2}{c}{$L = 5{,}0$~m} & \multicolumn{2}{c}{$L = 10{,}0$~m} \\
 \cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
  & & & $V_{sp}$ & $\Delta V$ & $V_{sp}$ & $\Delta V$ & $V_{sp}$ & $\Delta V$ \\
 \midrule
 \multicolumn{9}{c}{\tofill{[A PREENCHER -- 40 linhas, uma por espécie, na mesma ordem da Tabela~\ref{tab:especies}]}} \\
 \midrule
-\multicolumn{3}{l}{Mean $|\Delta V|$} & & \tofill{--\%} & & \tofill{--\%} & & \tofill{--\%} \\
-\multicolumn{3}{l}{Range of $\Delta V$} & & \tofill{--\%} & & \tofill{--\%} & & \tofill{--\%} \\
-\multicolumn{3}{l}{Species with $\Delta V < 0$} & & \tofill{--} & & \tofill{--} & & \tofill{--} \\
+\multicolumn{3}{l}{$|\Delta V|$ médio} & & \tofill{--\%} & & \tofill{--\%} & & \tofill{--\%} \\
+\multicolumn{3}{l}{Amplitude de $\Delta V$} & & \tofill{--\%} & & \tofill{--\%} & & \tofill{--\%} \\
+\multicolumn{3}{l}{Espécies com $\Delta V < 0$} & & \tofill{--} & & \tofill{--} & & \tofill{--} \\
 \bottomrule
 \end{tabular*}
 \begin{tablenotes}
 \footnotesize
-\item $V_{sp}$: timber volume of the species-based design (m\textsuperscript{3}). $\Delta V$: class-assignment error, Equation~\eqref{eq:deltaV}. A negative $\Delta V$ means the class-based design uses less material than the species requires, and is therefore unconservative.
+\item $V_{sp}$: volume de madeira do projeto pela espécie (m\textsuperscript{3}). $\Delta V$: erro de enquadramento em classe, Equação~\eqref{eq:deltaV}. Um $\Delta V$ negativo significa que o projeto pela classe emprega menos material do que a espécie requer, sendo portanto contrário à segurança.
 \item \tofill{[NOTA] Caso a tabela completa de 40 linhas por três vãos fique excessiva para o corpo do artigo, mover a versão completa para material suplementar e manter aqui apenas as dez espécies de maior $|\Delta V|$ mais as linhas de síntese. Verificar a política de material suplementar da revista.}
 \end{tablenotes}
 \end{threeparttable}
@@ -65,7 +65,7 @@ For each species and span, Table~\ref{tab:custo_enquadramento} reports the timbe
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figuras/continuo_vs_degraus.png}
-    \caption{Timber volume as a continuous function of the material property against the step function imposed by class-based design, one panel per span. Each point is a species designed with its measured properties; the step function is the class-based design.}
+    \caption{Volume de madeira como função contínua da propriedade do material contra a função-degrau imposta pelo projeto baseado em classe, um painel por vão. Cada ponto é uma espécie dimensionada com suas propriedades medidas; a função-degrau é o projeto pela classe.}
     \label{fig:continuo_degraus}
 \end{figure}
 
@@ -85,24 +85,24 @@ A leitura pretendida é que a nuvem de pontos se espalhe verticalmente em torno 
 \textbf{(iii) Dependência do vão.} Verificar se o erro cresce com o vão, conforme previsto pela migração do critério governante da Seção~\ref{sec:governante}. Quantificar o crescimento. Esta é a afirmação central do artigo e precisa vir acompanhada de número, não apenas de tendência.
 \end{fillblock}
 
-\subsection{Is the limitation the number of classes?}\label{sec:granularidade}
+\subsection{A limitação está no número de classes?}\label{sec:granularidade}
 
-A natural objection to the preceding results is that they reflect the coarseness of a five-class system, and would be mitigated by a finer one. EN 338 defines thirteen hardwood classes, from D18 to D80, and therefore offers a direct test of that hypothesis on the same population.
+Uma objeção natural aos resultados precedentes é que eles refletiriam a grosseria de um sistema de cinco classes, e seriam mitigados por um sistema mais fino. A EN 338 define treze classes de folhosas, de D18 a D80, e oferece portanto um teste direto dessa hipótese sobre a mesma população.
 
 \begin{table}[!ht]
-\caption{Comparison of the class-assignment error under the ABNT NBR 7190-3 and EN 338 class systems.\label{tab:comparacao_normas}}
+\caption{Comparação do erro de enquadramento sob os sistemas de classes da ABNT NBR 7190-3 e da EN 338.\label{tab:comparacao_normas}}
 \begin{threeparttable}
 \begin{tabular*}{\columnwidth}{@{\extracolsep\fill}lcc@{\extracolsep\fill}}
 \toprule
  & ABNT NBR 7190-3 & EN 338 \\
 \midrule
-Number of hardwood classes & 5 & \tofill{13} \\
-Indexing property & $f_{c0,k}$ & \tofill{$f_{m,k}$} \\
-Step in tabulated $E$ between adjacent classes & 14--21\% & \tofill{--} \\
-Mean within-class scatter of measured $E_{M0}$ & \tofill{--} & \tofill{--} \\
-Ratio, within-class scatter to class step & \tofill{$\approx 4$} & \tofill{--} \\
-Species assigned a different class by stiffness & 58\% & \tofill{--} \\
-Species less stiff than their class & 35\% & \tofill{--} \\
+Número de classes de folhosas & 5 & \tofill{13} \\
+Propriedade indexadora & $f_{c0,k}$ & \tofill{$f_{m,k}$} \\
+Passo em $E$ tabelado entre classes vizinhas & 14--21\% & \tofill{--} \\
+Dispersão intraclasse média de $E_{M0}$ medido & \tofill{--} & \tofill{--} \\
+Razão dispersão intraclasse / passo entre classes & \tofill{$\approx 4$} & \tofill{--} \\
+Espécies enquadradas em outra classe pela rigidez & 58\% & \tofill{--} \\
+Espécies menos rígidas que sua classe & 35\% & \tofill{--} \\
 \bottomrule
 \end{tabular*}
 \end{threeparttable}
@@ -116,7 +116,7 @@ Dois cuidados. Primeiro, conferir os valores da EN 338:2016, Tabela 2, contra o 
 O desfecho esperado, e que deve ser declarado com clareza qualquer que seja: se a EN 338, com treze classes, ainda assim apresentar dispersão intraclasse superior ao passo entre classes, então a limitação não está no número de classes e sim em indexar o sistema por resistência -- e essa é a conclusão geral que torna o artigo relevante fora do Brasil. Se, ao contrário, a granularidade mais fina resolver o problema, a conclusão passa a ser uma recomendação concreta de revisão da NBR 7190-3, o que é um resultado menos geral mas de aplicação imediata.
 \end{fillblock}
 
-\subsection{Detailed case}\label{sec:caso_detalhado}
+\subsection{Caso detalhado}\label{sec:caso_detalhado}
 
 \begin{fillblock}
 \noindent\textbf{[A PREENCHER]} Selecionar uma espécie de referência de relevância comercial e apresentar, para ela, a fronteira eficiente completa, a análise de sensibilidade global de Sobol e a curva de convergência do hipervolume, de modo a documentar a qualidade da otimização que sustenta todos os resultados agregados das seções anteriores. Acrescentar a comparação resumida entre os três extremos do conjunto: a espécie mais eficiente, a menos eficiente e a de maior discrepância frente à sua classe.
@@ -124,7 +124,7 @@ O desfecho esperado, e que deve ser declarado com clareza qualquer que seja: se 
 Manter esta seção contida. Ela existe para dar credibilidade ao procedimento de otimização, não para reapresentar a plataforma.
 \end{fillblock}
 
-\subsection{Limitations}\label{sec:limitacoes}
+\subsection{Limitações}\label{sec:limitacoes}
 
 \begin{fillblock}
 \noindent\textbf{[A PREENCHER]} Declarar as limitações de forma direta, pois todas serão levantadas na revisão e é preferível antecipá-las:

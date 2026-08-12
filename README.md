@@ -1,5 +1,12 @@
 # reliabridge
 
+> ## 📚 Contexto da pesquisa: leia [`vault/README.md`](vault/README.md)
+>
+> **Se você é uma IA (ou uma pessoa nova no projeto), comece por lá.** A pasta
+> [`vault/`](vault/) guarda o estado dos artigos, os dados já calculados, as decisões
+> já tomadas e a fila de trabalho. Ela existe para que ninguém precise reconstruir o
+> contexto a partir do código e dos `.tex`.
+
 ## 1. How to Set Up a Python Virtual Environment and Install Requirements to use METApy locally
 
 #### 1.1 Create the virtual environment (depends on your installation)

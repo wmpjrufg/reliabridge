@@ -1,12 +1,12 @@
-\section{Species population and class assignment}\label{sec:materials}
+\section{População de espécies e enquadramento em classe}\label{sec:materials}
 
 \begin{fillblock}
 \noindent\textbf{[VERIFICAR ANTES DE PUBLICAR]} Todos os números desta seção foram calculados a partir dos valores \emph{médios} reportados na fonte experimental, convertidos em valores característicos por $f_k = 0{,}70\,f_m$ para compressão e flexão e $f_k = 0{,}54\,f_m$ para cisalhamento, conforme a ABNT NBR 7190-1:2022. O enquadramento em classe -- e portanto a composição de cada bin -- depende dessa conversão. Se o artigo-fonte já reportar valores característicos, ou adotar outro fator, refazer o cálculo e atualizar as Tabelas~\ref{tab:especies},~\ref{tab:dispersao} e~\ref{tab:discordancia} e todos os percentuais citados no texto. A conclusão sobre a dispersão intraclasse é robusta à escolha do fator, mas a lista nominal de espécies por classe não é.
 \end{fillblock}
 
-\subsection{Experimental data}\label{sec:dados}
+\subsection{Dados experimentais}\label{sec:dados}
 
-The mechanical properties used in this study were measured on 40 Brazilian tropical hardwood species and are reported in \tofill{[CITAR o artigo-fonte]}. The species cover a wide range of the hardwood spectrum, with apparent density at 12\% moisture content ranging from 512 to 1163~kg/m\textsuperscript{3} and compressive strength parallel to grain from 33 to 94~MPa, and are therefore representative of the material effectively available for construction in the northern and central regions of Brazil. Table~\ref{tab:especies} lists the species, the properties relevant to the present analysis and the resulting strength class.
+As propriedades mecânicas empregadas neste estudo foram medidas em 40 espécies de madeira tropical brasileira e estão reportadas em \tofill{[CITAR o artigo-fonte]}. As espécies cobrem uma ampla faixa do espectro de folhosas, com massa específica aparente a 12\% de umidade variando de 512 a 1163~kg/m\textsuperscript{3} e resistência à compressão paralela às fibras de 33 a 94~MPa, sendo portanto representativas do material efetivamente disponível para construção nas regiões Norte e Centro-Oeste do Brasil. A Tabela~\ref{tab:especies} lista as espécies, as propriedades relevantes para a presente análise e a classe de resistência resultante.
 
 \begin{fillblock}
 \noindent\textbf{[A PREENCHER]} Descrever sucintamente o programa experimental da fonte: norma de ensaio adotada, número de corpos de prova por espécie, procedência do material e teor de umidade de referência. Registrar também se a fonte reporta desvio-padrão por espécie; em caso positivo, incluir uma coluna adicional na Tabela~\ref{tab:especies} e discutir a variabilidade intraespécie na Seção~\ref{sec:limitacoes}, pois um revisor certamente perguntará por ela.
@@ -14,34 +14,34 @@ The mechanical properties used in this study were measured on 40 Brazilian tropi
 
 \input{tabelas/tab_especies}
 
-\subsection{Class assignment rule}\label{sec:enquadramento}
+\subsection{Regra de enquadramento em classe}\label{sec:enquadramento}
 
-ABNT NBR 7190-3 defines five strength classes for hardwoods from native forests, D20 to D60, each identified by a characteristic compressive strength parallel to grain and carrying a tabulated mean modulus of elasticity, a shear strength and a reference density. A species is assigned to the highest class whose characteristic compressive strength does not exceed its own. The tabulated properties of the assigned class are those the designer is required to adopt, and they are reproduced in Table~\ref{tab:classes_madeira} of Section~\ref{sec:methodology}.
+A ABNT NBR 7190-3 define cinco classes de resistência para folhosas de florestas nativas, D20 a D60, cada uma identificada por uma resistência característica à compressão paralela às fibras e portadora de um módulo de elasticidade médio tabelado, uma resistência ao cisalhamento e uma massa específica de referência. Uma espécie é atribuída à classe mais alta cuja resistência característica à compressão não exceda a sua própria. As propriedades tabeladas da classe atribuída são as que o projetista é obrigado a adotar, e estão reproduzidas na Tabela~\ref{tab:classes_madeira} da Seção~\ref{sec:methodology}.
 
-Two features of this rule matter for what follows. First, the indexing property is a strength, so the assignment carries no information about how stiff the species actually is. Second, the tabulated modulus of elasticity increases by 14 to 21\% from one class to the next, which sets the resolution of the system in stiffness: a species can only be represented to within that granularity, even in the best case.
+Dois aspectos dessa regra importam para o que se segue. Primeiro, a propriedade indexadora é uma resistência, de modo que a atribuição não carrega informação alguma sobre quão rígida a espécie de fato é. Segundo, o módulo de elasticidade tabelado cresce de 14 a 21\% de uma classe para a seguinte, o que estabelece a resolução do sistema em rigidez: uma espécie só pode ser representada dentro dessa granularidade, mesmo no melhor caso.
 
-\subsection{How well does the class represent the species?}\label{sec:representacao}
+\subsection{Quão bem a classe representa a espécie?}\label{sec:representacao}
 
-Table~\ref{tab:dispersao} compares, for each class, the range of measured bending modulus of elasticity among the species assigned to it against the step separating adjacent classes.
+A Tabela~\ref{tab:dispersao} compara, para cada classe, a amplitude do módulo de elasticidade à flexão medido entre as espécies a ela atribuídas contra o passo que separa classes vizinhas.
 
 \input{tabelas/tab_dispersao}
 
-The result is unambiguous. In classes D30 and D40, which together hold 23 of the 40 species, the measured stiffness scatters by 70 and 74\% respectively, while the step between neighbouring classes is only 14 to 21\%. Within-class scatter therefore exceeds the resolution of the class system by a factor of approximately four. Moving a species one class up changes its tabulated stiffness by about one fifth, whereas two species sharing the same class may differ in real stiffness by more than two thirds.
+O resultado é inequívoco. Nas classes D30 e D40, que juntas concentram 23 das 40 espécies, a rigidez medida dispersa 70 e 74\% respectivamente, enquanto o passo entre classes vizinhas é de apenas 14 a 21\%. A dispersão intraclasse, portanto, supera a resolução do sistema de classes por um fator de aproximadamente quatro. Subir uma espécie de classe altera sua rigidez tabelada em cerca de um quinto, ao passo que duas espécies que compartilham a mesma classe podem diferir em rigidez real em mais de dois terços.
 
-Table~\ref{tab:discordancia} makes the same point species by species, by comparing the class assigned by characteristic compressive strength against the class that the measured modulus of elasticity would imply.
+A Tabela~\ref{tab:discordancia} expressa o mesmo ponto espécie a espécie, comparando a classe atribuída pela resistência característica à compressão contra a classe que o módulo de elasticidade medido implicaria.
 
 \input{tabelas/tab_discordancia}
 
-Twenty-three of the 40 species, that is 58\% of the population, fall in a different class under the two criteria, and two species differ by two full classes. The extreme cases are instructive. Angelim-pedra (\textit{Hymenolobium petraeum}) is assigned to class D40 by its characteristic compressive strength of 40.6~MPa, but its measured bending modulus of 10\,755~MPa lies below the value tabulated for class D30. Goiabão (\textit{Planchonella pachycarpa}) is assigned to class D30 by a characteristic strength of 34.3~MPa, yet its measured modulus of 18\,367~MPa exceeds the value tabulated for class D50. The code therefore ranks Angelim-pedra one class above Goiabão, while in stiffness Goiabão is three class levels above Angelim-pedra, and 71\% stiffer in absolute terms.
+Vinte e três das 40 espécies, isto é 58\% da população, caem em classe diferente sob os dois critérios, e quatro espécies diferem em duas classes inteiras. Os casos extremos são instrutivos. O angelim-pedra (\textit{Hymenolobium petraeum}) é atribuído à classe D40 por sua resistência característica à compressão de 40,6~MPa, mas seu módulo de elasticidade à flexão medido, de 10\,755~MPa, situa-se abaixo do valor tabelado para a classe D30. O goiabão (\textit{Planchonella pachycarpa}) é atribuído à classe D30 por uma resistência característica de 34,3~MPa, e no entanto seu módulo medido de 18\,367~MPa excede o valor tabelado para a classe D50. A norma, portanto, classifica o angelim-pedra uma classe acima do goiabão, enquanto em rigidez o goiabão está três níveis de classe acima do angelim-pedra, e é 71\% mais rígido em termos absolutos.
 
-The direction of the error is not uniform. Fourteen species, 35\% of the population, are less stiff than the class prescribes; for these, class-based design underestimates deflection and is therefore unconservative with respect to the serviceability limit state. The remaining 26 species are stiffer than prescribed, and for these the class assignment merely wastes material.
+A direção do erro não é uniforme. Quatorze espécies, 35\% da população, são menos rígidas do que a classe prescreve; para essas, o projeto baseado em classe subestima o deslocamento e é, portanto, contrário à segurança no estado limite de serviço. As 26 espécies restantes são mais rígidas do que o prescrito, e para elas o enquadramento apenas desperdiça material.
 
-It is worth contrasting this with the corresponding error in strength. Because the normative relation $f_{m,k} = f_{c0,k}/0{,}77$ is markedly conservative for these species, the class systematically underestimates their bending strength, by \tofill{2} to \tofill{92}\% and always in the safe direction. The class machinery thus protects strength generously and stiffness poorly, which is the reverse of what the designer would reasonably assume.
+Vale contrastar isso com o erro correspondente em resistência. Como a relação normativa $f_{m,k} = f_{c0,k}/0{,}77$ é marcadamente conservadora para essas espécies, a classe subestima sistematicamente sua resistência à flexão, de \tofill{2} a \tofill{92}\% e sempre a favor da segurança. O mecanismo das classes protege, assim, generosamente a resistência e mal a rigidez, o que é o inverso do que o projetista razoavelmente suporia.
 
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=0.75\textwidth]{figuras/E_vs_fc0.png}
-    \caption{Measured bending modulus of elasticity against characteristic compressive strength for the 40 species, with the strength-class boundaries and the tabulated modulus of each class overlaid.}
+    \caption{Módulo de elasticidade à flexão medido contra resistência característica à compressão para as 40 espécies, com os limites das classes de resistência e o módulo tabelado de cada classe sobrepostos.}
     \label{fig:E_vs_fc0}
 \end{figure}
 
