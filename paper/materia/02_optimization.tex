@@ -93,20 +93,20 @@ Para a evolução das gerações, o algoritmo baseia-se em operadores genéticos
 \toprule
 Parâmetro & Valor \\
 \midrule
-Tamanho da população, $N_{pop}$ & 75 \\
-Número de gerações, $N_{gen}$ & \tofill{--} \\
+Tamanho da população, $N_{pop}$ & 50 \\
+Número de gerações, $N_{gen}$ & 150 \\
 Amostragem inicial & Aleatória uniforme \\
 Cruzamento & SBX, $p_c = 0{,}90$, $\eta_c = 15$ \\
 Mutação & Polinomial, $\eta_m = 20$ \\
 Eliminação de duplicatas & Sim \\
 Semente aleatória & 1 \\
-Número de checagens robustas, $N_c$ & \tofill{--} \\
+Número de checagens robustas, $N_c$ & 30 \\
 Desvio de robustez, $\rho$ & 5\% \\
 \bottomrule
 \end{tabular*}
 \begin{tablenotes}
 \footnotesize
-\item \tofill{[A PREENCHER] $N_{gen}$ e $N_c$ devem ser preenchidos com os valores efetivamente utilizados nas execuções finais. A escolha de $N_{gen}$ é justificada a posteriori pela curva de convergência do hipervolume (Seção~\ref{sec:hipervolume}): adotar o menor valor a partir do qual o indicador estabiliza. Registrar também o tempo médio de processamento por execução.}
+\item Valores efetivamente utilizados em todas as execuções deste trabalho. A adequação de $N_{gen} = 150$ é confirmada a posteriori pela curva de convergência do hipervolume (Seção~\ref{sec:hipervolume}), que estabiliza antes desse número de gerações. \tofill{[A PREENCHER] Registrar o tempo médio de processamento por execução.}
 \end{tablenotes}
 \end{threeparttable}
 \end{table}

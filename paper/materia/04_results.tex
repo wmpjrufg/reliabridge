@@ -10,14 +10,14 @@ Como principal produto de engenharia deste trabalho, foi desenvolvida uma plataf
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.85\textwidth]{figuras/interface_inicial.png}
+    \includegraphics[width=0.85\textwidth]{figuras/inicio.png}
     \caption{Tela inicial da plataforma computacional.}
     \label{fig:tela_inicial}
 \end{figure}
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.9\textwidth]{figuras/interface_dimensionamento.png}
+    \includegraphics[width=0.9\textwidth]{figuras/predimencionamento.png}
     \caption{Módulo de dimensionamento por otimização.}
     \label{fig:interface_dim}
 \end{figure}
@@ -37,22 +37,23 @@ Largura da pista, $b_{w,\mathrm{pista}}$ (cm) & 450 \\
 Trem tipo (ABNT NBR 7188) & TB-240 \\
 Carga concentrada por roda, $p_{rodak}$ (kN) & 40 \\
 Carga variável distribuída, $p_{qk}$ (kPa) & 4 \\
-Carga permanente distribuída, $p_{gk}$ (kPa) & 1 \\
+Carga permanente distribuída (rodeiro), $p_{gk}$ (kPa)\tnote{a} & 0{,}10 \\
 Distância entre eixos, $a$ (m) & 1{,}5 \\
-Classe de carregamento & Permanente \\
+Classe de carregamento & Média duração \\
 Classe da madeira & Madeira natural \\
-Classe de umidade & 1 \\
+Classe de umidade & 3 \\
 Coeficiente parcial das ações permanentes, $\gamma_g$ & 1{,}35 \\
 Coeficiente parcial das ações variáveis, $\gamma_q$ & 1{,}50 \\
 Coeficiente de minoração (tensões normais), $\gamma_{wf}$ & 1{,}40 \\
 Coeficiente de minoração (cisalhamento), $\gamma_{wc}$ & 1{,}80 \\
 Fator de combinação quase permanente, $\psi_2$ & 0{,}30 \\
-Coeficiente de fluência, $\varphi$ & 0{,}60 \\
+Coeficiente de fluência, $\varphi$ & 0{,}80 \\
 Desvio de robustez, $\rho$ (\%) & 5{,}0 \\
 \bottomrule
 \end{tabular*}
 \begin{tablenotes}
 \footnotesize
+\item[a] O peso próprio do tabuleiro e das longarinas é calculado internamente pela plataforma a partir da geometria e da densidade da madeira; a carga permanente $p_{gk}$ representa apenas a ação sobreposta do rodeiro, isto é, das tábuas longitudinais de rolamento que guiam as rodas. Estimou-se essa parcela a partir de duas tábuas de seção $5 \times 30$~cm, com densidade de 620~kg/m\textsuperscript{3} ($\gamma \approx 6{,}1$~kN/m\textsuperscript{3}), resultando em cerca de 0{,}18~kN/m ao longo do vão, ou aproximadamente 0{,}04~kPa quando distribuída sobre a largura da pista. Adotou-se o valor de 0{,}10~kPa, arredondado para cobrir fixações e a maior densidade usual das peças de rolamento.
 \item As propriedades mecânicas da madeira não constam desta tabela por variarem entre as células da matriz; são as da Tabela~\ref{tab:classes_madeira}, conforme a classe de resistência de cada célula.
 \end{tablenotes}
 \end{threeparttable}
@@ -95,7 +96,7 @@ Diâmetro da longarina, $d$ & 30 & 150 \\
 Largura da prancha do tabuleiro, $b_w$ & 5 & 60 \\
 Altura da prancha do tabuleiro, $h$ & 5 & 60 \\
 Espaçamento entre longarinas, $esp_{long}$ & 30 & 200 \\
-Espaçamento entre peças do tabuleiro, $esp_{tab}$ & 5 & 60 \\
+Espaçamento entre peças do tabuleiro, $esp_{tab}$ & 2 & 5 \\
 \bottomrule
 \end{tabular*}
 \end{threeparttable}
@@ -111,7 +112,7 @@ A otimização robusta multiobjetivo da célula C-13, com $\rho = 5\%$, gerou um
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.6\textwidth]{figuras/fronteira_C13.png}
+    \includegraphics[width=0.6\textwidth]{figuras/pareto_frontier_C13.png}
     \caption{Fronteira eficiente da célula de referência C-13 ($L = 5{,}0$~m, D40, $\rho = 5\%$).}
     \label{fig:fronteira_ref}
 \end{figure}
@@ -124,9 +125,9 @@ A otimização robusta multiobjetivo da célula C-13, com $\rho = 5\%$, gerou um
 \toprule
 $d$ (cm) & $b_w$ (cm) & $h$ (cm) & $esp_{long}$ (cm) & $esp_{tab}$ (cm) & $V_{\mathrm{total}}$ (m\textsuperscript{3}) & $\delta_{\mathrm{tot}}/(L/250)$ & $g_{\max}$ \\
 \midrule
-\tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
-\tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
-\tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
+\tofill{150,00} & \tofill{44,25} & \tofill{10,76} & \tofill{163,32} & \tofill{3,43} & \tofill{19,78} & \tofill{0,028} & \tofill{-0,0018} \\
+\tofill{39,27} & \tofill{44,26} & \tofill{7,63} & \tofill{96,65} & \tofill{4,00} & \tofill{3,99} & \tofill{0,028} & \tofill{-0,0137} \\
+\tofill{74,93} & \tofill{44,25} & \tofill{10,76} & \tofill{158,81} & \tofill{3,29} & \tofill{8,80} & \tofill{0,03} & \tofill{-0,3609} \\
 \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
 \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
 \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
@@ -283,7 +284,7 @@ C-13 & 10{,}0 & \tofill{--} & \tofill{--} & \tofill{--} \\
 
 \subsubsection{Análise de sensibilidade global por índices de Sobol}\label{sec:sobol}
 
-Para identificar quais variáveis de projeto mais influenciam a violação de cada restrição sob perturbação, realizou-se uma análise de sensibilidade global pelo método de Sobol \parencite{Sobol2001}, implementado na biblioteca \texttt{UQpy} \parencite{Olivier2020}. Os índices de efeito total $S_{T_i}$ das cinco variáveis de projeto foram estimados em relação às seis funções limite, a partir de uma amostragem independente de $N = \tofill{--}$ pontos no domínio de cada variável (Tabela~\ref{tab:intervalos}).
+Para identificar quais variáveis de projeto mais influenciam a violação de cada restrição sob perturbação, realizou-se uma análise de sensibilidade global pelo método de Sobol \parencite{Sobol2001}, implementado na biblioteca \texttt{UQpy} \parencite{Olivier2020}. Os índices de efeito total $S_{T_i}$ das cinco variáveis de projeto foram estimados em relação às seis funções limite, a partir de uma amostragem independente de $N = 20\,000$ pontos no domínio de cada variável (Tabela~\ref{tab:intervalos}).
 
 \begin{figure}[!ht]
     \centering
@@ -365,13 +366,13 @@ Esta seção reporta o resultado das vinte células da matriz. Para cada célula
 Célula & $L$ (m) / Classe & $d$ & $b_w$ & $h$ & $esp_{long}$ & $esp_{tab}$ & $V_{\mathrm{total}}$ & $\delta_{\mathrm{tot}}/(L/250)$ & Verificação \\
  & & (cm) & (cm) & (cm) & (cm) & (cm) & (m\textsuperscript{3}) & & governante \\
 \midrule
-C-01 & 3{,}0 / D20 & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
+C-01 & 3{,}0 / D20 & \tofill{30,03} & \tofill{5,01} & \tofill{5,00} & \tofill{45,82} & \tofill{4,99} & \tofill{1,75} & \tofill{0,018} & \tofill{-0,1088} \\
 C-02 & 3{,}0 / D30 & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
 C-03 & 3{,}0 / D40 & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
 C-04 & 3{,}0 / D50 & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
 C-05 & 3{,}0 / D60 & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
 \midrule
-C-06 & 4{,}0 / D20 & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
+C-06 & 4{,}0 / D20 & \tofill{41,08} & \tofill{40,80} & \tofill{5,00} & \tofill{51,78} & \tofill{4,94} & \tofill{3,61} & \tofill{0,129} & \tofill{-0,0022} \\
 C-07 & 4{,}0 / D30 & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
 C-08 & 4{,}0 / D40 & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
 C-09 & 4{,}0 / D50 & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} & \tofill{--} \\
@@ -434,5 +435,5 @@ Os resultados da Tabela~\ref{tab:resultados_matriz} foram convertidos em ábacos
 \end{figure}
 
 \begin{fillblock}
-\noindent\textbf{[A PREENCHER]} Redigir o parágrafo de uso dos ábacos, na forma de um roteiro curto para o projetista: entrar com o vão a vencer, escolher a curva da classe de resistência da madeira disponível na região, ler o consumo esperado e o diâmetro requerido, e usar esses valores como ponto de partida para a verificação detalhada na plataforma. Explicitar as condições de validade, que são as da Tabela~\ref{tab:parametros}: pista simples de 4{,}5~m, trem tipo TB-240, classe de umidade 1, carregamento de longa duração e desvio de robustez de 5\%. Alertar que os ábacos não substituem a verificação, apenas a antecipam.
+\noindent\textbf{[A PREENCHER]} Redigir o parágrafo de uso dos ábacos, na forma de um roteiro curto para o projetista: entrar com o vão a vencer, escolher a curva da classe de resistência da madeira disponível na região, ler o consumo esperado e o diâmetro requerido, e usar esses valores como ponto de partida para a verificação detalhada na plataforma. Explicitar as condições de validade, que são as da Tabela~\ref{tab:parametros}: pista simples de 4{,}5~m, trem tipo TB-240, classe de umidade 3, carregamento de média duração e desvio de robustez de 5\%. Alertar que os ábacos não substituem a verificação, apenas a antecipam.
 \end{fillblock}
