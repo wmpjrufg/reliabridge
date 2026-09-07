@@ -39,8 +39,9 @@ em `preamble.tex`. Enquanto houver vermelho no PDF, o texto não está pronto.
 2. **Definir `N_gen` e `N_c`** a partir da curva de hipervolume da C-13 e preencher a
    Tabela `tab:nsga2` em `02_optimization.tex`. Esses dois valores precisam ser os mesmos
    em todas as 20 células — decida uma vez.
-3. **Análises da C-13** (§4.3): fronteira, Monte Carlo no espaço de projeto, utilização,
-   custo da robustez, validação independente, hipervolume, Sobol, boxplot.
+3. **Análises da C-13** (§4.3): fronteira, utilização, custo da robustez, hipervolume,
+   Sobol, boxplot. As duas análises de Monte Carlo saíram do escopo — ver D-14 em
+   `vault/04_decisoes.md`. Não reintroduzir.
 4. **Varredura das 20 células** (§4.4) → Tabela `tab:resultados_matriz`.
 5. **Ábacos** (§4.5) a partir da tabela consolidada.
 6. **Conferência manual** do Apêndice A. Faça isso de verdade: é a única validação
@@ -53,13 +54,12 @@ Salvar em `figuras/` com **exatamente** estes nomes — o `.tex` já os referenc
 
 | Arquivo | Seção |
 |---|---|
-| `fronteira_C13.png` | 4.3.1 |
-| `fronteira_vs_mc_C13.png` | 4.3.2 |
-| `utilizacao_C13.png` | 4.3.3 — barras horizontais, linha de referência em 100 % |
-| `custo_robustez_C13.png` | 4.3.4 — 4 fronteiras sobrepostas |
-| `convergencia_hv.png` | 4.3.6 |
-| `sobol_heatmap_C13.png` | 4.3.7 |
-| `boxplot_variaveis_C13.png` | 4.3.8 |
+| `pareto_frontier_C13.png` | 4.3.1 |
+| `utilizacao_C13.png` | 4.3.2 — barras horizontais, linha de referência em 100 % |
+| `custo_robustez_C13.png` | 4.3.3 — 4 fronteiras sobrepostas |
+| `convergencia_hv.png` | 4.3.4 |
+| `sobol_heatmap_C13.png` | 4.3.5 |
+| `boxplot_variaveis_C13.png` | 4.3.6 |
 | `abaco_volume_vs_vao.png` | 4.5 — x = L, y = V, uma curva por classe |
 | `abaco_volume_por_m2.png` | 4.5 |
 | `abaco_diametro_vs_vao.png` | 4.5 |
@@ -71,9 +71,8 @@ As demais figuras (interface, fluxograma, caminhão) já estão na pasta.
 - **Célula inviável.** A rotina levanta `ValueError` quando não há solução viável — provável
   em D20 com vão de 6 m. Isso é **resultado**, não erro: registre "inviável" na linha da
   tabela e comente no texto. Não reduza a robustez para forçar uma solução.
-- **Validação de Monte Carlo circular.** A semente das perturbações da §4.3.5 tem de ser
-  diferente da usada na otimização. Se você reaproveitar os mesmos multiplicadores, a
-  validação valida a si mesma e o resultado não vale nada.
+- ~~**Validação de Monte Carlo circular.**~~ Não se aplica mais: as seções de Monte
+  Carlo saíram do artigo (D-14).
 - **Unidade do objetivo.** O código minimiza **volume em m³**. Todo o texto foi padronizado
   em volume. Se aparecer "área" ou "m²" em algum lugar, é resíduo da versão antiga.
 - **Monotonicidade.** Na tabela consolidada, o volume deve crescer com o vão dentro de cada

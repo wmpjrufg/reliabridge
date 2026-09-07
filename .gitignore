@@ -128,8 +128,14 @@ Desktop.ini
 
 # =============================================================================
 # Regras específicas deste projeto
-# =============================================================================
-_vault/
+
 .claude/
 *.txt
 !requirements.txt
+
+# =============================================================================
+# Vault - PDFs de referencia
+# =============================================================================
+# Os PDFs das editoras nao podem ser redistribuidos, entao ficam so na maquina.
+# O indice (refs/README.md) e as entradas .bib continuam versionados.
+vault/refs/*.pdf

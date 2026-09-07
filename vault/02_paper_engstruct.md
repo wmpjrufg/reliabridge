@@ -73,7 +73,10 @@ Há um lembrete disso dentro de `03_methodology.tex` — não apagar sem ler.
 já calculadas e conferidas), metodologia, protocolo de comparação, esqueleto de
 resultados, conclusões 1–3.
 
-**Pendente:** toda a parte estrutural. Nenhuma das 320 rodadas de otimização foi feita.
+**Pendente:** toda a parte estrutural. Nenhuma das 320 rodadas de otimização foi feita,
+mas **a infraestrutura para rodá-las está pronta** (2026-09-07): `gerar_casos_engstruct.py`
+monta a planilha das 320 a partir de `tabelas/tab_especies.tex`, e
+`rodar_lote_engstruct.py` executa o lote em cerca de 2 horas. Ver `09_lote_headless.md`.
 
 Números já no texto: ver `03_dados_40_especies.md` (todos reconferidos em 2026-08-12).
 

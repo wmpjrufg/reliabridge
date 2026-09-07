@@ -26,9 +26,11 @@ Ressalta-se que, para a madeira pertencente ao grupo das dicotiledôneas, a norm
 \begin{table}[!ht]
 \caption{Classes de resistência de espécies de florestas nativas e resistência à flexão calculada.\label{tab:classes_madeira}}
 \begin{threeparttable}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
 \begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lccccc@{\extracolsep{\fill}}}
 \toprule
-Classes & $f_{c0,k}$ (MPa) & $f_{m,k}$ (MPa) & $f_{v0,k}$ (MPa) & $E_{c0,med}$ (MPa) & Densidade a 12\% (kg/m\textsuperscript{3}) \\
+Classes & $f_{c0,k}$ (MPa) & $f_{m,k}$ (MPa) & $f_{v0,k}$ (MPa) & $E_{c0,med}$ (MPa) & $\rho_{12\%}$ (kg/m\textsuperscript{3}) \\
 \midrule
 D20 & 20 & 26,0 & 4 & 10 000 & 500 \\
 D30 & 30 & 39,0 & 5 & 12 000 & 625 \\
@@ -138,6 +140,13 @@ CIV = 1{,}35 \qquad \text{para } L \leq 10{,}0\ \text{m}
 \begin{equation}
 CIV = 1 + 1{,}06\left(\frac{20}{LIV + 50}\right), \qquad \text{para } 10{,}0 < L \leq 200{,}0\ \text{m}
 \label{eq:civ2}
+\end{equation}
+
+A plataforma aplica ainda um fator de atenuação sobre o excedente do coeficiente de impacto em relação à unidade, de modo que apenas 75\% desse excedente amplifique de fato os esforços variáveis, conforme a Equação~\eqref{eq:civaux}. O fator resultante, $aux_{ci}$, multiplica diretamente $M_{qk}$ e $Q_{qk}$, tanto da longarina quanto do tabuleiro.
+
+\begin{equation}
+aux_{ci} = 1 + 0{,}75\,(CIV - 1)
+\label{eq:civaux}
 \end{equation}
 
 \subsubsection{Esforços solicitantes e deslocamentos}

@@ -230,10 +230,13 @@ with st.container():
 
     st.subheader(t["cargas_projeto"])
 
+    # "eixos" é o espaçamento LONGITUDINAL entre os três eixos do veículo tipo (1,50 m
+    # pela NBR 7188), e não a bitola transversal de 2,00 m. É esse valor que entra em
+    # M_qk = 3PL/4 - P.a e na flecha, onde b = (L - 2a)/2 posiciona os eixos externos.
     VEICULOS_PADRAO = {
-        "TB240": {"roda": 40.0, "multidao": 4.0, "eixos": 2.0},
-        "TB450": {"roda": 75.0, "multidao": 5.0, "eixos": 2.0}
-        
+        "TB240": {"roda": 40.0, "multidao": 4.0, "eixos": 1.5},
+        "TB450": {"roda": 75.0, "multidao": 5.0, "eixos": 1.5}
+
     }
 
     if "p_rodak" not in st.session_state:
