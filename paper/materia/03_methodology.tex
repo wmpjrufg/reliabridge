@@ -1,12 +1,26 @@
 \section{Metodologia}\label{sec:metodologia}
 
-Esta seção detalha a metodologia desenvolvida para a análise otimizada e o projeto paramétrico de pontes de madeira roliça. Para a consecução deste objetivo, construiu-se uma plataforma computacional dedicada à definição automatizada das dimensões estruturais, especificamente das longarinas e das pranchas do tabuleiro.
+Esta seção detalha a metodologia desenvolvida para a análise otimizada e o projeto paramétrico de pontes de madeira roliça.
+Para a consecução deste objetivo, construiu-se uma plataforma computacional dedicada à definição automatizada das dimensões estruturais, especificamente das longarinas e das pranchas do tabuleiro.
 
-O ambiente computacional foi integralmente desenvolvido em linguagem \textit{Python}, adotando uma arquitetura cliente-servidor flexível, com interface web construída por meio da biblioteca \textit{Streamlit} e disponibilizada em acesso livre \parencite{ReliaBridge2026}. Internamente, o motor de simulação e busca evolutiva integra pacotes avançados de programação científica. A otimização multiobjetivo baseada em metaheurísticas é conduzida por algoritmos genéticos da biblioteca \texttt{pymoo} \parencite{blank2020}, enquanto a quantificação de incertezas e a análise de sensibilidade global estocástica são processadas pela biblioteca \texttt{UQpy} \parencite{Olivier2020}.
+O ambiente computacional foi integralmente desenvolvido em linguagem \textit{Python}, adotando uma arquitetura cliente-servidor flexível, com interface web construída por meio da biblioteca \textit{Streamlit} e disponibilizada em acesso livre \parencite{ReliaBridge2026}.
+A otimização multiobjetivo baseada em metaheurísticas é conduzida por algoritmos genéticos da biblioteca \texttt{pymoo} \parencite{blank2020}, enquanto a quantificação de incertezas e a análise de sensibilidade global estocástica são processadas pela biblioteca \texttt{UQpy} \parencite{Olivier2020}.
 
-A plataforma permite uma transição fluida entre o dimensionamento paramétrico tradicional e a concepção orientada por otimização de Pareto. Após o processamento algorítmico do modelo da ponte, o usuário obtém acesso integral ao memorial de cálculo gerado pela ferramenta. Esse relatório detalha o desempenho da estrutura frente aos esforços solicitantes e aos deslocamentos normativos, fornecendo o escrutínio completo das verificações de segurança e de serviço, com a indicação exata dos critérios em que a configuração da ponte obteve êxito ou falhou.
+A plataforma permite uma transição fluida entre o dimensionamento paramétrico tradicional e a concepção orientada por otimização de Pareto.
+Após o processamento algorítmico do modelo da ponte, o usuário obtém acesso integral ao memorial de cálculo gerado pela ferramenta.
+Esse relatório detalha o desempenho da estrutura frente aos esforços solicitantes e aos deslocamentos normativos, fornecendo um relatório completo das verificações de ruína e de serviço, com a indicação exata dos critérios em que a configuração da ponte obteve êxito ou falhou.
 
-O fluxo metodológico consolidado, ilustrado na Figura~\ref{fig:fluxograma}, é composto pelas seguintes etapas: (i) definição da geometria e das cargas permanentes; (ii) definição do trem tipo; (iii) cálculo estrutural dos esforços solicitantes e deslocamentos; (iv) combinação de ações nos estados limites último e de serviço; (v) determinação das resistências de projeto e avaliação de propriedades segundo a NBR 7190; (vi) otimização estocástica via NSGA-II; (vii) análise de sensibilidade global de Sobol; e (viii) obtenção do conjunto de soluções viáveis da fronteira eficiente.
+O fluxo metodológico consolidado, ilustrado na Figura~\ref{fig:fluxograma}, é composto pelas seguintes etapas.
+\begin{enumerate}[label=(\roman*)]
+    \item Definição da geometria e das cargas permanentes.
+    \item Definição do trem tipo.
+    \item Cálculo estrutural dos esforços solicitantes e deslocamentos.
+    \item Combinação de ações nos estados limites último e de serviço.
+    \item Determinação das resistências de projeto e avaliação de propriedades segundo a ABNT NBR 7190 \parencite{NBR7190-1:2022}.
+    \item Otimização estocástica via NSGA-II.
+    \item Análise de sensibilidade global de Sobol.
+    \item Obtenção do conjunto de soluções viáveis da fronteira eficiente.
+\end{enumerate}
 
 \begin{figure}[!ht]
 \centering
@@ -17,11 +31,15 @@ O fluxo metodológico consolidado, ilustrado na Figura~\ref{fig:fluxograma}, é 
 
 \subsection{Definição do modelo de teste e propriedades dos materiais}\label{sec:modelo_teste}
 
-Para testar a ferramenta e demonstrar a aplicação direta do algoritmo implementado, adotou-se como objeto de estudo a ponte de estrada vicinal de pista simples, dimensionada para suportar o tráfego do trem tipo TB-240 estipulado pela ABNT NBR 7188 \parencite{nbr7188}. Essa configuração é representativa de acessos rurais e vias locais, nas quais a demanda por projetos econômicos e duráveis em madeira é proeminente. Em vez de um único caso isolado, o trabalho explora uma matriz de configurações que combina quatro vãos teóricos com as cinco classes de resistência normativas, conforme detalhado na Seção~\ref{sec:casos}, de modo a permitir a leitura do efeito isolado de cada fator.
+Para testar a ferramenta e demonstrar a aplicação direta do algoritmo implementado, adotou-se como objeto de estudo a ponte de estrada vicinal de pista simples, dimensionada para suportar o tráfego do trem tipo TB-240 estipulado pela ABNT NBR 7188 \parencite{nbr7188}.
+Essa configuração é representativa de acessos rurais e vias locais, nas quais a demanda por projetos em madeira é alta.
 
-A modelagem mecânica dos elementos estruturais acompanha rigorosamente as prescrições normativas brasileiras. As variações de características do material e a definição das propriedades adotadas nas simulações foram estabelecidas em conformidade com a ABNT NBR 7190-3:2022. As propriedades elásticas e as classes de resistência de base para espécies de florestas nativas (D20 a D60), derivadas de ensaios em corpos de prova isentos de defeitos, estão dispostas na Tabela~\ref{tab:classes_madeira}.
+A modelagem mecânica dos elementos estruturais acompanha rigorosamente as prescrições normativas brasileiras.
+As variações de características do material e a definição das propriedades adotadas nas simulações foram estabelecidas em conformidade com a ABNT NBR 7190-3:2022.
+As propriedades elásticas e as classes de resistência de base para espécies de florestas nativas (D20 a D60), derivadas de ensaios em corpos de prova isentos de defeitos, estão dispostas na Tabela~\ref{tab:classes_madeira}.
 
-Ressalta-se que, para a madeira pertencente ao grupo das dicotiledôneas, a norma técnica define a relação direta entre a resistência característica à compressão paralela às fibras ($f_{c0,k}$) e a resistência característica à flexão ($f_{m,k}$) pela razão $f_{c0,k} / f_{m,k} = 0{,}77$. Logo, os valores de resistência à flexão empregados pela plataforma para a formulação das restrições de estado limite foram deduzidos analiticamente a partir dessa premissa.
+Ressalta-se que, para a madeira pertencente ao grupo das dicotiledôneas, a norma técnica define a relação direta entre a resistência característica à compressão paralela às fibras ($f_{c0,k}$) e a resistência característica à flexão ($f_{m,k}$) pela razão $f_{c0,k} / f_{m,k} = 0{,}77$.
+Logo, os valores de resistência à flexão empregados pela plataforma para a formulação das restrições de estado limite foram deduzidos analiticamente a partir dessa premissa.
 
 \begin{table}[!ht]
 \caption{Classes de resistência de espécies de florestas nativas e resistência à flexão calculada.\label{tab:classes_madeira}}
@@ -48,7 +66,10 @@ D60 & 60 & 77,9 & 8 & 19 500 & 1 000 \\
 \end{table}
 \subsection{Sistema estrutural e modelo paramétrico}\label{sec:sistema}
 
-O sistema estrutural considerado na modelagem computacional consiste em um tabuleiro composto por pranchas longitudinais retangulares de madeira, apoiadas de modo contínuo sobre vigas longitudinais circulares de madeira roliça (longarinas), regularmente distribuídas a uma distância denominada espaçamento paramétrico ($esp$). O tabuleiro está sujeito a ações permanentes oriundas do peso próprio dos materiais constituintes e a ações variáveis de multidão e de eixos associadas ao tráfego móvel. A transferência de carga atua transferindo as parcelas de solicitação do tabuleiro para as longarinas de apoio, tratadas analiticamente como carregamentos distribuídos no vão. A representação conceitual do sistema pode ser observada na Figura~\ref{fig:sistema}.
+O sistema estrutural considerado na modelagem computacional consiste em um tabuleiro composto por pranchas longitudinais retangulares de madeira, apoiadas de modo contínuo sobre vigas longitudinais circulares de madeira roliça (longarinas), regularmente distribuídas a uma distância denominada espaçamento paramétrico ($esp$).
+O tabuleiro está sujeito a ações permanentes oriundas do peso próprio dos materiais constituintes e a ações variáveis de multidão e de eixos associadas ao tráfego móvel.
+A transferência de carga atua transferindo as parcelas de solicitação do tabuleiro para as longarinas de apoio, tratadas analiticamente como carregamentos distribuídos no vão.
+A representação conceitual do sistema pode ser observada na Figura~\ref{fig:sistema}.
 
 \begin{figure}[!ht]
 \centering
@@ -57,13 +78,18 @@ O sistema estrutural considerado na modelagem computacional consiste em um tabul
 \label{fig:sistema}
 \end{figure}
 
-O modelo é matematicamente parametrizado: a partir de um vetor de entrada do usuário compreendendo largura da pista, propriedades mecânicas, coeficientes de fluência ($\varphi$) e fatores normativos de combinação ($\psi_2$), as propriedades geométricas das seções transversais (área, momento de inércia, módulo resistente e raios de giração) são dinamicamente recalculadas no código para qualquer indivíduo gerado. Tal flexibilidade paramétrica acopla a geometria à formulação de restrições geométricas, permitindo a checagem de viabilidade em rotinas computacionais automatizadas.
+O modelo é matematicamente parametrizado: a partir de um vetor de entrada do usuário compreendendo largura da pista, propriedades mecânicas, coeficientes de fluência ($\varphi$) e fatores normativos de combinação ($\psi_2$), as propriedades geométricas das seções transversais (área, momento de inércia, módulo resistente e raios de giração) são dinamicamente recalculadas no código para qualquer indivíduo gerado.
+Tal flexibilidade paramétrica acopla a geometria à formulação de restrições geométricas, permitindo a checagem de viabilidade em rotinas computacionais automatizadas.
 
 \subsection{Formulação das restrições e otimização robusta}\label{sec:formulacao}
 
-No ambiente do NSGA-II, o projeto é convertido em um vetor de variáveis matemáticas $\mathbf{x} = (d,\ b_w,\ h,\ esp_{long},\ esp_{tab})^T$, contendo o diâmetro da longarina ($d$), as dimensões da prancha do tabuleiro ($b_w$, $h$), o espaçamento entre longarinas ($esp_{long}$) e o espaçamento entre as peças do tabuleiro ($esp_{tab}$). A partir dos espaçamentos e da largura da pista, o número de peças de cada família é determinado internamente pela rotina de acomodação geométrica, que também origina as restrições $g_5$ e $g_6$.
+No ambiente do NSGA-II, o projeto é convertido em um vetor de variáveis matemáticas $\mathbf{x} = (d,\ b_w,\ h,\ esp_{long},\ esp_{tab})^T$, contendo o diâmetro da longarina ($d$), as dimensões da prancha do tabuleiro ($b_w$, $h$), o espaçamento entre longarinas ($esp_{long}$) e o espaçamento entre as peças do tabuleiro ($esp_{tab}$).
+A partir dos espaçamentos e da largura da pista, o número de peças de cada família é determinado internamente pela rotina de acomodação geométrica, que também origina as restrições $g_5$ e $g_6$.
 
-As duas funções objetivo são ambas de minimização. A primeira, $f_1$, é o volume total de madeira consumido pela superestrutura, conforme a Equação~\eqref{eq:f1}, em que $n_{long}$ e $n_{tab}$ são as quantidades de longarinas e de peças do tabuleiro efetivamente acomodadas, $A_{long}$ e $A_{tab}$ as respectivas áreas de seção transversal e $b_{w,\mathrm{pista}}$ a largura da pista. A segunda, $f_2$, é a utilização do limite de serviço de deslocamento da longarina, definida na Equação~\eqref{eq:f2} como a razão entre a flecha total, já incluída a parcela de fluência, e o deslocamento limite normativo $L/250$. Minimizar $f_2$ equivale a maximizar o desempenho em serviço, e as duas funções são antagônicas: reduzir o volume de madeira aumenta necessariamente a flecha relativa.
+As duas funções objetivo são ambas de minimização.
+A primeira, $f_1$, é o volume total de madeira consumido pela superestrutura, conforme a Equação~\eqref{eq:f1}, em que $n_{long}$ e $n_{tab}$ são as quantidades de longarinas e de peças do tabuleiro efetivamente acomodadas, $A_{long}$ e $A_{tab}$ as respectivas áreas de seção transversal e $b_{w,\mathrm{pista}}$ a largura da pista.
+A segunda, $f_2$, é a utilização do limite de serviço de deslocamento da longarina, definida na Equação~\eqref{eq:f2} como a razão entre a flecha total, já incluída a parcela de fluência, e o deslocamento limite normativo $L/250$.
+Minimizar $f_2$ equivale a maximizar o desempenho em serviço, e as duas funções são antagônicas: reduzir o volume de madeira aumenta necessariamente a flecha relativa.
 
 \begin{equation}
 f_1(\mathbf{x}) = V_{\mathrm{total}} = n_{long}\,A_{long}\,L + n_{tab}\,A_{tab}\,b_{w,\mathrm{pista}}
@@ -79,7 +105,8 @@ As soluções geradas devem satisfazer um conjunto rígido de seis equações de
 
 Devido à elevada incerteza dos parâmetros da madeira em estado natural, a plataforma insere a robustez estocástica efetuando $N_c$ realizações para cada indivíduo avaliado, gerando perturbações estatísticas uniformes ($\rho = 5\%$) nas variáveis dimensionais (Seção~\ref{sec:otimizacao}).
 
-Para mensurar o impacto que essas flutuações randômicas causam nas seis restrições normativas listadas, o sistema integra o cálculo de índices de sensibilidade de ordem total de Sobol ($S_{T_i}$), processados por simulação de Monte Carlo por intermédio da biblioteca \texttt{UQpy} \parencite{Olivier2020}. Esse índice revela numericamente ao projetista qual das características geométricas da ponte requer maior controle de qualidade de corte e execução em campo para evitar a falha sistêmica do tabuleiro.
+Para mensurar o impacto que essas flutuações randômicas causam nas seis restrições normativas listadas, o sistema integra o cálculo de índices de sensibilidade de ordem total de Sobol ($S_{T_i}$), processados por simulação de Monte Carlo por intermédio da biblioteca \texttt{UQpy} \parencite{Olivier2020}.
+Esse índice revela numericamente ao projetista qual das características geométricas da ponte requer maior controle de qualidade de corte e execução em campo para evitar a falha sistêmica do tabuleiro.
 
 \subsection{Dimensionamento estrutural segundo a NBR 7190}\label{sec:dimensionamento}
 
@@ -130,7 +157,8 @@ G = \gamma \cdot A
 \label{eq:permanente}
 \end{equation}
 
-A carga móvel rodoviária avaliada consiste no trem tipo TB-240 \parencite{nbr7188}, representado por um veículo com três eixos e seis rodas, cada roda transmitindo 40~kN, e carga de multidão distribuída. Os efeitos dinâmicos são incorporados pelo coeficiente de impacto vertical ($CIV$), determinado pelas Equações~\eqref{eq:civ1} e~\eqref{eq:civ2}, sendo $LIV$ o comprimento característico da estrutura.
+A carga móvel rodoviária avaliada consiste no trem tipo TB-240 \parencite{nbr7188}, representado por um veículo com três eixos e seis rodas, cada roda transmitindo 40~kN, e carga de multidão distribuída.
+Os efeitos dinâmicos são incorporados pelo coeficiente de impacto vertical ($CIV$), determinado pelas Equações~\eqref{eq:civ1} e~\eqref{eq:civ2}, sendo $LIV$ o comprimento característico da estrutura.
 
 \begin{equation}
 CIV = 1{,}35 \qquad \text{para } L \leq 10{,}0\ \text{m}
@@ -142,7 +170,8 @@ CIV = 1 + 1{,}06\left(\frac{20}{LIV + 50}\right), \qquad \text{para } 10{,}0 < L
 \label{eq:civ2}
 \end{equation}
 
-A plataforma aplica ainda um fator de atenuação sobre o excedente do coeficiente de impacto em relação à unidade, de modo que apenas 75\% desse excedente amplifique de fato os esforços variáveis, conforme a Equação~\eqref{eq:civaux}. O fator resultante, $aux_{ci}$, multiplica diretamente $M_{qk}$ e $Q_{qk}$, tanto da longarina quanto do tabuleiro.
+A plataforma aplica ainda um fator de atenuação sobre o excedente do coeficiente de impacto em relação à unidade, de modo que apenas 75\% desse excedente amplifique de fato os esforços variáveis, conforme a Equação~\eqref{eq:civaux}.
+O fator resultante, $aux_{ci}$, multiplica diretamente $M_{qk}$ e $Q_{qk}$, tanto da longarina quanto do tabuleiro.
 
 \begin{equation}
 aux_{ci} = 1 + 0{,}75\,(CIV - 1)
@@ -151,7 +180,8 @@ aux_{ci} = 1 + 0{,}75\,(CIV - 1)
 
 \subsubsection{Esforços solicitantes e deslocamentos}
 
-O momento fletor e o esforço cortante máximos devido à carga permanente, assim como a flecha estática, são quantificados pelas premissas clássicas de estática para vigas biapoiadas (Equações \eqref{eq:mgk}, \eqref{eq:qgk} e \eqref{eq:flechag}). Para o dimensionamento elástico referente à carga variável, adota-se o balanço da posição da roda gerando o momento $M_{qk}$ dependente da extensão de vão (Equações \eqref{eq:mqk30} e \eqref{eq:mqk45}), assim como a força de corte admissível na extremidade (Equação \eqref{eq:qqk}) e o deslocamento de serviço instantâneo (Equação \eqref{eq:flechaq}).
+O momento fletor e o esforço cortante máximos devido à carga permanente, assim como a flecha estática, são quantificados pelas premissas clássicas de estática para vigas biapoiadas (Equações \eqref{eq:mgk}, \eqref{eq:qgk} e \eqref{eq:flechag}).
+Para o dimensionamento elástico referente à carga variável, adota-se o balanço da posição da roda gerando o momento $M_{qk}$ dependente da extensão de vão (Equações \eqref{eq:mqk30} e \eqref{eq:mqk45}), assim como a força de corte admissível na extremidade (Equação \eqref{eq:qqk}) e o deslocamento de serviço instantâneo (Equação \eqref{eq:flechaq}).
 
 \begin{equation}
 M_{gk} = \frac{q\,L^2}{8}
@@ -190,7 +220,8 @@ Q_{qk} = \frac{P}{L}\,(6a + 3e) + \frac{q\,e^2}{2\,L}
 
 \subsubsection{Combinações e Verificações de segurança}
 
-No estado limite último (ELU), a formulação emprega as combinações da ABNT NBR 8681 \parencite{NBR8681:2025}, de acordo com a Equação~\eqref{eq:comb}. A tensão de resistência subjacente às simulações é ponderada na Equação~\eqref{eq:xd} utilizando o coeficiente global de modificação estrutural ($k_{mod} = k_{mod,1}\,k_{mod,2}$) e os fatores estipulados de minoração de propriedades $\gamma_m$.
+No estado limite último (ELU), a formulação emprega as combinações da ABNT NBR 8681 \parencite{NBR8681:2025}, de acordo com a Equação~\eqref{eq:comb}.
+A tensão de resistência subjacente às simulações é ponderada na Equação~\eqref{eq:xd} utilizando o coeficiente global de modificação estrutural ($k_{mod} = k_{mod,1}\,k_{mod,2}$) e os fatores estipulados de minoração de propriedades $\gamma_m$.
 
 \begin{equation}
 F_d = \sum_{i=1}^{m}\gamma_{gi}\,F_{Gi,k} + \gamma_{q1}\,F_{Q1,k} + \sum_{j=2}^{n}\gamma_{qj}\,\psi_{0j}\,F_{Qj,k}

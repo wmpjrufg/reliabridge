@@ -2,20 +2,27 @@
 
 \section{Demonstração manual do dimensionamento}\label{ap:demonstracao}
 
-Este apêndice reproduz, passo a passo e por cálculo manual, a verificação de uma solução da fronteira eficiente da célula de referência C-13 ($L = 5{,}0$~m, classe D40), de modo a permitir a conferência independente da implementação computacional. Os cálculos foram conduzidos de forma inteiramente separada do código da plataforma, a partir apenas das equações apresentadas na Seção~\ref{sec:dimensionamento}, e comparados ao final contra o resultado que a plataforma produz para a mesma solução.
+Este apêndice reproduz, passo a passo e por cálculo manual, a verificação de uma solução da fronteira eficiente da célula de referência C-13 ($L = 5{,}0$~m, classe D40), de modo a permitir a conferência independente da implementação computacional.
+Os cálculos foram conduzidos de forma inteiramente separada do código da plataforma, a partir apenas das equações apresentadas na Seção~\ref{sec:dimensionamento}, e comparados ao final contra o resultado que a plataforma produz para a mesma solução.
 
 \subsection{Solução verificada}
 
-Escolheu-se a quarta das sete soluções listadas na Tabela~\ref{tab:solucoes_ref}, por ser uma solução intermediária da fronteira -- nem o extremo de menor volume, nem o de menor flecha --, com os valores de projeto na precisão plena com que foram gerados pela otimização:
+Escolheu-se a quarta das sete soluções listadas na Tabela~\ref{tab:solucoes_ref}, por ser uma solução intermediária da fronteira, nem o extremo de menor volume, nem o de menor flecha, com os valores de projeto na precisão plena com que foram gerados pela otimização:
 
 \begin{align*}
 d &= 71{,}4912~\text{cm}, & b_w &= 45{,}2885~\text{cm}, & h &= 8{,}9727~\text{cm}, \\
 esp_{long} &= 104{,}1819~\text{cm}, & esp_{tab} &= 3{,}0125~\text{cm}. &&
 \end{align*}
 
-Os dois espaçamentos acima são as variáveis contínuas efetivamente manipuladas pelo NSGA-II; a rotina de acomodação geométrica descrita na Seção~\ref{sec:formulacao} converte-as no número inteiro de peças que cabem na pista e no vão, com o espaçamento uniforme resultante. Para a longarina, distribuída ao longo da largura de pista $b_{w,\mathrm{pista}} = 4{,}5$~m, o número contínuo de peças é $n_{cont} = (b_{w,\mathrm{pista}} + esp_{long})/(d + esp_{long}) = 3{,}155$, o que dá dois candidatos inteiros, $n = 3$ e $n = 4$. Para $n = 3$, a folga $b_{w,\mathrm{pista}} - n\,d = 2{,}355$~m reparte-se em dois vãos, resultando em $esp_{long,corr} = 1{,}1776$~m; para $n = 4$, o espaçamento corrigido cairia para $0{,}547$~m. Como ambos atendem aos limites normativos de $30$ a $200$~cm da Tabela~\ref{tab:intervalos}, prevalece o critério de desempate pelo espaçamento mais próximo do valor contínuo original, e $n_{long} = 3$ é adotado, com $esp_{long,corr} = 117{,}76$~cm.
+Os dois espaçamentos acima são as variáveis contínuas efetivamente manipuladas pelo NSGA-II. A rotina de acomodação geométrica descrita na Seção~\ref{sec:formulacao} converte-as no número inteiro de peças que cabem na pista e no vão, com o espaçamento uniforme resultante.
+Para a longarina, distribuída ao longo da largura de pista $b_{w,\mathrm{pista}} = 4{,}5$~m, o número contínuo de peças é $n_{cont} = (b_{w,\mathrm{pista}} + esp_{long})/(d + esp_{long}) = 3{,}155$, o que dá dois candidatos inteiros, $n = 3$ e $n = 4$.
+Para $n = 3$, a folga $b_{w,\mathrm{pista}} - n\,d = 2{,}355$~m reparte-se em dois vãos, resultando em $esp_{long,corr} = 1{,}1776$~m. Para $n = 4$, o espaçamento corrigido cairia para $0{,}547$~m.
+Como ambos atendem aos limites normativos de $30$ a $200$~cm da Tabela~\ref{tab:intervalos}, prevalece o critério de desempate pelo espaçamento mais próximo do valor contínuo original, e $n_{long} = 3$ é adotado, com $esp_{long,corr} = 117{,}76$~cm.
 
-Para o tabuleiro, distribuído ao longo do vão $L = 5{,}0$~m, o número contínuo é $n_{cont} = (L + esp_{tab})/(b_w + esp_{tab}) = 10{,}414$, com candidatos $n = 10$ e $n = 11$. Para $n = 10$, o espaçamento corrigido é $esp_{tab,corr} = 5{,}235$~cm, que excede o limite máximo de $5{,}0$~cm da Tabela~\ref{tab:intervalos} em $4{,}7\%$; para $n = 11$, o espaçamento cairia a $0{,}18$~cm, muito abaixo do mínimo de $2{,}0$~cm, uma violação bem mais severa. Nenhum dos dois candidatos é geometricamente admissível no ponto nominal, e a rotina de acomodação adota o de menor violação, $n_{tab} = 10$, com $esp_{tab,corr} = 5{,}235$~cm. Esse detalhe é retomado na síntese comparativa ao final deste apêndice, pois tem consequência direta sobre a restrição $g_6$.
+Para o tabuleiro, distribuído ao longo do vão $L = 5{,}0$~m, o número contínuo é $n_{cont} = (L + esp_{tab})/(b_w + esp_{tab}) = 10{,}414$, com candidatos $n = 10$ e $n = 11$.
+Para $n = 10$, o espaçamento corrigido é $esp_{tab,corr} = 5{,}235$~cm, que excede o limite máximo de $5{,}0$~cm da Tabela~\ref{tab:intervalos} em $4{,}7\%$. Para $n = 11$, o espaçamento cairia a $0{,}18$~cm, muito abaixo do mínimo de $2{,}0$~cm, uma violação bem mais severa.
+Nenhum dos dois candidatos é geometricamente admissível no ponto nominal, e a rotina de acomodação adota o de menor violação, $n_{tab} = 10$, com $esp_{tab,corr} = 5{,}235$~cm.
+Esse detalhe é retomado na síntese comparativa ao final deste apêndice, pois tem consequência direta sobre a restrição $g_6$.
 
 \subsection{Propriedades geométricas}
 
@@ -34,7 +41,8 @@ I_{tab} &= \frac{0{,}452885 \times (0{,}089727)^3}{12} = 2{,}726\times10^{-5}~\t
 
 \subsection{Resistências de cálculo}
 
-Para a classe de carregamento de média duração, madeira natural e classe de umidade 3 (Tabela~\ref{tab:parametros}), a Tabela 20 da NBR 7190 fornece $k_{mod,1} = 0{,}80$ e $k_{mod,2} = 0{,}80$, de modo que $k_{mod} = k_{mod,1}\,k_{mod,2} = 0{,}64$. A partir dos valores característicos da classe D40 ($f_{m,k} = 51{,}95$~MPa, $f_{v0,k} = 6{,}0$~MPa, Tabela~\ref{tab:classes_madeira}), a Equação~\eqref{eq:xd} fornece as resistências de cálculo, iguais para a longarina e para o tabuleiro, que compartilham a mesma classe de resistência:
+Para a classe de carregamento de média duração, madeira natural e classe de umidade 3 (Tabela~\ref{tab:parametros}), a Tabela 20 da NBR 7190 fornece $k_{mod,1} = 0{,}80$ e $k_{mod,2} = 0{,}80$, de modo que $k_{mod} = k_{mod,1}\,k_{mod,2} = 0{,}64$.
+A partir dos valores característicos da classe D40 ($f_{m,k} = 51{,}95$~MPa, $f_{v0,k} = 6{,}0$~MPa, Tabela~\ref{tab:classes_madeira}), a Equação~\eqref{eq:xd} fornece as resistências de cálculo, iguais para a longarina e para o tabuleiro, que compartilham a mesma classe de resistência:
 \begin{equation*}
 f_{m,d} = \frac{51{,}95 \times 0{,}64}{1{,}40} = 23{,}749~\text{MPa}, \qquad f_{v0,d} = \frac{6{,}0 \times 0{,}64}{1{,}80} = 2{,}133~\text{MPa}.
 \end{equation*}
@@ -61,7 +69,8 @@ Para o tabuleiro, a mesma pressão combinada é convertida em carga linear ao lo
 p_{gtab,k} = (p_{gk} + p_{\mathrm{tab}})\,b_w = (0{,}10 + 0{,}5980) \times 0{,}452885 = 0{,}3161~\text{kN/m}.
 \end{equation*}
 
-Como o vão da longarina é $L = 5{,}0~\text{m} \leq 10{,}0$~m, a Equação~\eqref{eq:civ1} fornece $CIV = 1{,}35$, e a Equação~\eqref{eq:civaux} fornece o fator de atenuação $aux_{ci} = 1 + 0{,}75\,(1{,}35 - 1) = 1{,}2625$. O mesmo se aplica ao tabuleiro, cujo vão local -- a distância entre longarinas, $esp_{long,corr} = 1{,}1776$~m -- também é inferior a $10{,}0$~m, resultando no mesmo $aux_{ci,tab} = 1{,}2625$.
+Como o vão da longarina é $L = 5{,}0~\text{m} \leq 10{,}0$~m, a Equação~\eqref{eq:civ1} fornece $CIV = 1{,}35$, e a Equação~\eqref{eq:civaux} fornece o fator de atenuação $aux_{ci} = 1 + 0{,}75\,(1{,}35 - 1) = 1{,}2625$.
+O mesmo se aplica ao tabuleiro, cujo vão local (a distância entre longarinas, $esp_{long,corr} = 1{,}1776$~m) também é inferior a $10{,}0$~m, resultando no mesmo $aux_{ci,tab} = 1{,}2625$.
 
 \subsection{Esforços solicitantes e deslocamentos da longarina}
 
@@ -75,7 +84,9 @@ Como $L = 5{,}0$~m está no intervalo $3 < L \leq 6$~m, o momento devido à carg
 M_{qk,0} = \frac{3 \times 40 \times 5{,}0}{4} - 40 \times 1{,}5 = 90{,}0~\text{kN}\cdot\text{m}, \qquad M_{qk} = 90{,}0 \times 1{,}2625 = 113{,}625~\text{kN}\cdot\text{m}.
 \end{equation*}
 
-O cortante devido à carga permanente segue da Equação~\eqref{eq:qgk}: $Q_{gk} = 3{,}7754 \times 5{,}0/2 = 9{,}4385$~kN. Para o cortante variável (Equação~\eqref{eq:qqk}), a plataforma emprega, para seção circular, o próprio diâmetro da longarina no lugar do parâmetro geométrico genérico da fórmula, de modo que $e = L - 3a - 2d = 5{,}0 - 3\times1{,}5 - 2\times0{,}714912 = -0{,}9298$~m. O valor negativo não invalida a expressão -- decorre apenas de a longarina ter diâmetro grande em relação ao vão e à distância entre eixos, e a fórmula é aplicada tal como definida:
+O cortante devido à carga permanente segue da Equação~\eqref{eq:qgk}: $Q_{gk} = 3{,}7754 \times 5{,}0/2 = 9{,}4385$~kN.
+Para o cortante variável (Equação~\eqref{eq:qqk}), a plataforma emprega, para seção circular, o próprio diâmetro da longarina no lugar do parâmetro geométrico genérico da fórmula, de modo que $e = L - 3a - 2d = 5{,}0 - 3\times1{,}5 - 2\times0{,}714912 = -0{,}9298$~m.
+O valor negativo não invalida a expressão. Ele decorre apenas de a longarina ter diâmetro grande em relação ao vão e à distância entre eixos, e a fórmula é aplicada tal como definida:
 \begin{equation*}
 Q_{qk,0} = \frac{40}{5{,}0}(6\times1{,}5 + 3\times(-0{,}9298)) + \frac{4\times(-0{,}9298)^2}{2\times5{,}0} = 50{,}030~\text{kN},
 \end{equation*}
@@ -117,11 +128,15 @@ A verificação de cisalhamento (Equação~\eqref{eq:vercis}), para seção circ
 g_2 = \frac{0{,}357 - 2{,}133}{2{,}133} = -0{,}8326 \quad\text{(utilização de } 16{,}7\%\text{)}.
 \end{equation*}
 
-Para a flecha, a parcela variável majorada pela fluência é $\psi_2(1+\varphi)\,\delta_{qk} = 0{,}30 \times 1{,}60 \times 1{,}197 = 0{,}574$~mm, de modo que a flecha total é $\delta_{tot} = 0{,}165 + 0{,}574 = 0{,}739$~mm. Contra o limite $\delta_{lim} = L/250 = 20{,}0$~mm, a utilização é de apenas $3{,}7\%$ ($g_{3a} = -0{,}9630$); mas a verificação isolada da parcela variável contra $L/360 = 13{,}89$~mm, exigida em paralelo pela Equação da Seção~\ref{sec:dimensionamento}, resulta em utilização de $8{,}6\%$ ($g_{3b} = -0{,}9138$), que é a mais severa das duas e portanto governa: $g_3 = \max(g_{3a}, g_{3b}) = -0{,}9138$. O fator de flecha $f_2 = \delta_{tot}/(L/250)$ reportado nas demais tabelas do artigo refere-se sempre à primeira parcela, $f_2 = 0{,}0370$.
+Para a flecha, a parcela variável majorada pela fluência é $\psi_2(1+\varphi)\,\delta_{qk} = 0{,}30 \times 1{,}60 \times 1{,}197 = 0{,}574$~mm, de modo que a flecha total é $\delta_{tot} = 0{,}165 + 0{,}574 = 0{,}739$~mm.
+Contra o limite $\delta_{lim} = L/250 = 20{,}0$~mm, a utilização é de apenas $3{,}7\%$ ($g_{3a} = -0{,}9630$). Já a verificação isolada da parcela variável contra $L/360 = 13{,}89$~mm, exigida em paralelo pela Equação da Seção~\ref{sec:dimensionamento}, resulta em utilização de $8{,}6\%$ ($g_{3b} = -0{,}9138$), que é a mais severa das duas e portanto governa: $g_3 = \max(g_{3a}, g_{3b}) = -0{,}9138$.
+O fator de flecha $f_2 = \delta_{tot}/(L/250)$ reportado nas demais tabelas do artigo refere-se sempre à primeira parcela, $f_2 = 0{,}0370$.
 
 \subsection{Verificação do tabuleiro}
 
-A prancha do tabuleiro vence, como viga biapoiada, o vão local $esp_{long,corr} = 1{,}1776$~m entre longarinas. O momento devido à carga permanente segue da Equação~\eqref{eq:mgk}: $M_{gk,tab} = 0{,}3161 \times 1{,}1776^2/8 = 0{,}0548$~kN$\cdot$m. O momento devido à carga variável decorre da roda do trem tipo aplicada sobre esse vão local, com comprimento efetivo de contato $a_r = 0{,}45$~m:
+A prancha do tabuleiro vence, como viga biapoiada, o vão local $esp_{long,corr} = 1{,}1776$~m entre longarinas.
+O momento devido à carga permanente segue da Equação~\eqref{eq:mgk}: $M_{gk,tab} = 0{,}3161 \times 1{,}1776^2/8 = 0{,}0548$~kN$\cdot$m.
+O momento devido à carga variável decorre da roda do trem tipo aplicada sobre esse vão local, com comprimento efetivo de contato $a_r = 0{,}45$~m:
 \begin{equation*}
 M_{qk,tab,0} = \frac{40}{4}\,(1{,}1776 - 0{,}45) = 7{,}276~\text{kN}\cdot\text{m},
 \end{equation*}
@@ -149,7 +164,9 @@ V_{\mathrm{total}} = 3\times0{,}401417\times5{,}0 + 10\times4{,}0636\times10^{-2
 
 \subsection{Síntese comparativa}\label{ap:sintese}
 
-A Tabela~\ref{tab:ap_sintese} confronta os oito resultados obtidos manualmente com os retornados pela plataforma para a mesma solução, no ponto nominal -- isto é, sem a média sobre as $N_c = 30$ realizações perturbadas da avaliação robusta (Seção~\ref{sec:robustez}). Essa distinção é deliberada: a robustez é um procedimento numérico de agregação estatística sobre repetições do mesmo modelo mecânico, e não faz parte do que este apêndice verifica. Por isso, os valores de referência aqui não coincidem com o $g_{\max}$ publicado na Tabela~\ref{tab:solucoes_ref} para a mesma solução, que é a média robusta.
+A Tabela~\ref{tab:ap_sintese} confronta os oito resultados obtidos manualmente com os retornados pela plataforma para a mesma solução, no ponto nominal, isto é, sem a média sobre as $N_c = 30$ realizações perturbadas da avaliação robusta (Seção~\ref{sec:robustez}).
+Essa distinção é deliberada: a robustez é um procedimento numérico de agregação estatística sobre repetições do mesmo modelo mecânico, e não faz parte do que este apêndice verifica.
+Por isso, os valores de referência aqui não coincidem com o $g_{\max}$ publicado na Tabela~\ref{tab:solucoes_ref} para a mesma solução, que é a média robusta.
 
 \begin{table}[!ht]
 \caption{Comparação entre o cálculo manual e a avaliação nominal da plataforma, para a solução da Seção~\ref{ap:demonstracao}.\label{tab:ap_sintese}}
@@ -162,12 +179,12 @@ Grandeza & Manual & Plataforma\tnote{a} & Diferença \\
 \midrule
 $V_{\mathrm{total}}$ (m\textsuperscript{3}) & 7{,}8499 & 7{,}8499 & $< 0{,}001\%$ \\
 $f_2 = \delta_{tot}/(L/250)$ & 0{,}0370 & 0{,}0370 & $< 0{,}001\%$ \\
-$g_1$ -- flexão da longarina & $-0{,}7812$ & $-0{,}7812$ & $< 0{,}001\%$ \\
-$g_2$ -- cisalhamento da longarina & $-0{,}8326$ & $-0{,}8326$ & $< 0{,}001\%$ \\
-$g_3$ -- flecha da longarina & $-0{,}9138$ & $-0{,}9138$ & $< 0{,}001\%$ \\
-$g_4$ -- flexão do tabuleiro & $-0{,}0401$ & $-0{,}0401$ & $< 0{,}001\%$ \\
-$g_5$ -- espaçamento entre longarinas & $-0{,}4112$ & $-0{,}4112$ & $< 0{,}001\%$ \\
-$g_6$ -- espaçamento entre peças do tabuleiro & $+0{,}0470$ & $+0{,}0470$ & $< 0{,}001\%$ \\
+$g_1$: flexão da longarina & $-0{,}7812$ & $-0{,}7812$ & $< 0{,}001\%$ \\
+$g_2$: cisalhamento da longarina & $-0{,}8326$ & $-0{,}8326$ & $< 0{,}001\%$ \\
+$g_3$: flecha da longarina & $-0{,}9138$ & $-0{,}9138$ & $< 0{,}001\%$ \\
+$g_4$: flexão do tabuleiro & $-0{,}0401$ & $-0{,}0401$ & $< 0{,}001\%$ \\
+$g_5$: espaçamento entre longarinas & $-0{,}4112$ & $-0{,}4112$ & $< 0{,}001\%$ \\
+$g_6$: espaçamento entre peças do tabuleiro & $+0{,}0470$ & $+0{,}0470$ & $< 0{,}001\%$ \\
 \bottomrule
 \end{tabular*}
 \begin{tablenotes}
@@ -178,6 +195,9 @@ $g_6$ -- espaçamento entre peças do tabuleiro & $+0{,}0470$ & $+0{,}0470$ & $<
 \end{threeparttable}
 \end{table}
 
-A conferência confirma que o modelo mecânico documentado na Seção~\ref{sec:dimensionamento} reproduz fielmente a implementação computacional para as sete grandezas de estado limite. Um ponto merece registro à parte, por não ser um erro e sim uma consequência esperada da formulação robusta: no ponto nominal desta solução, a restrição geométrica $g_6$ é tecnicamente violada em $4{,}7\%$, porque a rotina de acomodação não encontra, para $n_{tab} = 10$ ou $11$, um espaçamento uniforme que caiba simultaneamente dentro dos limites de $2{,}0$ a $5{,}0$~cm da Tabela~\ref{tab:intervalos}. Ainda assim, essa solução integra a fronteira eficiente publicada porque a otimização robusta declara viabilidade pela restrição \emph{média} sobre as 30 realizações perturbadas, e não pelo ponto nominal isoladamente (Seção~\ref{sec:robustez}): sob perturbações de $\pm 5\%$ nas variáveis de projeto, a folga geométrica de algumas realizações compensa, na média, a pequena violação nominal, resultando no valor médio $g_6 = -0{,}0555$ publicado na Tabela~\ref{tab:solucoes_ref}. O achado ilustra, em miniatura e para uma restrição geométrica, o mesmo mecanismo quantificado em escala na Seção~\ref{sec:custo_robustez} para as restrições de resistência: a robustez desloca o critério de aceitação do ponto nominal para o comportamento médio sob incerteza, e soluções que soam ``no limite'' quando inspecionadas isoladamente podem ser exatamente as que a formulação robusta pretende capturar.
+A conferência confirma que o modelo mecânico documentado na Seção~\ref{sec:dimensionamento} reproduz fielmente a implementação computacional para as sete grandezas de estado limite.
+Um ponto merece registro à parte, por não ser um erro e sim uma consequência esperada da formulação robusta: no ponto nominal desta solução, a restrição geométrica $g_6$ é tecnicamente violada em $4{,}7\%$, porque a rotina de acomodação não encontra, para $n_{tab} = 10$ ou $11$, um espaçamento uniforme que caiba simultaneamente dentro dos limites de $2{,}0$ a $5{,}0$~cm da Tabela~\ref{tab:intervalos}.
+Ainda assim, essa solução integra a fronteira eficiente publicada porque a otimização robusta declara viabilidade pela restrição \emph{média} sobre as 30 realizações perturbadas, e não pelo ponto nominal isoladamente (Seção~\ref{sec:robustez}): sob perturbações de $\pm 5\%$ nas variáveis de projeto, a folga geométrica de algumas realizações compensa, na média, a pequena violação nominal, resultando no valor médio $g_6 = -0{,}0555$ publicado na Tabela~\ref{tab:solucoes_ref}.
+O achado ilustra, em miniatura e para uma restrição geométrica, o mesmo mecanismo quantificado em escala na Seção~\ref{sec:custo_robustez} para as restrições de resistência: a robustez desloca o critério de aceitação do ponto nominal para o comportamento médio sob incerteza, e soluções que soam ``no limite'' quando inspecionadas isoladamente podem ser exatamente as que a formulação robusta pretende capturar.
 
 \end{appendices}

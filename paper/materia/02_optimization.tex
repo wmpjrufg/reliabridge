@@ -1,14 +1,12 @@
 \section{Otimização}\label{sec:otimizacao}
 
-O dimensionamento estrutural tradicional caracteriza-se, historicamente, por uma abordagem determinística e sequencial, frequentemente restrita à exploração de um número limitado de alternativas de projeto. No contexto de pontes de madeira roliça, cuja matéria-prima apresenta elevada variabilidade dimensional e incertezas intrínsecas ao processo de fabricação e montagem, projetos otimizados de forma puramente determinística tendem a se posicionar no limite exato da viabilidade normativa, tornando-se suscetíveis a violações de segurança sob condições reais. Para superar essa limitação, este trabalho fundamenta-se no emprego de técnicas avançadas de busca computacional acopladas à modelagem paramétrica. 
-Nesta seção, estabelecem-se as bases computacionais e estatísticas que viabilizam o modelo proposto. Inicialmente, descrevem-se as formulações matemáticas da otimização multiobjetivo, essenciais para a conciliação simultânea de metas estruturais antagônicas. Na sequência, detalha-se o funcionamento algorítmico do NSGA-II (\textit{Non-dominated Sorting Genetic Algorithm II}), metaheurística selecionada para a exploração eficiente do domínio viável. Por fim, formaliza-se a inserção da robustez no processo de busca, delineando a estratégia estocástica adotada para mitigar as incertezas geométricas da madeira e garantir margem de segurança aos resultados
-
 \subsection{Estrutura de otimização multiobjetivo}\label{sec:otim_multiobjetivo}
 
- O projeto estrutural pode ser integrado a uma estrutura de otimização multiobjetivo visando apoiar uma etapa racional e orientada ao desempenho do dimensionamento. A tarefa é formulada como um problema matemático e resolvida por meio de algoritmos evolutivos, sendo uma abordagem adequada para lidar com domínios não lineares, com restrições rigorosas e múltiplos objetivos conflitantes.
- Um problema de otimização multiobjetivo envolve a minimização e/ou maximização simultânea de múltiplas funções objetivo, sujeitas a um conjunto de restrições que definem a viabilidade das soluções candidatas. Diferentemente da otimização monoobjetivo, essa formulação não conduz a uma única solução ótima global. Alternativamente, resulta em um conjunto de soluções ótimas de Pareto, cada uma representando um caso distinto de compromisso (\textit{trade-off}) entre critérios de desempenho concorrentes.
+Um problema de otimização multiobjetivo envolve a minimização e/ou maximização simultânea de múltiplas funções objetivo, sujeitas a um conjunto de restrições que definem a viabilidade das soluções candidatas.
+Diferentemente da otimização monoobjetivo, essa formulação não conduz a uma única solução ótima global.
+Alternativamente, resulta em um conjunto de soluções ótimas de Pareto, cada uma representando um caso distinto de compromisso (\textit{trade-off}) entre critérios de desempenho concorrentes.
  
- A formulação matemática geral de um problema de otimização multiobjetivo pode ser expressa conforme a Equação~\eqref{eq:mop}.
+A formulação matemática geral de um problema de otimização multiobjetivo pode ser expressa conforme a Equação~\eqref{eq:mop}.
  
 \begin{equation}
 \left\{
@@ -30,33 +28,38 @@ x_i^{(L)} \leq x_i \leq x_i^{(U)}, & i = 1,2,\ldots,n.
  \end{equation}
  
  Onde $\mathbf{x} = (x_1, x_2, \ldots, x_n)^T$ 
- representa o vetor $n$-dimensional de variáveis de projeto. O espaço de projeto viável é delimitado pelas restrições de desigualdade $g_j(\mathbf{x})$, restrições de igualdade $h_k(\mathbf{x})$ e restrições de domínio definidas pelos limites inferior $x_i^{(L)}$ e superior $x_i^{(U)}$, que em conjunto estabelecem o domínio admissível $(D)$ \parencite{DEB2009}.
+representa o vetor $n$-dimensional de variáveis de projeto.
+O espaço de projeto viável é delimitado pelas restrições de desigualdade $g_j(\mathbf{x})$, restrições de igualdade $h_k(\mathbf{x})$ e restrições de domínio definidas pelos limites inferior $x_i^{(L)}$ e superior $x_i^{(U)}$, que em conjunto estabelecem o domínio admissível $(D)$ \parencite{DEB2009}.
 
- Objetivos inicialmente concebidos como problemas de maximização são convertidos em problemas equivalentes de minimização mediante a multiplicação das respectivas funções objetivo por $-1$, garantindo uma estrutura computacional unificada. A Figura~\ref{fig:pareto} ilustra o espaço de soluções de um problema biobjetivo típico, destacando a diversidade de configurações viáveis e o conceito de fronteira de Pareto.
+Objetivos inicialmente concebidos como problemas de maximização são convertidos em problemas equivalentes de minimização mediante a multiplicação das respectivas funções objetivo por $-1$, garantindo uma estrutura computacional unificada.
+A Figura~\ref{fig:pareto} ilustra o espaço de soluções de um problema biobjetivo típico, destacando a diversidade de configurações viáveis e o conceito de fronteira de Pareto.
 
  \begin{figure}[htpb!]
  \centering
  \captionsetup{labelfont={bf,small},font={small},labelsep=endash}
- \caption{Possíveis soluções de um problema de otimização multiobjetivo.}
+ \includegraphics[width=0.6\textwidth]{figuras/z_types_frontier.png}
+ \caption{Possíveis soluções de um problema de otimização multiobjetivo. Fonte: \textcite{DEB2009}.}
  \label{fig:pareto}
- \includegraphics[width=0.6\textwidth]{figuras/z_types_frontier.png}\vspace{0.1cm}\par {
- \fontsize{11pt}{13.2pt}
- \selectfont 
- \textbf{Fonte:} {
- \textcite{DEB2009}}.}
  \end{figure}
  
  \subsection{Algoritmo de otimização NSGA-II} \label{sec:nsga2}
  
- O problema formulado é resolvido por meio do Algoritmo Genético de Ordenação Não Dominada II (NSGA-II - \textit{Non-dominated Sorting Genetic Algorithm II}). Desenvolvido por \textcite{DEB2009}, este algoritmo evolutivo consolidou-se na literatura por sua capacidade de aproximar de forma eficiente o conjunto ótimo de Pareto. 
- O NSGA-II preserva a natureza vetorial do problema multiobjetivo e busca um conjunto diverso de soluções não dominadas, sem recorrer à escalarização (soma ponderada) das funções objetivo. O mecanismo central do algoritmo baseia-se na classificação rápida de não dominância (\textit{fast non-dominated sorting}). A cada geração iterativa, toda a população de indivíduos é avaliada e ordenada em frentes sucessivas de não dominância $\mathcal{F}_1, \mathcal{F}_2, \ldots, \mathcal{F}_k$. A primeira frente ($\mathcal{F}_1$) agrupa as soluções temporariamente ótimas daquela geração, constituindo a aproximação corrente da fronteira de Pareto. 
- A frente subsequente ($\mathcal{F}_2$) abriga soluções que seriam dominantes caso os indivíduos da frente $\mathcal{F}_1$ fossem desconsiderados, e assim por diante.Para garantir que a busca não convirja prematuramente para uma única região e mantenha uma dispersão uniforme ao longo da fronteira, o algoritmo utiliza o operador de distância de aglomeração (\textit{crowding distance}). Esta métrica estima a densidade de soluções em torno de um determinado indivíduo, calculando o hipervolume formado pelos seus vizinhos mais próximos. Para um problema com $M$ funções objetivo, a distância de aglomeração $d_i$ do indivíduo $i$ é calculada conforme a Equação~\eqref{eq:crowding}.
+ Desenvolvido por \textcite{DEB2009}, este algoritmo evolutivo consolidou-se na literatura por sua capacidade de aproximar de forma eficiente o conjunto ótimo de Pareto. 
+O NSGA-II preserva a natureza vetorial do problema multiobjetivo e busca um conjunto diverso de soluções não dominadas, sem recorrer à escalarização (soma ponderada) das funções objetivo.
+O mecanismo central do algoritmo baseia-se na classificação rápida de não dominância (\textit{fast non-dominated sorting}).
+A cada geração iterativa, toda a população de indivíduos é avaliada e ordenada em frentes sucessivas de não dominância $\mathcal{F}_1, \mathcal{F}_2, \ldots, \mathcal{F}_k$.
+A primeira frente ($\mathcal{F}_1$) agrupa as soluções temporariamente ótimas daquela geração, constituindo a aproximação corrente da fronteira de Pareto.
+A frente subsequente ($\mathcal{F}_2$) abriga soluções que seriam dominantes caso os indivíduos da frente $\mathcal{F}_1$ fossem desconsiderados, e assim por diante.Para garantir que a busca não convirja prematuramente para uma única região e mantenha uma dispersão uniforme ao longo da fronteira, o algoritmo utiliza o operador de distância de aglomeração (\textit{crowding distance}).
+Esta métrica estima a densidade de soluções em torno de um determinado indivíduo, calculando o hipervolume formado pelos seus vizinhos mais próximos.
+Para um problema com $M$ funções objetivo, a distância de aglomeração $d_i$ do indivíduo $i$ é calculada conforme a Equação~\eqref{eq:crowding}.
  
  \begin{equation}d_i = \sum_{m=1}^{M} \frac{f_m(\mathbf{x}_{i+1}) - f_m(\mathbf{x}_{i-1})}{f_m^{\max} - f_m^{\min}}
  \label{eq:crowding}
  \end{equation}
  
- O NSGA-II emprega uma estratégia fortemente elitista. A cada ciclo, as populações parental e descendente são combinadas e ordenadas primeiramente pelo nível de Pareto e, em caso de empate na mesma frente, pela maior distância de aglomeração. O Algoritmo~\ref{alg:nsga2} resume a lógica evolutiva e o fluxo de avaliações estruturais, incorporando a proteção contra incertezas descrita na Seção~\ref{sec:robustez}.
+O NSGA-II emprega uma estratégia fortemente elitista.
+A cada ciclo, as populações parental e descendente são combinadas e ordenadas primeiramente pelo nível de Pareto e, em caso de empate na mesma frente, pela maior distância de aglomeração.
+O Algoritmo~\ref{alg:nsga2} resume a lógica evolutiva e o fluxo de avaliações estruturais, incorporando a proteção contra incertezas descrita na Seção~\ref{sec:robustez}.
  
  \begin{algorithm}[!ht]
  \caption{Otimização robusta multiobjetivo via NSGA-II}
@@ -84,11 +87,12 @@ x_i^{(L)} \leq x_i \leq x_i^{(U)}, & i = 1,2,\ldots,n.
  \end{algorithmic}
  \end{algorithm}
 
-Para a evolução das gerações, o algoritmo baseia-se em operadores genéticos específicos para o tratamento de variáveis contínuas. A aplicação conjunta do cruzamento simulado binário (SBX) e da mutação polinomial (PM) permite refinar as soluções locais no espaço de busca, ao passo que a eliminação sistemática de duplicatas resguarda a diversidade genética da população, prevenindo a convergência prematura. Os parâmetros de configuração adotados em todas as execuções deste trabalho estão reunidos na Tabela~\ref{tab:nsga2}.
+Para a evolução das gerações, o algoritmo baseia-se em operadores genéticos específicos para o tratamento de variáveis contínuas.
+A aplicação conjunta do cruzamento simulado binário (SBX) e da mutação polinomial (PM) permite refinar as soluções locais no espaço de busca, ao passo que a eliminação sistemática de duplicatas resguarda a diversidade genética da população, prevenindo a convergência prematura.
+Os parâmetros de configuração adotados em todas as execuções deste trabalho estão reunidos na Tabela~\ref{tab:nsga2}.
 
 \begin{table}[!ht]
 \caption{Parâmetros de configuração do NSGA-II.\label{tab:nsga2}}
-\begin{threeparttable}
 \begin{tabular*}{\columnwidth}{@{\extracolsep\fill}lc@{\extracolsep\fill}}
 \toprule
 Parâmetro & Valor \\
@@ -104,21 +108,24 @@ Número de checagens robustas, $N_c$ & 30 \\
 Desvio de robustez, $\rho$ & 5\% \\
 \bottomrule
 \end{tabular*}
-\begin{tablenotes}
-\footnotesize
-\item Valores efetivamente utilizados em todas as execuções deste trabalho. A adequação de $N_{gen} = 150$ é confirmada a posteriori pela curva de convergência do hipervolume (Seção~\ref{sec:hipervolume}), que estabiliza antes desse número de gerações. Cada execução consome, em média, 30{,}7~s de processamento em um computador pessoal, dos quais 24{,}4~s no NSGA-II e 5{,}9~s na análise de sensibilidade de Sobol, de modo que a matriz completa de vinte células é processada em cerca de 10~min.
-\end{tablenotes}
-\end{threeparttable}
 \end{table}
  
  \subsection{Robustez na otimização}\label{sec:robustez}
  
- Na engenharia estrutural, a otimização puramente determinística tende a posicionar as soluções ótimas exatamente sobre a fronteira matemática das restrições ativas. Essa característica as torna extremamente sensíveis a pequenas variações nas variáveis de projeto. Na prática, essa sensibilidade é agravada pela variabilidade inerente às propriedades físicas dos materiais empregados e pelas tolerâncias naturais de fabricação, corte e montagem das peças. Sob condições reais, uma estrutura cujo projeto encontre-se no limite exato de viabilidade determinística possui alta probabilidade de violar normas de segurança ou estados limites de serviço caso suas dimensões finais desviem minimamente do previsto. Para mitigar esse efeito, o conceito de robustez deve ser incorporado de forma nativa ao processo algorítmico.A estratégia matemática adotada para inserir robustez na otimização consiste em avaliar cada solução candidata não apenas em seus valores nominais de projeto, mas também sob a influência de um conjunto de perturbações estatísticas controladas. Para um dado indivíduo $\mathbf{x}$, são geradas $N_c$ realizações perturbadas, denotadas por $\tilde{\mathbf{x}}^{(c)}$, conforme definido na Equação~\eqref{eq:perturbacao}.
+Na engenharia estrutural, a otimização puramente determinística tende a posicionar as soluções ótimas exatamente sobre a fronteira matemática das restrições ativas.
+Essa característica as torna extremamente sensíveis a pequenas variações nas variáveis de projeto.
+Na prática, essa sensibilidade é agravada pela variabilidade inerente às propriedades físicas dos materiais empregados e pelas tolerâncias naturais de fabricação, corte e montagem das peças.
+Sob condições reais, uma estrutura cujo projeto encontre-se no limite exato de viabilidade determinística possui alta probabilidade de violar normas de segurança ou estados limites de serviço caso suas dimensões finais desviem minimamente do previsto.
+Para mitigar esse efeito, o conceito de robustez deve ser incorporado de forma nativa ao processo algorítmico.
+A estratégia adotada para inserir robustez na otimização consiste em avaliar cada solução candidata não apenas em seus valores nominais de projeto, mas também sob a influência de um conjunto de perturbações estatísticas controladas.
+Para um dado indivíduo $\mathbf{x}$, são geradas $N_c$ realizações perturbadas, denotadas por $\tilde{\mathbf{x}}^{(c)}$, conforme definido na Equação~\eqref{eq:perturbacao}.
  
  \begin{equation}\tilde{x}_i^{(c)} = x_i \left(1 + \rho\,\xi_i^{(c)}\right),\qquad \xi_i^{(c)} \sim \mathcal{U}(-1,\,1)\label{eq:perturbacao}
  \end{equation}
  
- O termo $\rho$ representa a magnitude do desvio paramétrico tolerado pelo projeto em relação ao valor nominal, e $\xi_i^{(c)}$ descreve uma variável aleatória com distribuição de probabilidade uniforme no intervalo de $[-1, 1]$. Em cada ciclo, as avaliações perturbadas são processadas independentemente no modelo analítico. Posteriormente, as funções objetivo e os valores das restrições são agregados por meio do operador de esperança matemática (média simples), de acordo com as Equações~\eqref{eq:fmed} e~\eqref{eq:gmed}.
+O termo $\rho$ representa a magnitude do desvio paramétrico tolerado pelo projeto em relação ao valor nominal, e $\xi_i^{(c)}$ descreve uma variável aleatória com distribuição de probabilidade uniforme no intervalo de $[-1, 1]$.
+Em cada ciclo, as avaliações perturbadas são processadas independentemente no modelo analítico.
+Posteriormente, as funções objetivo e os valores das restrições são agregados por meio do operador de esperança matemática (média simples), de acordo com as Equações~\eqref{eq:fmed} e~\eqref{eq:gmed}.
  
  \begin{equation}\bar{f}_m(\mathbf{x}) = \frac{1}{N_c}\sum_{c=1}^{N_c} f_m\!\left(\tilde{\mathbf{x}}^{(c)}\right)
  \label{eq:fmed}
@@ -128,4 +135,5 @@ Desvio de robustez, $\rho$ & 5\% \\
  \label{eq:gmed}
  \end{equation}
  
- Por meio desta formulação, uma solução só é julgada admissível e propícia à reprodução genética se as suas restrições médias permanecerem viáveis ($\bar{g}_j \leq 0$) mesmo quando os parâmetros oscilam aleatoriamente. Projetos configurados de modo muito justo às restrições acumularão violações durante o sorteio das perturbações desfavoráveis, inflacionando a função média $\bar{g}_j$ e sofrendo, assim, as devidas penalidades pelo mecanismo de viabilidade do algoritmo. O resultado macroscópico da aplicação desta metodologia é o deslocamento natural da fronteira de Pareto rumo a zonas estritamente mais conservadoras do espaço viável de projeto, atribuindo às soluções uma margem adicional de segurança intrínseca e absorvendo as incertezas materiais e construtivas.
+Por meio desta formulação, uma solução só é julgada admissível se suas restrições médias permanecerem viáveis ($\bar{g}_j \leq 0$) mesmo sob a oscilação aleatória dos parâmetros: projetos configurados muito próximos das restrições acumulam violações durante o sorteio das perturbações desfavoráveis, inflacionando $\bar{g}_j$ e sendo penalizados pelo mecanismo de viabilidade do algoritmo.
+O resultado é o deslocamento natural da fronteira de Pareto rumo a zonas mais conservadoras do espaço viável de projeto.
