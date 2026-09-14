@@ -3,7 +3,7 @@
 \section{Demonstração manual do dimensionamento}\label{ap:demonstracao}
 
 Este apêndice reproduz, passo a passo e por cálculo manual, a verificação de uma solução da fronteira eficiente da célula de referência C-13 ($L = 5{,}0$~m, classe D40), de modo a permitir a conferência independente da implementação computacional.
-Os cálculos foram conduzidos de forma inteiramente separada do código da plataforma, a partir apenas das equações apresentadas na Seção~\ref{sec:dimensionamento}, e comparados ao final contra o resultado que a plataforma produz para a mesma solução.
+Os cálculos foram conduzidos de forma inteiramente separada do código da plataforma, a partir apenas das equações apresentadas na Seção~\ref{sec:projeto_ponte}, e comparados ao final contra o resultado que a plataforma produz para a mesma solução.
 
 \subsection{Solução verificada}
 
@@ -41,8 +41,8 @@ I_{tab} &= \frac{0{,}452885 \times (0{,}089727)^3}{12} = 2{,}726\times10^{-5}~\t
 
 \subsection{Resistências de cálculo}
 
-Para a classe de carregamento de média duração, madeira natural e classe de umidade 3 (Tabela~\ref{tab:parametros}), a Tabela 20 da NBR 7190 fornece $k_{mod,1} = 0{,}80$ e $k_{mod,2} = 0{,}80$, de modo que $k_{mod} = k_{mod,1}\,k_{mod,2} = 0{,}64$.
-A partir dos valores característicos da classe D40 ($f_{m,k} = 51{,}95$~MPa, $f_{v0,k} = 6{,}0$~MPa, Tabela~\ref{tab:classes_madeira}), a Equação~\eqref{eq:xd} fornece as resistências de cálculo, iguais para a longarina e para o tabuleiro, que compartilham a mesma classe de resistência:
+Para a classe de carregamento de média duração, madeira natural e classe de umidade 3 (Tabela~\ref{tab:parametros}), as Tabelas 4 e 5 da ABNT NBR 7190 fornecem $k_{mod,1} = 0{,}80$ e $k_{mod,2} = 0{,}80$, de modo que $k_{mod} = k_{mod,1}\,k_{mod,2} = 0{,}64$.
+A partir dos valores característicos da classe D40 ($f_{m,k} = 51{,}95$~MPa, $f_{v0,k} = 6{,}0$~MPa, Tabela~\ref{tab:classes_madeira}), a Equação~\eqref{eq:2.099} fornece as resistências de cálculo, iguais para a longarina e para o tabuleiro, que compartilham a mesma classe de resistência:
 \begin{equation*}
 f_{m,d} = \frac{51{,}95 \times 0{,}64}{1{,}40} = 23{,}749~\text{MPa}, \qquad f_{v0,d} = \frac{6{,}0 \times 0{,}64}{1{,}80} = 2{,}133~\text{MPa}.
 \end{equation*}
@@ -129,7 +129,7 @@ g_2 = \frac{0{,}357 - 2{,}133}{2{,}133} = -0{,}8326 \quad\text{(utilização de 
 \end{equation*}
 
 Para a flecha, a parcela variável majorada pela fluência é $\psi_2(1+\varphi)\,\delta_{qk} = 0{,}30 \times 1{,}60 \times 1{,}197 = 0{,}574$~mm, de modo que a flecha total é $\delta_{tot} = 0{,}165 + 0{,}574 = 0{,}739$~mm.
-Contra o limite $\delta_{lim} = L/250 = 20{,}0$~mm, a utilização é de apenas $3{,}7\%$ ($g_{3a} = -0{,}9630$). Já a verificação isolada da parcela variável contra $L/360 = 13{,}89$~mm, exigida em paralelo pela Equação da Seção~\ref{sec:dimensionamento}, resulta em utilização de $8{,}6\%$ ($g_{3b} = -0{,}9138$), que é a mais severa das duas e portanto governa: $g_3 = \max(g_{3a}, g_{3b}) = -0{,}9138$.
+Contra o limite $\delta_{lim} = L/250 = 20{,}0$~mm, a utilização é de apenas $3{,}7\%$ ($g_{3a} = -0{,}9630$). Já a verificação isolada da parcela variável contra $L/360 = 13{,}89$~mm, exigida em paralelo pela Equação~\eqref{eq:verflecha}, resulta em utilização de $8{,}6\%$ ($g_{3b} = -0{,}9138$), que é a mais severa das duas e portanto governa: $g_3 = \max(g_{3a}, g_{3b}) = -0{,}9138$.
 O fator de flecha $f_2 = \delta_{tot}/(L/250)$ reportado nas demais tabelas do artigo refere-se sempre à primeira parcela, $f_2 = 0{,}0370$.
 
 \subsection{Verificação do tabuleiro}
@@ -195,7 +195,7 @@ $g_6$: espaçamento entre peças do tabuleiro & $+0{,}0470$ & $+0{,}0470$ & $< 0
 \end{threeparttable}
 \end{table}
 
-A conferência confirma que o modelo mecânico documentado na Seção~\ref{sec:dimensionamento} reproduz fielmente a implementação computacional para as sete grandezas de estado limite.
+A conferência confirma que o modelo mecânico documentado na Seção~\ref{sec:projeto_ponte} reproduz fielmente a implementação computacional para as sete grandezas de estado limite.
 Um ponto merece registro à parte, por não ser um erro e sim uma consequência esperada da formulação robusta: no ponto nominal desta solução, a restrição geométrica $g_6$ é tecnicamente violada em $4{,}7\%$, porque a rotina de acomodação não encontra, para $n_{tab} = 10$ ou $11$, um espaçamento uniforme que caiba simultaneamente dentro dos limites de $2{,}0$ a $5{,}0$~cm da Tabela~\ref{tab:intervalos}.
 Ainda assim, essa solução integra a fronteira eficiente publicada porque a otimização robusta declara viabilidade pela restrição \emph{média} sobre as 30 realizações perturbadas, e não pelo ponto nominal isoladamente (Seção~\ref{sec:robustez}): sob perturbações de $\pm 5\%$ nas variáveis de projeto, a folga geométrica de algumas realizações compensa, na média, a pequena violação nominal, resultando no valor médio $g_6 = -0{,}0555$ publicado na Tabela~\ref{tab:solucoes_ref}.
 O achado ilustra, em miniatura e para uma restrição geométrica, o mesmo mecanismo quantificado em escala na Seção~\ref{sec:custo_robustez} para as restrições de resistência: a robustez desloca o critério de aceitação do ponto nominal para o comportamento médio sob incerteza, e soluções que soam ``no limite'' quando inspecionadas isoladamente podem ser exatamente as que a formulação robusta pretende capturar.
