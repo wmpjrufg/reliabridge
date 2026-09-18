@@ -548,7 +548,7 @@ def cortante_max_carga_variavel(l: float, p_rodak: float, p_qk: float, a: float,
     
     :param l: vão teórico da viga [m]
     :param p_rodak: carga variável característica por roda [kN]
-    :param p_qk: carga variável característica de multidão [kPa]
+    :param p_qk: carga variável característica de multidão, já convertida em carga linear [kN/m]
     :param a: distância entre eixos [m]
     :param h: altura média da viga [m]
 
@@ -610,7 +610,7 @@ def reacao_apoio_carga_variavel(l: float, p_rodak: float, p_qk: float, a: float)
     
     :param l: vão teórico da viga [m]
     :param p_rodak: carga variável característica por roda [kN]
-    :param p_qk: carga variável característica de multidão [kPa]
+    :param p_qk: carga variável característica de multidão, já convertida em carga linear [kN/m]
     :param a: distância entre eixos [m]
 
     :return: reação de apoio devido à carga variável [kN]
@@ -934,7 +934,7 @@ def checagem_completa_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: flo
 
     :param geo: Parâmetros geométricos da seção transversal. Se retangular: Chaves: 'b_w': Largura da seção transversal [m] e 'h': Altura da seção transversal [m]. Se circular: Chaves: 'd': Diâmetro da seção transversal [m]
     :param p_gk: Carga permanente característica, uniformemente distribuída [kN/m] na longarina
-    :param p_qk: Carga variável característica de multidão [kPa]
+    :param p_qk: Carga variável característica de multidão, já convertida em carga linear na longarina [kN/m] (multiplicar a carga de área [kPa] pelo espaçamento entre longarinas)
     :param p_rodak: carga variável característica por roda [kN]
     :param a: distância entre eixos [m]
     :param l: Comprimento do vão [m]
@@ -1703,6 +1703,12 @@ def gerar_relatorio_final(projeto, res, geo_real):
             r"&= (" + f(projeto.p_gk) + r" + " + f(relat_carga.get('pp_tab [kPa]')) + r") \cdot " + f(bw_m),
             r"&= " + f(relat_carga.get('p_gtabk [kN/m]')) + r"\ \text{kN/m}",
         )
+        + "Carga de multidão, convertida de carga de área para carga linear na longarina pela largura tributária:\n\n"
+        + eq(
+            r"p_{qk,long} &= p_{qk} \cdot esp_{long,corr}",
+            r"&= " + f(projeto.p_qk) + r" \cdot " + f(esp_long_corr),
+            r"&= " + f(relat_carga.get('p_qklong [kN/m]')) + r"\ \text{kN/m}",
+        )
 
         + "\n## 3.6 Esforços solicitantes na longarina\n\n"
         + "Coeficiente de impacto vertical (NBR 7188) e coeficiente auxiliar:\n\n"
@@ -1723,10 +1729,10 @@ def gerar_relatorio_final(projeto, res, geo_real):
             r"c &= \frac{L - 4a}{2} = \frac{" + f(l_m) + r" - 4 \cdot " + f(projeto.a) + r"}{2} = " + f(c_momento) + r"\ \text{m}",
         )
         + eq(
-            r"M_{qk,0} &= \frac{3\,P_{roda}\,L}{4} - P_{roda}\,a + \frac{p_{qk}\,c^{2}}{2}",
+            r"M_{qk,0} &= \frac{3\,P_{roda}\,L}{4} - P_{roda}\,a + \frac{p_{qk,long}\,c^{2}}{2}",
             r"&= \frac{3 \cdot " + f(projeto.p_rodak) + r" \cdot " + f(l_m) + r"}{4}"
             r" - " + f(projeto.p_rodak) + r" \cdot " + f(projeto.a)
-            + r" + \frac{" + f(projeto.p_qk) + r" \cdot (" + f(c_momento) + r")^{2}}{2}",
+            + r" + \frac{" + f(relat_carga.get('p_qklong [kN/m]')) + r" \cdot (" + f(c_momento) + r")^{2}}{2}",
             r"&= " + f(m_qk_long_sem_impacto) + r"\ \text{kN}\cdot\text{m}",
         )
         + eq(
@@ -1753,10 +1759,10 @@ def gerar_relatorio_final(projeto, res, geo_real):
             + r" - 2 \cdot " + f(d_m) + r" = " + f(e_cortante) + r"\ \text{m}",
         )
         + eq(
-            r"V_{qk,0} &= \frac{P_{roda}}{L}\,(6a + 3e) + \frac{p_{qk}\,e^{2}}{2L}",
+            r"V_{qk,0} &= \frac{P_{roda}}{L}\,(6a + 3e) + \frac{p_{qk,long}\,e^{2}}{2L}",
             r"&= \frac{" + f(projeto.p_rodak) + r"}{" + f(l_m) + r"} \cdot (6 \cdot " + f(projeto.a)
             + r" + 3 \cdot " + f(e_cortante) + r")"
-            + r" + \frac{" + f(projeto.p_qk) + r" \cdot (" + f(e_cortante) + r")^{2}}{2 \cdot " + f(l_m) + r"}",
+            + r" + \frac{" + f(relat_carga.get('p_qklong [kN/m]')) + r" \cdot (" + f(e_cortante) + r")^{2}}{2 \cdot " + f(l_m) + r"}",
             r"&= " + f(v_qk_long_sem_impacto) + r"\ \text{kN}",
         )
         + eq(
@@ -1964,7 +1970,7 @@ Os valores abaixo reproduzem integralmente a planilha `beam_data.xlsx` gerada no
 | Longarina | Densidade | $\\rho_{{long}}$ | {fmt(projeto.densidade_long)} | kg/m$^3$ |
 | Longarina | Resistência caract. à flexão | $f_{{mk}}$ | {fmt(projeto.f_mk_long)} | MPa |
 | Longarina | Resistência caract. ao cisalhamento | $f_{{vk}}$ | {fmt(projeto.f_vk_long)} | MPa |
-| Longarina | Módulo de elasticidade à flexão | $E_{{0,ef}}$ | {fmt(projeto.e_modflex_long)} | GPa |
+| Longarina | Módulo de elasticidade médio à flexão | $E_{{0,m}}$ | {fmt(projeto.e_modflex_long)} | GPa |
 | Tabuleiro | Densidade | $\\rho_{{tab}}$ | {fmt(projeto.densidade_tab)} | kg/m$^3$ |
 | Tabuleiro | Resistência caract. à flexão | $f_{{mk,tab}}$ | {fmt(projeto.f_mk_tab)} | MPa |
 
@@ -2347,18 +2353,21 @@ class ProjetoOtimo(ElementwiseProblem):
             )
 
         # Carga permanente do tabuleiro que atua na longarina
-        carga_area_tab = (densidade_tab * num_tabss * (h * bw * bw_pista)) / (bw_pista * l)  # [kPa]            
+        carga_area_tab = (densidade_tab * num_tabss * (h * bw * bw_pista)) / (bw_pista * l)  # [kPa]
         p_gk_long      = (self.p_gk + carga_area_tab) * esp_long_corr                        # [kN/m]
         props_long     = prop_madeiras(geo_long)
         area_long      = props_long[0]
         pp_gk_long     = peso_proprio_longarina(densidade_long, area_long)                   # [kN/m]
         p_gk_long      += pp_gk_long                                                         # [kN/m]
 
+        # Carga de multidão (área, kPa) convertida em carga linear na longarina (kN/m)
+        p_qk_long      = self.p_qk * esp_long_corr                                           # [kN/m]
+
         # Avaliação flexão, cisalhamento e flecha da longarina
         res_m, res_v, res_f_total, relat_l = checagem_completa_longarina_madeira_flexao(
                                                                                             geo_long,
                                                                                             p_gk_long,
-                                                                                            self.p_qk,
+                                                                                            p_qk_long,
                                                                                             self.p_rodak,
                                                                                             self.a,
                                                                                             l,
@@ -2383,6 +2392,7 @@ class ProjetoOtimo(ElementwiseProblem):
                             "p_gtabk [kN/m]": p_gtabk,
                             "pp_gk_long [kN/m]": pp_gk_long,
                             "p_glongk [kN/m]": p_gk_long,
+                            "p_qklong [kN/m]": p_qk_long,
                             "num_longs": num_longs,
                             "num_tabs": num_tabss,
                             "esp_long_corr [m]": esp_long_corr,

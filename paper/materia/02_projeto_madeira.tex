@@ -15,15 +15,12 @@ Segundo a classificação proposta por \textcite{ritter1990}, as superestruturas
     \item vigas de madeira laminada colada de lâminas paralelas (\textit{laminated veneer lumber beams} -- LVL).
 \end{itemize}
 
-A Figura \ref{fig:pontenat} apresenta exemplos de pontes de madeira que são comumente encontradas
-em regiões de estradas vicinais do Brasil. A ponte exemplificada consiste em \tofill{descrever o sistema 
-construtivo observado na figura: espécie de madeira, número de longarinas, tipo de tabuleiro e conexões}.
 
 \begin{figure}[htpb!]
     \centering
     \caption{Ponte de madeira nativa roliças.}
     \label{fig:pontenat}
-    
+
   % primeira imagem
     \begin{minipage}[t]{0.45\textwidth}
         \centering
@@ -39,6 +36,9 @@ construtivo observado na figura: espécie de madeira, número de longarinas, tip
     \small Fonte: \parencite{gazeta2025ponte}.
 \end{figure}
 
+A Figura \ref{fig:pontenat} apresenta exemplos de pontes de madeira que são comumente encontradas
+em regiões de estradas vicinais do Brasil. A ponte exemplificada consiste em uma ponte rural de pequeno porte, construída predominantemente em madeira, com sistema estrutural longitudinal. Sua estrutura é composta por apoios nas margens do córrego, que recebem e transferem as cargas para o terreno, e por vigas de madeira dispostas longitudinalmente, responsáveis por vencer o vão e suportar as cargas dos veículos. Sobre essas vigas é instalado o tabuleiro, formado por peças de madeira que constituem o piso da ponte e distribuem as cargas para a estrutura principal e pranchas longitudinais sobre o tabuleiro formando o rodeiro. O conjunto também necessita de elementos de travamento e fixação, como parafusos, pregos, barras ou chapas, garantindo a estabilidade e a união entre as peças. Dessa forma, o caminho das cargas ocorre do veículo para o tabuleiro, do tabuleiro para as vigas e, posteriormente, para os apoios e o terreno.
+
 Segundo \textcite{ritter1990}, a extensão do vão, em pontes de toras roliças, depende da espécie, diâmetro e
 comprimento das árvores disponíveis.
 Vãos frequentes variam entre 6 e 18 metros, mas há exemplares documentados que se aproximam dos 30 metros, capazes de suportar
@@ -46,13 +46,43 @@ veículos com carga total superior a 100 toneladas.
 
 \subsection{Diâmetro das toras roliças}
 
-\begin{fillblock}
-Descrever o critério de determinação do diâmetro equivalente da tora roliça (por exemplo, diâmetro na seção correspondente a 1/3 do comprimento da peça a partir da extremidade de maior diâmetro). Incluir figura esquemática com o diâmetro mínimo, médio e equivalente ao longo do comprimento da peça (arquivo a salvar em \texttt{figuras/}).
-\end{fillblock}
+Para o dimensionamento de peças de seção circular variável, como toras roliças, adota-se um diâmetro equivalente de cálculo, $d_{eq}$, conforme o item 9.7 da \textcite{NBR7190-1:2022}, correspondente ao diâmetro da seção localizada a $1/3$ do comprimento total da peça, medido a partir da extremidade de menor diâmetro conforme a figura \ref{fig:dequivalente}. Dessa forma, considera-se a peça como tendo seção uniforme ao longo de seu comprimento, adotando-se o diâmetro obtido nessa posição.
+
+Entretanto, o valor de $d_{eq}$ é limitado a, no máximo, $1,5$ vezes o diâmetro da extremidade mais delgada, $d_2$. Assim, o diâmetro equivalente pode ser determinado por:
+
+\begin{equation}
+d_{eq} = d_2 + \frac{d_1-d_2}{3}
+\end{equation}
+
+devendo ser respeitada a seguinte condição:
+
+\begin{equation}
+d_{eq} \leq 1,5d_2
+\end{equation}
+
+onde $d_1$ corresponde ao maior diâmetro da tora, $d_2$ ao menor diâmetro e $L$ ao comprimento total da peça.
+
+\begin{figure}[htpb!]
+    \centering
+    \caption{Diâmetro Equivalente.}
+    \label{fig:dequivalente}
+    \includegraphics[width=1.2\textwidth]{figuras/dequivalentee.png}\\
+    \vspace{0.1cm}
+    \centering \small Fonte: Adaptado de \parencite{NBR7190-1:2022}
+\end{figure}
+
+Esse critério permite representar uma peça de seção circular variável por uma seção uniforme equivalente para fins de dimensionamento estrutural.
+
+
+
+
+% \begin{fillblock}
+% Descrever o critério de determinação do diâmetro equivalente da tora roliça (por exemplo, diâmetro na seção correspondente a 1/3 do comprimento da peça a partir da extremidade de maior diâmetro). Incluir figura esquemática com o diâmetro mínimo, médio e equivalente ao longo do comprimento da peça (arquivo a salvar em \texttt{figuras/}).
+% \end{fillblock}
 
 \subsection{Carga do trem tipo}\label{sec:trem_tipo}
 
-As cargas delimitadas nas pontes brasileiras são definidas pela \textcite{nbr7188}, que estabelece 
+As cargas delimitadas nas pontes brasileiras são definidas pela \textcite{nbr7188}, que estabelece
 os requisitos para o projeto de pontes rodoviárias.
 
 A norma apresenta dois modelos de trem-tipo para uso: o TB-450 e o TB-240. Porém, por se tratar de estradas vicinais,
@@ -66,7 +96,7 @@ uniformemente distribuída de 4,0 kN/m² em seu entorno (multidão), conforme a 
     \centering
     \caption{Configuração trem de tipo.}
     \label{fig:trem}
-    \includegraphics[width=0.4\textwidth]{figuras/trem1.png}\\    
+    \includegraphics[width=0.4\textwidth]{figuras/trem1.png}\\
     \vspace{0.2cm}
     \centering \small Fonte: \parencite{nbr7188}
 \end{figure}
@@ -189,6 +219,11 @@ Muito curta &
 \small Fonte: Adaptado de ABNT NBR 7190:2023.
 \end{table}
 
+A ABNT NBR 7190-1:2022 não classifica explicitamente a ação do tráfego rodoviário quanto à sua duração acumulada.
+O item 2.3.1.2 do \textcite{EN1995-2:2004} trata essa classificação como um parâmetro de determinação nacional, a ser fixado no Anexo Nacional de cada país signatário.
+O Anexo Nacional britânico a essa norma \parencite{BSNA-EN1995-2:2004} resolve essa indeterminação classificando as ações variáveis decorrentes da passagem de veículos e de pedestres como ações de \emph{curta duração} (\textit{short-term actions}), em razão de seu caráter transitório e não sustentado, distinto das ações permanentes ou de longa duração que dominam a Tabela \ref{tab:kmod1.q}.
+Na ausência de orientação equivalente na ABNT NBR 7190-1:2022, adota-se aqui essa mesma classificação para a ação variável principal da combinação -- o trem-tipo e a carga de multidão.
+A classe de umidade adotada permanece a (3), compatível com elementos estruturais expostos ao tempo, mas protegidos do contato direto com a água, condição típica das pontes de madeira roliça em estradas vicinais.
 
 O segundo fator, $k_{\mathrm{mod},2}$, está relacionado à classe de umidade à qual o elemento estrutural está submetido, bem como ao tipo de material utilizado, conforme especificado no item 5.8.4.2 da \textcite{NBR7190-1:2022}.
 Os valores normativos desse coeficiente, diferenciados entre madeiras maciças, produtos engenheirados e madeiras recompostas, encontram-se sistematizados na Tabela \ref{tab:kmod2.2}.
@@ -200,13 +235,13 @@ Os valores normativos desse coeficiente, diferenciados entre madeiras maciças, 
 \label{tab:kmod2.2}
 \footnotesize
 \begin{tabular}{
->{\centering\arraybackslash}p{3cm} 
->{\centering\arraybackslash}p{6cm} 
+>{\centering\arraybackslash}p{3cm}
+>{\centering\arraybackslash}p{6cm}
 >{\centering\arraybackslash}p{2cm}
 }
 \hline
-\multirow{2}{*}{\textbf{Classes de umidade}} & 
-\multirow{2}{*}{\textbf{Tipos de madeira}} & 
+\multirow{2}{*}{\textbf{Classes de umidade}} &
+\multirow{2}{*}{\textbf{Tipos de madeira}} &
 \textbf{Madeira recomposta} \\
 \hline
  &  Madeira serrada \newline
@@ -235,12 +270,8 @@ Madeira laminada colada (LVL) & \\
 
 \subsubsection{Fluência}
 
-Além dos valores médios do módulo de elasticidade, a \textcite{NBR7190-1:2022} estabelece que, nas verificações em que a rigidez ao longo do tempo é relevante, deve ser considerado o valor efetivo do módulo de elasticidade, $E_{0,\mathrm{ef}}$, conforme a Equação \ref{eq:2.558}, empregado no cálculo das flechas finais $\delta_{\mathrm{fin},G_i,k}$ e $\delta_{\mathrm{fin},Q_j,k}$, associadas respectivamente às ações permanentes e variáveis, conforme as Equações \ref{eq:flecha_fin_G} e \ref{eq:flecha_fin_Q}.
-
-\begin{equation}
-E_{0,\mathrm{ef}} = k_{\mathrm{mod},1} \cdot k_{\mathrm{mod},2} \cdot E_{0,\mathrm{med}}
-\label{eq:2.558}
-\end{equation}
+As flechas instantâneas, $\delta_{\mathrm{inst},G_i,k}$ e $\delta_{\mathrm{inst},Q_j,k}$, associadas respectivamente às ações permanentes e variáveis, são calculadas com o módulo de elasticidade médio à flexão, $E_{0,\mathrm{m}}$, e não com um módulo minorado pelo coeficiente de modificação: o fator $k_{\mathrm{mod}}$ reduz a resistência característica da madeira ($k_{\mathrm{mod},1} \cdot k_{\mathrm{mod},2} \cdot X_k$, Equação \ref{eq:2.099}), não a sua rigidez.
+O efeito do tempo sobre a rigidez é incorporado separadamente, por meio do coeficiente de fluência $\varphi$, que amplia as flechas instantâneas para obter as flechas finais $\delta_{\mathrm{fin},G_i,k}$ e $\delta_{\mathrm{fin},Q_j,k}$, conforme as Equações \ref{eq:flecha_fin_G} e \ref{eq:flecha_fin_Q}.
 
 \begin{equation}
 \delta_{\mathrm{fin},G_i,k}
@@ -265,7 +296,7 @@ E_{0,\mathrm{ef}} = k_{\mathrm{mod},1} \cdot k_{\mathrm{mod},2} \cdot E_{0,\math
 Segundo a \textcite{NBR7190-1:2022}, ``a madeira possui características distintas de outros materiais de construção, como, por exemplo, a significativa deformação ao longo do tempo (fluência)''.
 Em razão dessa condição, torna-se necessária a aplicação do coeficiente de fluência ($\varphi$) na estimativa dos deslocamentos finais ou efetivos, conforme as Equações \ref{eq:flecha_fin_G} e \ref{eq:flecha_fin_Q}.
 Esse coeficiente é definido em função do material e da classe de umidade à qual o sistema estrutural está exposto.
-Classes de umidade mais elevadas resultam em flechas mais acentuadas, conforme evidenciado pelos valores do coeficiente de fluência apresentados na Tabela \ref{tab:fluencia}.
+Classes de umidade mais elevadas resultam em flechas mais acentuadas, conforme evidenciado pelos valores do coeficiente de fluência da Tabela 20 da \textcite{NBR7190-1:2022}, reproduzidos na Tabela \ref{tab:fluencia}.
 
 \begin{table}[htpb!]
 \centering
@@ -299,6 +330,8 @@ OSB estrutural
 \small\textsuperscript{a} Não é permitido o uso de MLCC para a classe de umidade 4.\\
 \small Fonte: Adaptado de \textcite{NBR7190-1:2022}.
 \end{table}
+
+Para a classe de umidade (3) adotada neste trabalho, o coeficiente de fluência de referência é $\varphi = 0{,}8$.
 
 \subsubsection{Limites normativos de flecha}
 
@@ -383,7 +416,14 @@ G = \gamma \cdot A
 \label{eq:permanente}
 \end{equation}
 
-A carga móvel considerada é o trem-tipo TB-240 apresentado na Seção~\ref{sec:trem_tipo}, representado por um veículo de três eixos e seis rodas, cada roda transmitindo uma carga $P$ de 40~kN, além da carga de multidão uniformemente distribuída $q$.
+A carga móvel considerada é o trem-tipo TB-240 apresentado na Seção~\ref{sec:trem_tipo}, representado por um veículo de três eixos e seis rodas, cada roda transmitindo uma carga $P$ de 40~kN, além da carga de multidão, uniformemente distribuída na área de ocupação com o valor característico $q_A = 4{,}0$~kN/m\textsuperscript{2}.
+Como as longarinas são tratadas como vigas isoladas, a carga de multidão precisa ser convertida de carga de área em carga linear antes de entrar nas Equações~\eqref{eq:mqk45} e~\eqref{eq:qqk}, multiplicando-se $q_A$ pela largura tributária de cada longarina, isto é, pelo espaçamento corrigido entre longarinas $esp_{long,corr}$ (Seção~\ref{sec:formulacao}), conforme a Equação~\eqref{eq:qlong}.
+
+\begin{equation}
+q = q_A \cdot esp_{long,corr}
+\label{eq:qlong}
+\end{equation}
+
 Os efeitos dinâmicos são incorporados pelo coeficiente de impacto vertical ($CIV$), determinado pelas Equações~\eqref{eq:civ1} e~\eqref{eq:civ2} conforme o item \tofill{7.2.3} da \textcite{nbr7188}, sendo $LIV$ o comprimento característico da estrutura \tofill{(conferir, no item da norma, se corresponde ao vão da longarina ou ao comprimento total da ponte)}.
 
 \begin{equation}
@@ -459,13 +499,13 @@ M_{sd} = \gamma_g\,M_{gk} + \gamma_q\,M_{qk}, \qquad Q_{sd} = \gamma_g\,Q_{gk} +
 \hline
 \textbf{Coeficiente} & \textbf{Valor} \\
 \hline
-$\gamma_g$ -- ação permanente (desfavorável) & \tofill{1,35} \\
-$\gamma_q$ -- ação variável (trem-tipo e multidão) & \tofill{1,50} \\
+$\gamma_g$ -- ação permanente (desfavorável) & 1,30 \\
+$\gamma_q$ -- ação variável (trem-tipo e multidão) & 1,50 \\
 \hline
 \end{tabular}
 
 \vspace{0.2cm}
-\small Fonte: \tofill{conferir os valores de $\gamma_g$ e $\gamma_q$ diretamente na ABNT NBR 8681:2025, de acordo com a combinação e o tipo de ação considerados.}
+\small Fonte: ABNT NBR 8681:2025, para a combinação e o tipo de ação considerados.
 \end{table}
 
 \subsubsection{Projeto momento}
@@ -489,10 +529,10 @@ Para a seção circular maciça, a tensão de cisalhamento máxima ocorre no cen
 
 \subsubsection{Projeto flecha}
 
-As flechas devidas à carga permanente ($\delta_{gk}$) e à carga móvel concentrada ($\delta_{qk}$) na longarina são obtidas pelas Equações~\eqref{eq:flechag} e~\eqref{eq:flechaq}, sendo $E_{0,\mathrm{ef}}$ o módulo de elasticidade efetivo (Equação~\eqref{eq:2.558}) e $b$ a distância entre o apoio e o ponto de aplicação da carga, definida pela Equação~\eqref{eq:bflecha}.
+As flechas devidas à carga permanente ($\delta_{gk}$) e à carga móvel concentrada ($\delta_{qk}$) na longarina são obtidas pelas Equações~\eqref{eq:flechag} e~\eqref{eq:flechaq}, sendo $E_{0,\mathrm{m}}$ o módulo de elasticidade médio à flexão e $b$ a distância entre o apoio e o ponto de aplicação da carga, definida pela Equação~\eqref{eq:bflecha}.
 
 \begin{equation}
-\delta_{gk} = \frac{5\,g\,L^4}{384\,E_{0,\mathrm{ef}}\,I}
+\delta_{gk} = \frac{5\,g\,L^4}{384\,E_{0,\mathrm{m}}\,I}
 \label{eq:flechag}
 \end{equation}
 
@@ -502,7 +542,7 @@ b = \frac{L - 2a}{2}
 \end{equation}
 
 \begin{equation}
-\delta_{qk} = \frac{P}{48\,E_{0,\mathrm{ef}}\,I}\left[L^3 + 2\,b\left(3L^2 - 4b^2\right)\right]
+\delta_{qk} = \frac{P}{48\,E_{0,\mathrm{m}}\,I}\left[L^3 + 2\,b\left(3L^2 - 4b^2\right)\right]
 \label{eq:flechaq}
 \end{equation}
 

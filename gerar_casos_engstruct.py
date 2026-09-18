@@ -34,12 +34,16 @@ FATOR_CISALHAMENTO = 0.54
 
 # Classes da NBR 7190-3, iguais às da tabela de classes do Artigo 1.
 # (densidade kg/m³, f_mk MPa, f_v0k MPa, E GPa)
+# f_mk = f_c0k (ABNT NBR 7190-1:2022, item 6.3.4: "no caso de uso da Tabela 2
+# considerar f_m,d = f_c0,d"; como gamma_wf e kmod são os mesmos para flexão e
+# compressão paralela, isso equivale a f_m,k = f_c0,k quando a classe vem da
+# Tabela 2). f_c0k é o próprio valor que indexa a classe (20, 30, 40, 50, 60 MPa).
 CLASSES = {
-    "D20": (500, 25.97, 4, 10.0),
-    "D30": (625, 38.96, 5, 12.0),
-    "D40": (750, 51.95, 6, 14.5),
-    "D50": (850, 64.94, 7, 16.5),
-    "D60": (1000, 77.92, 8, 19.5),
+    "D20": (500, 20.0, 4, 10.0),
+    "D30": (625, 30.0, 5, 12.0),
+    "D40": (750, 40.0, 6, 14.5),
+    "D50": (850, 50.0, 7, 16.5),
+    "D60": (1000, 60.0, 8, 19.5),
 }
 
 # Parâmetros fixos. Por decisão do autor, são os mesmos do Artigo 1: a única coisa que
@@ -51,15 +55,15 @@ FIXOS = {
     "p_rodak_kn": 40,
     "p_qk_kpa": 4,
     "a_m": 1.5,
-    "classe_carregamento": "média duração",
+    "classe_carregamento": "curta duração",
     "classe_madeira": "madeira natural",
     "classe_umidade": 3,
-    "gamma_g": 1.35,
+    "gamma_g": 1.30,
     "gamma_q": 1.50,
     "gamma_wc": 1.80,
     "gamma_wf": 1.40,
     "psi2": 0.30,
-    "phi": 0.60,
+    "phi": 0.80,
     "robustez_pct": 5,
 }
 

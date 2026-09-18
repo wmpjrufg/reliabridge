@@ -34,6 +34,10 @@ Ao final do processamento, a ferramenta disponibiliza para download a planilha d
 Os parâmetros geométricos, de carregamento e os coeficientes normativos mantidos constantes em toda a matriz são apresentados na Tabela~\ref{tab:parametros}.
 A largura de pista de 4{,}5~m corresponde à seção transversal usual de ponte vicinal de pista simples, compatível com o tráfego de um veículo por vez e com guarda-rodas laterais.
 
+\begin{fillblock}
+\noindent\textbf{[PENDENTE -- regenerar o lote antes de submeter]} As vinte células da matriz (Tabela~\ref{tab:matriz}), a varredura de robustez da célula C-13, as figuras e o Apêndice~\ref{ap:demonstracao} desta seção ainda refletem a execução antiga, com classe de carregamento de \emph{média duração}, $\gamma_g = 1{,}35$, $\varphi = 0{,}60$, e um erro de implementação em que a carga de multidão $p_{qk}$ (kPa) entrava direto nas Equações de $M_{qk}$ e $Q_{qk}$ sem ser convertida para carga linear (kN/m) pelo espaçamento entre longarinas. O código e a Seção~\ref{sec:ponte_madeira} já foram corrigidos (classe de curta duração, $\gamma_g = 1{,}30$, $\varphi = 0{,}80$ e a conversão $p_{qk,long} = p_{qk} \cdot esp_{long,corr}$), e a Tabela~\ref{tab:parametros} abaixo já reflete esses valores. É necessário rodar novamente \texttt{rodar\_lote.py} e atualizar a Tabela~\ref{tab:matriz}, a Tabela~\ref{tab:solucoes_ref}, as figuras e o Apêndice~\ref{ap:demonstracao} com os novos resultados antes da submissão.
+\end{fillblock}
+
 \begin{table}[!ht]
 \caption{Parâmetros geométricos, de carregamento e coeficientes normativos comuns a toda a matriz.\label{tab:parametros}}
 \begin{threeparttable}
@@ -47,15 +51,15 @@ Carga concentrada por roda, $p_{rodak}$ (kN) & 40 \\
 Carga variável distribuída, $p_{qk}$ (kPa) & 4 \\
 Carga permanente distribuída (rodeiro), $p_{gk}$ (kPa)\tnote{a} & 0{,}10 \\
 Distância entre eixos, $a$ (m) & 1{,}5 \\
-Classe de carregamento & Média duração \\
+Classe de carregamento & Curta duração \\
 Classe da madeira & Madeira natural \\
 Classe de umidade & 3 \\
-Coeficiente parcial das ações permanentes, $\gamma_g$ & 1{,}35 \\
+Coeficiente parcial das ações permanentes, $\gamma_g$ & 1{,}30 \\
 Coeficiente parcial das ações variáveis, $\gamma_q$ & 1{,}50 \\
 Coeficiente de minoração (tensões normais), $\gamma_{wf}$ & 1{,}40 \\
 Coeficiente de minoração (cisalhamento), $\gamma_{wc}$ & 1{,}80 \\
 Fator de combinação quase permanente, $\psi_2$ & 0{,}30 \\
-Coeficiente de fluência, $\varphi$ & 0{,}60 \\
+Coeficiente de fluência, $\varphi$ & 0{,}80 \\
 Desvio de robustez, $\rho$ (\%) & 5{,}0 \\
 \bottomrule
 \end{tabular*}

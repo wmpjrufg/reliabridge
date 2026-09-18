@@ -38,8 +38,9 @@ A modelagem mecânica dos elementos estruturais acompanha rigorosamente as presc
 As variações de características do material e a definição das propriedades adotadas nas simulações foram estabelecidas em conformidade com a ABNT NBR 7190-3:2022.
 As propriedades elásticas e as classes de resistência de base para espécies de florestas nativas (D20 a D60), derivadas de ensaios em corpos de prova isentos de defeitos, estão dispostas na Tabela~\ref{tab:classes_madeira}.
 
-Ressalta-se que, para a madeira pertencente ao grupo das dicotiledôneas, a norma técnica define a relação direta entre a resistência característica à compressão paralela às fibras ($f_{c0,k}$) e a resistência característica à flexão ($f_{m,k}$) pela razão $f_{c0,k} / f_{m,k} = 0{,}77$.
-Logo, os valores de resistência à flexão empregados pela plataforma para a formulação das restrições de estado limite foram deduzidos analiticamente a partir dessa premissa.
+Ressalta-se que, conforme o item 6.3.4 da \textcite{NBR7190-1:2022}, no dimensionamento pelas classes da Tabela 2 da norma considera-se $f_{m,d} = f_{c0,d}$, o valor de cálculo da resistência à flexão igual ao da resistência à compressão paralela às fibras.
+Como o coeficiente de modificação e o coeficiente de ponderação das tensões normais ($\gamma_{wf}$) são os mesmos para as duas verificações, essa equivalência se traduz, ao nível característico, em $f_{m,k} = f_{c0,k}$.
+Logo, os valores de resistência à flexão empregados pela plataforma para a formulação das restrições de estado limite são os próprios valores de $f_{c0,k}$ tabelados para cada classe.
 
 \begin{table}[!ht]
 \caption{Classes de resistência de espécies de florestas nativas e resistência à flexão calculada.\label{tab:classes_madeira}}
@@ -50,17 +51,17 @@ Logo, os valores de resistência à flexão empregados pela plataforma para a fo
 \toprule
 Classes & $f_{c0,k}$ (MPa) & $f_{m,k}$ (MPa) & $f_{v0,k}$ (MPa) & $E_{c0,med}$ (MPa) & $\rho_{12\%}$ (kg/m\textsuperscript{3}) \\
 \midrule
-D20 & 20 & 26,0 & 4 & 10 000 & 500 \\
-D30 & 30 & 39,0 & 5 & 12 000 & 625 \\
-D40 & 40 & 51,9 & 6 & 14 500 & 750 \\
-D50 & 50 & 64,9 & 7 & 16 500 & 850 \\
-D60 & 60 & 77,9 & 8 & 19 500 & 1 000 \\
+D20 & 20 & 20,0 & 4 & 10 000 & 500 \\
+D30 & 30 & 30,0 & 5 & 12 000 & 625 \\
+D40 & 40 & 40,0 & 6 & 14 500 & 750 \\
+D50 & 50 & 50,0 & 7 & 16 500 & 850 \\
+D60 & 60 & 60,0 & 8 & 19 500 & 1 000 \\
 \bottomrule
 \end{tabular*}
 %\begin{tablenotes}
 \footnotesize
 %\item \textbf{Nota 1:} Valores extraídos em conformidade com a ABNT NBR 7190-3:2022, referentes ao teor de umidade de 12\%.
-%\item \textbf{Nota 2:} A resistência característica à flexão ($f_{m,k}$) foi obtida matematicamente pela equação $f_{m,k} = f_{c0,k} / 0{,}77$, conforme relação normativa para madeiras dicotiledôneas.
+%\item \textbf{Nota 2:} A resistência característica à flexão ($f_{m,k}$) é tomada igual a $f_{c0,k}$, conforme o item 6.3.4 da ABNT NBR 7190-1:2022 ($f_{m,d} = f_{c0,d}$ no dimensionamento pela Tabela 2 da norma).
 %\end{tablenotes}
 \end{threeparttable}
 \end{table}
