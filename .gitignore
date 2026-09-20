@@ -132,6 +132,7 @@ Desktop.ini
 .claude/
 *.txt
 !requirements.txt
+!packages.txt
 
 # =============================================================================
 # Vault - PDFs de referencia

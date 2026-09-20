@@ -85,14 +85,14 @@ def render_verificacao(nome: str, resultado: dict, t_local: dict):
     status = t_local["status_ok"] if atende else t_local["status_falha"]
     interpretacao = t_local["g_atende"] if atende else t_local["g_nao_atende"]
 
+    # Empilhado (sem sub-colunas): este bloco já roda dentro de uma coluna externa
+    # (Flexão / Cisalhamento / Flecha lado a lado); dividir de novo aqui dentro
+    # espremia o rótulo do st.metric a ponto de truncar ("Indicad...", "-,...").
     st.markdown(f"**{nome}**")
-    col1, col2 = st.columns([1, 2])
-    with col1:
-        st.metric(t_local["indicador_g"], f"{g:.4f}")
-    with col2:
-        st.markdown(f"**{status}**")
-        st.caption(interpretacao)
-        st.caption(t_local["g_interpretacao"])
+    st.metric(t_local["indicador_g"], f"{g:.4f}")
+    st.markdown(f"**{status}**")
+    st.caption(interpretacao)
+    st.caption(t_local["g_interpretacao"])
 
 
 def normalizar_planilha_pre_sizing(row: pd.Series, lang_atual: str) -> tuple[dict, dict]:
@@ -332,7 +332,12 @@ if tem_resultado_design:
             mime="application/pdf",
         )
     else:
-        st.error("❌ Falha na geração do PDF. Verifique o terminal para ver o erro do LaTeX.")
+        st.error(
+            "❌ Falha na geração do PDF: o WeasyPrint não está disponível neste ambiente "
+            "(faltam bibliotecas de sistema como Pango/Cairo/GDK-Pixbuf). "
+            "Se estiver rodando no Streamlit Cloud, confirme que o `packages.txt` do "
+            "repositório foi implantado; localmente, verifique o log do terminal."
+        )
 else:
     st.warning(t["aviso_gerar_primeiro"])
     
