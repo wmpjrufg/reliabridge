@@ -89,7 +89,7 @@ Estrutura: `00_nomenclature`, `01_introduction`, `02_optimization`, `03_methodol
    confirmados a posteriori pelo hipervolume em todas as 20 células.
 3. ~~Análises da C-13~~ ✅ — fronteira, utilização, hipervolume, Sobol, boxplot e
    **custo da robustez** (§4.3.3, ρ = 0/2,5/5/10 %, script em
-   `gerar_casos_robustez.py` + `rodar_lote_robustez.py`, resultados em
+   `gerar_casos_robustez_materia.py` + `rodar_lote_robustez_materia.py`, resultados em
    `simulacaoes_/custo_robustez_C13/`). As duas análises de Monte Carlo saíram do
    escopo — ver **D-14**.
 4. ~~Varredura das 20 células~~ ✅ → `tab:resultados_matriz` completa.

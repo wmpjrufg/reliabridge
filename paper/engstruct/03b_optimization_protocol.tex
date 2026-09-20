@@ -1,0 +1,67 @@
+A formulação robusta transportada da Matéria é expressa por
+\begin{equation}
+ \min_{\mathbf{x}\in\mathcal D}
+ \left(\overline V(\mathbf{x}),\overline U_{fin}(\mathbf{x})\right),
+ \qquad \overline g_j(\mathbf{x})\leq0,\quad j=1,\ldots,6,
+\label{eq:problema_robusto}
+\end{equation}
+em que $\mathcal D$ reúne os limites das cinco variáveis e a admissibilidade geométrica. Para cada candidata, calculam-se
+\begin{equation}
+ \widetilde x_i^{(c)}=x_i(1+\rho\xi_i^{(c)}),\quad
+ \xi_i^{(c)}\sim\mathcal U(-1,1),\qquad
+ \overline f_m=\frac{1}{N_c}\sum_{c=1}^{N_c}f_m(\widetilde{\mathbf{x}}^{(c)}),\quad
+ \overline g_j=\frac{1}{N_c}\sum_{c=1}^{N_c}g_j(\widetilde{\mathbf{x}}^{(c)}).
+\label{eq:agregacao_robusta}
+\end{equation}
+Na implementação atual, a matriz de multiplicadores é reutilizada durante a otimização. O protocolo de comparação requer matrizes idênticas em R e C e sementes distintas entre repetições. Como a acomodação geométrica é recalculada, uma perturbação pode alterar o número inteiro de peças: essa formulação representa sensibilidade do processo de dimensionamento e não apenas tolerâncias de fabricação de uma ponte com número de peças fixo. A verificação posterior de uma solução construída deve preservar sua configuração discreta.
+
+O NSGA-II combina seleção por viabilidade, ordenação por não dominância e preservação de diversidade por distância de aglomeração \parencite{Deb2002}. A distância é a soma dos intervalos entre vizinhos normalizados em cada objetivo, com ordenação própria por objetivo; não é uma medida de hipervolume. Os descendentes são avaliados antes da seleção elitista na união das populações, conforme o Algoritmo~\ref{alg:comparacao}.
+
+\begin{table}[!ht]
+\centering
+\caption{Configuração inicial transportada da Matéria para o piloto; o orçamento final será definido pela verificação de convergência.}\label{tab:otimizacao_piloto}
+\begin{tabular}{lc}
+\toprule
+Parâmetro & Configuração inicial \\
+\midrule
+População / gerações & 50 / 150 \\
+Inicialização & Aleatória uniforme \\
+Cruzamento SBX & $p_c=0{,}90$, $\eta_c=15$ \\
+Mutação polinomial & $\eta_m=20$ \\
+Eliminação de duplicatas & Sim \\
+Realizações geométricas, $N_c$ & 30 \\
+Amplitude relativa, $\rho$ & 5\% \\
+Repetições propostas por cenário & 10 sementes pareadas (1 a 10) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Esses parâmetros são um ponto de partida, não evidência de suficiência do orçamento. A probabilidade efetiva de mutação, a versão das bibliotecas, os limites dimensionais e as tolerâncias serão registrados na configuração executável. O piloto comparará pelo menos dois orçamentos de busca; se diferenças entre materiais forem da ordem da dispersão entre sementes, será necessário ampliar a busca antes de interpretá-las.
+
+\begin{algorithm}[!ht]
+\caption{Comparação pareada e reavaliação estrutural}\label{alg:comparacao}
+\begin{algorithmic}[1]
+\Require Base auditada, sistema de classes, ações, vãos, domínio e sementes
+\For{cada espécie, vão e semente}
+  \State Fixar propriedades complementares e matriz de perturbações comum
+  \For{cenário $S\in\{R,C\}$}
+    \State Definir a rigidez $E_S$ e inicializar e avaliar a população $P_0$
+    \For{cada geração}
+      \State Gerar descendentes $Q_t$ por seleção, SBX e mutação
+      \State Avaliar acomodação, cargas, esforços, objetivos e restrições de $Q_t$
+      \State Agregar as avaliações conforme a Equação~\ref{eq:agregacao_robusta}
+      \State Selecionar em $P_t\cup Q_t$ por viabilidade, frente e aglomeração
+    \EndFor
+    \State Reavaliar soluções finais nominalmente e com amostra independente
+    \State Selecionar menor volume nominal entre soluções que atendem ao critério comum
+  \EndFor
+  \State Reavaliar a geometria $\mathbf{x}_C$ com rigidez $E_R$, sem reotimizar
+  \State Registrar $\Delta V$, $U_{fin}^{C\rightarrow R}$, $U_Q^{C\rightarrow R}$ e restrições
+\EndFor
+\State Agregar diferenças pareadas entre sementes e entre espécies
+\end{algorithmic}
+\end{algorithm}
+
+O volume nominal da Equação~\ref{eq:volume_modelo} será usado em $\Delta V$, enquanto o objetivo de busca robusta é $\overline V$; ambos serão armazenados para evitar misturar estimativas. Uma solução aceita pelas restrições médias deverá ser novamente verificada em sua geometria nominal. Se nenhuma solução atender ao critério comum, o caso será identificado como sem solução viável encontrada, sem interpretar isso como prova de inexistência de projeto viável.
+
+A verificação independente da otimização compreende: comparação de respostas com soluções analíticas em geometria fixa; conferência do equilíbrio das cargas distribuídas entre longarinas; avaliação das envoltórias nos limites dos trechos de carregamento; repetição entre sementes; e reavaliação das soluções selecionadas com perturbações não utilizadas na busca. O critério de aceitação da amostra de verificação deverá ser fixado antes da campanha e distinguido das restrições médias do otimizador.

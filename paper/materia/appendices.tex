@@ -5,165 +5,166 @@
 Este apêndice reproduz, passo a passo e por cálculo manual, a verificação de uma solução da fronteira eficiente da célula de referência C-13 ($L = 5{,}0$~m, classe D40), de modo a permitir a conferência independente da implementação computacional.
 Os cálculos foram conduzidos de forma inteiramente separada do código da plataforma, a partir apenas das equações apresentadas na Seção~\ref{sec:projeto_ponte}, e comparados ao final contra o resultado que a plataforma produz para a mesma solução.
 
-\begin{fillblock}
-\noindent\textbf{[PENDENTE -- regenerar antes de submeter]} Os valores deste apêndice ($k_{mod}$, $M_{qk}$, $Q_{qk}$, $\gamma_g$, $\varphi$ e as verificações $g_1$ a $g_4$) refletem os parâmetros antigos (média duração, $\gamma_g = 1{,}35$, $\varphi = 0{,}60$) e o erro de conversão de $p_{qk}$ discutido na nota da Seção~\ref{sec:casos}. Refazer esta demonstração com a solução que resultar da reotimização da célula C-13 sob os parâmetros corrigidos.
-\end{fillblock}
-
 \subsection{Solução verificada}
 
 Escolheu-se a quarta das sete soluções listadas na Tabela~\ref{tab:solucoes_ref}, por ser uma solução intermediária da fronteira, nem o extremo de menor volume, nem o de menor flecha, com os valores de projeto na precisão plena com que foram gerados pela otimização:
 
 \begin{align*}
-d &= 71{,}4912~\text{cm}, & b_w &= 45{,}2885~\text{cm}, & h &= 8{,}9727~\text{cm}, \\
-esp_{long} &= 104{,}1819~\text{cm}, & esp_{tab} &= 3{,}0125~\text{cm}. &&
+d &= 67{,}094508~\text{cm}, & b_w &= 46{,}205444~\text{cm}, & h &= 10{,}174077~\text{cm}, \\
+esp_{long} &= 108{,}475962~\text{cm}, & esp_{tab} &= 2{,}351631~\text{cm}. &&
 \end{align*}
 
 Os dois espaçamentos acima são as variáveis contínuas efetivamente manipuladas pelo NSGA-II. A rotina de acomodação geométrica descrita na Seção~\ref{sec:formulacao} converte-as no número inteiro de peças que cabem na pista e no vão, com o espaçamento uniforme resultante.
-Para a longarina, distribuída ao longo da largura de pista $b_{w,\mathrm{pista}} = 4{,}5$~m, o número contínuo de peças é $n_{cont} = (b_{w,\mathrm{pista}} + esp_{long})/(d + esp_{long}) = 3{,}155$, o que dá dois candidatos inteiros, $n = 3$ e $n = 4$.
-Para $n = 3$, a folga $b_{w,\mathrm{pista}} - n\,d = 2{,}355$~m reparte-se em dois vãos, resultando em $esp_{long,corr} = 1{,}1776$~m. Para $n = 4$, o espaçamento corrigido cairia para $0{,}547$~m.
-Como ambos atendem aos limites normativos de $30$ a $200$~cm da Tabela~\ref{tab:intervalos}, prevalece o critério de desempate pelo espaçamento mais próximo do valor contínuo original, e $n_{long} = 3$ é adotado, com $esp_{long,corr} = 117{,}76$~cm.
+Para a longarina, distribuída ao longo da largura de pista $b_{w,\mathrm{pista}} = 4{,}5$~m, o número contínuo de peças é $n_{cont} = (b_{w,\mathrm{pista}} + esp_{long})/(d + esp_{long}) = 3{,}180922$, o que dá dois candidatos inteiros, $n = 3$ e $n = 4$.
+Para $n = 3$, a folga $b_{w,\mathrm{pista}} - n\,d = 2{,}487165$~m reparte-se em dois vãos, resultando em $esp_{long,corr} = 1{,}243582$~m ($g_5 = -0{,}378209$). Para $n = 4$, a folga é $1{,}816220$~m, e o espaçamento corrigido cairia para $0{,}605407$~m ($g_5 = -0{,}697297$).
+Ambos os candidatos são geometricamente admissíveis frente aos limites de $30$ a $200$~cm da Tabela~\ref{tab:intervalos}; prevalece então o critério de desempate pelo espaçamento mais próximo do valor contínuo original ($|1{,}243582 - 1{,}084760| = 0{,}158822$ contra $|0{,}605407 - 1{,}084760| = 0{,}479353$), e $n_{long} = 3$ é adotado, com $esp_{long,corr} = 124{,}358238$~cm.
 
-Para o tabuleiro, distribuído ao longo do vão $L = 5{,}0$~m, o número contínuo é $n_{cont} = (L + esp_{tab})/(b_w + esp_{tab}) = 10{,}414$, com candidatos $n = 10$ e $n = 11$.
-Para $n = 10$, o espaçamento corrigido é $esp_{tab,corr} = 5{,}235$~cm, que excede o limite máximo de $5{,}0$~cm da Tabela~\ref{tab:intervalos} em $4{,}7\%$. Para $n = 11$, o espaçamento cairia a $0{,}18$~cm, muito abaixo do mínimo de $2{,}0$~cm, uma violação bem mais severa.
-Nenhum dos dois candidatos é geometricamente admissível no ponto nominal, e a rotina de acomodação adota o de menor violação, $n_{tab} = 10$, com $esp_{tab,corr} = 5{,}235$~cm.
-Esse detalhe é retomado na síntese comparativa ao final deste apêndice, pois tem consequência direta sobre a restrição $g_6$.
+Para o tabuleiro, distribuído ao longo do vão $L = 5{,}0$~m, o número contínuo é $n_{cont} = (L + esp_{tab})/(b_w + esp_{tab}) = 10{,}345591$, com candidatos $n = 10$ e $n = 11$.
+Para $n = 11$, a folga $L - n\,b_w = 5{,}0 - 11 \times 0{,}462054 = -0{,}082599$~m já é negativa, isto é, as onze peças não cabem lado a lado no vão nem mesmo encostadas, e o candidato é descartado de imediato.
+Resta apenas $n = 10$, com folga $0{,}379456$~m e espaçamento corrigido $esp_{tab,corr} = 4{,}216173$~cm, dentro dos limites de $2{,}0$ a $5{,}0$~cm da Tabela~\ref{tab:intervalos} ($g_6 = -0{,}156765$).
+Ao contrário do que ocorre em outros pontos da fronteira, discutidos na Seção~\ref{sec:custo_robustez}, esta solução em particular não está próxima da restrição geométrica do tabuleiro.
 
 \subsection{Propriedades geométricas}
 
-Para a longarina circular, de diâmetro $d = 0{,}714912$~m, as Equações~\eqref{eq:areacirc} a~\eqref{eq:wcirc} fornecem:
+Para a longarina circular, de diâmetro $d = 0{,}670945$~m, as Equações~\eqref{eq:areacirc}, \eqref{eq:icirc}, \eqref{eq:wcirc} e \eqref{eq:scirc} fornecem:
 \begin{align*}
-A_{long} &= \frac{\pi\,(0{,}714912)^2}{4} = 0{,}401417~\text{m}^2, \\
-I_{long} &= \frac{\pi\,(0{,}714912)^4}{64} = 1{,}28227\times10^{-2}~\text{m}^4, \\
-W_{long} &= \frac{I_{long}}{d/2} = 3{,}5872\times10^{-2}~\text{m}^3.
+A_{long} &= \frac{\pi\,(0{,}670945)^2}{4} = 0{,}353561~\text{m}^2, \\
+I_{long} &= \frac{\pi\,(0{,}670945)^4}{64} = 9{,}94759\times10^{-3}~\text{m}^4, \\
+W_{long} &= \frac{I_{long}}{d/2} = 2{,}96525\times10^{-2}~\text{m}^3, \\
+S_{long} &= \frac{(0{,}670945)^3}{12} = 2{,}51698\times10^{-2}~\text{m}^3.
 \end{align*}
 
-Para a prancha do tabuleiro, de largura $b_w = 0{,}452885$~m e altura $h = 0{,}089727$~m, as Equações~\eqref{eq:arearet} e~\eqref{eq:iret} fornecem:
+Para a prancha do tabuleiro, de largura $b_w = 0{,}462054$~m e altura $h = 0{,}101741$~m, as Equações~\eqref{eq:arearet} e~\eqref{eq:iret} fornecem:
 \begin{align*}
-A_{tab} &= 0{,}452885 \times 0{,}089727 = 4{,}0636\times10^{-2}~\text{m}^2, \\
-I_{tab} &= \frac{0{,}452885 \times (0{,}089727)^3}{12} = 2{,}726\times10^{-5}~\text{m}^4, \qquad W_{tab} = \frac{I_{tab}}{h/2} = 6{,}08\times10^{-4}~\text{m}^3.
+A_{tab} &= 0{,}462054 \times 0{,}101741 = 4{,}70098\times10^{-2}~\text{m}^2, \\
+I_{tab} &= \frac{0{,}462054 \times (0{,}101741)^3}{12} = 4{,}05506\times10^{-5}~\text{m}^4, \qquad W_{tab} = \frac{I_{tab}}{h/2} = 7{,}97135\times10^{-4}~\text{m}^3.
 \end{align*}
 
 \subsection{Resistências de cálculo}
 
-Para a classe de carregamento de média duração, madeira natural e classe de umidade 3 (Tabela~\ref{tab:parametros}), as Tabelas 4 e 5 da ABNT NBR 7190 fornecem $k_{mod,1} = 0{,}80$ e $k_{mod,2} = 0{,}80$, de modo que $k_{mod} = k_{mod,1}\,k_{mod,2} = 0{,}64$.
-A partir dos valores característicos da classe D40 ($f_{m,k} = 51{,}95$~MPa, $f_{v0,k} = 6{,}0$~MPa, Tabela~\ref{tab:classes_madeira}), a Equação~\eqref{eq:2.099} fornece as resistências de cálculo, iguais para a longarina e para o tabuleiro, que compartilham a mesma classe de resistência:
+Para a classe de carregamento de curta duração, madeira natural e classe de umidade 3 (Tabela~\ref{tab:parametros}), as Tabelas 4 e 5 da ABNT NBR 7190 fornecem $k_{mod,1} = 0{,}90$ e $k_{mod,2} = 0{,}80$, de modo que $k_{mod} = k_{mod,1}\,k_{mod,2} = 0{,}72$.
+A partir dos valores característicos da classe D40 ($f_{m,k} = f_{c0,k} = 40{,}0$~MPa, conforme a equivalência do item 6.3.4 da \textcite{NBR7190-1:2022} discutida na Seção~\ref{sec:formulacao}, e $f_{v0,k} = 6{,}0$~MPa, Tabela~\ref{tab:classes_madeira}), a Equação~\eqref{eq:2.099} fornece as resistências de cálculo, iguais para a longarina e para o tabuleiro, que compartilham a mesma classe de resistência:
 \begin{equation*}
-f_{m,d} = \frac{51{,}95 \times 0{,}64}{1{,}40} = 23{,}749~\text{MPa}, \qquad f_{v0,d} = \frac{6{,}0 \times 0{,}64}{1{,}80} = 2{,}133~\text{MPa}.
+f_{m,d} = \frac{40{,}0 \times 0{,}72}{1{,}40} = 20{,}571~\text{MPa}, \qquad f_{v0,d} = \frac{6{,}0 \times 0{,}72}{1{,}80} = 2{,}400~\text{MPa}.
 \end{equation*}
 
 \subsection{Ações}
 
 O peso próprio da longarina segue a Equação~\eqref{eq:permanente}, com o peso específico da madeira $\gamma = 750 \times 9{,}81/1000 = 7{,}3575$~kN/m\textsuperscript{3}:
 \begin{equation*}
-G_{long} = \gamma\,A_{long} = 7{,}3575 \times 0{,}401417 = 2{,}9534~\text{kN/m}.
+G_{long} = \gamma\,A_{long} = 7{,}3575 \times 0{,}353561 = 2{,}60132~\text{kN/m}.
 \end{equation*}
 
 O peso próprio do tabuleiro é primeiro convertido em uma pressão equivalente, distribuindo o peso das $n_{tab} = 10$ peças sobre toda a área do tabuleiro ($b_{w,\mathrm{pista}} \times L$):
 \begin{equation*}
-p_{\mathrm{tab}} = \frac{\gamma\,n_{tab}\,(h\,b_w\,b_{w,\mathrm{pista}})}{b_{w,\mathrm{pista}}\,L} = \frac{7{,}3575 \times 10 \times (0{,}089727 \times 0{,}452885 \times 4{,}5)}{4{,}5 \times 5{,}0} = 0{,}5980~\text{kPa}.
+p_{\mathrm{tab}} = \frac{\gamma\,n_{tab}\,(h\,b_w\,b_{w,\mathrm{pista}})}{b_{w,\mathrm{pista}}\,L} = \frac{7{,}3575 \times 10 \times (0{,}101741 \times 0{,}462054 \times 4{,}5)}{4{,}5 \times 5{,}0} = 0{,}691749~\text{kPa}.
 \end{equation*}
 
 Essa pressão, somada à carga permanente adicional $p_{gk} = 0{,}10$~kPa da Tabela~\ref{tab:parametros}, é distribuída sobre a faixa tributária de cada longarina, de largura $esp_{long,corr}$, e somada ao peso próprio da própria longarina:
 \begin{equation*}
-p_{gk,long} = (p_{gk} + p_{\mathrm{tab}})\,esp_{long,corr} + G_{long} = (0{,}10 + 0{,}5980)\times 1{,}1776 + 2{,}9534 = 3{,}7754~\text{kN/m}.
+p_{gk,long} = (p_{gk} + p_{\mathrm{tab}})\,esp_{long,corr} + G_{long} = (0{,}10 + 0{,}691749)\times 1{,}243582 + 2{,}60132 = 3{,}58593~\text{kN/m}.
 \end{equation*}
 
 Para o tabuleiro, a mesma pressão combinada é convertida em carga linear ao longo do seu próprio vão local, distribuindo-a sobre a largura $b_w$ da peça:
 \begin{equation*}
-p_{gtab,k} = (p_{gk} + p_{\mathrm{tab}})\,b_w = (0{,}10 + 0{,}5980) \times 0{,}452885 = 0{,}3161~\text{kN/m}.
+p_{gtab,k} = (p_{gk} + p_{\mathrm{tab}})\,b_w = (0{,}10 + 0{,}691749) \times 0{,}462054 = 0{,}365831~\text{kN/m}.
 \end{equation*}
 
-Como o vão da longarina é $L = 5{,}0~\text{m} \leq 10{,}0$~m, a Equação~\eqref{eq:civ1} fornece $CIV = 1{,}35$, e a Equação~\eqref{eq:civaux} fornece o fator de atenuação $aux_{ci} = 1 + 0{,}75\,(1{,}35 - 1) = 1{,}2625$.
-O mesmo se aplica ao tabuleiro, cujo vão local (a distância entre longarinas, $esp_{long,corr} = 1{,}1776$~m) também é inferior a $10{,}0$~m, resultando no mesmo $aux_{ci,tab} = 1{,}2625$.
+A carga variável de multidão, $p_{qk} = 4{,}0$~kPa da Tabela~\ref{tab:parametros}, é convertida em carga linear na longarina pela mesma faixa tributária, $p_{qk,long} = p_{qk}\,esp_{long,corr} = 4{,}0 \times 1{,}243582 = 4{,}97433$~kN/m.
+
+Como o vão da longarina é $L = 5{,}0~\text{m} \leq 10{,}0$~m, a Equação~\eqref{eq:civ1} fornece $CIV = 1{,}35$, aplicado diretamente sobre os esforços variáveis, sem atenuação: o fator de $0{,}75$ que reduzia esse coeficiente em versões anteriores da plataforma não consta da \textcite{nbr7188} e foi removido (Seção~\ref{sec:formulacao}).
+O mesmo coeficiente se aplica ao tabuleiro, cujo vão local (a distância entre longarinas, $esp_{long,corr} = 1{,}243582$~m) também é inferior a $10{,}0$~m, resultando no mesmo $CIV_{tab} = 1{,}35$.
 
 \subsection{Esforços solicitantes e deslocamentos da longarina}
 
 O momento fletor devido à carga permanente segue da Equação~\eqref{eq:mgk}:
 \begin{equation*}
-M_{gk} = \frac{3{,}7754 \times 5{,}0^2}{8} = 11{,}798~\text{kN}\cdot\text{m}.
+M_{gk} = \frac{3{,}58593 \times 5{,}0^2}{8} = 11{,}2060~\text{kN}\cdot\text{m}.
 \end{equation*}
 
-Como $L = 5{,}0$~m está no intervalo $3 < L \leq 6$~m, o momento devido à carga variável usa a Equação~\eqref{eq:mqk30}, sem a parcela de multidão, e é majorado pelo fator de impacto:
+Como $L = 5{,}0$~m está no intervalo $3 < L \leq 6$~m, o momento devido à carga variável usa a Equação~\eqref{eq:mqk30}, sem a parcela de multidão, e é majorado diretamente pelo $CIV$:
 \begin{equation*}
-M_{qk,0} = \frac{3 \times 40 \times 5{,}0}{4} - 40 \times 1{,}5 = 90{,}0~\text{kN}\cdot\text{m}, \qquad M_{qk} = 90{,}0 \times 1{,}2625 = 113{,}625~\text{kN}\cdot\text{m}.
+M_{qk,0} = \frac{3 \times 40 \times 5{,}0}{4} - 40 \times 1{,}5 = 90{,}000~\text{kN}\cdot\text{m}, \qquad M_{qk} = 90{,}000 \times 1{,}35 = 121{,}500~\text{kN}\cdot\text{m}.
 \end{equation*}
 
-O cortante devido à carga permanente segue da Equação~\eqref{eq:qgk}: $Q_{gk} = 3{,}7754 \times 5{,}0/2 = 9{,}4385$~kN.
-Para o cortante variável (Equação~\eqref{eq:qqk}), a plataforma emprega, para seção circular, o próprio diâmetro da longarina no lugar do parâmetro geométrico genérico da fórmula, de modo que $e = L - 3a - 2d = 5{,}0 - 3\times1{,}5 - 2\times0{,}714912 = -0{,}9298$~m.
-O valor negativo não invalida a expressão. Ele decorre apenas de a longarina ter diâmetro grande em relação ao vão e à distância entre eixos, e a fórmula é aplicada tal como definida:
+O cortante devido à carga permanente segue da Equação~\eqref{eq:qgk}: $Q_{gk} = 3{,}58593 \times 5{,}0/2 = 8{,}96482$~kN.
+Para o cortante variável (Equação~\eqref{eq:qqk}), a plataforma emprega, para seção circular, o próprio diâmetro da longarina no lugar do parâmetro geométrico genérico da fórmula, de modo que $e = L - 3a - 2d = 5{,}0 - 3\times1{,}5 - 2\times0{,}670945 = -0{,}841890$~m.
+O valor negativo não invalida a expressão. Ele decorre apenas de a longarina ter diâmetro grande em relação ao vão e à distância entre eixos, e a fórmula é aplicada tal como definida, com $p_{qk,long} = 4{,}97433$~kN/m:
 \begin{equation*}
-Q_{qk,0} = \frac{40}{5{,}0}(6\times1{,}5 + 3\times(-0{,}9298)) + \frac{4\times(-0{,}9298)^2}{2\times5{,}0} = 50{,}030~\text{kN},
+Q_{qk,0} = \frac{40}{5{,}0}\big(6\times1{,}5 + 3\times(-0{,}841890)\big) + \frac{4{,}97433\times(-0{,}841890)^2}{2\times5{,}0} = 51{,}7946 + 0{,}3526 = 52{,}1472~\text{kN},
 \end{equation*}
 \begin{equation*}
-Q_{qk} = 50{,}030 \times 1{,}2625 = 63{,}163~\text{kN}.
+Q_{qk} = 52{,}1472 \times 1{,}35 = 70{,}3987~\text{kN}.
 \end{equation*}
 
 As flechas seguem das Equações~\eqref{eq:flechag} e~\eqref{eq:flechaq}, com $E_{0,\mathrm{ef}} = 14{,}5$~GPa e $b = (L - 2a)/2 = 1{,}0$~m:
 \begin{equation*}
-\delta_{gk} = \frac{5 \times 3{,}7754 \times 5{,}0^4}{384 \times 14{,}5\times10^6 \times 1{,}28227\times10^{-2}} = 0{,}165~\text{mm},
+\delta_{gk} = \frac{5 \times 3{,}58593 \times 5{,}0^4}{384 \times 14{,}5\times10^6 \times 9{,}94759\times10^{-3}} = 0{,}202~\text{mm},
 \end{equation*}
 \begin{equation*}
-\delta_{qk} = \frac{40\,[5{,}0^3 + 2(1{,}0)(3\times5{,}0^2-4\times1{,}0^2)]}{48 \times 14{,}5\times10^6 \times 1{,}28227\times10^{-2}} = 1{,}197~\text{mm}.
+\delta_{qk} = \frac{40\,[5{,}0^3 + 2(1{,}0)(3\times5{,}0^2-4\times1{,}0^2)]}{48 \times 14{,}5\times10^6 \times 9{,}94759\times10^{-3}} = 1{,}543~\text{mm}.
 \end{equation*}
 
 \subsection{Verificações da longarina}
 
 A combinação de ações no estado limite último (Equação~\eqref{eq:comb}) fornece o momento e o cortante de cálculo:
 \begin{equation*}
-M_{sd} = 11{,}798 \times 1{,}35 + 113{,}625 \times 1{,}50 = 186{,}365~\text{kN}\cdot\text{m},
+M_{sd} = 11{,}2060 \times 1{,}30 + 121{,}500 \times 1{,}50 = 196{,}818~\text{kN}\cdot\text{m},
 \end{equation*}
 \begin{equation*}
-Q_{sd} = 9{,}4385 \times 1{,}35 + 63{,}163 \times 1{,}50 = 107{,}486~\text{kN}.
+Q_{sd} = 8{,}96482 \times 1{,}30 + 70{,}3987 \times 1{,}50 = 117{,}252~\text{kN}.
 \end{equation*}
 
 A verificação de flexão (Equação~\eqref{eq:verflexao}) resulta em:
 \begin{equation*}
-\sigma_{Mx,d} = \frac{186{,}365}{3{,}5872\times10^{-2}} = 5{,}195~\text{MPa},
+\sigma_{Mx,d} = \frac{196{,}818}{2{,}96525\times10^{-2}} = 6{,}637~\text{MPa},
 \end{equation*}
 \begin{equation*}
-g_1 = \frac{5{,}195 - 23{,}749}{23{,}749} = -0{,}7812 \quad\text{(utilização de } 21{,}9\%\text{)}.
+g_1 = \frac{6{,}637 - 20{,}571}{20{,}571} = -0{,}6773 \quad\text{(utilização de } 32{,}3\%\text{)}.
 \end{equation*}
 
-A verificação de cisalhamento (Equação~\eqref{eq:vercis}), para seção circular, resulta em:
+A verificação de cisalhamento, para seção circular, segue da Equação~\eqref{eq:vercis} com $S_{long} = 2{,}51698\times10^{-2}$~m\textsuperscript{3}:
 \begin{equation*}
-\tau_{\max} = \frac{4}{3}\times\frac{107{,}486}{0{,}401417} = 0{,}357~\text{MPa},
+\tau_{\max} = \frac{Q_{sd}\,S_{long}}{I_{long}\,d} = \frac{117{,}252 \times 2{,}51698\times10^{-2}}{9{,}94759\times10^{-3} \times 0{,}670945} = 0{,}442~\text{MPa},
 \end{equation*}
 \begin{equation*}
-g_2 = \frac{0{,}357 - 2{,}133}{2{,}133} = -0{,}8326 \quad\text{(utilização de } 16{,}7\%\text{)}.
+g_2 = \frac{0{,}442 - 2{,}400}{2{,}400} = -0{,}8158 \quad\text{(utilização de } 18{,}4\%\text{)}.
 \end{equation*}
 
-Para a flecha, a parcela variável majorada pela fluência é $\psi_2(1+\varphi)\,\delta_{qk} = 0{,}30 \times 1{,}60 \times 1{,}197 = 0{,}574$~mm, de modo que a flecha total é $\delta_{tot} = 0{,}165 + 0{,}574 = 0{,}739$~mm.
-Contra o limite $\delta_{lim} = L/250 = 20{,}0$~mm, a utilização é de apenas $3{,}7\%$ ($g_{3a} = -0{,}9630$). Já a verificação isolada da parcela variável contra $L/360 = 13{,}89$~mm, exigida em paralelo pela Equação~\eqref{eq:verflecha}, resulta em utilização de $8{,}6\%$ ($g_{3b} = -0{,}9138$), que é a mais severa das duas e portanto governa: $g_3 = \max(g_{3a}, g_{3b}) = -0{,}9138$.
-O fator de flecha $f_2 = \delta_{tot}/(L/250)$ reportado nas demais tabelas do artigo refere-se sempre à primeira parcela, $f_2 = 0{,}0370$.
+Para a flecha, a Equação~\eqref{eq:verflecha} compara duas combinações em paralelo, cada qual com seu próprio limite normativo (Tabela 21 da \textcite{NBR7190-1:2022}).
+Na combinação quase permanente, a fluência amplia as duas parcelas, permanente e variável (esta última já reduzida por $\psi_2$): $\delta_{tot} = (1+\varphi)\,(\delta_{gk} + \psi_2\,\delta_{qk}) = 1{,}80 \times (0{,}202 + 0{,}30 \times 1{,}543) = 1{,}80 \times 0{,}665 = 1{,}197$~mm.
+Contra o limite $\delta_{lim,total} = L/350 = 14{,}286$~mm, a utilização é de $8{,}4\%$ ($g_{3a} = -0{,}9162$).
+Já na combinação rara, exigida em paralelo, verifica-se a flecha instantânea da parcela variável isolada, sem fluência, contra um limite mais severo: $\delta_{qk} = 1{,}543$~mm contra $\delta_{lim,var} = L/500 = 10{,}000$~mm, utilização de $15{,}4\%$ ($g_{3b} = -0{,}8457$), que é a mais severa das duas e portanto governa: $g_3 = \max(g_{3a}, g_{3b}) = -0{,}8457$.
+O fator de flecha $f_2 = \delta_{tot}/(L/350)$ reportado nas demais tabelas do artigo refere-se sempre à combinação quase permanente, $f_2 = 0{,}0838$.
 
 \subsection{Verificação do tabuleiro}
 
-A prancha do tabuleiro vence, como viga biapoiada, o vão local $esp_{long,corr} = 1{,}1776$~m entre longarinas.
-O momento devido à carga permanente segue da Equação~\eqref{eq:mgk}: $M_{gk,tab} = 0{,}3161 \times 1{,}1776^2/8 = 0{,}0548$~kN$\cdot$m.
-O momento devido à carga variável decorre da roda do trem tipo aplicada sobre esse vão local, com comprimento efetivo de contato $a_r = 0{,}45$~m:
+A prancha do tabuleiro vence, como viga biapoiada, o vão local $esp_{long,corr} = 1{,}243582$~m entre longarinas.
+O momento devido à carga permanente segue da Equação~\eqref{eq:mgk}: $M_{gk,tab} = 0{,}365831 \times 1{,}243582^2/8 = 0{,}0707$~kN$\cdot$m.
+O momento devido à carga variável decorre da roda do trem tipo aplicada sobre esse vão local, com comprimento efetivo de contato $a_r = 0{,}45$~m, e é majorado diretamente pelo $CIV_{tab}$:
 \begin{equation*}
-M_{qk,tab,0} = \frac{40}{4}\,(1{,}1776 - 0{,}45) = 7{,}276~\text{kN}\cdot\text{m},
+M_{qk,tab,0} = \frac{40}{4}\,(1{,}243582 - 0{,}45) = 7{,}9358~\text{kN}\cdot\text{m},
 \end{equation*}
 \begin{equation*}
-M_{qk,tab} = 7{,}276 \times 1{,}2625 = 9{,}186~\text{kN}\cdot\text{m}.
+M_{qk,tab} = 7{,}9358 \times 1{,}35 = 10{,}7134~\text{kN}\cdot\text{m}.
 \end{equation*}
 
 O momento de cálculo e a verificação de flexão resultam em:
 \begin{equation*}
-M_{sd,tab} = 0{,}0548\times1{,}35 + 9{,}186\times1{,}50 = 13{,}854~\text{kN}\cdot\text{m},
+M_{sd,tab} = 0{,}0707\times1{,}30 + 10{,}7134\times1{,}50 = 16{,}1620~\text{kN}\cdot\text{m},
 \end{equation*}
 \begin{equation*}
-\sigma_{Mx,d,tab} = \frac{13{,}854}{6{,}08\times10^{-4}} = 22{,}797~\text{MPa},
+\sigma_{Mx,d,tab} = \frac{16{,}1620}{7{,}97135\times10^{-4}} = 20{,}275~\text{MPa},
 \end{equation*}
 \begin{equation*}
-g_4 = \frac{22{,}797 - 23{,}749}{23{,}749} = -0{,}0401 \quad\text{(utilização de } 96{,}0\%\text{)}.
+g_4 = \frac{20{,}275 - 20{,}571}{20{,}571} = -0{,}0144 \quad\text{(utilização de } 98{,}6\%\text{)}.
 \end{equation*}
 
 \subsection{Volume total}
 
 Pela Equação~\eqref{eq:f1}, com $n_{long} = 3$ e $n_{tab} = 10$:
 \begin{equation*}
-V_{\mathrm{total}} = 3\times0{,}401417\times5{,}0 + 10\times4{,}0636\times10^{-2}\times4{,}5 = 6{,}0213 + 1{,}8286 = 7{,}8499~\text{m}^3.
+V_{\mathrm{total}} = 3\times0{,}353561\times5{,}0 + 10\times4{,}70098\times10^{-2}\times4{,}5 = 5{,}30341 + 2{,}11544 = 7{,}41885~\text{m}^3.
 \end{equation*}
 
 \subsection{Síntese comparativa}\label{ap:sintese}
@@ -181,14 +182,14 @@ Por isso, os valores de referência aqui não coincidem com o $g_{\max}$ publica
 \toprule
 Grandeza & Manual & Plataforma\tnote{a} & Diferença \\
 \midrule
-$V_{\mathrm{total}}$ (m\textsuperscript{3}) & 7{,}8499 & 7{,}8499 & $< 0{,}001\%$ \\
-$f_2 = \delta_{tot}/(L/250)$ & 0{,}0370 & 0{,}0370 & $< 0{,}001\%$ \\
-$g_1$: flexão da longarina & $-0{,}7812$ & $-0{,}7812$ & $< 0{,}001\%$ \\
-$g_2$: cisalhamento da longarina & $-0{,}8326$ & $-0{,}8326$ & $< 0{,}001\%$ \\
-$g_3$: flecha da longarina & $-0{,}9138$ & $-0{,}9138$ & $< 0{,}001\%$ \\
-$g_4$: flexão do tabuleiro & $-0{,}0401$ & $-0{,}0401$ & $< 0{,}001\%$ \\
-$g_5$: espaçamento entre longarinas & $-0{,}4112$ & $-0{,}4112$ & $< 0{,}001\%$ \\
-$g_6$: espaçamento entre peças do tabuleiro & $+0{,}0470$ & $+0{,}0470$ & $< 0{,}001\%$ \\
+$V_{\mathrm{total}}$ (m\textsuperscript{3}) & 7{,}41885 & 7{,}41885 & $< 0{,}001\%$ \\
+$f_2 = \delta_{tot}/(L/350)$ & 0{,}0838 & 0{,}0838 & $< 0{,}001\%$ \\
+$g_1$: flexão da longarina & $-0{,}6773$ & $-0{,}6773$ & $< 0{,}001\%$ \\
+$g_2$: cisalhamento da longarina & $-0{,}8158$ & $-0{,}8158$ & $< 0{,}001\%$ \\
+$g_3$: flecha da longarina & $-0{,}8457$ & $-0{,}8457$ & $< 0{,}001\%$ \\
+$g_4$: flexão do tabuleiro & $-0{,}0144$ & $-0{,}0144$ & $< 0{,}001\%$ \\
+$g_5$: espaçamento entre longarinas & $-0{,}3782$ & $-0{,}3782$ & $< 0{,}001\%$ \\
+$g_6$: espaçamento entre peças do tabuleiro & $-0{,}1568$ & $-0{,}1568$ & $< 0{,}001\%$ \\
 \bottomrule
 \end{tabular*}
 \begin{tablenotes}
@@ -199,9 +200,9 @@ $g_6$: espaçamento entre peças do tabuleiro & $+0{,}0470$ & $+0{,}0470$ & $< 0
 \end{threeparttable}
 \end{table}
 
-A conferência confirma que o modelo mecânico documentado na Seção~\ref{sec:projeto_ponte} reproduz fielmente a implementação computacional para as sete grandezas de estado limite.
-Um ponto merece registro à parte, por não ser um erro e sim uma consequência esperada da formulação robusta: no ponto nominal desta solução, a restrição geométrica $g_6$ é tecnicamente violada em $4{,}7\%$, porque a rotina de acomodação não encontra, para $n_{tab} = 10$ ou $11$, um espaçamento uniforme que caiba simultaneamente dentro dos limites de $2{,}0$ a $5{,}0$~cm da Tabela~\ref{tab:intervalos}.
-Ainda assim, essa solução integra a fronteira eficiente publicada porque a otimização robusta declara viabilidade pela restrição \emph{média} sobre as 30 realizações perturbadas, e não pelo ponto nominal isoladamente (Seção~\ref{sec:robustez}): sob perturbações de $\pm 5\%$ nas variáveis de projeto, a folga geométrica de algumas realizações compensa, na média, a pequena violação nominal, resultando no valor médio $g_6 = -0{,}0555$ publicado na Tabela~\ref{tab:solucoes_ref}.
-O achado ilustra, em miniatura e para uma restrição geométrica, o mesmo mecanismo quantificado em escala na Seção~\ref{sec:custo_robustez} para as restrições de resistência: a robustez desloca o critério de aceitação do ponto nominal para o comportamento médio sob incerteza, e soluções que soam ``no limite'' quando inspecionadas isoladamente podem ser exatamente as que a formulação robusta pretende capturar.
+A conferência confirma que o modelo mecânico documentado na Seção~\ref{sec:projeto_ponte} reproduz fielmente a implementação computacional para as oito grandezas verificadas.
+Cabe registrar a natureza da pequena diferença entre o $g_{\max}$ nominal desta demonstração e o valor publicado na Tabela~\ref{tab:solucoes_ref} para a mesma linha: aqui, o maior valor entre as seis funções limite é $g_4 = -0{,}0144$ (flexão do tabuleiro, ponto nominal, sem perturbação), ao passo que a tabela publica $g_{\max} = -0{,}0097$, a média das seis funções limite sobre as $N_c = 30$ realizações perturbadas da avaliação robusta (Seção~\ref{sec:robustez}).
+As duas leituras concordam quanto à verificação governante, a flexão do tabuleiro, mas não precisam coincidir em valor: a primeira descreve o comportamento da solução exatamente no ponto de projeto, a segunda descreve seu comportamento esperado sob a variabilidade dimensional considerada na busca.
+Esse é o mesmo mecanismo quantificado em escala na Seção~\ref{sec:custo_robustez}: a robustez desloca o critério de aceitação do ponto nominal para o comportamento médio sob incerteza, de modo que as duas avaliações --- nominal e robusta --- são complementares, e não intercambiáveis, na leitura de uma solução da fronteira.
 
 \end{appendices}

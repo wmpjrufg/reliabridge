@@ -1,112 +1,74 @@
 \section{Metodologia}\label{sec:methodology}
 
-A consequência estrutural do erro de representação caracterizado na Seção~\ref{sec:representacao} é avaliada dimensionando superestruturas de ponte duas vezes para cada espécie: uma usando suas propriedades medidas e outra usando as propriedades tabeladas da classe atribuída. A diferença entre os dois projetos, expressa como percentual de volume de madeira, é o custo do enquadramento em classe. Como o dimensionamento é obtido por otimização, e não por arbitramento de seções, a comparação está livre do julgamento do projetista e depende apenas das propriedades do material fornecidas.
+O protocolo separa a representação das propriedades, a resposta de uma geometria fixa e o redimensionamento. O experimento principal substitui somente a rigidez: as demais propriedades, ações, limites e hipóteses são comuns aos dois cenários de cada par espécie--vão. Esse controle permite atribuir a diferença observada à representação da rigidez dentro do modelo adotado. Uma comparação de conjuntos completos de propriedades constituirá uma extensão condicionada à definição e à justificativa dos dados complementares.
 
 \subsection{Sistema estrutural e modelo paramétrico}\label{sec:system}
 
-O sistema estrutural consiste em peças retangulares longitudinais de tabuleiro continuamente apoiadas sobre longarinas circulares de madeira roliça, regularmente espaçadas ao longo da largura da pista, conforme ilustrado na Figura~\ref{fig:system}. A superestrutura é de vão único e simplesmente apoiada. As ações permanentes compreendem o peso próprio das peças e um carregamento distribuído adicional sobre o tabuleiro; as ações variáveis compreendem as cargas de roda do veículo-tipo e uma carga de multidão uniformemente distribuída. A transferência de carga do tabuleiro para as longarinas é tratada analiticamente como carregamento distribuído ao longo do vão.
+O sistema considerado é uma superestrutura de vão único simplesmente apoiado, com peças retangulares de tabuleiro apoiadas sobre longarinas circulares de madeira roliça, distribuídas ao longo da largura da pista. As ações incluem peso próprio, carga permanente adicional, cargas de roda e carga distribuída de multidão. A transferência das ações e a obtenção de esforços e deslocamentos são realizadas pelo modelo analítico paramétrico da plataforma ReliaBridge \parencite{ReliaBridge2026}.
 
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.5\textwidth]{figuras/caminhao.png}
-\caption{Representação conceitual do sistema estrutural da ponte.}
+\caption{Representação conceitual da superestrutura considerada.}
 \label{fig:system}
 \end{figure}
 
-O modelo é integralmente paramétrico: a partir do vetor de projeto e da largura da pista, o número de peças de cada família, todas as propriedades das seções transversais, as ações permanentes, os esforços solicitantes, os deslocamentos e as seis funções de estado limite são recalculados para qualquer solução candidata. A implementação é a plataforma computacional de acesso livre descrita em \parencite{ReliaBridge2026}, desenvolvida em Python com a biblioteca \texttt{pymoo} para otimização multiobjetivo \parencite{blank2020} e \texttt{UQpy} para análise de sensibilidade global \parencite{Olivier2020}.
+A análise de propriedades obtidas em ensaios de caracterização não constitui validação experimental de peças roliças de dimensão estrutural. A aplicação à ponte é uma investigação numérica condicionada ao modelo e às hipóteses de transferência dessas propriedades.
 
-\begin{fillblock}
-\noindent\textbf{[NOTA DE REDAÇÃO -- não apagar sem ler]} Esta subseção deve permanecer curta, no máximo meia página, citando o artigo da plataforma para os detalhes de implementação. O Engineering Structures não publica apresentação de software: se o texto for lido como ``desenvolvemos uma ferramenta e a aplicamos'', o artigo é rejeitado por novidade incremental. A contribuição declarada tem de ser o achado sobre o enquadramento em classe, e a plataforma é apenas o instrumento que o produz. Resistir à tentação de detalhar a interface.
-\end{fillblock}
+\subsection{Hipóteses e verificações de projeto}\label{sec:verificacao}
 
-\subsection{Verificação de projeto segundo a ABNT NBR 7190}\label{sec:verificacao}
+Para cada comparação serão documentados geometria, ações, combinações, resistência à flexão, resistência ao cisalhamento, densidade, relação entre módulos e parâmetros de fluência. Cada entrada será identificada como experimental, estimada ou adotada. As verificações compreendem flexão e cisalhamento das longarinas, deslocamentos, flexão do tabuleiro e limites geométricos. Os critérios de serviço incluem a flecha final quase permanente e a flecha variável, conforme a Seção~\ref{sec:restricoes}.
 
-\begin{fillblock}
-\noindent\textbf{[A PREENCHER]} Transportar para esta seção o núcleo do dimensionamento já redigido no artigo da plataforma: propriedades geométricas das seções circular e retangular, ações permanentes e trem tipo com o coeficiente de impacto vertical, esforços solicitantes e deslocamentos, combinações da ABNT NBR 8681 e as verificações de flexão, cisalhamento e flecha. Manter todas as equações, pois o leitor internacional precisa poder auditar a formulação sem recorrer à norma brasileira.
+\input{03a_structural_model}
 
-Acrescentar um parágrafo curto, ausente do artigo em português da plataforma e essencial aqui, observando que a formulação adotada é equivalente em estrutura à do EN 1995-1-1, diferindo nos coeficientes parciais e nos fatores de modificação, de modo que os resultados são transponíveis. Isso desarma antecipadamente a objeção de que se trata de um estudo restrito a uma norma nacional.
-\end{fillblock}
+\subsection{Comparação sob geometria e carregamento fixos}\label{sec:geometria_fixa}
 
-A ABNT NBR 7190-1:2022 não classifica explicitamente a ação do tráfego rodoviário quanto à sua duração acumulada para fins do coeficiente de modificação $k_{\mathrm{mod},1}$. Adota-se aqui a classe de \emph{curta duração} para a ação variável principal (o veículo-tipo e a carga de multidão), com base no critério do \textcite{EN1995-2:2004}, item 2.3.1.2, que enquadra o efeito do tráfego em pontes rodoviárias nessa classe de carregamento. A classe de umidade adotada é a (3).
+Para uma mesma estrutura, definem-se dois cenários: R, com rigidez baseada no $E_{c0,s}$ experimental, e C, com rigidez baseada no $E_{c0,c_s}$ da classe. A transformação entre módulo de compressão e módulo usado no cálculo, quando necessária, é aplicada de forma consistente. Todas as demais entradas, inclusive o peso próprio, permanecem comuns.
 
-\begin{table}[!ht]
-\caption{Propriedades tabeladas das classes de resistência da ABNT NBR 7190-3 para folhosas de florestas nativas.\label{tab:classes_madeira}}
-\begin{threeparttable}
-\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lccccc@{\extracolsep{\fill}}}
-\toprule
-Classe & $f_{c0,k}$ (MPa) & $f_{m,k}$ (MPa) & $f_{v0,k}$ (MPa) & $E_{c0,med}$ (MPa) & Massa esp. a 12\% (kg/m\textsuperscript{3}) \\
-\midrule
-D20 & 20 & 20 & 4 & 10\,000 & 500 \\
-D30 & 30 & 30 & 5 & 12\,000 & 625 \\
-D40 & 40 & 40 & 6 & 14\,500 & 750 \\
-D50 & 50 & 50 & 7 & 16\,500 & 850 \\
-D60 & 60 & 60 & 8 & 19\,500 & 1\,000 \\
-\bottomrule
-\end{tabular*}
-\begin{tablenotes}
-\footnotesize
-\item Valores da ABNT NBR 7190-3:2022 a 12\% de umidade. Conforme o item 6.3.4 da \textcite{NBR7190-1:2022}, no dimensionamento por classe (Tabela 2 da norma) considera-se $f_{m,d} = f_{c0,d}$; como o coeficiente de modificação e o coeficiente de ponderação das tensões normais ($\gamma_{wf}$) são os mesmos para flexão e para compressão paralela às fibras, isso equivale a $f_{m,k} = f_{c0,k}$.
-\end{tablenotes}
-\end{threeparttable}
-\end{table}
-
-\subsection{Otimização robusta multiobjetivo}\label{sec:optimisation}
-
-O dimensionamento de cada superestrutura é obtido por otimização robusta multiobjetivo. O vetor de projeto é $\mathbf{x} = (d,\ b_w,\ h,\ esp_{long},\ esp_{tab})^T$, e as duas funções objetivo, ambas de minimização, são o volume total de madeira da superestrutura e a utilização do limite de serviço de deslocamento, $\delta_{\mathrm{tot}}/(L/250)$. Aplicam-se seis restrições de desigualdade normalizadas: flexão e cisalhamento da longarina, deslocamento da longarina incluindo fluência, flexão da peça do tabuleiro sob a carga de roda, e espaçamentos mínimo e máximo entre peças.
-
-O problema é resolvido com o algoritmo NSGA-II. A robustez é incorporada nativamente à busca: cada candidata é avaliada em $N_c$ realizações perturbadas, $\tilde{\mathbf{x}} = \mathbf{x}\,(1+\rho\,\boldsymbol{\xi})$ com $\boldsymbol{\xi}\sim\mathcal{U}(-1,1)$, e os objetivos e restrições são agregados por seu valor esperado, de modo que apenas soluções tolerantes a desvios dimensionais permaneçam na fronteira eficiente. Isso trata a variabilidade dimensional da madeira roliça, característica definidora do material, que de outro modo deixaria os projetos ótimos exatamente sobre a fronteira de viabilidade.
-
-\begin{fillblock}
-\noindent\textbf{[A PREENCHER]} Transportar do artigo da plataforma a formulação completa: equações do problema multiobjetivo, mecanismo de ordenação não dominada e distância de aglomeração, equação da perturbação e das agregações por média, e a tabela de parâmetros do NSGA-II. Manter o algoritmo em pseudocódigo, que é bem recebido em revista de otimização estrutural.
-\end{fillblock}
-
-\subsection{Protocolo de comparação}\label{sec:protocolo}
-
-Para cada combinação de espécie e vão, são realizadas duas execuções independentes de otimização, sob configurações de algoritmo idênticas e mesma semente aleatória:
-
-\begin{enumerate}[nosep]
-\item \textbf{Projeto pela espécie}, usando as propriedades medidas da espécie: massa específica, resistência característica à flexão, resistência característica ao cisalhamento e módulo de elasticidade à flexão medido.
-\item \textbf{Projeto pela classe}, usando as propriedades tabeladas da classe à qual a espécie é atribuída (Tabela~\ref{tab:classes_madeira}).
-\end{enumerate}
-
-De cada fronteira extrai-se a solução de volume mínimo, e o custo do enquadramento em classe é definido pela Equação~\eqref{eq:deltaV}, na qual $V_{classe}$ e $V_{especie}$ são os volumes de madeira dos projetos pela classe e pela espécie. Um $\Delta V$ positivo indica que o enquadramento conduz a mais material do que a espécie de fato requer; um valor negativo indica que o projeto pela classe é mais leve do que a espécie pode suportar com segurança, isto é, contrário à segurança.
-
+O erro de previsão do deslocamento é
 \begin{equation}
-\Delta V = \frac{V_{classe} - V_{especie}}{V_{especie}} \times 100\%
+\varepsilon_{\delta,s,L}=\left(\frac{\delta_C}{\delta_R}-1\right)100\%.
+\label{eq:erro_delta}
+\end{equation}
+No caso elástico linear em que o deslocamento considerado é inversamente proporcional a um único módulo, com ações e geometria fixas e o mesmo $\alpha_E$ nos dois cenários,
+\begin{equation}
+\frac{\delta_C}{\delta_R}=\frac{E_{c0,s}}{E_{c0,c_s}}.
+\label{eq:razao_delta}
+\end{equation}
+Essa relação serve como verificação analítica do modelo sob essas condições. Ela não deve ser estendida automaticamente a modelos com parcelas de deformação independentes desse módulo ou alterações simultâneas de carregamento.
+
+\subsection{Redimensionamento sob critérios comuns}\label{sec:optimisation}
+
+A etapa de redimensionamento utiliza o vetor $\mathbf{x}=(d,b_w,h,esp_{long},esp_{tab})^T$ e o algoritmo NSGA-II \parencite{Deb2002} implementado com \texttt{pymoo} \parencite{blank2020}. Os objetivos propostos são o volume total de madeira e a utilização $U_{fin}$ do limite de deslocamento final quase permanente. Para comparar consumo, extrai-se de cada fronteira a solução viável de menor volume sob os mesmos critérios de aceitação e tolerâncias. Valores inferiores de volume em uma aproximação numérica de fronteira não constituem prova de ótimo global.
+
+A configuração de robustez geométrica será mantida comum aos cenários. Na formulação disponível, $\widetilde{\mathbf{x}}=\mathbf{x}(1+\rho\boldsymbol{\xi})$, com componentes de $\boldsymbol{\xi}$ uniformes em $[-1,1]$, e objetivos e restrições são agregados por médias das realizações. Satisfazer uma restrição em média não garante sua satisfação em todas as realizações; essa avaliação deve ser distinguida de uma garantia probabilística de desempenho e da variabilidade material.
+
+Cada par será executado com sementes pareadas e repetido com múltiplas sementes. Serão apresentados convergência, viabilidade e dispersão do volume entre execuções. A utilização da mesma semente, isoladamente, não elimina o erro do otimizador.
+
+\input{03b_optimization_protocol}
+
+\subsection{Diferença de volume e reavaliação do projeto}\label{sec:protocolo}
+
+Para cada espécie e vão, sejam $\mathbf{x}_R$ e $\mathbf{x}_C$ os projetos obtidos com rigidez experimental e de classe, respectivamente. A diferença relativa de volume é
+\begin{equation}
+\Delta V_{s,L}=\frac{V(\mathbf{x}_C)-V(\mathbf{x}_R)}{V(\mathbf{x}_R)}100\%.
 \label{eq:deltaV}
 \end{equation}
+Um valor positivo indica maior volume no cenário de classe; um valor negativo indica menor volume. O sinal, por si só, não permite concluir sobre atendimento aos limites de projeto.
 
-Como ambos os projetos são produzidos pelo mesmo algoritmo, com a mesma semente e as mesmas configurações de convergência, a diferença é atribuível exclusivamente às propriedades do material fornecidas, e não ao otimizador.
+Para avaliar o desempenho do projeto por classe, sua geometria é mantida e o cálculo é repetido com a rigidez experimental da espécie:
+\begin{equation}
+U_{\delta,s,L}^{C\rightarrow R}=\frac{\delta(\mathbf{x}_C;E_{R,s})}{L/250}.
+\label{eq:reavaliacao}
+\end{equation}
+Nessa expressão, $\delta$ corresponde a $\delta_{fin,qp}$. A utilização variável $U_Q^{C\rightarrow R}$ é calculada separadamente, dividindo-se a flecha variável reavaliada por $L/360$. Valores superiores a um em qualquer dos dois indicadores indicam excedência do respectivo limite de serviço nessa reavaliação, sob as hipóteses de ações, fluência e propriedades complementares adotadas. Esse resultado não é uma probabilidade de falha nem uma demonstração de insegurança última. Serão reavaliadas também as demais verificações e a viabilidade geométrica, separando avaliação nominal e avaliação sob perturbações.
 
-\subsection{Faixa de vãos}\label{sec:vaos}
+\subsection{Vãos, controles e análises de sensibilidade}\label{sec:vaos}
 
-A comparação é conduzida sobre os vãos teóricos listados na Tabela~\ref{tab:vaos}. A faixa é deliberadamente mais ampla do que a típica de uma única situação de projeto, porque o vão não é um parâmetro secundário deste estudo, e sim o mecanismo sob investigação: as três verificações escalam de modo distinto com o vão, de forma que o critério governante -- e com ele a propriedade do material que determina o dimensionamento -- migra à medida que o vão aumenta.
+A faixa inicial proposta compreende $L=3$, 5, 8 e 10~m, com largura de pista de 4,5~m. O veículo, as ações e os demais parâmetros serão fixados na campanha e documentados junto aos resultados. Mudanças de expressão do carregamento ao longo da faixa de vãos deverão ser identificadas para não serem confundidas com efeitos do material.
 
-\begin{table}[!ht]
-\caption{Parâmetros fixos e faixa de vãos da comparação.\label{tab:vaos}}
-\begin{threeparttable}
-\begin{tabular*}{\columnwidth}{@{\extracolsep\fill}lc@{\extracolsep\fill}}
-\toprule
-Parâmetro & Valor \\
-\midrule
-Vãos teóricos, $L$ (m) & 3,0; 5,0; 8,0; 10,0 \\
-Largura da pista, $b_{w,\mathrm{pista}}$ (m) & 4,5 \\
-Veículo-tipo (ABNT NBR 7188) & TB-240 \\
-Carga de roda, $p_{rodak}$ (kN) & 40 \\
-Carga de multidão, $p_{qk}$ (kPa) & 4 \\
-Carga permanente adicional, $p_{gk}$ (kPa) & 0,1 \\
-Distância entre eixos, $a$ (m) & 1,5 \\
-Classe de umidade / classe de carregamento & 3 / curta duração \\
-Coeficientes parciais $\gamma_g$ / $\gamma_q$ & 1,30 / 1,50 \\
-Coeficientes parciais do material $\gamma_{wf}$ / $\gamma_{wc}$ & 1,40 / 1,80 \\
-Fator de combinação $\psi_2$ / coeficiente de fluência $\varphi$ & 0,30 / 0,80 \\
-Desvio de robustez, $\rho$ (\%) & 5,0 \\
-\bottomrule
-\end{tabular*}
-\begin{tablenotes}
-\footnotesize
-\item \tofill{[ATENÇÃO] Os vãos de 8{,}0 e 10{,}0~m ultrapassam 6~m e portanto empregam a segunda expressão de momento devido à carga móvel, que inclui a parcela de multidão. Verificar que a transição entre as duas formulações está corretamente implementada antes de rodar o lote, e mencioná-la no texto ao discutir as curvas, para que uma eventual mudança de inclinação entre 5 e 8~m não seja atribuída ao material.}
-\item \tofill{[DECIDIR] O total de execuções é 40 espécies $\times$ 4 vãos $\times$ 2 bases de propriedades = 320 rodadas do NSGA-II. Cronometrar uma rodada antes de iniciar o lote. Caso o tempo por rodada inviabilize o total, reduzir para dois vãos, 3{,}0 e 10{,}0~m, que são os que sustentam o argumento da migração do critério governante, mantendo os vãos intermediários apenas para um subconjunto de espécies.}
-\end{tablenotes}
-\end{threeparttable}
-\end{table}
+A verificação governante será identificada em cada solução a partir das utilizações e folgas normalizadas, registrando eventuais restrições simultaneamente ativas. Não se pressupõe uma migração entre resistência e serviço. Se o deslocamento governar em toda a faixa, a análise permanece centrada na magnitude das diferenças; se outra restrição limitar o volume, será examinado quanto isso reduz a sensibilidade do dimensionamento à rigidez.
+
+O protocolo contém três análises separadas: (i) efeito de usar $0{,}70f_{c0,m}$ em lugar do $f_{c0,k}$ publicado sobre a atribuição de classe; (ii) efeito de substituir apenas a rigidez para uma classe e geometria fixadas; e (iii) efeito do redimensionamento. A sensibilidade às propriedades complementares e a $\alpha_E$ será avaliada com os mesmos valores nos dois membros de cada comparação. Um cenário que altere simultaneamente resistências e densidade deverá ser reportado à parte, com identificação das hipóteses que o sustentam.
+
+Os desvios-padrão da fonte podem apoiar uma etapa posterior sobre variabilidade intraespécie. Sua utilização deverá distinguir dispersão dos ensaios e incerteza das médias, explicitar distribuições e dependências assumidas e evitar interpretar estatísticas resumidas como acesso aos dados individuais.

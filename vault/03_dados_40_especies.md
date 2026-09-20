@@ -1,8 +1,13 @@
+# Base anterior — registro histórico, fora do estudo reformulado
+
+> A partir de 2026-09-20, a base definida pelo usuário é Wolenski et al. (2020). Os valores e classes abaixo pertencem à população anterior e não devem alimentar o manuscrito nem as novas simulações. Ver `02_paper_engstruct.md` e `../paper/engstruct/PREENCHIMENTO.md`.
+
 # Dados das 40 espécies e números já calculados
 
-Fonte primária dos dados: **artigo experimental de terceiros, ainda não citado no texto**
-(`\tofill{[CITAR o artigo-fonte]}` em `paper/engstruct/02_materials.tex` e em
-`tabelas/tab_especies.tex`). Preencher isso é pendência bloqueante.
+> **Atualização após leitura de Wolenski et al. (2020), em 2026-09-20:** o PDF publica resistências características e DP/CV, mas sua população e propriedades não coincidem integralmente com a base atual. Os números abaixo permanecem provisórios; não atribuir toda a tabela ao artigo nem substituir seus característicos por 0,70 × média. Ver a análise em `notas/Wolenski2020.md`. A planilha de origem será buscada pelo usuário.
+
+
+Referência experimental identificada: **Wolenski et al. (2020)**, já citada no texto. A fonte das colunas da base atual ainda precisa ser reconciliada com a planilha original.
 
 Tabela completa das 40 espécies: `paper/engstruct/tabelas/tab_especies.tex`.
 

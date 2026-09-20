@@ -25,7 +25,7 @@ NIVEIS_RHO = [0.0, 2.5, 5.0, 10.0]
 
 
 def main() -> int:
-    saida = RAIZ / "robustez_casos.xlsx"
+    saida = RAIZ / "robustez_casos_materia.xlsx"
     if saida.exists():
         print(f"{saida.name} já existe — apague antes se quiser regerar.", file=sys.stderr)
         return 1

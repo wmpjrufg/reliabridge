@@ -123,7 +123,7 @@ As cargas delimitadas nas pontes brasileiras são definidas pela \textcite{nbr71
 os requisitos para o projeto de pontes rodoviárias. A norma apresenta dois modelos de trem-tipo para uso: o TB-450 e o TB-240. Porém, por se tratar de estradas vicinais,
 serão contemplados apenas os detalhes do TB-240.
 Esse trem-tipo é caracterizado por um veículo de 240 kN de peso total, constituído por seis rodas e três eixos.
-Cada eixo do veículo aplica uma carga de 40 kN, com espaçamentos de 1,5 m entre os eixos.
+Cada roda do veículo aplica uma carga de 40 kN, com espaçamentos de 1,5 m entre os eixos.
 A área de ocupação do veículo deve ser de 18,0 m², complementada por uma carga
 uniformemente distribuída de 4,0 kN/m² em seu entorno (multidão), conforme a Figura \ref{fig:trem}.
 
@@ -506,7 +506,6 @@ CIV = 1 + 1{,}06\left(\frac{20}{LIV + 50}\right), \qquad \text{para } 10{,}0 < L
 O $CIV$ multiplica diretamente os esforços solicitantes de origem variável.
 
 O momento fletor e o esforço cortante máximos devidos à carga permanente, assim como a flecha estática correspondente, são quantificados pelas premissas clássicas de estática para vigas biapoiadas, conforme as Equações~\eqref{eq:mgk} e~\eqref{eq:qgk}.
-Para a carga variável, adota-se o posicionamento mais desfavorável das rodas do trem-tipo sobre o vão, resultando no momento fletor $M_{qk}$ das Equações~\eqref{eq:mqk30} e~\eqref{eq:mqk45}, dependente da extensão do vão, e na força cortante $Q_{qk}$ da Equação~\eqref{eq:qqk}, sendo $a$ a distância entre o apoio e a roda mais próxima, com as grandezas auxiliares $c$ e $e$ definidas pelas Equações~\eqref{eq:cmomento} e~\eqref{eq:ecortante}.
 
 \begin{equation}
 M_{gk} = \frac{g\,L^2}{8}
@@ -517,6 +516,21 @@ M_{gk} = \frac{g\,L^2}{8}
 Q_{gk} = \frac{g\,L}{2}
 \label{eq:qgk}
 \end{equation}
+
+Para a carga variável, o trem-tipo é posicionado sobre o vão de modo a produzir o efeito mais desfavorável em cada verificação, e essa posição de pior caso é diferente para o momento fletor, para o cortante e para a reação de apoio \parencite{CALIL2006}.
+
+\subsubsection*{Momento fletor e flecha}
+
+Para o momento fletor e para a flecha, o veículo é centralizado no vão: a roda central posiciona-se exatamente no meio do vão, com as duas rodas externas a uma distância $a$ dela, conforme a Figura~\ref{fig:posicao_momento_flecha}. Essa é a posição do Teorema de Barré para um grupo de cargas igualmente espaçadas cujo resultante coincide com a roda central.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figuras/posicionamento_momento_flecha.png}
+    \caption{Posicionamento do veículo-tipo para momento fletor e flecha \parencite{CALIL2006}.}
+    \label{fig:posicao_momento_flecha}
+\end{figure}
+
+O momento fletor máximo sob a roda central resulta da Equação~\eqref{eq:mqk30}, válida para $3\,\text{m} < L \leq 6\,\text{m}$, faixa em que a parcela de multidão simétrica $c$ (Equação~\eqref{eq:cmomento}, aplicável apenas para $L > 6\,\text{m}$) ainda não existe, pois o próprio veículo, com as rodas externas a $2a = 3{,}0$~m uma da outra, já ocupa o vão quase por inteiro.
 
 \begin{equation}
 c = \frac{L - 4a}{2}, \qquad \text{para } L > 6\,\text{m}
@@ -533,8 +547,33 @@ M_{qk} = \left(\frac{3\,P\,L}{4} - P\,a\right) + \frac{q\,c^2}{2}, \qquad \text{
 \label{eq:mqk45}
 \end{equation}
 
+A mesma posição centralizada da Figura~\ref{fig:posicao_momento_flecha} é usada para a flecha (Seção~\ref{sec:formulacao}, Equações~\eqref{eq:flechag} e~\eqref{eq:flechaq}), com $b$ a distância entre o apoio e a roda externa mais próxima.
+
+\subsubsection*{Reação de apoio}
+
+Para a reação de apoio, o veículo é posicionado encostado no apoio de interesse, conforme a Figura~\ref{fig:posicao_reacao}, e não centralizado como no caso do momento: aproximar o grupo de cargas do apoio maximiza a parcela de cada roda que se transfere diretamente para ele.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figuras/posicionamento_reacao_apoio.png}
+    \caption{Posicionamento do veículo-tipo para reação de apoio \parencite{CALIL2006}.}
+    \label{fig:posicao_reacao}
+\end{figure}
+
+\subsubsection*{Esforço cortante}
+
+Para o cortante, a Figura~\ref{fig:posicao_cortante} mostra o veículo afastado do apoio por $2h$, sendo $h$ a altura (ou o diâmetro, para seção circular) da peça: a norma admite avaliar o cortante em uma seção afastada do apoio, e não na face do apoio propriamente dita.
+Essa posição fornece a grandeza auxiliar $e$ da Equação~\eqref{eq:ecortante} e o cortante de cálculo $Q_{qk}$ da Equação~\eqref{eq:qqk}.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figuras/posicionamento_cortante.png}
+    \caption{Posicionamento do veículo-tipo para cortante \parencite{CALIL2006}.}
+    \label{fig:posicao_cortante}
+\end{figure}
+
 \begin{equation}
-e = L - 3a - 2d
+e = L - 3a - 2h
 \label{eq:ecortante}
 \end{equation}
 
@@ -542,6 +581,8 @@ e = L - 3a - 2d
 Q_{qk} = \frac{P}{L}\,(6a + 3e) + \frac{q\,e^2}{2\,L}
 \label{eq:qqk}
 \end{equation}
+
+\tofill{[nota para revisão -- não integrada ao texto ainda]: a Equação~\eqref{eq:ecortante} pressupõe $L \geq 2h + 3a$, isto é, que sobra vão suficiente, depois de afastar o veículo por $2h$ do apoio, para acomodar as três rodas e ainda alguma parcela de multidão. Essa condição, folgada para vigas usuais, deixa de valer justamente na faixa de interesse deste trabalho: longarinas roliças de diâmetro grande frente ao vão (até $d \approx 1{,}5$~m para vãos de $3$ a $6$~m), em que $2h + 3a$ pode superar $L$. Quando isso ocorre, $e$ torna-se negativo e a Equação~\eqref{eq:qqk} deixa de representar o posicionamento de pior caso -- ela subestima $Q_{qk}$, tanto mais quanto maior o diâmetro, exatamente o padrão observado na varredura da Seção~\ref{sec:varredura}. A plataforma precisa passar a calcular $Q_{qk}$ pela envoltória do posicionamento do veículo (rodas nas posições reais, somando-se apenas as parcelas efetivamente apoiadas no vão), e não mais pela Equação~\eqref{eq:qqk} isoladamente; esta última permanece no texto como a formulação de referência da apostila e como caso de verificação da rotina numérica, válida quando $L \geq 2h+3a$.]}
 
 Os esforços de cálculo, $M_{sd}$ e $Q_{sd}$, seguem a combinação normativa de ações da ABNT NBR 8681 \parencite{NBR8681:2025}.
 Para o caso de uma ponte de vão único sujeita ao peso próprio e ao trem-tipo como única ação variável predominante, essa combinação se reduz à Equação~\eqref{eq:comb}, em que $\gamma_g$ e $\gamma_q$ são os coeficientes de ponderação das ações permanentes e variáveis, respectivamente, adotados conforme a Tabela~\ref{tab:ponderadores_acoes}.
@@ -614,10 +655,10 @@ b = \frac{L - 2a}{2}
 \end{equation}
 
 Essas parcelas correspondem às flechas instantâneas empregadas nas Equações~\eqref{eq:flecha_fin_G} e~\eqref{eq:flecha_fin_Q}, cuja soma fornece a flecha total $\delta_{\mathrm{fin}}$ já considerando a fluência.
-A verificação de flecha compara simultaneamente essa flecha total com o limite normativo $L/250$ e a flecha devida isoladamente à carga variável com o limite $L/360$, conforme a Equação~\eqref{eq:verflecha}.
+A verificação de flecha compara simultaneamente essa flecha total, na combinação quase permanente, com o limite normativo $L/350$ e a flecha devida isoladamente à carga variável, na combinação rara, com o limite $L/500$, ambos da Tabela 21 da \textcite{NBR7190-1:2022}, conforme a Equação~\eqref{eq:verflecha}.
 
 \begin{equation}
-\max\left(\frac{\delta_{\mathrm{fin}}}{L/250},\ \frac{\delta_{qk}}{L/360}\right) \leq 1
+\max\left(\frac{\delta_{\mathrm{fin}}}{L/350},\ \frac{\delta_{qk}}{L/500}\right) \leq 1
 \label{eq:verflecha}
 \end{equation}
 
@@ -625,7 +666,16 @@ A verificação de flecha compara simultaneamente essa flecha total com o limite
 
 A peça do tabuleiro é verificada isoladamente como uma viga biapoiada, vencendo o vão correspondente ao espaçamento entre longarinas ($esp_{long}$).
 O momento fletor devido à carga permanente sobre o tabuleiro, $M_{gk,tab}$, segue a mesma formulação da Equação~\eqref{eq:mgk}, substituindo-se $L$ por $esp_{long}$.
-O momento fletor devido à carga móvel concentrada de uma roda do trem-tipo, $M_{qk,tab}$, é obtido pela Equação~\eqref{eq:mqktab}, em que $a_r$ é o comprimento efetivo de contato da roda sobre o tabuleiro e $CIV_{tab}$ é o coeficiente de impacto vertical calculado de forma análoga às Equações~\eqref{eq:civ1} e~\eqref{eq:civ2}, considerando como vão de referência o espaçamento $esp_{long}$.
+O momento fletor devido à carga móvel concentrada de uma roda do trem-tipo é obtido posicionando uma única roda no meio desse vão local, conforme a Figura~\ref{fig:posicao_tabuleiro}, posição crítica para uma carga concentrada isolada sobre uma viga biapoiada.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.55\textwidth]{figuras/posicionamento_roda_tabuleiro.png}
+    \caption{Posicionamento crítico de uma roda sobre o tabuleiro \parencite{CALIL2006}.}
+    \label{fig:posicao_tabuleiro}
+\end{figure}
+
+$M_{qk,tab}$ é então obtido pela Equação~\eqref{eq:mqktab}, em que $a_r$ é o comprimento efetivo de contato da roda sobre o tabuleiro e $CIV_{tab}$ é o coeficiente de impacto vertical calculado de forma análoga às Equações~\eqref{eq:civ1} e~\eqref{eq:civ2}, considerando como vão de referência o espaçamento $esp_{long}$.
 
 \begin{equation}
 M_{qk,tab} = \frac{P}{4}\,\left(esp_{long} - a_r\right)\cdot CIV_{tab}

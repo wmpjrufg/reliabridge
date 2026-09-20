@@ -2,6 +2,11 @@
 
 \begin{tabbing}
 $A$\qquad\qquad \= Área da seção transversal (m\textsuperscript{2})\\
+$B$ \> Largura da pista (m), equivalente a $b_{w,\mathrm{pista}}$\\
+$\ell_t$ \> Vão de cálculo da prancha do tabuleiro (m)\\
+$b_{tr}$ \> Largura tributária de uma longarina (m)\\
+$a$ \> Espaçamento entre eixos do veículo (m)\\
+$P$ \> Carga característica por roda (kN)\\
 $b_w$ \> Largura da seção transversal da peça do tabuleiro (m)\\
 $b_{w,\mathrm{pista}}$ \> Largura da pista de rolamento (m)\\
 $CIV$ \> Coeficiente de impacto vertical\\
@@ -9,8 +14,10 @@ $d$ \> Diâmetro da longarina circular de madeira roliça (m)\\
 $esp_{long}$ \> Espaçamento entre longarinas (m)\\
 $esp_{tab}$ \> Espaçamento entre peças do tabuleiro (m)\\
 $E_{c0,med}$ \> Módulo de elasticidade médio na compressão paralela às fibras (MPa)\\
-$E_{M0}$ \> Módulo de elasticidade na flexão estática (MPa)\\
+$E_{M0}$ \> Módulo de flexão estimado na modelagem, não medido na fonte (MPa)\\
 $E_{0,\mathrm{m}}$ \> Módulo de elasticidade médio à flexão adotado no dimensionamento (MPa)\\
+$E_{t0}$ \> Módulo de elasticidade na tração paralela às fibras (MPa)\\
+$\alpha_E$ \> Fator adotado na relação $E_{M0}=\alpha_E E_{c0}$\\
 $f_{c0}$ \> Resistência à compressão paralela às fibras (MPa)\\
 $f_{m}$ \> Resistência à flexão (MPa)\\
 $f_{v0}$ \> Resistência ao cisalhamento paralelo às fibras (MPa)\\
@@ -26,9 +33,13 @@ $W$ \> Módulo de resistência da seção (m\textsuperscript{3})\\
 $\mathbf{x}$ \> Vetor de variáveis de projeto\\
 $\gamma_g,\ \gamma_q$ \> Coeficientes parciais das ações permanentes e variáveis\\
 $\gamma_{wf},\ \gamma_{wc}$ \> Coeficientes parciais do material (tensão normal e cisalhamento)\\
-$\delta_{\mathrm{tot}}$ \> Deslocamento vertical total no meio do vão (m)\\
-$\Delta V$ \> Erro de volume de madeira decorrente do enquadramento em classe (\%)\\
-$\varepsilon_E$ \> Erro de representação de rigidez, $E_{M0}/E_{c0,med}^{classe} - 1$ (\%)\\
+$\delta_{\mathrm{tot}}$ \> Flecha final quase permanente no meio do vão (m)\\
+$\Delta V$ \> Diferença relativa de volume entre os cenários C e R (\%)\\
+$\varepsilon_E$ \> Erro de rigidez, $100(E_{c0,c_s}/E_{c0,s}-1)$ (\%)\\
+$\varepsilon_\delta$ \> Erro relativo de previsão de deslocamento (\%)\\
+$U_{fin},U_Q$ \> Utilizações da flecha final quase permanente e variável\\
+$U_\delta^{C\rightarrow R}$ \> Utilização final do projeto C reavaliado com rigidez R\\
+C, R \> Cenários de rigidez de classe e experimental, respectivamente\\
 $\varphi$ \> Coeficiente de fluência\\
 $\psi_2$ \> Fator de combinação quase permanente\\
 $\rho$ \> Nível de perturbação das variáveis de projeto (robustez)\\

@@ -1383,7 +1383,7 @@ def textos_pre_sizing_l() -> dict:
                         "tabuleiro_t": "Tabuleiro",
                         "restricoes_packing": "Restrições de espaçamento das peças",
                         "botao_dados_down": "Baixar dados do pré-dimensionamento",
-                        "tag_y_fig": r'$\frac{\delta_{\text{total}}}{L/250}$',
+                        "tag_y_fig": r'$\frac{\delta_{\text{total}}}{L/350}$',
                         "tag_x_fig": "Volume de madeira ($m^3$)",
                     },
                 "en": {
@@ -1512,7 +1512,7 @@ def textos_pre_sizing_l() -> dict:
                     "tabuleiro_t": "Deck",
                     "restricoes_packing": "Element spacing constraints",
                     "botao_dados_down": "Download preliminary design data",
-                    "tag_y_fig": r'$\frac{\delta_{\text{total}}}{L/250}$',
+                    "tag_y_fig": r'$\frac{\delta_{\text{total}}}{L/350}$',
                     "tag_x_fig": "Timber volume ($m^3$)",
                 },
             }
@@ -1852,14 +1852,14 @@ def gerar_relatorio_final(projeto, res, geo_real):
         )
         + "Flecha total, considerando a fluência:\n\n"
         + eq(
-            r"\delta_{total} &= \delta_{gk} + \psi_{2}\,(1 + \varphi)\,\delta_{qk}",
-            r"&= " + f(delta_g, 6) + r" + " + f(projeto.psi2) + r" \cdot (1 + " + f(projeto.phi) + r") \cdot " + f(delta_q, 6),
+            r"\delta_{total} &= (1 + \varphi)\,(\delta_{gk} + \psi_{2}\,\delta_{qk})",
+            r"&= (1 + " + f(projeto.phi) + r") \cdot (" + f(delta_g, 6) + r" + " + f(projeto.psi2) + r" \cdot " + f(delta_q, 6) + r")",
             r"&= " + f(delta_total, 6) + r"\ \text{m}",
         )
         + "Limites normativos e funções de estado limite:\n\n"
         + eq(
-            r"\delta_{lim,total} &= \frac{L}{250} = \frac{" + f(l_m) + r"}{250} = " + f(delta_lim_total, 6) + r"\ \text{m}",
-            r"\delta_{lim,var} &= \frac{L}{360} = \frac{" + f(l_m) + r"}{360} = " + f(delta_lim_variavel, 6) + r"\ \text{m}",
+            r"\delta_{lim,total} &= \frac{L}{350} = \frac{" + f(l_m) + r"}{350} = " + f(delta_lim_total, 6) + r"\ \text{m}",
+            r"\delta_{lim,var} &= \frac{L}{500} = \frac{" + f(l_m) + r"}{500} = " + f(delta_lim_variavel, 6) + r"\ \text{m}",
         )
         + eq(
             r"g_{total} &= \frac{\delta_{total} - \delta_{lim,total}}{\delta_{lim,total}}"

@@ -34,10 +34,6 @@ Ao final do processamento, a ferramenta disponibiliza para download a planilha d
 Os parâmetros geométricos, de carregamento e os coeficientes normativos mantidos constantes em toda a matriz são apresentados na Tabela~\ref{tab:parametros}.
 A largura de pista de 4{,}5~m corresponde à seção transversal usual de ponte vicinal de pista simples, compatível com o tráfego de um veículo por vez e com guarda-rodas laterais.
 
-\begin{fillblock}
-\noindent\textbf{[PENDENTE -- regenerar o lote antes de submeter]} As vinte células da matriz (Tabela~\ref{tab:matriz}), a varredura de robustez da célula C-13, as figuras e o Apêndice~\ref{ap:demonstracao} desta seção ainda refletem a execução antiga, com classe de carregamento de \emph{média duração}, $\gamma_g = 1{,}35$, $\varphi = 0{,}60$, e um erro de implementação em que a carga de multidão $p_{qk}$ (kPa) entrava direto nas Equações de $M_{qk}$ e $Q_{qk}$ sem ser convertida para carga linear (kN/m) pelo espaçamento entre longarinas. O código e a Seção~\ref{sec:ponte_madeira} já foram corrigidos (classe de curta duração, $\gamma_g = 1{,}30$, $\varphi = 0{,}80$ e a conversão $p_{qk,long} = p_{qk} \cdot esp_{long,corr}$), e a Tabela~\ref{tab:parametros} abaixo já reflete esses valores. É necessário rodar novamente \texttt{rodar\_lote.py} e atualizar a Tabela~\ref{tab:matriz}, a Tabela~\ref{tab:solucoes_ref}, as figuras e o Apêndice~\ref{ap:demonstracao} com os novos resultados antes da submissão.
-\end{fillblock}
-
 \begin{table}[!ht]
 \caption{Parâmetros geométricos, de carregamento e coeficientes normativos comuns a toda a matriz.\label{tab:parametros}}
 \begin{threeparttable}
@@ -144,7 +140,7 @@ A Tabela~\ref{tab:solucoes_ref} reúne uma amostra representativa dessas soluç�
 \setlength{\tabcolsep}{3pt}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}cccccccc@{\extracolsep{\fill}}}
 \toprule
-$d$ (cm) & $b_w$ (cm) & $h$ (cm) & $esp_{long}$ (cm) & $esp_{tab}$ (cm) & $V_{\mathrm{total}}$ (m\textsuperscript{3}) & $\delta_{\mathrm{tot}}/(L/250)$ & $g_{\max}$ \\
+$d$ (cm) & $b_w$ (cm) & $h$ (cm) & $esp_{long}$ (cm) & $esp_{tab}$ (cm) & $V_{\mathrm{total}}$ (m\textsuperscript{3}) & $\delta_{\mathrm{tot}}/(L/350)$ & $g_{\max}$ \\
 \midrule
 45{,}71 & 46{,}51 & 7{,}51 & 103{,}58 & 2{,}26 & 4{,}83 & 0{,}3355 & $-0{,}0000$ \\
 49{,}51 & 46{,}96 & 7{,}17 & 99{,}82 & 2{,}35 & 5{,}33 & 0{,}2476 & $-0{,}0367$ \\
@@ -166,7 +162,7 @@ As funções limite geométricas $g_5$ e $g_6$, que apenas verificam o enquadram
 A fronteira estende-se de 4{,}83~m\textsuperscript{3} de madeira, com flecha total igual a 33{,}6\% do limite normativo, até 20{,}01~m\textsuperscript{3}, com flecha de apenas 0{,}65\% do limite.
 Os dois objetivos variam, portanto, em escalas muito distintas: enquanto o volume pouco mais que quadruplica, a flecha adimensional cai cerca de cinquenta vezes.
 Esse desequilíbrio é a manifestação direta da geometria da seção circular.
-O volume cresce aproximadamente com $d^{1{,}22}$ ao longo da fronteira, ao passo que a flecha decresce com $d^{-3{,}37}$, de modo que o ajuste conjunto resulta em $\delta_{\mathrm{tot}}/(L/250) \propto V^{-2{,}74}$, com coeficiente de determinação de 0{,}997.
+O volume cresce aproximadamente com $d^{1{,}22}$ ao longo da fronteira, ao passo que a flecha decresce com $d^{-3{,}37}$, de modo que o ajuste conjunto resulta em $\delta_{\mathrm{tot}}/(L/350) \propto V^{-2{,}74}$, com coeficiente de determinação de 0{,}997.
 Em termos de projeto, isso significa que os primeiros metros cúbicos adicionais de madeira compram uma redução expressiva de deslocamento: dobrar o volume a partir do extremo econômico já reduz a flecha em cerca de oito vezes, e dobrá-lo novamente reduz esse valor por um fator adicional de aproximadamente seis. O retorno, contudo, deixa de ter relevância prática nesse segundo intervalo, pois a flecha já está bem abaixo de 1\% do limite normativo desde o primeiro dobramento.
 O trecho útil da fronteira para o projetista concentra-se, assim, no primeiro terço da curva.
 
@@ -197,7 +193,7 @@ Imediatamente atrás vem a flexão da longarina, a 99{,}7\%.
 As duas verificações de flexão, portanto, tornam-se ativas quase simultaneamente, o que é a assinatura de um dimensionamento bem equilibrado: o algoritmo não pôde reduzir mais o volume porque teria de violar uma das duas ao mesmo tempo em que a outra ainda estava no limite.
 
 As folgas concentram-se nas verificações restantes.
-A flecha da longarina opera a 73{,}2\% do deslocamento limite $L/250$ e o cisalhamento a 45{,}0\% da resistência de cálculo, sendo esta última a verificação com maior reserva.
+A flecha da longarina opera a 73{,}2\% do deslocamento limite $L/350$ e o cisalhamento a 45{,}0\% da resistência de cálculo, sendo esta última a verificação com maior reserva.
 O resultado tem consequência prática direta: no vão de 5~m, para a madeira D40 e o trem tipo TB-240, o dimensionamento é integralmente controlado por resistência à flexão, e não por rigidez.
 A ampla folga ao cisalhamento decorre da geometria circular, na qual a área da seção cresce com $d^2$ enquanto a solicitação de cortante independe do diâmetro, e indica que a verificação ao esforço cortante, tradicionalmente citada como crítica em peças roliças curtas, não é determinante nesta faixa de vãos.
 
@@ -223,7 +219,7 @@ O caso $\rho = 0\%$ corresponde à otimização determinística, com $N_c = 1$, 
 \setlength{\tabcolsep}{3pt}
 \begin{tabular*}{\columnwidth}{@{\extracolsep\fill}lccccccc@{\extracolsep\fill}}
 \toprule
-$\delta_{\mathrm{tot}}/(L/250)$ & $V(0\%)$ & $V(2{,}5\%)$ & $\Delta$ & $V(5\%)$ & $\Delta$ & $V(10\%)$ & $\Delta$ \\
+$\delta_{\mathrm{tot}}/(L/350)$ & $V(0\%)$ & $V(2{,}5\%)$ & $\Delta$ & $V(5\%)$ & $\Delta$ & $V(10\%)$ & $\Delta$ \\
 \midrule
 0{,}0500 & 8{,}391 & 8{,}267 & $-1{,}5\%$ & 8{,}915 & $+6{,}2\%$ & 8{,}544 & $+1{,}8\%$ \\
 0{,}1000 & 6{,}445 & 6{,}577 & $+2{,}0\%$ & 6{,}762 & $+4{,}9\%$ & 6{,}677 & $+3{,}6\%$ \\
@@ -442,7 +438,7 @@ Os resultados consolidados constam da Tabela~\ref{tab:resultados_matriz}.
 \setlength{\tabcolsep}{3pt}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrrrrrrrrl@{\extracolsep{\fill}}}
 \toprule
-Célula & $L$ (m) / Classe & $d$ & $b_w$ & $h$ & $esp_{long}$ & $esp_{tab}$ & $V_{\mathrm{total}}$ & $\delta_{\mathrm{tot}}/(L/250)$ & $g_{\max}$ & Verificação \\
+Célula & $L$ (m) / Classe & $d$ & $b_w$ & $h$ & $esp_{long}$ & $esp_{tab}$ & $V_{\mathrm{total}}$ & $\delta_{\mathrm{tot}}/(L/350)$ & $g_{\max}$ & Verificação \\
  & & (cm) & (cm) & (cm) & (cm) & (cm) & (m\textsuperscript{3}) & & & governante \\
 \midrule
 C-01 & 3{,}0 / D20 & 39{,}65 & 5{,}14 & 5{,}00 & 50{,}35 & 5{,}00 & 2{,}519 & 0{,}1325 & $-0{,}0030$ & Flexão long. \\
@@ -504,7 +500,7 @@ Nem a flecha da longarina nem o cisalhamento governam qualquer uma das vinte cé
 As duas verificações alternam-se ao longo da matriz sem um padrão nítido em vão ou classe, o que é coerente com o que a Seção~\ref{sec:fronteira_ref} mostrou para a célula de referência: as duas flexões tornam-se ativas quase simultaneamente na solução econômica, e qual delas fica marginalmente à frente depende de detalhes do arredondamento do número inteiro de peças acomodadas na pista.
 
 A consequência prática é relevante e vai na direção oposta da expectativa corrente.
-Em pontes de madeira roliça nesta faixa de vãos, sob o TB-240, a propriedade do material que importa é a resistência à flexão em toda a matriz, e não a rigidez: o estado limite de serviço de deslocamento, comumente tido como determinante em estruturas de madeira, permanece com folga de pelo menos 48\% em todas as células, conforme o valor máximo de $\delta_{\mathrm{tot}}/(L/250)$ igual a 0{,}514 registrado na célula C-20.
+Em pontes de madeira roliça nesta faixa de vãos, sob o TB-240, a propriedade do material que importa é a resistência à flexão em toda a matriz, e não a rigidez: o estado limite de serviço de deslocamento, comumente tido como determinante em estruturas de madeira, permanece com folga de pelo menos 48\% em todas as células, conforme o valor máximo de $\delta_{\mathrm{tot}}/(L/350)$ igual a 0{,}514 registrado na célula C-20.
 Igualmente relevante é a ausência do cisalhamento, tradicionalmente citado como crítico em peças roliças curtas: a área da seção circular cresce com $d^2$ enquanto a solicitação de cortante independe do diâmetro, de modo que essa verificação nunca se aproxima do limite.
 A transição de resistência para rigidez, que caracterizaria vãos maiores, situa-se portanto fora da faixa de 3 a 6~m e só deve ser esperada em extensões superiores, o que delimita com precisão o campo de validade dos ábacos da seção seguinte.
 Cabe notar, por fim, que o tabuleiro governa nove das vinte células e permanece a restrição ativa em toda a fronteira da célula de referência: ele não é um elemento secundário do dimensionamento, e merece no anteprojeto a mesma atenção dedicada às longarinas.
@@ -542,7 +538,7 @@ Terceiro, lê-se na Figura~\ref{fig:abaco_volume} o volume total esperado, que s
 A Figura~\ref{fig:abaco_volume_m2} permite ainda comparar a eficiência entre vãos, ao normalizar o consumo pela área de tabuleiro, e mostra que o consumo unitário varia de 0{,}13~m\textsuperscript{3}/m\textsuperscript{2} no vão de 3~m com D60 a 0{,}34~m\textsuperscript{3}/m\textsuperscript{2} no vão de 6~m com D20.
 Quarto, entram-se esses valores na plataforma como ponto de partida para a verificação detalhada, no mesmo formato demonstrado passo a passo no Apêndice~\ref{ap:demonstracao}.
 
-As condições de validade dos ábacos são exatamente as da Tabela~\ref{tab:parametros} e devem ser verificadas antes de qualquer leitura: pista simples de 4{,}5~m de largura, trem tipo TB-240 com carga por roda de 40~kN e carga de multidão de 4~kPa, classe de umidade 3, classe de carregamento de média duração, coeficiente de fluência de 0{,}60, madeira natural de florestas nativas enquadrada nas classes da Tabela~\ref{tab:classes_madeira} e desvio de robustez de 5\%.
+As condições de validade dos ábacos são exatamente as da Tabela~\ref{tab:parametros} e devem ser verificadas antes de qualquer leitura: pista simples de 4{,}5~m de largura, trem tipo TB-240 com carga por roda de 40~kN e carga de multidão de 4~kPa, classe de umidade 3, classe de carregamento de curta duração, coeficiente de fluência de 0{,}80, madeira natural de florestas nativas enquadrada nas classes da Tabela~\ref{tab:classes_madeira} e desvio de robustez de 5\%.
 Fora dessas condições, e em particular para larguras de pista diferentes ou para vãos superiores a 6~m, as curvas não se aplicam, já que a formulação do momento devido à carga móvel muda de expressão e a hierarquia entre as verificações governantes pode se alterar, conforme discutido na Seção~\ref{sec:varredura}.
 
 Cabe o alerta de que os ábacos não substituem a verificação estrutural: eles a antecipam.

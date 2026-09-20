@@ -6,7 +6,7 @@ Uso:
     .venv\Scripts\python.exe rodar_lote.py --retomar        # continua de onde parou
     .venv\Scripts\python.exe rodar_lote.py --verificar       # só confere o cálculo, não roda nada
 
-Lê `batch_pre_sizing_casos.xlsx` e grava uma pasta por célula em
+Lê `batch_pre_sizing_casos_materia.xlsx` e grava uma pasta por célula em
 `simulacaoes_/lote_eixos_1p5/`, com os mesmos artefatos que a interface baixa.
 """
 
@@ -51,7 +51,7 @@ def verificar() -> int:
 def main(
     argv=None,
     *,
-    planilha_padrao: str = "batch_pre_sizing_casos.xlsx",
+    planilha_padrao: str = "batch_pre_sizing_casos_materia.xlsx",
     destino_padrao: str = "simulacaoes_/lote_eixos_1p5",
     descricao: str = __doc__,
 ) -> int:

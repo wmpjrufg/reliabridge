@@ -2,7 +2,7 @@
 
 **Data:** 2026-09-07
 **Arquivos:** `rodar_lote.py` (script), `batch_pre_sizing.py` (módulo),
-`batch_pre_sizing_casos.xlsx` (entrada)
+`batch_pre_sizing_casos_materia.xlsx` (entrada)
 
 Substitui o processo de rodar a interface Streamlit 20 vezes à mão e baixar o zip a cada
 vez. O script lê uma planilha com uma linha por simulação e grava os mesmos artefatos,
@@ -29,7 +29,7 @@ Pelo terminal, que é o caminho mais direto:
 **Tem de ser o Python do `.venv`** — o do sistema não tem UQpy, e o script recusa rodar
 com uma mensagem clara em vez de falhar no meio.
 
-A planilha `batch_pre_sizing_casos.xlsx` já vem com as 20 células e `a = 1,5 m`. A saída
+A planilha `batch_pre_sizing_casos_materia.xlsx` já vem com as 20 células e `a = 1,5 m`. A saída
 vai para `simulacaoes_/lote_eixos_1p5/`.
 
 **Nunca apontar o destino para `simulacaoes_/simulacao_C_XX/`** — ver a seção de riscos.

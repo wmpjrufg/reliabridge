@@ -91,7 +91,7 @@ A partir dos espaçamentos e da largura da pista, o número de peças de cada fa
 
 As duas funções objetivo são ambas de minimização.
 A primeira, $f_1$, é o volume total de madeira consumido pela superestrutura, conforme a Equação~\eqref{eq:f1}, em que $n_{long}$ e $n_{tab}$ são as quantidades de longarinas e de peças do tabuleiro efetivamente acomodadas, $A_{long}$ e $A_{tab}$ as respectivas áreas de seção transversal e $b_{w,\mathrm{pista}}$ a largura da pista.
-A segunda, $f_2$, é a utilização do limite de serviço de deslocamento da longarina, definida na Equação~\eqref{eq:f2} como a razão entre a flecha total, já incluída a parcela de fluência, e o deslocamento limite normativo $L/250$.
+A segunda, $f_2$, é a utilização do limite de serviço de deslocamento da longarina, definida na Equação~\eqref{eq:f2} como a razão entre a flecha total, já incluída a parcela de fluência, e o deslocamento limite normativo $L/350$ (combinação quase permanente, Tabela 21 da NBR 7190-1:2022).
 Minimizar $f_2$ equivale a maximizar o desempenho em serviço, e as duas funções são antagônicas: reduzir o volume de madeira aumenta necessariamente a flecha relativa.
 
 \begin{equation}
@@ -100,7 +100,7 @@ f_1(\mathbf{x}) = V_{\mathrm{total}} = n_{long}\,A_{long}\,L + n_{tab}\,A_{tab}\
 \end{equation}
 
 \begin{equation}
-f_2(\mathbf{x}) = \frac{\delta_{\mathrm{tot}}}{L/250}
+f_2(\mathbf{x}) = \frac{\delta_{\mathrm{tot}}}{L/350}
 \label{eq:f2}
 \end{equation}
 

@@ -1,50 +1,80 @@
-\section{População de espécies e enquadramento em classe}\label{sec:materials}
+\section{Base experimental e representação por classes}\label{sec:materials}
+
+\subsection{Origem e alcance dos dados}\label{sec:dados}
+
+A base experimental adotada é exclusivamente o conjunto de 40 espécies nativas de folhosas de \textcite{Wolenski2020}. Os ensaios foram realizados no Laboratório de Madeiras e de Estruturas de Madeira (LaMEM), da Escola de Engenharia de São Carlos, Universidade de São Paulo, seguindo os procedimentos da NBR 7190:1997, Anexo B. A fonte informa 12 corpos de prova por espécie para cada modalidade, compressão e tração paralelas às fibras, totalizando 960 determinações experimentais. Resistências e módulos foram corrigidos para 12\% de umidade.
+
+As Tabelas 3 a 6 da fonte apresentam médias, desvios-padrão, coeficientes de variação e intervalos de confiança de $f_{c0}$, $f_{t0}$, $E_{c0}$ e $E_{t0}$. A Tabela 7 apresenta as resistências características e as classes históricas atribuídas pelos autores. Os resultados individuais ordenados e as covariâncias entre propriedades não são publicados. A Tabela~\ref{tab:base_fonte} delimita quais dados podem ser utilizados diretamente e quais exigem hipóteses adicionais.
+
+\begin{table}[!ht]
+\centering
+\caption{Dados disponíveis e limites da base de \textcite{Wolenski2020}.}\label{tab:base_fonte}
+\begin{tabular}{p{0.24\textwidth}p{0.28\textwidth}p{0.36\textwidth}}
+\toprule
+Informação & Localização na fonte & Uso nesta investigação \\
+\midrule
+Identificação de 40 espécies & Tabela 1 & Correspondência por ID e nome científico \\
+$f_{c0,m}$ e $f_{t0,m}$; DP e CV & Tabelas 3 e 4 & Comparação com estimativas simplificadas \\
+$E_{c0}$ e $E_{t0}$; DP e CV & Tabelas 5 e 6 & Análise de rigidez na modalidade correspondente \\
+$f_{c0,k}$ e $f_{t0,k}$; classe publicada & Tabela 7 & Entrada característica e auditoria de classe \\
+Classes C20, C30, C40 e C60 & Tabela 2 & Referência histórica da classificação \\
+$E_{M0}$, $f_{m,k}$, $f_{v0,k}$ e densidade por espécie & Não disponibilizados & Hipóteses de modelagem explicitadas separadamente \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A população segue os identificadores e nomes científicos da fonte. Semelhança de nomes populares não basta para combinar amostras. A tabela de espécies utilizada em versões anteriores deste manuscrito foi retirada da análise, pois continha uma população e propriedades distintas, inclusive ensaios de flexão e cisalhamento não publicados nessa referência.
+
+\subsection{Resistência característica e classificação na fonte}\label{sec:enquadramento}
+
+O parâmetro de classificação utilizado pelos autores é a resistência característica à compressão paralela às fibras, $f_{c0,k}$, associada ao percentil de 5\% da resistência. O procedimento descrito na fonte ordena os resultados individuais de forma crescente e considera
+\begin{equation}
+\widehat f_k=1{,}10\left[\frac{2}{n/2-1}\sum_{i=1}^{n/2-1}f_{(i)}-f_{(n/2)}\right],
+\qquad f_k=\max\{f_{(1)},\;0{,}70\overline f,\;\widehat f_k\},
+\label{eq:caracteristico_fonte}
+\end{equation}
+com $n=12$, $f_{(i)}$ representando os resultados ordenados e $\overline f$ a média amostral. Portanto, $0{,}70\overline f$ é um dos limites desse procedimento, não um substituto automático dos valores característicos já publicados. Nesta investigação, a entrada experimental de referência é o valor da Tabela 7 da fonte. A aproximação $f_{c0,k}^{(0,70)}=0{,}70f_{c0,m}$ é utilizada apenas como cenário de sensibilidade para avaliar o efeito da conversão sobre o enquadramento.
+
+A Tabela 2 de \textcite{Wolenski2020} reproduz quatro classes da NBR 7190:1997, com os valores apresentados na Tabela~\ref{tab:classes_fonte}. A reprodução desse sistema constitui a etapa histórica de auditoria; não equivale à verificação de conformidade de um projeto com uma edição normativa atual.
+
+\begin{table}[!ht]
+\centering
+\caption{Limiares e rigidez das classes históricas reproduzidos da Tabela 2 de \textcite{Wolenski2020}.}\label{tab:classes_fonte}
+\begin{tabular}{lrr}
+\toprule
+Classe & $f_{c0,k}$ (MPa) & $E_{c0}$ (MPa) \\
+\midrule
+C20 & 20 & 9\,500 \\
+C30 & 30 & 14\,500 \\
+C40 & 40 & 19\,500 \\
+C60 & 60 & 24\,500 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Para tornar a auditoria reproduzível, o enquadramento recalculado é definido pela maior classe cujo limiar não supera a resistência característica informada:
+\begin{equation}
+c_s=\max\{c\in\mathcal C:f_{c0,k,s}\geq c\},
+\qquad \mathcal C=\{20,30,40,60\},
+\label{eq:classe_especie}
+\end{equation}
+em que $s$ identifica a espécie. Valores inferiores ao menor limiar ficam sem enquadramento nesse conjunto. Preservam-se separadamente a classe publicada e a classe recalculada, sem correções silenciosas da fonte.
+
+A Tabela 7 contém aparentes divergências frente aos limiares da Tabela 2: mandioqueira, oiticica-amarela e quina-rosa aparecem como C60 com 53,70, 58,00 e 55,00~MPa, respectivamente; piolho aparece como C40 com 39,80~MPa. Essas ocorrências serão registradas na auditoria e, quando possível, esclarecidas com os autores. Um exemplo da diferença entre conversão e valor publicado é o goiabão: $f_{c0,m}=48{,}46$~MPa e $f_{c0,k}=43{,}10$~MPa; a aproximação $0{,}70f_{c0,m}=33{,}92$~MPa o colocaria em C30 pela Equação~\ref{eq:classe_especie}, enquanto o valor publicado o coloca em C40.
 
 \begin{fillblock}
-\noindent\textbf{[VERIFICAR ANTES DE PUBLICAR]} Todos os números desta seção foram calculados a partir dos valores \emph{médios} reportados na fonte experimental, convertidos em valores característicos por $f_k = 0{,}70\,f_m$ para compressão e flexão e $f_k = 0{,}54\,f_m$ para cisalhamento, conforme a ABNT NBR 7190-1:2022. O enquadramento em classe -- e portanto a composição de cada bin -- depende dessa conversão. Se o artigo-fonte já reportar valores característicos, ou adotar outro fator, refazer o cálculo e atualizar as Tabelas~\ref{tab:especies},~\ref{tab:dispersao} e~\ref{tab:discordancia} e todos os percentuais citados no texto. A conclusão sobre a dispersão intraclasse é robusta à escolha do fator, mas a lista nominal de espécies por classe não é.
+\noindent\textbf{[ETAPA NORMATIVA PENDENTE]} Para o estudo de projeto contemporâneo, conferir a edição, a parte e a tabela normativa aplicáveis ao produto e definir o conjunto de classes correspondente. Um reenquadramento D20--D60 deve ser documentado como nova operação, sem transferir os módulos históricos C20--C60 nem apenas trocar a letra da classe. Concluir essa verificação antes das simulações estruturais.
 \end{fillblock}
 
-\subsection{Dados experimentais}\label{sec:dados}
+\subsection{Representação da rigidez e propriedades complementares}\label{sec:representacao}
 
-As propriedades mecânicas empregadas neste estudo foram medidas em 40 espécies de madeira tropical brasileira e estão reportadas em \tofill{[CITAR o artigo-fonte]}. As espécies cobrem uma ampla faixa do espectro de folhosas, com massa específica aparente a 12\% de umidade variando de 512 a 1163~kg/m\textsuperscript{3} e resistência à compressão paralela às fibras de 33 a 94~MPa, sendo portanto representativas do material efetivamente disponível para construção nas regiões Norte e Centro-Oeste do Brasil. A Tabela~\ref{tab:especies} lista as espécies, as propriedades relevantes para a presente análise e a classe de resistência resultante.
+A comparação diretamente sustentada pela fonte é entre $E_{c0,s}$ experimental e $E_{c0,c_s}$ da classe. Define-se o erro assinado de representação por
+\begin{equation}
+\varepsilon_{E,s}=\left(\frac{E_{c0,c_s}}{E_{c0,s}}-1\right)100\%.
+\label{eq:erro_E}
+\end{equation}
+Valores positivos indicam que a classe atribui rigidez superior à média experimental. Essa diferença é um indicador de representação, não uma demonstração isolada de descumprimento de um limite estrutural. Serão reportados erros individuais, média do erro assinado, média do erro absoluto e dispersão por classe, com o número de espécies de cada grupo.
 
-\begin{fillblock}
-\noindent\textbf{[A PREENCHER]} Descrever sucintamente o programa experimental da fonte: norma de ensaio adotada, número de corpos de prova por espécie, procedência do material e teor de umidade de referência. Registrar também se a fonte reporta desvio-padrão por espécie; em caso positivo, incluir uma coluna adicional na Tabela~\ref{tab:especies} e discutir a variabilidade intraespécie na Seção~\ref{sec:limitacoes}, pois um revisor certamente perguntará por ela.
-\end{fillblock}
+O módulo de compressão não será identificado como módulo medido à flexão. Se o modelo exigir $E_{M0}$, será introduzida uma relação explícita $E_{M0}=\alpha_E E_{c0}$, com origem e domínio de aplicação a verificar e sensibilidade a $\alpha_E$. Uma mesma relação deverá ser aplicada aos dois cenários na comparação destinada a isolar a representação por classe. Os dados de $E_{t0}$ permitem análises complementares entre modalidades, mas não fornecem diretamente $E_{M0}$.
 
-\input{tabelas/tab_especies}
-
-\subsection{Regra de enquadramento em classe}\label{sec:enquadramento}
-
-A ABNT NBR 7190-3 define cinco classes de resistência para folhosas de florestas nativas, D20 a D60, cada uma identificada por uma resistência característica à compressão paralela às fibras e portadora de um módulo de elasticidade médio tabelado, uma resistência ao cisalhamento e uma massa específica de referência. Uma espécie é atribuída à classe mais alta cuja resistência característica à compressão não exceda a sua própria. As propriedades tabeladas da classe atribuída são as que o projetista é obrigado a adotar, e estão reproduzidas na Tabela~\ref{tab:classes_madeira} da Seção~\ref{sec:methodology}.
-
-Dois aspectos dessa regra importam para o que se segue. Primeiro, a propriedade indexadora é uma resistência, de modo que a atribuição não carrega informação alguma sobre quão rígida a espécie de fato é. Segundo, o módulo de elasticidade tabelado cresce de 14 a 21\% de uma classe para a seguinte, o que estabelece a resolução do sistema em rigidez: uma espécie só pode ser representada dentro dessa granularidade, mesmo no melhor caso.
-
-\subsection{Quão bem a classe representa a espécie?}\label{sec:representacao}
-
-A Tabela~\ref{tab:dispersao} compara, para cada classe, a amplitude do módulo de elasticidade à flexão medido entre as espécies a ela atribuídas contra o passo que separa classes vizinhas.
-
-\input{tabelas/tab_dispersao}
-
-O resultado é inequívoco. Nas classes D30 e D40, que juntas concentram 23 das 40 espécies, a rigidez medida dispersa 70 e 74\% respectivamente, enquanto o passo entre classes vizinhas é de apenas 14 a 21\%. A dispersão intraclasse, portanto, supera a resolução do sistema de classes por um fator de aproximadamente quatro. Subir uma espécie de classe altera sua rigidez tabelada em cerca de um quinto, ao passo que duas espécies que compartilham a mesma classe podem diferir em rigidez real em mais de dois terços.
-
-A Tabela~\ref{tab:discordancia} expressa o mesmo ponto espécie a espécie, comparando a classe atribuída pela resistência característica à compressão contra a classe que o módulo de elasticidade medido implicaria.
-
-\input{tabelas/tab_discordancia}
-
-Vinte e três das 40 espécies, isto é 58\% da população, caem em classe diferente sob os dois critérios, e quatro espécies diferem em duas classes inteiras. Os casos extremos são instrutivos. O angelim-pedra (\textit{Hymenolobium petraeum}) é atribuído à classe D40 por sua resistência característica à compressão de 40,6~MPa, mas seu módulo de elasticidade à flexão medido, de 10\,755~MPa, situa-se abaixo do valor tabelado para a classe D30. O goiabão (\textit{Planchonella pachycarpa}) é atribuído à classe D30 por uma resistência característica de 34,3~MPa, e no entanto seu módulo medido de 18\,367~MPa excede o valor tabelado para a classe D50. A norma, portanto, classifica o angelim-pedra uma classe acima do goiabão, enquanto em rigidez o goiabão está três níveis de classe acima do angelim-pedra, e é 71\% mais rígido em termos absolutos.
-
-A direção do erro não é uniforme. Quatorze espécies, 35\% da população, são menos rígidas do que a classe prescreve; para essas, o projeto baseado em classe subestima o deslocamento e é, portanto, contrário à segurança no estado limite de serviço. As 26 espécies restantes são mais rígidas do que o prescrito, e para elas o enquadramento apenas desperdiça material.
-
-Vale contrastar isso com o erro correspondente em resistência. Pelo item 6.3.4 da \textcite{NBR7190-1:2022}, o dimensionamento por classe (Tabela 2 da norma) toma $f_{m,d} = f_{c0,d}$, o que equivale a $f_{m,k} = f_{c0,k}$: a classe não atribui à espécie nenhuma resistência à flexão além da sua própria resistência característica à compressão tabelada. Como a resistência à flexão medida é tipicamente superior à resistência à compressão paralela às fibras para madeiras folhosas, essa simplificação normativa subestima sistematicamente a resistência à flexão das espécies, de \tofill{2} a \tofill{92}\% e sempre a favor da segurança. O mecanismo das classes protege, assim, generosamente a resistência e mal a rigidez, o que é o inverso do que o projetista razoavelmente suporia.
-
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[width=0.75\textwidth]{figuras/E_vs_fc0.png}
-    \caption{Módulo de elasticidade à flexão medido contra resistência característica à compressão para as 40 espécies, com os limites das classes de resistência e o módulo tabelado de cada classe sobrepostos.}
-    \label{fig:E_vs_fc0}
-\end{figure}
-
-\begin{fillblock}
-\noindent\textbf{[A PREENCHER -- figura]} Gerar a Figura~\ref{fig:E_vs_fc0} como dispersão de $E_{M0}$ contra $f_{c0,k}$, um ponto por espécie, com linhas verticais nos limites de classe (20, 30, 40, 50 e 60~MPa) e segmentos horizontais no valor de $E$ tabelado de cada classe. A distância vertical entre cada ponto e o segmento da sua faixa é o erro de representação de rigidez daquela espécie, e a figura torna esse erro imediatamente visível. Anotar no gráfico as duas espécies extremas discutidas no texto. Reportar no eixo ou na legenda o coeficiente de determinação da regressão $E_{M0}$ contra $f_{c0}$, que vale \tofill{0{,}70}.
-\end{fillblock}
+Resistência à flexão, resistência ao cisalhamento e massa específica por espécie não são disponibilizadas na fonte. No experimento principal de substituição exclusiva da rigidez, suas hipóteses serão comuns aos dois cenários de cada par espécie--vão. Assim, o cenário com rigidez experimental não será apresentado como uma caracterização experimental completa da madeira. Comparações que também alterem resistências ou densidade serão identificadas como cenários adicionais dependentes de hipóteses.

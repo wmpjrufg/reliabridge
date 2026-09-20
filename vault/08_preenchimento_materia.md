@@ -150,9 +150,9 @@ entre re-rodar ou registrar a diferença.
 ### §4.3.3, custo da robustez — FECHADO em 2026-09-08
 
 Reotimizada só a C-13, para ρ ∈ {0 %, 2,5 %, 5 %, 10 %} (D-06). Scripts:
-`gerar_casos_robustez.py` monta `robustez_casos.xlsx` (4 linhas, a partir do `beam_data`
+`gerar_casos_robustez_materia.py` monta `robustez_casos_materia.xlsx` (4 linhas, a partir do `beam_data`
 já corrigido da C-13 em `lote_eixos_1p5/`, variando só "Percentual de robustez");
-`rodar_lote_robustez.py` roda e grava em `simulacaoes_/custo_robustez_C13/`. Sobol
+`rodar_lote_robustez_materia.py` roda e grava em `simulacaoes_/custo_robustez_C13/`. Sobol
 desligada (a seção não pede). `gerar_figuras_materia.py` ganhou `figura_custo_robustez()`.
 
 **Tempos** (sequenciais, mesma máquina, sem Sobol): 57 s (ρ=0%), 82 s (ρ=2,5%),

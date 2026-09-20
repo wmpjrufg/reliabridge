@@ -1,106 +1,62 @@
-# Paper 2 — Engineering Structures — guia de preenchimento
+# Engineering Structures — plano reformulado
 
-**Alvo:** Engineering Structures (Elsevier). Escolhido sobre o Journal of Bridge Engineering
-porque o JBE cobra profundidade de modelagem de ponte — elementos finitos, ligações, ensaio
-de campo — que este trabalho não tem, enquanto o ES publica rotineiramente estudos
-paramétricos com formulação analítica desde que o achado seja real. O ES também tem fator
-de impacto maior. Conferir os números atuais antes de decidir em definitivo.
+**Decisão de 2026-09-20:** adotar como base experimental o artigo de Wolenski, Dias, Peixoto, Christoforo e Lahr (2020), DOI 10.1590/s1678-86212020000100373. A antiga tabela de 40 espécies não integra esta versão da investigação.
 
-**A tese, em uma frase:** classes de resistência são atribuídas por resistência, mas pontes
-vicinais de madeira roliça são governadas por rigidez, e nas madeiras tropicais essas duas
-propriedades se correlacionam mal o bastante para que o enquadramento erre — inclusive
-contra a segurança.
+**Título:** Efeito da representação por classes de resistência no desempenho e no consumo de material de pontes de madeira tropical.
 
-## Os números que já estão no texto
+**Pergunta:** quanto a substituição da rigidez experimental pela rigidez de classe altera a previsão de deslocamentos e o volume de madeira, e em quais condições o projeto por classe atende ao limite de serviço quando reavaliado com a rigidez experimental?
 
-Calculados a partir dos dados das 40 espécies, com conversão média → característico de
-0,70 (compressão e flexão) e 0,54 (cisalhamento):
+O trabalho não pressupõe inadequação das classes nem migração do estado limite governante. A otimização é instrumento de comparação. A versão de trabalho permanece em português; o título da referência experimental está em inglês, como solicitado.
 
-| Achado | Valor |
-|---|---|
-| R² de E_M0 contra f_c0 | 0,70 |
-| Dispersão intraclasse de E_M0 em D30 / D40 | 70 % / 74 % |
-| Passo de E entre classes vizinhas | 14 – 21 % |
-| **Razão dispersão / passo** | **≈ 4×** |
-| Espécies que mudam de classe se enquadradas por rigidez | 23 de 40 (58 %) |
-| Espécies **menos rígidas** que a própria classe | 14 de 40 (35 %) |
-| Pior caso contra a segurança | Angelim-pedra, −25,8 % |
-| Pior caso de desperdício | Goiabão, +53,1 % |
+## Base e limites
 
-O par que resume o artigo: **Angelim-pedra** é D40 e tem E = 10 755 MPa (abaixo do valor
-tabelado de D30); **Goiabão** é D30 e tem E = 18 367 MPa (acima do de D50). A norma diz que
-o Angelim-pedra é o material superior; na rigidez real o Goiabão é 71 % mais rígido.
+A fonte fornece 40 espécies, médias e DP/CV de compressão e tração, módulos E_c0 e E_t0, resistências características e classes históricas C20/C30/C40/C60. Não fornece as propriedades de flexão, cisalhamento e densidade por espécie exigidas pelo modelo de ponte. E_c0 não deve ser renomeado E_M0.
 
-## ⚠️ Antes de qualquer coisa: validar a conversão
+As tabelas antigas `tab_especies.tex`, `tab_dispersao.tex` e `tab_discordancia.tex` estão preservadas apenas como histórico e não são incluídas no manuscrito. Os percentuais 58%, 35%, as dispersões 70–74% e o exemplo angelim-pedra/goiabão foram retirados da argumentação. Não reutilizar os casos antigos nem executar `gerar_casos_engstruct.py` como se implementasse o novo protocolo: ele depende da antiga tabela e precisa de adaptação futura.
 
-Todos esses números dependem do fator média → característico. **Confira contra o artigo-fonte.**
-Se ele já reportar valores característicos, use os originais e regenere as três tabelas
-de `tabelas/`. A conclusão sobre dispersão intraclasse é robusta ao fator; a lista nominal
-de qual espécie caiu em qual classe **não é**.
+## Sequência de execução
 
-O script que gerou as tabelas está em `../../` (histórico da sessão) e pode ser refeito em
-poucos minutos: são três tabelas derivadas de uma planilha de 40 linhas.
+1. Transcrever as Tabelas 1 e 3–7 do PDF para uma base auditável, com ID, nome científico, propriedade, unidade e origem. Conferir visualmente valores e estatísticas; preservar possíveis inconsistências da publicação.
+2. Auditar a classificação histórica: conservar classe publicada e recalcular pelo maior limiar não superior a f_c0,k. Comparar separadamente com a classe obtida por 0,70 × f_c0,m. Não substituir o característico publicado pela conversão simplificada.
+3. Definir o sistema de classes do estudo estrutural contemporâneo, conferindo a edição normativa e a aplicabilidade a madeira roliça. Não misturar os módulos históricos C com classes D. A tabela histórica do manuscrito serve à auditoria da fonte.
+4. Definir e justificar alpha_E, resistências de flexão/cisalhamento e densidade. Marcar cada entrada como medida, estimada ou adotada. No experimento principal, somente a rigidez muda dentro de cada par.
+5. Comparar uma mesma geometria e carregamento com rigidez R (experimental) e C (classe). Conferir a razão inversa entre deslocamento e módulo nas condições do modelo elástico aplicável.
+6. Redimensionar com os mesmos critérios e múltiplas sementes pareadas. Extrair a solução viável de menor volume de cada cenário. Informar tolerâncias e dispersão numérica; a mesma semente não elimina erro de otimização.
+7. Reavaliar a geometria do projeto C com rigidez R. Apresentar utilização de serviço e verificações complementares. Delta V negativo não implica, por si só, violação de limites.
+8. Comparar os vãos propostos de 3, 5, 8 e 10 m, identificar restrições ativas e testar sensibilidade às hipóteses complementares. Não exigir transição entre estados limites.
+9. Preencher resultados, resumo e conclusões somente com análises efetivamente realizadas. A extensão para variabilidade intraespécie é posterior e depende de hipóteses explícitas de distribuição e dependência.
 
-## Ordem de execução
+## Figuras prioritárias
 
-1. **Validar a conversão** contra o artigo-fonte (acima).
-2. **Gerar a Figura `E_vs_fc0.png`** — dispersão de E contra f_c0k com os degraus de classe
-   sobrepostos. É rápida e já conta metade da história.
-3. **Confirmar a migração do estado limite governante** (§4.1, Tabela `tab:governante`).
-   Este é o passo que decide o formato do artigo:
-   - se a flecha passar a governar conforme o vão cresce → o artigo é sobre a dependência
-     do vão, como está escrito;
-   - se a flecha governar em toda a faixa → reescrever em torno da magnitude do erro;
-   - se a flecha nunca governar → o efeito estrutural é pequeno, e é preciso reescrever
-     introdução e resumo em torno de um resultado negativo.
+- Auditoria: classe publicada, recalculada e obtida pela conversão simplificada.
+- Rigidez experimental versus classe, com erros por espécie e dispersão por classe.
+- Flecha prevista C versus R sob geometria fixa.
+- Delta V versus utilização C→R, por vão, com referência U=1.
+- Restrições ativas e sensibilidade às hipóteses.
 
-   **Não pule esta etapa nem assuma o desfecho.** As instruções para os três casos estão
-   no bloco vermelho da §4.1.
-4. **Varredura de espécies** (§4.2): 40 espécies × 4 vãos × 2 bases de propriedades =
-   320 rodadas. Cronometre uma antes. Se for inviável, reduza para os vãos de 3 e 10 m,
-   que são os que sustentam o argumento.
-5. **Figura `continuo_vs_degraus.png`** — a figura central, um painel por vão.
-6. **Reenquadramento na EN 338** (§4.3). Custa uma planilha e não toca no modelo de cálculo.
-   Vale muito: é o que generaliza o achado para além da norma brasileira.
-7. **Caso detalhado** (§4.4) e **limitações** (§4.5).
-8. **Conclusões** (§5).
+A comparação com EN 338 não faz parte do núcleo atual: requer dados e critérios próprios, indisponíveis apenas com esse PDF. A campanha antiga de 320 rodadas não descreve mais o custo computacional do protocolo com controles e repetições.
 
-## Regra de redação que não pode ser violada
+## Validação e apresentação
 
-**O Engineering Structures não publica apresentação de software.** Se o artigo for lido como
-"desenvolvemos uma plataforma e aplicamos NSGA-II", é rejeitado por novidade incremental.
+Conferir manualmente um caso, demonstrar viabilidade e convergência e disponibilizar scripts e dados derivados. Distinguir frequência de excedência no conjunto analisado de probabilidade de falha. A caracterização laboratorial não valida automaticamente peças de dimensões estruturais ou pontes construídas.
 
-A plataforma tem de ocupar no máximo meia página da metodologia, citando o artigo da
-Matéria para os detalhes. A abertura é o problema do enquadramento, não a ferramenta.
-Há um lembrete disso dentro de `03_methodology.tex` — não o apague sem ler.
+Antes da submissão: completar a literatura, concluir a verificação normativa, revisar autoria/contribuições, traduzir para inglês, adequar o formato e remover todos os marcadores de pendência.
 
-## Pendências de coautoria e dados
+## Transferência da Matéria — 2026-09-20
 
-`title_authors.tex` e `declarations.tex` têm blocos vermelhos sobre isto, e é assunto a
-resolver **antes** de escrever, não depois: os dados experimentais das 40 espécies são de
-terceiros. Alinhe coautoria ou forma de citação com os autores originais. O André Luís
-Christoforo é coautor do grupo e trabalha exatamente com caracterização de madeiras
-brasileiras — é o caminho natural para essa conversa, e também para descobrir se existem
-desvios-padrão por espécie que não foram para a tabela publicada.
+Incorporados sem resultados: enquadramento na literatura, propriedades geométricas, acomodação inteira de peças, volume, configuração TB-240, ações lineares, esforços e flechas de referência, resistência de cálculo, fluência, seis restrições, agregação robusta e operadores do NSGA-II. A formulação está em `03a_structural_model.tex` e `03b_optimization_protocol.tex`, incluídos pela metodologia.
 
-## Extensão futura, fora do caminho crítico
+Melhorias: distinguir espaçamento livre/eixos/largura tributária; chamar as expressões simétricas de respostas de uma configuração, não de envoltórias gerais; separar serviço quase permanente e variável; diferenciar volume nominal e objetivo médio; avaliar descendentes antes da seleção; propor dez sementes pareadas; preservar configuração discreta na verificação de uma solução construída. População 50, 150 gerações, 30 realizações e 5% são configurações iniciais do piloto, não parâmetros já validados para a nova base.
 
-Com os desvios-padrão por espécie, ou com CoV do JCSS Probabilistic Model Code, dá para
-calcular o índice de confiabilidade β de cada espécie dentro da sua classe e mostrar que
-a classe produz pontes com probabilidades de falha diferentes. Isso é um **terceiro** artigo,
-e é ele — não este — que teria chance real no Journal of Bridge Engineering.
+A auditoria de leitura do código identificou pendências antes das rodadas:
 
-Detalhe metodológico útil: usar **um mesmo CoV para todas as espécies** é preferível a usar
-CoVs individuais, porque isola o efeito do enquadramento. O espalhamento de β passa a ser
-atribuível puramente ao erro da classe. O fator 0,70 da NBR, aliás, implica CoV ≈ 22 % se
-o característico for o percentil 5 % de uma lognormal.
+- `restringir_espaco` define espaçamento livre; o avaliador usa esse valor como largura tributária e vão de tabuleiro. Conferir equilíbrio de cargas, bordas e posição dos apoios.
+- A expressão de cortante contém `e = L - 3*a - 2*d`, negativo para alguns vãos curtos. Conferir domínio e envoltória por posições reais das rodas.
+- A flecha variável da rotina atual só inclui as rodas estáticas. Definir a composição completa de ELS, multidão e impacto segundo a combinação aplicável.
+- A fronteira de CIV em L = 10 m difere entre a redação da Matéria e a rotina lida.
+- A expressão de momento de roda no tabuleiro exige conferir contato e domínio; não pode produzir momento negativo por vão menor que o contato e seguir como verificação física.
+- O artigo herda limites L/250 e L/360; verificar a justificativa normativa de cada combinação antes de tratá-los como conformidade final.
 
-## Antes de submeter
+Nenhuma dessas rotinas foi alterada nesta transferência editorial. O código e a matriz de casos ainda devem ser adaptados e verificados antes da campanha.
 
-- [ ] Conversão média → característico validada contra a fonte
-- [ ] Nenhum `\tofill` nem `fillblock` restante
-- [ ] Nenhuma caixa "Missing figure" no PDF
-- [ ] Coautoria / citação dos dados resolvida
-- [ ] Valores da EN 338 conferidos contra a norma, não reproduzidos de memória
-- [ ] Formato convertido para `elsarticle` e citações numéricas (o preâmbulo atual é
-      genérico, com biblatex/APA)
+Referências incorporadas da Matéria: Criado2024, Marti2013 e SimoesNegrao2005. Acrescentada Deb2002 como referência original do NSGA-II. Fontes conferidas: páginas do artigo em SciELO, ScienceDirect e ASCE e texto original do NSGA-II; a busca não substitui consulta às normas integrais.
