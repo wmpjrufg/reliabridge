@@ -1,0 +1,1471 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?application progid="SMath Solver" version="1.5.0.9678"?>
+<worksheet xmlns="http://smath.info/schemas/worksheet/1.0">
+  <settings ppi="120">
+    <identity>
+      <id>4b133fb2-9c87-49c3-8e22-d7822c0e7406</id>
+      <revision>17</revision>
+    </identity>
+    <calculation>
+      <precision>4</precision>
+      <exponentialThreshold>5</exponentialThreshold>
+      <trailingZeros>false</trailingZeros>
+      <significantDigitsMode>false</significantDigitsMode>
+      <mixedNumbers>false</mixedNumbers>
+      <roundingMode>0</roundingMode>
+      <approximateEqualAccuracy>3</approximateEqualAccuracy>
+      <fractions>decimal</fractions>
+    </calculation>
+    <pageModel active="false" viewMode="2" printGrid="false" printAreas="true" simpleEqualsOnly="false" printBackgroundImages="true" hideElementsHighlightings="true">
+      <paper id="9" orientation="Portrait" width="827" height="1169" />
+      <margins left="39" right="39" top="49" bottom="49" />
+      <header alignment="Center" color="#a9a9a9">&amp;[DATE] &amp;[TIME] - &amp;[FILENAME]</header>
+      <footer alignment="Center" color="#a9a9a9">&amp;[PAGENUM] / &amp;[COUNT]</footer>
+      <backgrounds />
+    </pageModel>
+    <dependencies>
+      <assembly name="SMath Core" version="1.75.9678.0" guid="a37cba83-b69c-4c71-9992-55ff666763bd" />
+      <assembly name="MathRegion" version="1.75.9678.0" guid="02f1ab51-215b-466e-a74d-5d8b1cf85e8d" />
+      <assembly name="TextRegion" version="1.75.9678.0" guid="485d28c5-349a-48b6-93be-12a35a1c1e39" />
+    </dependencies>
+  </settings>
+  <regions type="content">
+    <region left="0" top="0" width="190" height="23" color="#000000" fontSize="10">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p style="font-weight: bold;">A.1 Solução verificada</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="36" width="114" height="24" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">d</e>
+          <e type="operand">71.4912</e>
+          <e type="operand" style="unit">cm</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="198" top="36" width="119" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">b.w.pista</e>
+          <e type="operand">4.5</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="0" top="54" width="121" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">b.w</e>
+          <e type="operand">45.2885</e>
+          <e type="operand" style="unit">cm</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="0" top="72" width="106" height="24" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">h</e>
+          <e type="operand">8.9727</e>
+          <e type="operand" style="unit">cm</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="198" top="72" width="58" height="24" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">L</e>
+          <e type="operand">5</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="0" top="90" width="180" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">esp.long.corr</e>
+          <e type="operand">117.76</e>
+          <e type="operand" style="unit">cm</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="0" top="108" width="165" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">esp.tab.corr</e>
+          <e type="operand">5.235</e>
+          <e type="operand" style="unit">cm</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="0" top="144" width="238" height="23" color="#000000" fontSize="10">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p style="font-weight: bold;">A.2 Propriedades geométricas</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="162" width="206" height="50" color="#000000" fontSize="10">
+      <math decimalPlaces="6">
+        <input>
+          <e type="operand">A.long</e>
+          <e type="operand">π</e>
+          <e type="operand">d</e>
+          <e type="operand">2</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">4</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">m</e>
+          <e type="operand">2</e>
+          <e type="operator" args="2">^</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">0.401416</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="216" width="215" height="50" color="#000000" fontSize="10">
+      <math decimalPlaces="7">
+        <input>
+          <e type="operand">I.long</e>
+          <e type="operand">π</e>
+          <e type="operand">d</e>
+          <e type="operand">4</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">64</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">0.0128227</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operand">4</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="270" width="206" height="63" color="#000000" fontSize="10">
+      <math decimalPlaces="6">
+        <input>
+          <e type="operand">W.long</e>
+          <e type="operand">I.long</e>
+          <e type="operand">d</e>
+          <e type="operand">2</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">0.035872</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operand">3</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="342" width="195" height="38" color="#000000" fontSize="10">
+      <math decimalPlaces="6">
+        <input>
+          <e type="operand">A.tab</e>
+          <e type="operand">b.w</e>
+          <e type="operand">h</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">0.040636</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operand">2</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="378" width="232" height="55" color="#000000" fontSize="10">
+      <math decimalPlaces="3">
+        <input>
+          <e type="operand">I.tab</e>
+          <e type="operand">b.w</e>
+          <e type="operand">h</e>
+          <e type="operand">3</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">12</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">2.726</e>
+          <e type="operand">10</e>
+          <e type="operand">5</e>
+          <e type="operator" args="1">-</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operand">4</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="450" width="193" height="63" color="#000000" fontSize="10">
+      <math decimalPlaces="6">
+        <input>
+          <e type="operand">W.tab</e>
+          <e type="operand">I.tab</e>
+          <e type="operand">h</e>
+          <e type="operand">2</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">0.000608</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operand">3</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="522" width="230" height="23" color="#000000" fontSize="10">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p style="font-weight: bold;">A.3 Resistências de cálculo</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="558" width="87" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">k.mod1</e>
+          <e type="operand">0.9</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="99" top="558" width="430" height="23" color="#000000" fontSize="10">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p>Tabela 4 - Curta Duração (NBR 7190: 2022) - EuroCode</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="594" width="87" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">k.mod2</e>
+          <e type="operand">0.8</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="99" top="594" width="390" height="23" color="#000000" fontSize="10" isBreakable="false">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p>Tabela 5 - Classe de Umidade 3 (NBR 7190: 2022)</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="630" width="185" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">k.mod</e>
+          <e type="operand">k.mod1</e>
+          <e type="operand">k.mod2</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">0.72</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="666" width="108" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">f.c0.k</e>
+          <e type="operand">40</e>
+          <e type="operand" style="unit">MPa</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="126" top="666" width="81" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">γ.w.c</e>
+          <e type="operand">1.4</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="234" top="666" width="145" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">E.c0.med</e>
+          <e type="operand">14500</e>
+          <e type="operand" style="unit">MPa</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="0" top="702" width="233" height="51" color="#000000" fontSize="10">
+      <math decimalPlaces="3">
+        <input>
+          <e type="operand">f.c0.d</e>
+          <e type="operand">k.mod</e>
+          <e type="operand">f.c0.k</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">γ.w.c</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">MPa</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">20.571</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="756" width="185" height="29" color="#000000" fontSize="10">
+      <math decimalPlaces="3">
+        <input>
+          <e type="operand">f.m.d</e>
+          <e type="operand">f.c0.d</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">MPa</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">20.571</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="792" width="100" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">f.v0.k</e>
+          <e type="operand">6</e>
+          <e type="operand" style="unit">MPa</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="126" top="792" width="81" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">γ.w.v</e>
+          <e type="operand">1.8</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="0" top="828" width="209" height="51" color="#000000" fontSize="10">
+      <math decimalPlaces="3">
+        <input>
+          <e type="operand">f.v0.d</e>
+          <e type="operand">k.mod</e>
+          <e type="operand">f.v0.k</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">γ.w.v</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">MPa</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">2.4</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="900" width="86" height="23" color="#000000" fontSize="10">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p style="font-weight: bold;">A.4 Ações</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="927" width="107" height="50" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">γ.D40</e>
+          <e type="operand">750</e>
+          <e type="operand" style="unit">kg</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operand">3</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="0" top="972" width="73" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">n.tab</e>
+          <e type="operand">10</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="72" top="972" width="142" height="23" color="#000000" fontSize="10">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p>Número de tábuas</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="999" width="236" height="41" color="#000000" fontSize="10">
+      <math decimalPlaces="3">
+        <input>
+          <e type="operand">G.long</e>
+          <e type="operand">A.long</e>
+          <e type="operand">γ.D40</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand" style="unit">g.e</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">kN</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operator" args="2">/</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">2.952</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="1071" width="357" height="57" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">p.tab</e>
+          <e type="operand">γ.D40</e>
+          <e type="operand">n.tab</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand" style="unit">g.e</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">h</e>
+          <e type="operand">b.w</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">b.w.pista</e>
+          <e type="operator" args="2">*</e>
+          <e type="bracket">(</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">b.w.pista</e>
+          <e type="operand">L</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">kN</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operand">2</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">/</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">0.5978</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="1143" width="111" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">p.gk</e>
+          <e type="operand">0.10</e>
+          <e type="operand" style="unit">kPa</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="117" top="1143" width="134" height="23" color="#000000" fontSize="10">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p>Peso do rodeiro</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="1170" width="395" height="41" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">P.gk.long</e>
+          <e type="operand">p.gk</e>
+          <e type="operand">p.tab</e>
+          <e type="operator" args="2">+</e>
+          <e type="bracket">(</e>
+          <e type="operand">esp.long.corr</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">G.long</e>
+          <e type="operator" args="2">+</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">kN</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operator" args="2">/</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">3.7741</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="1224" width="446" height="23" color="#000000" fontSize="10">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p style="font-weight: bold;">A.5 Esforços solicitantes e deslocamentos da longarina</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="1242" width="241" height="55" border="true" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">M.g.k</e>
+          <e type="operand">P.gk.long</e>
+          <e type="operand">L</e>
+          <e type="operand">2</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">8</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">kN</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operator" args="2">*</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">11.794</e>
+        </result>
+      </math>
+    </region>
+    <region left="108" top="1296" width="95" height="50" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">q.v</e>
+          <e type="operand">4.0</e>
+          <e type="operand" style="unit">kN</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operand">2</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="0" top="1305" width="87" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">P.rv</e>
+          <e type="operand">40</e>
+          <e type="operand" style="unit">kN</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="216" top="1305" width="438" height="23" color="#000000" fontSize="10">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p>Cargas do TB-240 - Rodovias Vicinais (NBR 7188, 2024)</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="1341" width="74" height="24" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">a</e>
+          <e type="operand">1.5</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="0" top="1368" width="142" height="43" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">b</e>
+          <e type="operand">L</e>
+          <e type="operand">2</e>
+          <e type="operand">a</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">-</e>
+          <e type="bracket">(</e>
+          <e type="operand">2</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">1</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operator" args="2">*</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="1413" width="247" height="46" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">M.q.k0</e>
+          <e type="operand">3</e>
+          <e type="operand">P.rv</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">L</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">4</e>
+          <e type="operator" args="2">/</e>
+          <e type="operand">P.rv</e>
+          <e type="operand">a</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">-</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">kN</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operator" args="2">*</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">90</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="1467" width="86" height="24" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">CIV</e>
+          <e type="operand">1.35</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="99" top="1467" width="446" height="23" color="#000000" fontSize="10">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p>Coeficiente de Impacto Vertical - ABNT NBR 7188 (2024)</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="1503" width="216" height="29" border="true" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">M.q.k</e>
+          <e type="operand">M.q.k0</e>
+          <e type="operand">CIV</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">kN</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operator" args="2">*</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">121.5</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="1539" width="219" height="46" border="true" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">Q.g.k</e>
+          <e type="operand">P.gk.long</e>
+          <e type="operand">L</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">2</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">kN</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">9.4352</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="1593" width="220" height="24" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">e</e>
+          <e type="operand">L</e>
+          <e type="operand">3</e>
+          <e type="operand">a</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">-</e>
+          <e type="operand">2</e>
+          <e type="operand">d</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">-</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">0.9298</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="1">-</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="1629" width="219" height="41" border="true" color="#000000" fontSize="10">
+      <math decimalPlaces="2">
+        <input>
+          <e type="operand">q</e>
+          <e type="operand">q.v</e>
+          <e type="operand">esp.long.corr</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">kN</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operator" args="2">/</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">4.71</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="1683" width="332" height="50" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">Q.q.k0</e>
+          <e type="operand">P.rv</e>
+          <e type="operand">L</e>
+          <e type="operator" args="2">/</e>
+          <e type="operand">6</e>
+          <e type="operand">a</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">3</e>
+          <e type="operand">e</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">+</e>
+          <e type="bracket">(</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">q</e>
+          <e type="operand">e</e>
+          <e type="operand">2</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">2</e>
+          <e type="operand">L</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">+</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">kN</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">50.0915</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="1737" width="212" height="29" border="true" color="#000000" fontSize="10">
+      <math decimalPlaces="3">
+        <input>
+          <e type="operand">Q.q.k</e>
+          <e type="operand">Q.q.k0</e>
+          <e type="operand">CIV</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">kN</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">67.623</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="1773" width="264" height="60" border="true" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">δ.gk</e>
+          <e type="operand">5</e>
+          <e type="operand">P.gk.long</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">L</e>
+          <e type="operand">4</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">384</e>
+          <e type="operand">E.c0.med</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">I.long</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">mm</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">0.1652</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="1845" width="455" height="51" border="true" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">δ.q.k</e>
+          <e type="operand">P.rv</e>
+          <e type="operand">48</e>
+          <e type="operand">E.c0.med</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">I.long</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">/</e>
+          <e type="operand">L</e>
+          <e type="operand">3</e>
+          <e type="operator" args="2">^</e>
+          <e type="operand">2</e>
+          <e type="operand">b</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">3</e>
+          <e type="operand">L</e>
+          <e type="operand">2</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">4</e>
+          <e type="operand">b</e>
+          <e type="operand">2</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">-</e>
+          <e type="bracket">(</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">+</e>
+          <e type="bracket">(</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">mm</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">1.1967</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="1917" width="246" height="23" color="#000000" fontSize="10">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p style="font-weight: bold;">A.6 Verificações da longarina</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="1953" width="68" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">γ.g</e>
+          <e type="operand">1.3</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="81" top="1953" width="262" height="23" color="#000000" fontSize="10">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p>Tabela 1 - ABNT NBR 8681 (2025)</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="1989" width="68" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">γ.q</e>
+          <e type="operand">1.5</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="81" top="1989" width="262" height="23" color="#000000" fontSize="10" isBreakable="false">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p>Tabela 4 - ABNT NBR 8681 (2025)</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="2025" width="272" height="29" color="#000000" fontSize="10">
+      <math decimalPlaces="2">
+        <input>
+          <e type="operand">M.sd</e>
+          <e type="operand">γ.g</e>
+          <e type="operand">M.g.k</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">γ.q</e>
+          <e type="operand">M.q.k</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">+</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">kN</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operator" args="2">*</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">197.58</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="2061" width="252" height="29" color="#000000" fontSize="10">
+      <math decimalPlaces="2">
+        <input>
+          <e type="operand">Q.sd</e>
+          <e type="operand">γ.g</e>
+          <e type="operand">Q.g.k</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">γ.q</e>
+          <e type="operand">Q.q.k</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">+</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">kN</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">113.7</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="2151" width="246" height="23" color="#000000" fontSize="10">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p style="font-weight: bold;">ELU - Tensão Normal de Flexão</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="2178" width="187" height="51" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">σ.Mx.d</e>
+          <e type="operand">M.sd</e>
+          <e type="operand">W.long</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">MPa</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">5.508</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="2241" width="113" height="51" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">σ.Mx.d</e>
+          <e type="operand">f.m.d</e>
+          <e type="operator" args="2">/</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">0.2677</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="2304" width="238" height="23" color="#000000" fontSize="10">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p style="font-weight: bold;">ELU - Tensão de Cisalhamento</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="2340" width="180" height="50" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">S</e>
+          <e type="operand">d</e>
+          <e type="operand">3</e>
+          <e type="operator" args="2">^</e>
+          <e type="operand">12</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">cm</e>
+          <e type="operand">3</e>
+          <e type="operator" args="2">^</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">30449.244</e>
+        </result>
+      </math>
+    </region>
+    <region left="189" top="2349" width="550" height="38" color="#000000" fontSize="10">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p>Momento estático do semicírculo em relação o diâmetro - Cálculo da Tensão Máxima de Cisalhamento</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="2403" width="188" height="51" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">τ</e>
+          <e type="operand">Q.sd</e>
+          <e type="operand">S</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">d</e>
+          <e type="operand">I.long</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">MPa</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">0.3777</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="2457" width="113" height="46" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">τ</e>
+          <e type="operand">f.v0.d</e>
+          <e type="operator" args="2">/</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">0.1574</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="2511" width="118" height="23" color="#000000" fontSize="10">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p style="font-weight: bold;">ELS - Flechas</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="2547" width="62" height="24" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">ϕ</e>
+          <e type="operand">0.8</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="72" top="2547" width="198" height="23" color="#000000" fontSize="10" isBreakable="false">
+      <text lang="por" fontFamily="Courier New" fontSize="12">
+        <content>
+          <p style="font-size: 10px;">Coeficiente de fluência</p>
+        </content>
+      </text>
+    </region>
+    <region left="270" top="2547" width="286" height="23" color="#000000" fontSize="10" isBreakable="false">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p>- Tabela 20 - ABNT NBR 7190 (2022)</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="2583" width="68" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">ψ.2</e>
+          <e type="operand">0.3</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="72" top="2583" width="262" height="23" color="#000000" fontSize="10" isBreakable="false">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p>Tabela 6 - ABNT NBR 8681 (2025)</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="2619" width="175" height="29" color="#000000" fontSize="10">
+      <math decimalPlaces="3">
+        <input>
+          <e type="operand">δ.inst.g</e>
+          <e type="operand">δ.gk</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">mm</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">0.165</e>
+        </result>
+      </math>
+    </region>
+    <region left="270" top="2619" width="182" height="29" color="#000000" fontSize="10">
+      <math decimalPlaces="3">
+        <input>
+          <e type="operand">δ.inst.q</e>
+          <e type="operand">δ.q.k</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">mm</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">1.197</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="2655" width="249" height="30" color="#000000" fontSize="10">
+      <math decimalPlaces="3">
+        <input>
+          <e type="operand">δ.fin.g</e>
+          <e type="operand">δ.inst.g</e>
+          <e type="operand">1</e>
+          <e type="operand">ϕ</e>
+          <e type="operator" args="2">+</e>
+          <e type="bracket">(</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">mm</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">0.297</e>
+        </result>
+      </math>
+    </region>
+    <region left="270" top="2655" width="275" height="30" color="#000000" fontSize="10">
+      <math decimalPlaces="3">
+        <input>
+          <e type="operand">δ.fin.q</e>
+          <e type="operand">δ.inst.q</e>
+          <e type="operand">ψ.2</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">1</e>
+          <e type="operand">ϕ</e>
+          <e type="operator" args="2">+</e>
+          <e type="bracket">(</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">mm</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">0.646</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="2700" width="598" height="23" color="#000000" fontSize="10" isBreakable="false">
+      <text lang="por" fontFamily="Courier New" fontSize="12">
+        <content>
+          <p style="font-weight: normal; text-decoration: underline; font-family: Courier New; font-size: 10px;">Flechas instantaneas - Combinação Rara de Serviço - ABNT NBR 7190 (2022) </p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="2709" width="22" height="23" color="#000000" fontSize="10" isBreakable="false">
+      <text lang="por" fontFamily="Courier New" fontSize="12">
+        <content>
+          <p style="font-family: Courier New; font-size: 10px;"> </p>
+        </content>
+      </text>
+    </region>
+    <region left="270" top="2727" width="90" height="41" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">L</e>
+          <e type="operand">500</e>
+          <e type="operator" args="2">/</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">mm</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">10</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="2736" width="245" height="29" color="#000000" fontSize="10">
+      <math decimalPlaces="2">
+        <input>
+          <e type="operand">δ.inst</e>
+          <e type="operand">δ.inst.g</e>
+          <e type="operand">δ.inst.q</e>
+          <e type="operator" args="2">+</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">mm</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">1.36</e>
+        </result>
+      </math>
+    </region>
+    <region left="243" top="2736" width="30" height="23" color="#000000" fontSize="10" isBreakable="false">
+      <text lang="por" fontFamily="Calibri" fontSize="12">
+        <content>
+          <p style="font-family: Courier New; font-size: 10px;"> &lt;</p>
+        </content>
+      </text>
+    </region>
+    <region left="369" top="2736" width="270" height="23" color="#000000" fontSize="10">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p>Tabela 21 - ABNT NBR 7190 (2022)</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="2781" width="550" height="23" color="#000000" fontSize="10" isBreakable="false">
+      <text lang="por" fontFamily="Courier New" fontSize="12">
+        <content>
+          <p style="text-decoration: underline; font-family: Courier New; font-size: 10px;">Flechas Finais - Combinação Quase Permanente - ABNT NBR 7190 (2022)</p>
+        </content>
+      </text>
+    </region>
+    <region left="279" top="2817" width="130" height="41" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">L</e>
+          <e type="operand">350</e>
+          <e type="operator" args="2">/</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">mm</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">14.2857</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="2826" width="226" height="29" color="#000000" fontSize="10">
+      <math decimalPlaces="2">
+        <input>
+          <e type="operand">δ.fin</e>
+          <e type="operand">δ.fin.g</e>
+          <e type="operand">δ.fin.q</e>
+          <e type="operator" args="2">+</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">mm</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">0.94</e>
+        </result>
+      </math>
+    </region>
+    <region left="252" top="2826" width="30" height="23" color="#000000" fontSize="10" isBreakable="false">
+      <text lang="por" fontFamily="Calibri" fontSize="12">
+        <content>
+          <p style="font-family: Courier New; font-size: 10px;"> &lt;</p>
+        </content>
+      </text>
+    </region>
+    <region left="414" top="2826" width="270" height="23" color="#000000" fontSize="10" isBreakable="false">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p>Tabela 21 - ABNT NBR 7190 (2022)</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="2880" width="238" height="23" color="#000000" fontSize="10">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p style="font-weight: bold;">A.7 Verificação do tabuleiro</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="2916" width="89" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">a.r</e>
+          <e type="operand">0.45</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+      </math>
+    </region>
+    <region left="0" top="2952" width="262" height="41" color="#000000" fontSize="10">
+      <math decimalPlaces="5" exponentialThreshold="6">
+        <input>
+          <e type="operand">p.gtab.k</e>
+          <e type="operand">p.gk</e>
+          <e type="operand">p.tab</e>
+          <e type="operator" args="2">+</e>
+          <e type="bracket">(</e>
+          <e type="operand">b.w</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">kN</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operator" args="2">/</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">0.316</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="2988" width="328" height="55" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">M.gk.tab</e>
+          <e type="operand">p.gtab.k</e>
+          <e type="operand">esp.long.corr</e>
+          <e type="operand">2</e>
+          <e type="operator" args="2">^</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">8</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">kN</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operator" args="2">*</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">0.0548</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="3060" width="340" height="46" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">M.qk.tab.0</e>
+          <e type="operand">P.rv</e>
+          <e type="operand">4</e>
+          <e type="operator" args="2">/</e>
+          <e type="operand">esp.long.corr</e>
+          <e type="operand">a.r</e>
+          <e type="operator" args="2">-</e>
+          <e type="bracket">(</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">kN</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operator" args="2">*</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">7.276</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="3114" width="262" height="29" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">M.q.tab</e>
+          <e type="operand">M.qk.tab.0</e>
+          <e type="operand">CIV</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">kN</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operator" args="2">*</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">9.8226</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="3150" width="322" height="29" color="#000000" fontSize="10">
+      <math decimalPlaces="2">
+        <input>
+          <e type="operand">M.sd.tab</e>
+          <e type="operand">γ.g</e>
+          <e type="operand">M.gk.tab</e>
+          <e type="operator" args="2">*</e>
+          <e type="operand">γ.q</e>
+          <e type="operand">M.q.tab</e>
+          <e type="operator" args="2">*</e>
+          <e type="operator" args="2">+</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">kN</e>
+          <e type="operand" style="unit">m</e>
+          <e type="operator" args="2">*</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">14.81</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="3213" width="246" height="23" color="#000000" fontSize="10" isBreakable="false">
+      <text lang="cpp" fontFamily="Courier New" fontSize="10">
+        <content>
+          <p style="font-weight: bold;">ELU - Tensão Normal de Flexão</p>
+        </content>
+      </text>
+    </region>
+    <region left="0" top="3240" width="242" height="51" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">σ.Mx.d.tab</e>
+          <e type="operand">M.sd.tab</e>
+          <e type="operand">W.tab</e>
+          <e type="operator" args="2">/</e>
+          <e type="operator" args="2">:</e>
+        </input>
+        <contract>
+          <e type="operand" style="unit">MPa</e>
+        </contract>
+        <result action="numeric">
+          <e type="operand">24.3629</e>
+        </result>
+      </math>
+    </region>
+    <region left="0" top="3303" width="139" height="51" color="#000000" fontSize="10">
+      <math>
+        <input>
+          <e type="operand">σ.Mx.d.tab</e>
+          <e type="operand">f.m.d</e>
+          <e type="operator" args="2">/</e>
+        </input>
+        <result action="numeric">
+          <e type="operand">1.1843</e>
+        </result>
+      </math>
+    </region>
+  </regions>
+</worksheet>

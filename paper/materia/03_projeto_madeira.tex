@@ -18,8 +18,6 @@ Segundo a classificação proposta por \textcite{ritter1990}, as superestruturas
 
 \begin{figure}[htpb!]
     \centering
-    \caption{Ponte de madeira nativa roliças.}
-    \label{fig:pontenat}
 
   % primeira imagem
     \begin{minipage}[t]{0.45\textwidth}
@@ -31,13 +29,12 @@ Segundo a classificação proposta por \textcite{ritter1990}, as superestruturas
         \centering
         \includegraphics[width=\textwidth]{figuras/pontenativa2.jpg}
     \end{minipage}
-
-    \vspace{0.2cm}
-    \small Fonte: \parencite{gazeta2025ponte}.
+    \caption{Ponte de madeira nativa roliças sobre Córrego do Ouro \parencite{gazeta2025ponte}.}
+    \label{fig:pontenat}
 \end{figure}
 
 A Figura \ref{fig:pontenat} apresenta exemplos de pontes de madeira que são comumente encontradas
-em regiões de estradas vicinais do Brasil. A ponte exemplificada consiste em uma ponte rural de pequeno porte, construída predominantemente em madeira, com sistema estrutural longitudinal. Sua estrutura é composta por apoios nas margens do córrego, que recebem e transferem as cargas para o terreno, e por vigas de madeira dispostas longitudinalmente, responsáveis por vencer o vão e suportar as cargas dos veículos. Sobre essas vigas é instalado o tabuleiro, formado por peças de madeira que constituem o piso da ponte e distribuem as cargas para a estrutura principal e pranchas longitudinais sobre o tabuleiro formando o rodeiro. O conjunto também necessita de elementos de travamento e fixação, como parafusos, pregos, barras ou chapas, garantindo a estabilidade e a união entre as peças. Dessa forma, o caminho das cargas ocorre do veículo para o tabuleiro, do tabuleiro para as vigas e, posteriormente, para os apoios e o terreno.
+em regiões de estradas vicinais do Brasil. A ponte exemplificada consiste em uma ponte rural de pequeno porte, construída predominantemente em madeira, com sistema estrutural em viga de toras roliças apoiadas em fundação superficiais nas margens do córrego. Sobre as vigas é instalado o tabuleiro de pranchas, complementado por pranchas longitudinais formando o rodeiro sob a linha das rodas dos veículos. O conjunto também necessita de elementos de travamento e fixação, como parafusos, pregos, barras ou chapas, garantindo a estabilidade e a união entre as peças. Dessa forma, o caminho das cargas ocorre do veículo para o tabuleiro, do tabuleiro para as vigas e, posteriormente, para os apoios e o terreno.
 
 Segundo \textcite{ritter1990}, a extensão do vão, em pontes de toras roliças, depende da espécie, diâmetro e
 comprimento das árvores disponíveis.
@@ -63,12 +60,52 @@ d_{eq} \leq 1,5d_2
 onde $d_1$ corresponde ao maior diâmetro da tora, $d_2$ ao menor diâmetro e $L$ ao comprimento total da peça.
 
 \begin{figure}[htpb!]
-    \centering
-    \caption{Diâmetro Equivalente.}
-    \label{fig:dequivalente}
-    \includegraphics[width=1.2\textwidth]{figuras/dequivalentee.png}\\
-    \vspace{0.1cm}
-    \centering \small Fonte: Adaptado de \parencite{NBR7190-1:2022}
+\centering
+\begin{tikzpicture}[
+  dim/.style={<->, >={Latex[length=2mm]}, thin},
+  every node/.style={font=\footnotesize}
+]
+% geometria (evitar \L -- e o comando reservado do LaTeX para "L-slash")
+\pgfmathsetmacro{\Ltot}{6}
+\pgfmathsetmacro{\rTwo}{0.4}
+\pgfmathsetmacro{\rOne}{0.9}
+\pgfmathsetmacro{\xEq}{2}
+\pgfmathsetmacro{\rEq}{\rTwo + (\rOne-\rTwo)*(\xEq/\Ltot)}
+\pgfmathsetmacro{\xMidA}{\xEq/2}
+\pgfmathsetmacro{\xMidB}{\xEq + (\Ltot-\xEq)/2}
+\pgfmathsetmacro{\xMidL}{\Ltot/2}
+
+% ---- corpo afunilado da tora ----
+\draw[thick] (0,\rTwo) -- (\Ltot,\rOne);
+\draw[thick] (0,-\rTwo) -- (\Ltot,-\rOne);
+\draw[thick] (0,0) ellipse [x radius=0.12, y radius=\rTwo];
+\draw[thick] (\Ltot,0) ellipse [x radius=0.18, y radius=\rOne];
+
+% ---- plano de medicao do deq ----
+\draw[dash dot, thin] (\xEq,-\rEq-0.15) -- (\xEq,\rEq+0.15);
+
+% ---- cotas verticais ----
+\draw[dim] (-0.9,-\rTwo) -- (-0.9,\rTwo);
+\node at (-1.25,0) {$d_2$};
+
+\draw[dim] (\xEq,-\rEq) -- (\xEq,\rEq);
+\node at (\xEq+0.45,0) {$d_{eq}$};
+
+\draw[dim] (\Ltot+0.9,-\rOne) -- (\Ltot+0.9,\rOne);
+\node at (\Ltot+1.25,0) {$d_1$};
+
+% ---- cotas horizontais ----
+\draw[dim] (0,-\rOne-0.7) -- (\xEq,-\rOne-0.7);
+\node at (\xMidA,-\rOne-0.95) {$L/3$};
+
+\draw[dim] (\xEq,-\rOne-0.7) -- (\Ltot,-\rOne-0.7);
+\node at (\xMidB,-\rOne-0.95) {$2L/3$};
+
+\draw[dim] (0,-\rOne-1.4) -- (\Ltot,-\rOne-1.4);
+\node at (\xMidL,-\rOne-1.65) {$L$};
+\end{tikzpicture}
+\caption{Diâmetro Equivalente \parencite{NBR7190-1:2022}.}
+\label{fig:dequivalente}
 \end{figure}
 
 Esse critério permite representar uma peça de seção circular variável por uma seção uniforme equivalente para fins de dimensionamento estrutural.
@@ -83,9 +120,7 @@ Esse critério permite representar uma peça de seção circular variável por u
 \subsection{Carga do trem tipo}\label{sec:trem_tipo}
 
 As cargas delimitadas nas pontes brasileiras são definidas pela \textcite{nbr7188}, que estabelece
-os requisitos para o projeto de pontes rodoviárias.
-
-A norma apresenta dois modelos de trem-tipo para uso: o TB-450 e o TB-240. Porém, por se tratar de estradas vicinais,
+os requisitos para o projeto de pontes rodoviárias. A norma apresenta dois modelos de trem-tipo para uso: o TB-450 e o TB-240. Porém, por se tratar de estradas vicinais,
 serão contemplados apenas os detalhes do TB-240.
 Esse trem-tipo é caracterizado por um veículo de 240 kN de peso total, constituído por seis rodas e três eixos.
 Cada eixo do veículo aplica uma carga de 40 kN, com espaçamentos de 1,5 m entre os eixos.
@@ -93,48 +128,88 @@ A área de ocupação do veículo deve ser de 18,0 m², complementada por uma ca
 uniformemente distribuída de 4,0 kN/m² em seu entorno (multidão), conforme a Figura \ref{fig:trem}.
 
 \begin{figure}[htpb!]
-    \centering
-    \caption{Configuração trem de tipo.}
-    \label{fig:trem}
-    \includegraphics[width=0.4\textwidth]{figuras/trem1.png}\\
-    \vspace{0.2cm}
-    \centering \small Fonte: \parencite{nbr7188}
+\centering
+\includegraphics[width=0.4\textwidth]{figuras/trem1_hq.png}
+\caption{Configuração trem de tipo \parencite{nbr7188}.}
+\label{fig:trem}
 \end{figure}
 
 \subsection{Propriedades da Madeira}
 
-\subsubsection{Estrutura da madeira}
+\subsubsection{Anatomia, fisiologia e comportamento mecânico da madeira}
+\label{sec:anatomia_madeira}
 
-\begin{fillblock}
-Descrever brevemente a anisotropia da madeira (direções longitudinal, radial e tangencial) e sua relação com as propriedades mecânicas empregadas nas verificações desta seção, em especial a resistência à compressão e a resistência à flexão paralelas às fibras.
-\end{fillblock}
+A compreensão do comportamento estrutural da madeira parte de sua organização anatômica e das funções que desempenha na árvore viva.
+A madeira corresponde ao xilema secundário, tecido associado à condução de água e nutrientes minerais, ao armazenamento de substâncias e à sustentação da planta.
+Seu crescimento em espessura decorre da atividade do câmbio vascular, que produz xilema para o interior e floema para o exterior do tronco \parencite{WiedenhoeftEberhardt2021}.
+
+Na seção transversal do tronco, distinguem-se medula, cerne, alburno, região cambial e cascas, conforme a Figura~\ref{fig:anatomia_madeira}.
+A medula ocupa a região central e está associada ao desenvolvimento inicial do caule.
+O alburno constitui a porção condutora do xilema e também participa do armazenamento de reservas, enquanto o cerne corresponde à região interna que perdeu a função de condução de água e pode acumular extrativos.
+A casca interna, ou floema, transporta produtos da fotossíntese; a casca externa protege os tecidos internos.
+Os raios contribuem para o transporte radial e o armazenamento de substâncias \parencite{WiedenhoeftEberhardt2021}.
+
+\begin{figure}[htbp]
+\centering
+\input{figuras/anatomia_madeira}
+\caption{Organização anatômica do tronco e detalhe esquemático do lenho inicial e tardio em uma conífera \parencite{WiedenhoeftEberhardt2021}.}
+\label{fig:anatomia_madeira}
+\end{figure}
+
+A atividade cambial pode formar incrementos reconhecíveis como anéis de crescimento.
+Em muitas coníferas, o lenho inicial apresenta células com maiores cavidades e paredes mais finas, enquanto o lenho tardio apresenta cavidades menores e paredes mais espessas.
+Essa distinção varia entre espécies e não deve ser associada de forma universal às estações primavera--verão e outono--inverno.
+Em espécies tropicais, os anéis podem ser pouco evidentes; sua utilização para estimar a idade exige confirmar a periodicidade de formação \parencite{WiedenhoeftEberhardt2021}.
+
+Essa organização dos tecidos estabelece a ligação entre a função biológica da madeira e seu comportamento como material de engenharia.
+
+A madeira é um material anisotrópico, pois suas propriedades físicas e mecânicas
+variam de acordo com a direção considerada. Em função da orientação e da
+disposição de suas fibras e demais elementos anatômicos, podem ser identificadas
+três direções principais: longitudinal, paralela às fibras e ao eixo predominante
+do tronco; radial, orientada do centro da seção transversal em direção à casca; e
+tangencial, tangente aos anéis de crescimento. Entre essas direções, a diferença
+de comportamento é particularmente significativa entre a direção longitudinal e
+as direções transversais, sendo usual, para fins estruturais, distinguir as
+propriedades paralelas às fibras das propriedades perpendiculares às fibras
+\parencite{CALIL2003}.
+
+Essa anisotropia exerce influência direta na resistência mecânica empregada no
+dimensionamento. Na direção longitudinal, paralela às fibras, a madeira apresenta
+maior capacidade de resistir a esforços normais, uma vez que a orientação das
+fibras favorece a transmissão das tensões ao longo do elemento. Por esse motivo,
+a resistência à compressão paralela às fibras, representada por $f_{c0}$, é uma
+propriedade fundamental nas verificações de elementos submetidos à compressão.
+A ABNT NBR 7190-3:2022 estabelece, inclusive, procedimento específico para
+determinação da resistência e da rigidez à compressão paralela às fibras
+\parencite{ABNT-NBR7190-3:2022}.
+
+De maneira semelhante, nas peças submetidas à flexão, as tensões normais atuantes
+são predominantemente paralelas às fibras, sendo utilizada a resistência à
+flexão, $f_M$, para a verificação da capacidade resistente da seção. A ABNT
+NBR 7190-1:2022 considera a resistência à flexão entre as propriedades
+empregadas nas verificações dos elementos estruturais e estabelece critérios
+específicos para as tensões normais e para a estabilidade de peças submetidas
+à flexão \parencite{NBR7190-1:2022}.
+
+Assim, nas verificações realizadas nesta seção, a orientação das fibras deve ser
+considerada na definição das propriedades resistentes adotadas. Para elementos
+em que as solicitações principais atuam paralelamente às fibras, como ocorre
+usualmente nas vigas submetidas à flexão e nos elementos submetidos à compressão
+axial, são empregadas, respectivamente, as resistências $f_M$ e $f_{c0}$.
+Essa consideração é fundamental porque os valores de resistência obtidos para
+solicitações paralelas às fibras não podem ser simplesmente aplicados às
+solicitações perpendiculares ou inclinadas em relação às fibras, que apresentam
+comportamento mecânico distinto \parencite{CALIL2003,NBR7190-1:2022}.
+
 
 \subsubsection{Ponderadores para propriedades mecânicas}
 
 Para a realização dessas verificações, a \textcite{NBR7190-1:2022} estabelece parâmetros de resistência ($f$) e de módulo de elasticidade ($E$), bem como classes de resistência para madeiras dos grupos das Coníferas e das Folhosas, sob condição padrão de referência, isto é, teor de umidade ($U$) igual a 12\%.
 
-Conforme o item 5.6.1 da \textcite{NBR7190-1:2022}, esses valores de referência correspondem à classe de umidade 1, definida pelo teor de umidade de equilíbrio de 12\%.
-Quando a caracterização das propriedades de resistência e de rigidez de um lote de madeira é realizada com teores de umidade distintos, no intervalo entre 10\% e 25\%, os resultados devem ser corrigidos para a umidade-padrão de 12\% por meio das Equações~\eqref{eq:corr_resist} e~\eqref{eq:corr_rigidez}.
-
-\begin{equation}
-f_{12} = f_U \left[1 + \frac{3\,(U - 12)}{100}\right]
-\label{eq:corr_resist}
-\end{equation}
-
-\begin{equation}
-E_{12} = E_U \left[1 + \frac{2\,(U - 12)}{100}\right]
-\label{eq:corr_rigidez}
-\end{equation}
-
-sendo $f_U$ e $E_U$ os valores de resistência e de rigidez obtidos no ensaio para o teor de umidade $U$ (em \%), e $f_{12}$ e $E_{12}$ os valores correspondentes já corrigidos para a condição-padrão de referência.
-
-\begin{fillblock}
-A \textcite{NBR7190-1:2022} também estabelece uma correção análoga para a massa específica aparente ($\rho_{ap}$) em função do teor de umidade. Transcrever aqui a equação de correção de $\rho_{ap}$ apresentada na norma (item imediatamente seguinte ao 5.6.1), indicando o item correspondente. Observação: as densidades das classes de resistência empregadas pela plataforma (Tabela de classes de resistência, coluna $\rho_{12\%}$) já são tabeladas na condição-padrão de 12\%, de modo que essa correção só é necessária caso se utilizem valores de densidade obtidos diretamente em ensaio, com teor de umidade diferente de 12\%.
-\end{fillblock}
-
 O método dos estados limites baseia-se na premissa de majoração dos esforços e minoração das resistências ($f$) e do módulo de elasticidade ($E$).
 Os coeficientes de minoração têm por objetivo compensar as incertezas associadas à resistência característica, bem como os efeitos adversos das imperfeições geométricas.
-A \textcite{NBR7190-1:2022} propõe essa minoração por meio da utilização dos coeficientes de modificação ($k_{\mathrm{mod}}$) e do coeficiente de ponderação da resistência ($\gamma_w$), conforme apresentado na equação \ref{eq:2.099}.
+A \textcite{NBR7190-1:2022} propõe essa minoração por meio da utilização dos coeficientes de modificação ($k_{\mathrm{mod}}$) e do coeficiente de ponderação da resistência ($\gamma_w$), conforme apresentado na Equação~\eqref{eq:2.099}.
 
 \begin{equation}
     X_d = \frac{k_{\mathrm{mod}} \cdot X_k}{\gamma_w}
@@ -147,7 +222,7 @@ Onde:
     \item o coeficiente de ponderação da resistência ($\gamma_w$) assume o valor de 1{,}4 para tensões normais e 1{,}8 para tensões de cisalhamento.
 \end{itemize}
 
-O coeficiente de modificação ($k_{\mathrm{mod}}$) altera os valores característicos das propriedades de resistência da madeira em função da classe de carregamento da estrutura e da classe de umidade admitida, sendo calculado conforme a Equação \ref{eq:2.99}.
+O coeficiente de modificação ($k_{\mathrm{mod}}$) altera os valores característicos das propriedades de resistência da madeira em função da classe de carregamento da estrutura e da classe de umidade admitida, sendo calculado conforme a Equação~\eqref{eq:2.99}.
 
 \begin{equation}
 k_{\mathrm{mod}} = k_{\mathrm{mod},1} \cdot k_{\mathrm{mod},2}
@@ -158,7 +233,7 @@ O primeiro fator, $k_{\mathrm{mod},1}$, está associado à classe de carregament
 
 \begin{table}[htpb!]
 \centering
-\caption{Classes de carregamento e fatores de modificação (\textit{$k_{mod,1}$}).}
+\caption{Classes de carregamento e fatores de modificação (\textit{$k_{mod,1}$}) \parencite{NBR7190-1:2022}.}
 \label{tab:kmod1.q}
 \footnotesize
 \begin{tabular}{
@@ -171,7 +246,7 @@ O primeiro fator, $k_{\mathrm{mod},1}$, está associado à classe de carregament
 \hline
 \multirow{4}{*}{\shortstack{\textbf{Classes de} \\ \textbf{carregamento}}} &
 \multicolumn{2}{c}{\textbf{Ação variável principal da combinação}} &
-\multirow{4}{*}{\shortstack{\textbf{Tipos de madeira}}} &
+\multirow{4}{*}{\shortstack{\textbf{Tipos de} \\ \textbf{madeira}\textsuperscript{a}}} &
 \multirow{4}{*}{\shortstack{\textbf{Madeira} \\ \textbf{Recomposta}}}\\
 \cline{2-3}
 & \textbf{Duração acumulada} &
@@ -181,13 +256,9 @@ O primeiro fator, $k_{\mathrm{mod},1}$, está associado à classe de carregament
 Permanente &
 Permanente &
 Mais de dez anos &
-Madeira serrada \newline
-Madeira roliça \newline
-Madeira laminada colada (MLC) \newline
-Madeira laminada colada cruzada (MLCC) \newline
-Madeira laminada colada (LVL) &
+0,60 &
 0,30 \\
-\hline
+%\hline
 Longa duração &
 Longa duração &
 Seis meses a dez anos &
@@ -214,9 +285,9 @@ Muito curta &
 \hline
 \end{tabular}
 
-\vspace{0.3cm}
+\vspace{0.2cm}
 \centering
-\small Fonte: Adaptado de ABNT NBR 7190:2023.
+\footnotesize\textsuperscript{a}\,Madeira serrada, madeira roliça, madeira laminada colada (MLC), madeira laminada colada cruzada (MLCC) e madeira laminada colada de lâminas paralelas (LVL).
 \end{table}
 
 A ABNT NBR 7190-1:2022 não classifica explicitamente a ação do tráfego rodoviário quanto à sua duração acumulada.
@@ -231,7 +302,7 @@ Os valores normativos desse coeficiente, diferenciados entre madeiras maciças, 
 
 \begin{table}[htpb!]
 \centering
-\caption{Valores de (\textit{$k_{mod,2}$}).}
+\caption{Valores de (\textit{$k_{mod,2}$}) \parencite{NBR7190-1:2022}.}
 \label{tab:kmod2.2}
 \footnotesize
 \begin{tabular}{
@@ -262,16 +333,15 @@ Madeira laminada colada (LVL) & \\
 
 \vspace{0.2cm}
 \centering
-\footnotesize\textsuperscript{a}\,Não é permitido o uso do MLCC para classe de umidade (4).\\
-\small Fonte: Adaptado de ABNT NBR 7190:2023.
+\footnotesize\textsuperscript{a}\,Não é permitido o uso do MLCC para classe de umidade (4).
 \end{table}
 
 \subsection{Flecha limite}\label{sec:flecha_limite}
 
 \subsubsection{Fluência}
 
-As flechas instantâneas, $\delta_{\mathrm{inst},G_i,k}$ e $\delta_{\mathrm{inst},Q_j,k}$, associadas respectivamente às ações permanentes e variáveis, são calculadas com o módulo de elasticidade médio à flexão, $E_{0,\mathrm{m}}$, e não com um módulo minorado pelo coeficiente de modificação: o fator $k_{\mathrm{mod}}$ reduz a resistência característica da madeira ($k_{\mathrm{mod},1} \cdot k_{\mathrm{mod},2} \cdot X_k$, Equação \ref{eq:2.099}), não a sua rigidez.
-O efeito do tempo sobre a rigidez é incorporado separadamente, por meio do coeficiente de fluência $\varphi$, que amplia as flechas instantâneas para obter as flechas finais $\delta_{\mathrm{fin},G_i,k}$ e $\delta_{\mathrm{fin},Q_j,k}$, conforme as Equações \ref{eq:flecha_fin_G} e \ref{eq:flecha_fin_Q}.
+As flechas instantâneas, $\delta_{\mathrm{inst},G_i,k}$ e $\delta_{\mathrm{inst},Q_j,k}$, associadas respectivamente às ações permanentes e variáveis, são calculadas com o módulo de elasticidade médio à flexão, $E_{0,\mathrm{m}}$, e não com um módulo minorado pelo coeficiente de modificação: o fator $k_{\mathrm{mod}}$ reduz a resistência característica da madeira ($k_{\mathrm{mod},1} \cdot k_{\mathrm{mod},2} \cdot X_k$, Equação~\eqref{eq:2.099}), não a sua rigidez.
+O efeito do tempo sobre a rigidez é incorporado separadamente, por meio do coeficiente de fluência $\varphi$, que amplia as flechas instantâneas para obter as flechas finais $\delta_{\mathrm{fin},G_i,k}$ e $\delta_{\mathrm{fin},Q_j,k}$, conforme as Equações~\eqref{eq:flecha_fin_G} e~\eqref{eq:flecha_fin_Q}.
 
 \begin{equation}
 \delta_{\mathrm{fin},G_i,k}
@@ -294,13 +364,13 @@ O efeito do tempo sobre a rigidez é incorporado separadamente, por meio do coef
 \end{equation}
 
 Segundo a \textcite{NBR7190-1:2022}, ``a madeira possui características distintas de outros materiais de construção, como, por exemplo, a significativa deformação ao longo do tempo (fluência)''.
-Em razão dessa condição, torna-se necessária a aplicação do coeficiente de fluência ($\varphi$) na estimativa dos deslocamentos finais ou efetivos, conforme as Equações \ref{eq:flecha_fin_G} e \ref{eq:flecha_fin_Q}.
+Em razão dessa condição, torna-se necessária a aplicação do coeficiente de fluência ($\varphi$) na estimativa dos deslocamentos finais ou efetivos, conforme as Equações~\eqref{eq:flecha_fin_G} e~\eqref{eq:flecha_fin_Q}.
 Esse coeficiente é definido em função do material e da classe de umidade à qual o sistema estrutural está exposto.
 Classes de umidade mais elevadas resultam em flechas mais acentuadas, conforme evidenciado pelos valores do coeficiente de fluência da Tabela 20 da \textcite{NBR7190-1:2022}, reproduzidos na Tabela \ref{tab:fluencia}.
 
 \begin{table}[htpb!]
 \centering
-\caption{Coeficiente de fluência ($\varphi$).}
+\caption{Coeficiente de fluência ($\varphi$) \parencite{NBR7190-1:2022}.}
 \label{tab:fluencia}
 \footnotesize
 \begin{tabular}{
@@ -327,8 +397,7 @@ OSB estrutural
 \end{tabular}
 
 \vspace{0.3cm}
-\small\textsuperscript{a} Não é permitido o uso de MLCC para a classe de umidade 4.\\
-\small Fonte: Adaptado de \textcite{NBR7190-1:2022}.
+\small\textsuperscript{a} Não é permitido o uso de MLCC para a classe de umidade 4.
 \end{table}
 
 Para a classe de umidade (3) adotada neste trabalho, o coeficiente de fluência de referência é $\varphi = 0{,}8$.
@@ -340,7 +409,7 @@ Esses valores limites dependem da configuração estática da estrutura e encont
 
 \begin{table}[htpb!]
 \centering
-\caption{Flechas limites para elementos correntes fletidos.}
+\caption{Flechas limites para elementos correntes fletidos \parencite{NBR7190-1:2022}.}
 \label{tab:flechas_limites}
 \footnotesize
 \begin{tabular}{
@@ -361,8 +430,6 @@ Vigas em balanço
 \hline
 \end{tabular}
 
-\vspace{0.3cm}
-\small Fonte: Adaptado da ABNT NBR 7190-1 (2022) .
 \end{table}
 
 Logo, o dimensionamento de sistemas estruturais em madeira deve atender a esses requisitos normativos.
@@ -424,7 +491,7 @@ q = q_A \cdot esp_{long,corr}
 \label{eq:qlong}
 \end{equation}
 
-Os efeitos dinâmicos são incorporados pelo coeficiente de impacto vertical ($CIV$), determinado pelas Equações~\eqref{eq:civ1} e~\eqref{eq:civ2} conforme o item \tofill{7.2.3} da \textcite{nbr7188}, sendo $LIV$ o comprimento característico da estrutura \tofill{(conferir, no item da norma, se corresponde ao vão da longarina ou ao comprimento total da ponte)}.
+Os efeitos dinâmicos são incorporados pelo coeficiente de impacto vertical ($CIV$), determinado pelas Equações~\eqref{eq:civ1} e~\eqref{eq:civ2} conforme o item 7.2.3 da \textcite{nbr7188}, sendo $LIV$ o comprimento característico da estrutura. %\tofill{(conferir, no item da norma, se corresponde ao vão da longarina ou ao comprimento total da ponte)}.
 
 \begin{equation}
 CIV = 1{,}35 \qquad \text{para } L \leq 10{,}0\ \text{m}
@@ -436,13 +503,7 @@ CIV = 1 + 1{,}06\left(\frac{20}{LIV + 50}\right), \qquad \text{para } 10{,}0 < L
 \label{eq:civ2}
 \end{equation}
 
-A plataforma aplica ainda um fator de atenuação sobre o excedente do coeficiente de impacto em relação à unidade, de modo que apenas 75\% desse excedente amplifique de fato os esforços variáveis, conforme a Equação~\eqref{eq:civaux}.
-O fator resultante, $aux_{ci}$, multiplica diretamente os esforços solicitantes de origem variável.
-
-\begin{equation}
-aux_{ci} = 1 + 0{,}75\,(CIV - 1)
-\label{eq:civaux}
-\end{equation}
+O $CIV$ multiplica diretamente os esforços solicitantes de origem variável.
 
 O momento fletor e o esforço cortante máximos devidos à carga permanente, assim como a flecha estática correspondente, são quantificados pelas premissas clássicas de estática para vigas biapoiadas, conforme as Equações~\eqref{eq:mgk} e~\eqref{eq:qgk}.
 Para a carga variável, adota-se o posicionamento mais desfavorável das rodas do trem-tipo sobre o vão, resultando no momento fletor $M_{qk}$ das Equações~\eqref{eq:mqk30} e~\eqref{eq:mqk45}, dependente da extensão do vão, e na força cortante $Q_{qk}$ da Equação~\eqref{eq:qqk}, sendo $a$ a distância entre o apoio e a roda mais próxima, com as grandezas auxiliares $c$ e $e$ definidas pelas Equações~\eqref{eq:cmomento} e~\eqref{eq:ecortante}.
@@ -492,7 +553,7 @@ M_{sd} = \gamma_g\,M_{gk} + \gamma_q\,M_{qk}, \qquad Q_{sd} = \gamma_g\,Q_{gk} +
 
 \begin{table}[htpb!]
 \centering
-\caption{Coeficientes de ponderação das ações no ELU.}
+\caption{Coeficientes de ponderação das ações no ELU, para a combinação e o tipo de ação considerados \parencite{NBR8681:2025}.}
 \label{tab:ponderadores_acoes}
 \footnotesize
 \begin{tabular}{lc}
@@ -503,9 +564,6 @@ $\gamma_g$ -- ação permanente (desfavorável) & 1,30 \\
 $\gamma_q$ -- ação variável (trem-tipo e multidão) & 1,50 \\
 \hline
 \end{tabular}
-
-\vspace{0.2cm}
-\small Fonte: ABNT NBR 8681:2025, para a combinação e o tipo de ação considerados.
 \end{table}
 
 \subsubsection{Projeto momento}
@@ -520,12 +578,21 @@ A verificação de flexão da longarina compara a tensão normal solicitante de 
 
 \subsubsection{Projeto cisalhamento}
 
-Para a seção circular maciça, a tensão de cisalhamento máxima ocorre no centro da seção transversal e é comparada à resistência de cálculo ao cisalhamento, $f_{v0,d}$, conforme a Equação~\eqref{eq:vercis}.
+Para a seção circular maciça, a tensão de cisalhamento máxima ocorre no eixo neutro e é obtida a partir do momento estático do semicírculo em relação ao diâmetro, $S_x$, conforme a Equação~\eqref{eq:scirc}.
 
 \begin{equation}
-\tau_{\max} = \frac{4}{3}\cdot\frac{Q_{sd}}{A} \leq f_{v0,d}
+S_x = \frac{d^3}{12}
+\label{eq:scirc}
+\end{equation}
+
+A tensão de cisalhamento máxima resulta então da Equação~\eqref{eq:vercis}, sendo comparada à resistência de cálculo ao cisalhamento, $f_{v0,d}$.
+
+\begin{equation}
+\tau_{\max} = \frac{Q_{sd}\,S_x}{I_x\,d} \leq f_{v0,d}
 \label{eq:vercis}
 \end{equation}
+
+Para a seção circular maciça, essa expressão equivale à forma fechada $\tau_{\max} = \tfrac{4}{3}\,(Q_{sd}/A)$, obtida substituindo-se $S_x$, $I_x$ e $A$ pelas Equações~\eqref{eq:scirc}, \eqref{eq:icirc} e \eqref{eq:areacirc}.
 
 \subsubsection{Projeto flecha}
 
@@ -558,10 +625,10 @@ A verificação de flecha compara simultaneamente essa flecha total com o limite
 
 A peça do tabuleiro é verificada isoladamente como uma viga biapoiada, vencendo o vão correspondente ao espaçamento entre longarinas ($esp_{long}$).
 O momento fletor devido à carga permanente sobre o tabuleiro, $M_{gk,tab}$, segue a mesma formulação da Equação~\eqref{eq:mgk}, substituindo-se $L$ por $esp_{long}$.
-O momento fletor devido à carga móvel concentrada de uma roda do trem-tipo, $M_{qk,tab}$, é obtido pela Equação~\eqref{eq:mqktab}, em que $a_r$ é o comprimento efetivo de contato da roda sobre o tabuleiro e $aux_{ci,tab}$ é o fator de impacto calculado de forma análoga às Equações~\eqref{eq:civ1} a~\eqref{eq:civaux}, considerando como vão de referência o espaçamento $esp_{long}$.
+O momento fletor devido à carga móvel concentrada de uma roda do trem-tipo, $M_{qk,tab}$, é obtido pela Equação~\eqref{eq:mqktab}, em que $a_r$ é o comprimento efetivo de contato da roda sobre o tabuleiro e $CIV_{tab}$ é o coeficiente de impacto vertical calculado de forma análoga às Equações~\eqref{eq:civ1} e~\eqref{eq:civ2}, considerando como vão de referência o espaçamento $esp_{long}$.
 
 \begin{equation}
-M_{qk,tab} = \frac{P}{4}\,\left(esp_{long} - a_r\right)\cdot aux_{ci,tab}
+M_{qk,tab} = \frac{P}{4}\,\left(esp_{long} - a_r\right)\cdot CIV_{tab}
 \label{eq:mqktab}
 \end{equation}
 

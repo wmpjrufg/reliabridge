@@ -10,28 +10,30 @@ A plataforma permite uma transição fluida entre o dimensionamento paramétrico
 Após o processamento algorítmico do modelo da ponte, o usuário obtém acesso integral ao memorial de cálculo gerado pela ferramenta.
 Esse relatório detalha o desempenho da estrutura frente aos esforços solicitantes e aos deslocamentos normativos, fornecendo um relatório completo das verificações de ruína e de serviço, com a indicação exata dos critérios em que a configuração da ponte obteve êxito ou falhou.
 
-O fluxo metodológico consolidado, ilustrado na Figura~\ref{fig:fluxograma}, é composto pelas seguintes etapas.
-\begin{enumerate}[label=(\roman*)]
-    \item Definição da geometria e das cargas permanentes.
-    \item Definição do trem tipo.
-    \item Cálculo estrutural dos esforços solicitantes e deslocamentos.
-    \item Combinação de ações nos estados limites último e de serviço.
-    \item Determinação das resistências de projeto e avaliação de propriedades segundo a ABNT NBR 7190 \parencite{NBR7190-1:2022}.
-    \item Otimização estocástica via NSGA-II.
-    \item Análise de sensibilidade global de Sobol.
-    \item Obtenção do conjunto de soluções viáveis da fronteira eficiente.
-\end{enumerate}
+O fluxo de avaliação de cada solução candidata segue a estrutura já apresentada no Algoritmo~\ref{alg:nsga2} (Seção~\ref{sec:nsga2}): para cada indivíduo $\mathbf{x}$ gerado pelo NSGA-II, o vetor de projeto é perturbado $N_c$ vezes e submetido à função \texttt{AvaliarModelo}, cujos resultados individuais são agregados pela média para compor os valores robustos das funções objetivo e das restrições daquele indivíduo.
+O Algoritmo~\ref{alg:avaliarmodelo} detalha o procedimento interno dessa função para um único vetor de projeto, nominal ou perturbado.
 
-\begin{figure}[!ht]
-\centering
-\includegraphics[width=0.9\textwidth]{figuras/fluxograma.jpeg}
-\caption{Fluxograma da otimização e análise do dimensionamento de pontes de madeira.}
-\label{fig:fluxograma}
-\end{figure}
+\begin{algorithm}[!ht]
+\caption{AvaliarModelo($\tilde{\mathbf{x}}$)}
+\label{alg:avaliarmodelo}
+\begin{algorithmic}[1]
+\Require Vetor de projeto $\tilde{\mathbf{x}} = (d,\ b_w,\ h,\ esp_{long},\ esp_{tab})^T$
+\Ensure Vetor de objetivos $\mathbf{f} = (f_1, f_2)$ e vetor de restrições $\mathbf{g} = (g_1,\ldots,g_6)$
+\State Executar a rotina de acomodação geométrica: determinar $n_{long}$, $n_{tab}$ e avaliar as restrições de espaçamento $g_5$ e $g_6$
+\State Definir as ações permanentes e variáveis (trem-tipo e multidão) atuantes sobre o tabuleiro
+\State Distribuir a reação do tabuleiro sobre as longarinas \Comment{acopla o carregamento das duas peças em um único carregamento da longarina}
+\State \textbf{Longarina:} calcular os esforços solicitantes ($M_{sd}$, $V_{sd}$) e as flechas; avaliar $g_1$ (flexão), $g_2$ (cisalhamento) e $g_3$ (flecha, com fluência)
+\State \textbf{Tabuleiro:} calcular o momento solicitante sob a roda do trem-tipo; avaliar $g_4$ (flexão)
+\State Calcular $f_1$ (volume total de madeira, Equação~\eqref{eq:f1}) e $f_2$ (utilização da flecha, Equação~\eqref{eq:f2})
+\State \Return $\mathbf{f}, \mathbf{g}$
+\end{algorithmic}
+\end{algorithm}
+
+O passo 3 evidencia o acoplamento entre tabuleiro e longarina que caracteriza a formulação: a reação do tabuleiro, decorrente das cargas permanentes e do trem-tipo, é distribuída diretamente sobre as longarinas a cada avaliação, de modo que as duas peças são dimensionadas simultaneamente, e não em etapas independentes.
 
 \subsection{Definição do modelo de teste e propriedades dos materiais}\label{sec:modelo_teste}
 
-Para testar a ferramenta e demonstrar a aplicação direta do algoritmo implementado, adotou-se como objeto de estudo a ponte de estrada vicinal de pista simples, dimensionada para suportar o tráfego do trem tipo TB-240 estipulado pela ABNT NBR 7188 \parencite{nbr7188}.
+Para testar a ferramenta e demonstrar a aplicação direta do algoritmo implementado, adotou-se como objeto de estudo a ponte de estrada vicinal de pista simples, dimensionada para suportar o tráfego do trem tipo TB-240 estipulado pela \textcite{nbr7188}.
 Essa configuração é representativa de acessos rurais e vias locais, nas quais a demanda por projetos em madeira é alta.
 
 A modelagem mecânica dos elementos estruturais acompanha rigorosamente as prescrições normativas brasileiras.

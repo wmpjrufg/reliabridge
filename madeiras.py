@@ -447,8 +447,8 @@ def prop_madeiras(geo: dict) -> tuple[float, float, float, float, float, float, 
         inercia = (np.pi * (geo['d'] ** 4)) / 64
         i_x = inercia
         i_y = inercia
-        s_x = area * (geo['d'] / 2)
-        s_y = area * (geo['d'] / 2)
+        s_x = (geo['d'] ** 3) / 12
+        s_y = s_x
         w_x = inercia / (geo['d'] / 2)
         w_y = w_x
         r_x = np.sqrt(i_x / area)
@@ -458,8 +458,8 @@ def prop_madeiras(geo: dict) -> tuple[float, float, float, float, float, float, 
         area = geo['b_w'] * geo['h']
         i_x = (geo['b_w'] * (geo['h'] ** 3)) / 12
         i_y = (geo['h'] * (geo['b_w'] ** 3)) / 12
-        s_x = area * (geo['h'] / 2)
-        s_y = area * (geo['b_w'] / 2)
+        s_x = (geo['b_w'] * (geo['h'] ** 2)) / 8
+        s_y = (geo['h'] * (geo['b_w'] ** 2)) / 8
         w_x = i_x / (geo['h'] / 2)
         w_y = i_y / (geo['b_w'] / 2)
         r_x = np.sqrt(i_x / area)
@@ -652,8 +652,8 @@ def k_mod_madeira(classe_carregamento: str, classe_madeira: str, classe_umidade:
     kmod1_tabela = {
                         'permanente': {'madeira natural': 0.60, 'madeira recomposta': 0.30},
                         'longa duração': {'madeira natural': 0.70, 'madeira recomposta': 0.45},
-                        'média duração': {'madeira natural': 0.80, 'madeira recomposta': 0.55},
-                        'curta duração': {'madeira natural': 0.90, 'madeira recomposta': 0.65},
+                        'média duração': {'madeira natural': 0.80, 'madeira recomposta': 0.65},
+                        'curta duração': {'madeira natural': 0.90, 'madeira recomposta': 0.90},
                         'instantânea': {'madeira natural': 1.10, 'madeira recomposta': 1.10}
                     }
     kmod2_tabela = {
@@ -903,15 +903,18 @@ def checagem_flecha_viga(
                 "analise": descrição se a viga passa ou não passa na verificação de flecha     
     """
 
-    # Verificação flecha total
-    delta_qk_aux_cor = psi2 * (1 + phi) * delta_qk
-    delta_sd_1 = delta_gk + delta_qk_aux_cor
-    lim_1 = l / 250
+    # Verificação flecha total (flechas finais, combinação quase permanente,
+    # Tabela 21 da NBR 7190-1:2022: limite L/350)
+    # delta_fin = delta_gk*(1+phi) + delta_qk*psi2*(1+phi), conforme NBR 7190-1:
+    # a fluência amplia tanto a parcela permanente quanto a variável (ponderada por psi2).
+    delta_sd_1 = (1 + phi) * (delta_gk + psi2 * delta_qk)
+    lim_1 = l / 350
     g_sd1 = (delta_sd_1 - lim_1) / lim_1
 
-    # Verificação flecha variável
+    # Verificação flecha variável (flechas instantâneas, combinação rara de
+    # serviço, Tabela 21 da NBR 7190-1:2022: limite L/500)
     delta_sd_2 = delta_qk
-    lim_2 = l / 360
+    lim_2 = l / 500
     g_sd2 = (delta_sd_2 - lim_2) / lim_2
     g_sd = max(g_sd1, g_sd2)
 
@@ -955,7 +958,9 @@ def checagem_completa_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: flo
     # Geometria, Propriedades da seção transversal e coeficiente de correção para impacto vertical
     area, w_x, w_y, i_x, i_y, s_x, s_y, r_x, r_y, k_m = prop_madeiras(geo)
     ci = coef_impacto_vertical(l)
-    aux_ci = (1 + 0.75 * (ci - 1))
+    # CIV aplicado integralmente sobre os esforços variáveis, sem atenuação:
+    # o fator de 0,75 não consta na NBR 7188, então aux_ci passa a valer o próprio CIV.
+    aux_ci = ci
 
     # Momentos fletores devido a carga permanente e variável
     m_gk = momento_max_carga_permanente(p_gk, l)
@@ -1064,7 +1069,9 @@ def checagem_completa_tabuleiro_madeira_flexao(
     # Geometria, Propriedades da seção transversal e coeficiente de correção para impacto vertical
     area, w_x, w_y, i_x, i_y, s_x, s_y, r_x, r_y, k_m = prop_madeiras(geo)
     ci = coef_impacto_vertical(esp)
-    aux_ci = (1 + 0.75 * (ci - 1))
+    # CIV aplicado integralmente sobre os esforços variáveis, sem atenuação (ver nota
+    # equivalente em checagem_completa_longarina_madeira_flexao).
+    aux_ci = ci
 
     # Momentos fletores devido a carga permanente e variável
     m_gk = momento_max_carga_permanente(p_gtabk, esp)
