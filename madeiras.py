@@ -1718,12 +1718,9 @@ def gerar_relatorio_final(projeto, res, geo_real):
         )
 
         + "\n## 3.6 Esforços solicitantes na longarina\n\n"
-        + "Coeficiente de impacto vertical (NBR 7188) e coeficiente auxiliar:\n\n"
+        + "Coeficiente de impacto vertical (NBR 7188), aplicado integralmente sobre os esforços variáveis:\n\n"
         + eq(
             r"C_{i} &= " + f(relat_l.get('coeficiente_impacto_vertical'), 3),
-            r"aux_{ci} &= 1 + 0{,}75\,(C_{i} - 1)"
-            r" = 1 + 0{,}75 \cdot (" + f(relat_l.get('coeficiente_impacto_vertical'), 3) + r" - 1)"
-            r" = " + f(relat_l.get('aux_ci'), 3),
         )
         + "Momento fletor devido à carga permanente:\n\n"
         + eq(
@@ -1743,7 +1740,7 @@ def gerar_relatorio_final(projeto, res, geo_real):
             r"&= " + f(m_qk_long_sem_impacto) + r"\ \text{kN}\cdot\text{m}",
         )
         + eq(
-            r"M_{qk} &= M_{qk,0} \cdot aux_{ci}",
+            r"M_{qk} &= M_{qk,0} \cdot C_{i}",
             r"&= " + f(m_qk_long_sem_impacto) + r" \cdot " + f(relat_l.get('aux_ci'), 3),
             r"&= " + f(relat_l.get('m_qk [kN.m]')) + r"\ \text{kN}\cdot\text{m}",
         )
@@ -1773,7 +1770,7 @@ def gerar_relatorio_final(projeto, res, geo_real):
             r"&= " + f(v_qk_long_sem_impacto) + r"\ \text{kN}",
         )
         + eq(
-            r"V_{qk} &= V_{qk,0} \cdot aux_{ci}",
+            r"V_{qk} &= V_{qk,0} \cdot C_{i}",
             r"&= " + f(v_qk_long_sem_impacto) + r" \cdot " + f(relat_l.get('aux_ci'), 3),
             r"&= " + f(relat_l.get('v_qk [kN]')) + r"\ \text{kN}",
         )
@@ -1877,7 +1874,6 @@ def gerar_relatorio_final(projeto, res, geo_real):
         + "A peça do tabuleiro é verificada como viga biapoiada, vencendo o vão entre longarinas.\n\n"
         + eq(
             r"C_{i,tab} &= " + f(relat_t.get('coeficiente_impacto_vertical'), 3),
-            r"aux_{ci,tab} &= 1 + 0{,}75\,(C_{i,tab} - 1) = " + f(relat_t.get('aux_ci'), 3),
         )
         + eq(
             r"M_{gk,tab} &= \frac{p_{g,tab} \cdot esp_{long,corr}^{2}}{8}",
@@ -1885,7 +1881,7 @@ def gerar_relatorio_final(projeto, res, geo_real):
             r"&= " + f(relat_t.get('m_gk [kN.m]')) + r"\ \text{kN}\cdot\text{m}",
         )
         + eq(
-            r"M_{qk,tab} &= \frac{P_{roda}}{4}\,(esp_{long,corr} - 0{,}45) \cdot aux_{ci,tab}",
+            r"M_{qk,tab} &= \frac{P_{roda}}{4}\,(esp_{long,corr} - 0{,}45) \cdot C_{i,tab}",
             r"&= \frac{" + f(projeto.p_rodak) + r"}{4} \cdot (" + f(esp_long_corr) + r" - 0{,}45) \cdot " + f(relat_t.get('aux_ci'), 3),
             r"&= " + f(relat_t.get('m_qk [kN.m]')) + r"\ \text{kN}\cdot\text{m}",
         )
