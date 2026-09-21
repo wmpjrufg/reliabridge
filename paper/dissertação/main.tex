@@ -1,0 +1,325 @@
+% ------------------------------------------------------------------------
+% ------------------------------------------------------------------------
+% Modelo de TCC do curso de Engenharia de Controle e Automação - UFSC/Campus Blumenau
+% Autor: Ciro André Pitz
+% Revisão: Brenda Teresa Porto de Matos
+% O presente modelo foi obtido a partir do modelo desenvolvido por Alisson Lopes Furlani disponível na BU/UFSC.
+% ------------------------------------------------------------------------
+% ------------------------------------------------------------------------
+
+\documentclass[
+12pt,				% tamanho da fonte
+%openright,			% capítulos começam em pág ímpar (insere página vazia caso preciso)
+oneside,			% para impressão no anverso. Oposto a twoside
+a4paper,			% tamanho do papel. 
+chapter=TITLE,		% títulos de capítulos convertidos em letras maiúsculas
+section=TITLE,		% títulos de seções convertidos em letras maiúsculas
+%subsection=TITLE,	% títulos de subseções convertidos em letras maiúsculas
+%subsubsection=TITLE,% títulos de subsubseções convertidos em letras maiúsculas
+% -- opções do pacote babel --
+english,			% idioma adicional para hifenização
+brazil,brazilian			% o último idioma é o principal do documento				% o último idioma é o principal do documento
+]{abntex2}
+
+\PassOptionsToPackage{nopatch=eqnum}{microtype}
+\usepackage{configs/eca_ufsc_bnu} % personalização da ABNTEX2 
+% \usepackage{setspace}
+\addbibresource{pos_textual/referencias.bib} % Seus arquivos de referências
+\emergencystretch=2em
+
+% --- Hyperref-safe: títulos em MAIÚSCULAS no Sumário sem redefinir \contentsline
+\AtBeginDocument{%
+  \renewcommand{\cftsectionfont}{\ABNTEXsectionfont\MakeTextUppercase}%
+  \renewcommand{\cftsectionpagefont}{\cftsectionfont}%
+  % Se quiser também SUBSEÇÕES/OUTROS níveis, descomente:
+  % \renewcommand{\cftsubsectionfont}{\ABNTEXsubsectionfont\MakeTextUppercase}%
+  % \renewcommand{\cftsubsectionpagefont}{\cftsubsectionfont}%
+}
+
+%---------------------------------------------------------------------------------------------
+%--------- DADOS BÁSICOS DO TCC (Preencher todos) -------------------------------------
+%---------------------------------------------------------------------------------------------
+%Substituir 'Nome completo do autor' pelo seu nome.
+\autor{Pedro Henrique Gomes Duarte}
+% FIXME Substituir 'Título do trabalho' pelo título da trabalho.
+\titulo{Avaliação da segurança de pontes de madeiras existente em estradas vicinais utilizando a teoria de confiabilidade estrutural}
+% Substituir 'Subtítulo (se houver)' pelo subtítulo da trabalho. 
+% Se não houver subtítulo, basta deletar o texto.
+%\subtitulo{subtítulo (se houver)}
+
+\orientador{Prof. Dr. Wanderlei Malaquias Pereira Junior}
+% Se for orientado por uma mulher, comente a linha acima e descomente a linha a seguir.
+% \orientador[Orientadora]{Profa. Nome, Dra.}
+
+% Caso não tenha coorientador, comente a linha a seguir.
+\coorientador{Prof. Dr. Wellington Andrade da Silva e prof. Dr. Humberto Salazer Amorim Varum.}
+% Se for coorientado por uma mulher, comente a linha acima e descomente a linha a seguir.
+% \coorientador[Coorientadora]{Profa. Nome, Dra.}
+
+\dia{dia}
+\mes{mês}
+\ano{2025}
+\local{Catalão}
+\formacao{Engenharia Civil}
+% Se for mulher, comente a linha acima e descomente a linha a seguir.
+%\formacao{Engenheira de Controle e Automação}
+
+\bancanomea{Prof. Nome, Dr.} %Primeiro membro da banca (normalmente o orientador). Altere as abreviações para o feminino (exemplo: Profa., Dra.) quando for o caso.
+\bancainsta{Nome da instituição ou empresa} %Nome da instituição (UFSC, por exemplo) ou empresa do primeiro membro da banca
+
+\bancanomeb{Prof. Nome, Dr.} %Segundo membro da banca. Altere as abreviações para o feminino (exemplo: Profa., Dra.) quando for o caso.
+\bancainstb{Nome da instituição ou empresa} %Nome da instituição (UFSC, por exemplo) ou empresa do segundo membro da banca
+
+\bancanomec{Prof. Nome, Dr.} %Terceiro membro da banca. Altere as abreviações para o feminino (exemplo: Profa., Dra.) quando for o caso.
+\bancainstc{Nome da instituição ou empresa} %Nome da instituição (UFSC, por exemplo) ou empresa do terceiro membro da banca
+
+%Resumo e palavras-chave do trabalho
+\resumotcc{Esta dissertação apresenta uma avaliação da segurança estrutural de pontes de madeira existentes em estradas vicinais, utilizando a teoria da confiabilidade estrutural como ferramenta principal de análise. O estudo foca-se em pontes com sistema estrutural biapoiado e longarinas de madeira roliça, tipologia comum nas estradas vicinais na região sudeste do estado de Goiás. A motivação reside na frequente ausência de projetos padronizados, na carência de manutenção sistemática e na ocorrência de acidentes envolvendo o colapso destas estruturas, aliado à escassez de metodologias de inspeção baseadas em critérios probabilísticos para o material madeira. A metodologia proposta envolve a criação de um gêmeo digital para simular o comportamento estrutural, considerando as incertezas inerentes às propriedades mecânicas da madeira e às condições de carregamento. A análise de confiabilidade é realizada através do método de Monte Carlo com Amostragem por Hipercubo Latino (LHS), permitindo a quantificação da probabilidade de falha e do índice de confiabilidade. Um dos defeitos investigados é a redução da seção resistente das longarinas devido à perda de alburno por ação de agentes biológicos, uma patologia comumente identificada durante as inspeções de campo. Os resultados esperados incluem a estimativa de índices de confiabilidade para as pontes inspecionadas e a avaliação de cenários de reparo, com o objetivo de reabilitar a estrutura para um nível de confiabilidade alvo 3,0. A pesquisa demonstra que a abordagem probabilística oferece uma avaliação de segurança mais realista e fundamentada quando comparada às verificações determinísticas tradicionais, fornecendo subsídios técnicos para a tomada de decisão sobre manutenção, reforço ou substituição destas obras de arte especiais, contribuindo assim para a segurança viária e a otimização de recursos públicos.}
+\palavraschave{Confiabilidade Estrutural; Pontes de Madeira; Método de Monte Carlo; Estradas Vicinais; Gêmeo Digital (ou Modelagem Computacional).}
+
+%Abstract e keywords do trabalho
+\abstracttcc{This dissertation presents a safety assessment of existing timber bridges on rural roads using structural reliability theory as the main analysis tool. The study focuses on bridges with simply supported structural systems and round timber stringers, a common typology in the southeastern region of Goiás State, Brazil. The motivation stems from the frequent lack of standardized designs, the absence of systematic maintenance, the occurrence of accidents involving the collapse of these structures, and the scarcity of inspection methodologies based on probabilistic criteria for timber. The proposed methodology involves creating a digital twin to simulate structural behavior, considering the inherent uncertainties in the mechanical properties of wood and loading conditions. Reliability analysis is performed using the Monte Carlo method with Latin Hypercube Sampling (LHS), allowing the quantification of the probability of failure and the reliability index. One of the defects investigated is the reduction of the resistant cross-section of the stringers due to sapwood loss caused by biological agents, a pathology commonly identified during field inspections. The expected results include estimating reliability indices for the inspected bridges and evaluating repair scenarios, aiming to rehabilitate the structure to a target reliability level 3.0. The research demonstrates that the probabilistic approach provides a more realistic and well-founded safety assessment compared to traditional deterministic checks, offering technical support for decision-making regarding the maintenance, reinforcement, or replacement of these special minor bridges, thereby contributing to road safety and the optimization of public resources.}
+\keywords{Structural Reliability; Timber Bridges; Monte Carlo Method; Rural Roads; Digital Twin (or Computational Modeling).}
+
+%Agradecimentos (opcional). Caso não queira inserir, deixe em branco (\agradecimentostcc{} )
+\agradecimentostcc{Inserir os agradecimentos aos colaboradores à execução do trabalho.}
+
+%Epígrafe (opcional). Caso não queira inserir, deixe em branco (\epigrafetcc{} )
+\epigrafetcc{Todo aquele, pois, que ouve estas minhas palavras e as põe em prática será comparado a um homem prudente, que edificou a sua casa sobre a rocha.(MATEUS 7:24).}
+
+%Decatória (opcional). Caso não queira inserir, deixe em branco (\dedicatoriatcc{} )
+\dedicatoriatcc{Este trabalho é dedicado aos meus colegas de classe e aos meus queridos pais.}
+
+%Lista de quadros
+%Além de figuras e tabelas, o TCC contém quadros? Caso afirmativo digite sim ou deixe em branco para não (\contemquadros{}).
+\contemquadros{sim}
+
+%Lista de siglas (opcional).
+%Deseja incluir lista de abreviaturas e siglas? Caso afirmativo digite sim ou deixe em branco para não (\contemsiglas{}).
+\contemsiglas{sim}
+
+%Lista de símbolos (opcional).
+%Deseja incluir lista de símbolos? Caso afirmativo digite sim ou deixe em branco para não (\contemsimbolos{}).
+\contemsimbolos{sim}
+
+%-------------------------FIM DOS DADOS BÁSICOS DO TCC--------------------------------------------
+
+
+% ajusta espaçamento das listas itemize e enumerate
+\setitemize{topsep=0pt,itemsep=0pt,leftmargin=\parindent+\labelwidth-\labelsep}
+\setenumerate{topsep=0pt,itemsep=0pt,leftmargin=\parindent+\labelwidth-\labelsep}
+
+% define a macro \Autoref to allow multiple references to be passed to \autoref
+\makeatletter
+\newcommand\Autoref[1]{\@first@ref#1,@}
+\def\@throw@dot#1.#2@{#1}% discard everything after the dot
+\def\@set@refname#1{%    % set \@refname to autoefname+s using \getrefbykeydefault
+	\edef\@tmp{\getrefbykeydefault{#1}{anchor}{}}%
+	\xdef\@tmp{\expandafter\@throw@dot\@tmp.@}%
+	\ltx@IfUndefined{\@tmp autorefnameplural}%
+	{\def\@refname{\@nameuse{\@tmp autorefname}s}}%
+	{\def\@refname{\@nameuse{\@tmp autorefnameplural}}}%
+}
+\def\@first@ref#1,#2{%
+	\ifx#2@\autoref{#1}\let\@nextref\@gobble% only one ref, revert to normal \autoref
+	\else%
+	\@set@refname{#1}%  set \@refname to autoref name
+	\@refname~\ref{#1}% add autoefname and first reference
+	\let\@nextref\@next@ref% push processing to \@next@ref
+	\fi%
+	\@nextref#2%
+}
+\def\@next@ref#1,#2{%
+	\ifx#2@ e~\ref{#1}\let\@nextref\@gobble% at end: print e+\ref and stop
+	\else, \ref{#1}% print  ,+\ref and continue
+	\fi%
+	\@nextref#2%
+}
+\makeatother
+
+% Cria comando para referenciar Anexo automaticamente \refanexo
+\newcommand{\refanexo}[1]{\hyperref[#1]{Anexo~\ref{#1}}}
+
+% Define comandos para tabelas que permite ajustar o tamanho da coluna e manter alinhamento C, R ou L
+%\newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
+\newcolumntype{C}[1]{>{\centering\let\arraybackslash}m{#1}}
+\newcolumntype{R}[1]{>{\RaggedLeft\let\arraybackslash}m{#1}}
+\newcolumntype{L}[1]{>{\RaggedRight\let\arraybackslash}m{#1}}
+
+
+% ---
+% Filtering and Mapping Bibliographies
+% ---
+\DeclareSourcemap{
+	\maps[datatype=bibtex]{
+		% remove fields that are always useless
+		\map{
+			\step[fieldset=abstract, null]
+			\step[fieldset=pagetotal, null]
+			\step[fieldset=doi, null]
+		}
+		% remove URLs for types that are primarily printed
+		\map{
+			\pernottype{software}
+			\pernottype{online}
+			\pernottype{report}
+			\pernottype{techreport}
+			\pernottype{standard}
+			\pernottype{manual}
+			\pernottype{misc}
+			\step[fieldset=url, null]
+			\step[fieldset=urldate, null]
+		}
+		\map{
+			\pertype{inproceedings}
+			% remove mostly redundant conference information
+			%\step[fieldset=venue, null]
+			%\step[fieldset=eventdate, null]
+			%\step[fieldset=eventtitle, null]
+			% do not show ISBN for proceedings
+			\step[fieldset=isbn, null]
+			% Citavi bug
+			%\step[fieldset=volume, null]
+		}
+	}
+}
+% ---
+
+\preambulo
+{%
+	Dissertação apresentada ao Programa de Pós-Graduação em Engenharia Civil, da Faculdade de Engenharia, da Universidade Federal de Catalão (UFCAT), como requisito para obtenção do título de Mestre em \imprimirformacao.
+}
+% ---
+
+% ---
+% Configurações de aparência do PDF final
+% ---
+% alterando o aspecto da cor azul
+\definecolor{blue}{RGB}{41,5,195}
+% informações do PDF
+\makeatletter
+\hypersetup{
+	%pagebackref=true,
+	pdftitle={\@title}, 
+	pdfauthor={\@author},
+	pdfsubject={\imprimirpreambulo},
+	pdfcreator={LaTeX with abnTeX2},
+	pdfkeywords={ufsc, latex, abntex2}, 
+	colorlinks=true,       		% false: boxed links; true: colored links
+	linkcolor=black,%blue,          	% color of internal links
+	citecolor=black,%blue,        		% color of links to bibliography
+	filecolor=black,%magenta,      		% color of file links
+	urlcolor=blue,
+	bookmarksdepth=4
+}
+\makeatother
+% ---
+
+% Definição das siglas e símbolos
+\input{pre_textual/siglas_simbolos}
+% compila a lista de abreviaturas e siglas e a lista de símbolos
+\makenoidxglossaries 
+
+% compila o indice
+\makeindex
+
+\Urlmuskip=0mu plus 2mu
+
+% Garanta que biblatex use os .lbx do pacote ABNT
+\DeclareLanguageMapping{brazilian}{brazilian-abnt}
+\DeclareLanguageMapping{brazil}{brazilian-abnt}
+\DeclareLanguageMapping{english}{english-abnt}
+
+
+
+
+
+
+% ------------------------------------------------------------------------------------------------
+% --------------------------INÍCIO DO DOCUMENTO---------------------------------------------
+% ------------------------------------------------------------------------------------------------
+\begin{document}
+
+     % Siglas e simbolos
+    \glsaddall
+	
+	% Seleciona o idioma do documento (conforme pacotes do babel)
+	%\selectlanguage{english}
+	\selectlanguage{brazil}
+	
+	% Retira espaço extra obsoleto entre as frases.
+	\frenchspacing 
+	
+	% Espaçamento 1.5 entre linhas
+	\OnehalfSpacing
+	
+	% Corrige justificação
+	%\sloppy
+	
+
+	%Elementos pré-textuais
+	% \pretextual %a macro \pretextual é acionado automaticamente no início de \begin{document}
+	% Capa, folha de rosto, ficha bibliografica, errata, folha de aprovação
+	% Dedicatória, agradecimentos, epígrafe (opcional), resumos, listas
+	\input{pre_textual/pretextual}
+
+	% Elementos textuais
+	\textual
+	
+	% 1 - Introdução
+	\include{capitulos/cap_1}
+	
+	% 2 - Revisão Bibliográfica 
+	\include{capitulos/cap_2}
+	
+	% 3 - Metodologia de Pesquisa
+	\include{capitulos/cap_3}
+	
+	% 4 - Resultados Esperados e Cronograma da Dissertação
+	\include{capitulos/cap_4}
+
+    % 5 - conclusão 
+	\include{capitulos/cap_5}
+	
+	
+	
+	% Elementos pós-textuais
+	\postextual
+		
+	% Referências bibliográficas
+	\begingroup
+	    \printbibliography[title=REFERÊNCIAS]
+	\endgroup
+
+
+
+
+
+
+    
+	
+	
+	%Reconfiguração do título para apêndices e anexos
+	 \renewcommand{\ABNTEXchapterupperifneeded}[1]{#1} 
+	\makeatletter
+	\settocpreprocessor{chapter}{%
+      \let\tempf@rtoc\f@rtoc%
+      \def\f@rtoc{%
+      \texorpdfstring{{\tempf@rtoc}}{\tempf@rtoc}}%
+      }
+    \makeatother
+	
+	
+	% Apêndices
+    \begin{apendicesenv}
+    	%\partapendices* 
+    	\input{pos_textual/apendice_a}
+    \end{apendicesenv}
+
+    % Anexos
+    \begin{anexosenv}
+    	%\partanexos*
+    	\input{pos_textual/anexo_a}
+    \end{anexosenv}
+
+\end{document}
