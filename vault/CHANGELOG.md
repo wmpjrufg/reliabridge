@@ -1,5 +1,66 @@
 # Changelog da pesquisa
 
+## 2026-09-21
+
+- **Boneco do artigo 3 no recorte de capacidade de carga:** após a discussão com o usuário, criado `paper/ia_explicavel/05_boneco_capacidade_carga.md`, com título, resumo de proposta, oito seções comentadas, figuras/tabelas e ordem de execução. Separados limites de serviço/resistência de geometrias fixas, com pré-dimensionamento como aplicação secundária. README e fila atualizados; matriz/piloto de otimização preservados como etapa anterior, sem tratá-los como dataset de capacidade ou transferir automaticamente sua robustez média.
+
+- **Artigo 3 iniciado por solicitação do usuário:** `paper/ia_explicavel/` reúne proposta de equações multidimensionais explicáveis, aplicação em anteprojeto e revistas candidatas. Criada matriz de 2.700 cenários de entrada (vão, p_gk, largura, veículo e classe), com configuração, hashes, partições agrupadas e executor de piloto. Dados planejados e resultados calculados ficam separados; não foi usada a tabela experimental antiga desativada. Nenhuma equação final ou generalização física foi alegada. Ver `11_paper_ia_explicavel.md`.
+- **Piloto do artigo 3 concluído:** 8/8 execuções com solução, verificações nominais e médias reavaliadas e volumes nominais reconstruídos. Conferidas as 2.700 entradas, hashes e partições por vão. Resultado exploratório, sem treinamento de IA e com revisão mecânica/convergência ainda pendentes.
+- **Diagnóstico do piloto:** transferindo a geometria de p_gk=5 para p_gk=0,1 kPa no caso L=3 m/B=4,5 m/D40/TB-450, encontrou-se candidato viável nominalmente e na média com volume médio 15,2% menor que a referência selecionada. Isso exige revisar a qualidade do alvo econômico antes de treinar as equações; não foi alterado o núcleo nem reinterpretado o achado como garantia de ótimo.
+
+- ✅ **Matriz reprocessada sobre o código corrigido de 2026-09-20 (D-17) e o Artigo 1
+  (Matéria) inteiramente refeito.** `simulacaoes_/lote_eixos_1p5/` (20 células) e
+  `simulacaoes_/custo_robustez_C13/` (4 níveis de ρ) estavam vazios desde a limpeza de
+  ontem à noite; rodados de novo com `rodar_lote.py` / `rodar_lote_robustez_materia.py`.
+  20/20 células `ok`, 15,2~min o lote principal (0,76~min/célula, contra a estimativa de
+  2,5~min do script — bem mais rápido que o previsto), 1,2~min a robustez. Novos scripts
+  `extrair_preenchimento_materia.py` (recalcula todas as tabelas e números citados no
+  `.tex` a partir dos zips, grava `tmp/preenchimento_materia.xlsx`) e
+  `ajustar_equacao_pre_dimensionamento.py`. `gerar_figuras_materia.py` ganhou a figura de
+  paridade `equacao_pre_dimensionamento.png` (PT/EN). PDF compila limpo em 62 páginas,
+  sem `??` nem figura ausente.
+- **Três achados da versão anterior não sobreviveram e foram reescritos, não só
+  re-numerados** — importante para quem for citar o artigo de memória:
+  1. **A flecha passa a governar uma célula.** C-15 (L=5~m, D60): $g_3$ (que combina
+     $L/350$ quase permanente e $L/500$ raro) atinge 99,99% de utilização, mesmo com o
+     índice $\delta_{tot}/(L/350)$ reportado marcando só 46,3% — é a parcela rara, sem
+     fluência, que governa. C-19 (L=6~m, D50) chega a empate técnico com o tabuleiro
+     (99,95% vs 99,97%). Antes, nenhuma das 20 tinha flecha como governante.
+  2. **A saturação no piso dimensional do vão de 3~m desapareceu.** Com o piso de `d`
+     revisto para 20~cm (era 30~cm, D-19 abaixo) nenhuma célula satura mais; em vez
+     disso, as 20 células convergem uniformemente a no máximo 0,63% do limite normativo
+     da verificação governante. A antiga narrativa "3~m é diferente" saiu do texto.
+  3. **O custo da robustez, antes ~5-6% e a maior alegação de originalidade do artigo,
+     não aparece mais.** Extremo econômico: +0,2% (ρ=2,5%), +0,5% (ρ=5%), +0,5%
+     (ρ=10%). Média pareada de 3 níveis de flecha: -0,6%, -0,3%, -0,5% — sinal trocado
+     em 5 das 9 combinações. Reescrito no `.tex` como resultado honesto e negativo, não
+     forçado a caber na narrativa antiga; atribuído à combinação das envoltórias
+     corrigidas + `N_gen=300` + novos limites de `d`, mas a causa exata não foi isolada.
+     **Uma única execução por nível de ρ, sem semente repetida — P-16 (rodar k=5
+     sementes) passa de "bom ter" a bloqueador para qualquer conclusão quantitativa
+     sobre esse custo.** Adicionado às limitações do artigo.
+- **D-19: limites de busca revisados para novas execuções (20/09), agora refletidos no
+  artigo.** `d` 30–150→20–100~cm, `bw` 5–60→20–50~cm, `h` 5–60→5–15~cm (indicado pelo
+  autor a partir de consulta ao mercado, ver `09_lote_headless.md`), `N_gen` 150→300.
+  `tab:intervalos` e todas as menções a "150 gerações" no `.tex` estavam desatualizadas
+  em relação ao `tab:nsga2` (já em 300 desde ontem) e foram corrigidas.
+- **Nova Seção 4.6, "Equação de pré-dimensionamento".** Ajuste por mínimos quadrados
+  log-log de $V(L, f_{c0,k}) = a\,L^b\,f_{c0,k}^c$ sobre as 20 células:
+  $a=1{,}970$, $b=1{,}696$, $c=-0{,}497$, $R^2=0{,}999$, erro relativo médio 1,4% (máximo
+  2,6%, célula C-02). $f_{c0,k}$ escolhido em vez de $E_{c0,med}$ porque a flexão, não a
+  rigidez, governa a matriz. Complementa os ábacos gráficos com uma estimativa numérica
+  direta, inclusive para $f_{c0,k}$ fora das cinco classes tabeladas.
+- Sobol, hipervolume/*spacing* e estatística descritiva da C-13 recalculados e
+  reescritos: o espaçamento entre longarinas passou a ter maior amplitude absoluta na
+  fronteira (130,8~cm) do que o diâmetro (54,3~cm) — inverteu a ordem da versão anterior,
+  ainda que os dois continuem sendo as duas variáveis de decisão (Sobol: $d$ 96–98% nas
+  três verificações da longarina, $esp_{long}$ 93,0% na flexão do tabuleiro).
+- Abstract e Conclusões reescritos para bater com os números novos, incluindo a aritmética
+  de avaliações (`N_gen=300` dobra 7~500→15~000 indivíduos/célula, 225~000→450~000
+  avaliações de modelo/célula, 4,5M→9M no lote).
+- Apêndices **não tocados** — a conferência manual (P-26) é validação independente feita
+  à mão e permanece pendente com os números antigos; precisa ser refeita contra este lote.
+
 ## 2026-09-20
 
 - ⚠️ **O lote em `simulacaoes_/lote_eixos_1p5/` está DESATUALIZADO em relação ao

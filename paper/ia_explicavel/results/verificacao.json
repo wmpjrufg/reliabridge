@@ -1,0 +1,106 @@
+{
+  "inputs_checked": 2700,
+  "pilot_runs_checked": 8,
+  "expected_pilot_runs": 8,
+  "pilot_complete": true,
+  "status_counts": {
+    "ok": 8
+  },
+  "checks": [
+    "hashes",
+    "unique_ids",
+    "split_groups",
+    "balanced_vehicles_classes",
+    "current_bounds",
+    "nominal_re_evaluation",
+    "robust_mean_re_evaluation",
+    "minimum_volume_selection",
+    "volume_reconstruction"
+  ],
+  "records": [
+    {
+      "case_id": "L0300_G010_B450_TB240_D40",
+      "status": "ok",
+      "elapsed_s": 28.754968900000677,
+      "d_cm": 32.7882327231521,
+      "volume_nominal_m3": 2.1369007618324365,
+      "g_nominal_max": -0.022677032109200527,
+      "near_bound": true
+    },
+    {
+      "case_id": "L0300_G010_B450_TB450_D40",
+      "status": "ok",
+      "elapsed_s": 27.06314610003028,
+      "d_cm": 47.504080910912194,
+      "volume_nominal_m3": 3.2695932198917173,
+      "g_nominal_max": -0.051362698665073786,
+      "near_bound": true
+    },
+    {
+      "case_id": "L0300_G500_B450_TB240_D40",
+      "status": "ok",
+      "elapsed_s": 22.26268450001953,
+      "d_cm": 33.479438045071056,
+      "volume_nominal_m3": 2.195726978754559,
+      "g_nominal_max": -0.03444582479651484,
+      "near_bound": true
+    },
+    {
+      "case_id": "L0300_G500_B450_TB450_D40",
+      "status": "ok",
+      "elapsed_s": 20.19895120000001,
+      "d_cm": 40.64338920342905,
+      "volume_nominal_m3": 2.888032508766573,
+      "g_nominal_max": -0.011999182612252857,
+      "near_bound": true
+    },
+    {
+      "case_id": "L1000_G010_B450_TB240_D40",
+      "status": "ok",
+      "elapsed_s": 21.344262500002515,
+      "d_cm": 66.70291713842404,
+      "volume_nominal_m3": 14.657907854439504,
+      "g_nominal_max": -0.0048057738266092595,
+      "near_bound": true
+    },
+    {
+      "case_id": "L1000_G010_B450_TB450_D40",
+      "status": "ok",
+      "elapsed_s": 20.535351799975615,
+      "d_cm": 79.78830257243504,
+      "volume_nominal_m3": 19.96650582873493,
+      "g_nominal_max": -0.007809150556617167,
+      "near_bound": true
+    },
+    {
+      "case_id": "L1000_G500_B450_TB240_D40",
+      "status": "ok",
+      "elapsed_s": 20.033981400018092,
+      "d_cm": 71.0947983436831,
+      "volume_nominal_m3": 16.099997661224634,
+      "g_nominal_max": -0.006763794002218672,
+      "near_bound": true
+    },
+    {
+      "case_id": "L1000_G500_B450_TB450_D40",
+      "status": "ok",
+      "elapsed_s": 20.994650900014676,
+      "d_cm": 81.97905847161424,
+      "volume_nominal_m3": 20.71085688776781,
+      "g_nominal_max": -0.008111614634828835,
+      "near_bound": true
+    }
+  ],
+  "cross_load_feasible_improvements": [
+    {
+      "target_case": "L0300_G010_B450_TB450_D40",
+      "candidate_from": "L0300_G500_B450_TB450_D40",
+      "original_volume_robust_mean_m3": 3.249453933205334,
+      "candidate_volume_robust_mean_m3": 2.755515607939844,
+      "reduction_pct": 15.200656338533097,
+      "candidate_g_mean_max": -0.027356284548336406,
+      "candidate_g_nominal_max": -0.011999182612252857
+    }
+  ],
+  "publication_ready": false
+}

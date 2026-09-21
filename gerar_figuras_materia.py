@@ -59,6 +59,8 @@ ROTULOS = {
         "consumo": "Consumo de madeira (m$^3$/m$^2$ de tabuleiro)",
         "diametro": "Diâmetro da longarina, $d$ (cm)",
         "classe": "Classe",
+        "v_obs": "Volume obtido na otimização, $V$ (m$^3$)",
+        "v_pred": "Volume da equação ajustada, $\\hat{V}$ (m$^3$)",
     },
     "en": {
         "utilizacao_x": "Utilisation ratio (%)",
@@ -70,6 +72,8 @@ ROTULOS = {
         "consumo": "Timber consumption (m$^3$/m$^2$ of deck)",
         "diametro": "Girder diameter, $d$ (cm)",
         "classe": "Class",
+        "v_obs": "Volume from the optimisation, $V$ (m$^3$)",
+        "v_pred": "Volume from the fitted equation, $\\hat{V}$ (m$^3$)",
     },
 }
 

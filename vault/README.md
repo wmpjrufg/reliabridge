@@ -5,7 +5,7 @@
 > (Claude, GPT, Gemini, Copilot, o que for) recupere o estado da pesquisa sem precisar
 > reler o repositório inteiro nem refazer perguntas já respondidas.
 
-**Última atualização:** 2026-09-07
+**Última atualização:** 2026-09-21
 
 ---
 
@@ -16,7 +16,7 @@ e otimização de **pontes de madeira roliça para estradas vicinais**, seguindo
 NBR 7190:2022. O modelo estrutural é integralmente paramétrico e está acoplado a uma
 rotina de **otimização robusta multiobjetivo** (NSGA-II via `pymoo`), com análise de
 sensibilidade global de Sobol (`UQpy`). Em torno dessa plataforma existe uma linha de
-pesquisa com **dois artigos em redação** e **desdobramentos planejados**.
+pesquisa com **dois artigos em redação**, um **terceiro em planejamento com dataset inicial** e outros desdobramentos planejados.
 
 ## 2. Mapa dos arquivos
 
@@ -28,6 +28,7 @@ pesquisa com **dois artigos em redação** e **desdobramentos planejados**.
 | `beam_data.xlsx` | Dados de vigas |
 | `paper/materia/` | **Artigo 1** — Revista Matéria (PT). Apresenta a plataforma |
 | `paper/engstruct/` | **Artigo 2** — Engineering Structures. Erro de enquadramento em classe |
+| `paper/ia_explicavel/` | **Artigo 3** — Equações multidimensionais explicáveis, dataset e aplicação |
 | `paper/priscilla/` | Dissertação da Priscilla |
 | `paper/pedro/` | Trabalho do Pedro (formato Elsevier) |
 | `paper/modelo/` | Template LaTeX base, não é conteúdo |
@@ -49,6 +50,7 @@ pesquisa com **dois artigos em redação** e **desdobramentos planejados**.
 | [`08_preenchimento_materia.md`](08_preenchimento_materia.md) | Artigo 1: o que já foi preenchido com as 20 simulações, o que falta e a auditoria dos dados de entrada |
 | [`09_lote_headless.md`](09_lote_headless.md) | Rodar a matriz por script em vez da interface: uso, limites recuperados e reprodutibilidade |
 | [`10_solucao_ideal_fronteira.md`](10_solucao_ideal_fronteira.md) | Como escolher a solução de projeto a partir da fronteira eficiente |
+| [`11_paper_ia_explicavel.md`](11_paper_ia_explicavel.md) | Artigo 3: equações multidimensionais, dataset e aplicação de anteprojeto |
 | [`CHANGELOG.md`](CHANGELOG.md) | Histórico de evolução do trabalho |
 | [`notas/`](notas/) | Fichamento de leitura, um arquivo por trabalho (`notas/_template_leitura.md` para novos) |
 | [`refs/`](refs/) | Índice das referências base e `entradas.bib`. **Os PDFs ficam só na máquina**, fora do git, por direito autoral das editoras |

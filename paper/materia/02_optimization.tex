@@ -117,7 +117,7 @@ O estudo evidencia que a otimização de uma seção isolada não substitui a av
 
 Em paralelo, a otimização de pontes metálicas estaiadas incorporou a interação entre dimensões das peças, geometria e distribuição dos esforços.
 \textcite{SimoesNegrao1994} formularam um problema multiobjetivo com metas de redução de custo e de tensões, adotando como variáveis as dimensões das seções e as posições de ancoragem dos estais no tabuleiro e nas torres.
-O procedimento, baseado em um algoritmo de otimização por entropia, também examinou a influência das tensões decorrentes da sequência construtiva.
+O procedimento também examinou a influência das tensões decorrentes da sequência construtiva.
 Assim, a literatura já contemplava soluções de compromisso e variáveis de forma antes da popularização das metaheurísticas multiobjetivo atualmente empregadas.
 
 Uma vertente posterior passou a explorar metaheurísticas para tratar problemas com numerosas variáveis discretas e verificações estruturais acopladas.
@@ -131,6 +131,10 @@ Nesse caso, a análise por elementos finitos e a verificação dos estados limit
 Em seguida, \textcite{GarciaSegura2017} estenderam a investigação ao desempenho ao longo da vida útil de pontes sujeitas à corrosão, articulando alternativas de projeto inicial e estratégias de manutenção sob uma meta de confiabilidade.
 Esses estudos mostram como a avaliação das soluções pode ultrapassar o custo inicial e incluir consequências ambientais e a evolução da segurança estrutural no tempo.
 
+Uma vertente distinta explorou a otimização topológica não como instrumento de redução de custo, mas como ferramenta de projeto conceitual voltada à expressão arquitetônica das pontes.
+\textcite{vanBaalen2017} investigou o uso da otimização topológica na concepção de passarelas de pedestres, buscando conciliar desempenho estrutural e apelo estético das formas resultantes, em linha com a valorização crescente da expressão arquitetônica de pontes observada desde meados da década de 1990.
+Essa aplicação ilustra o potencial da otimização topológica como ferramenta de pré-dimensionamento conceitual, ainda que dissociada, nesse caso, da otimização de seção que constitui o foco do presente trabalho.
+
 Mais recentemente, a integração entre otimização e modelagem paramétrica passou a permitir a atualização automática da geometria, da análise e das verificações de projeto.
 \textcite{deMoraes2025} combinaram modelagem tridimensional, algoritmo genético, análise por elementos finitos e busca local pelo método Simplex no projeto de pontes com vigas de concreto protendido.
 A abordagem relaciona decisões sobre a configuração global da ponte ao dimensionamento de suas vigas, aproximando a otimização das etapas de elaboração e avaliação do modelo estrutural.
@@ -139,6 +143,7 @@ No caso da madeira, há antecedentes específicos de otimização de passarelas 
 \textcite{Negrao1999} investigou a minimização de custo mediante a alteração das dimensões dos elementos, das características dos estais e de parâmetros geométricos, incluindo a escolha de propriedades associadas às classes de madeira laminada colada.
 Posteriormente, \textcite{SimoesNegrao2005} apresentaram um procedimento de projeto ótimo baseado em confiabilidade para passarelas estaiadas de madeira laminada colada, integrando análise por elementos finitos, análise de sensibilidade e uma formulação multicritério que considera custo, tensões, deslocamentos e confiabilidade.
 Esses antecedentes demonstram que tanto a busca de soluções econômicas quanto a consideração de incertezas já fazem parte da pesquisa sobre pontes de madeira, embora em sistemas estruturais distintos das pontes rodoviárias de madeira roliça estudadas neste trabalho.
+Em uma direção complementar, voltada à fase conceitual do projeto, \textcite{Fiore2020} propuseram uma metodologia de três etapas, compreendendo condicionantes de contorno e sistema estrutural, durabilidade e níveis de vibração, para orientar decisões de forma, durabilidade e estrutura em passarelas de madeira, com vistas à extensão de sua vida útil. A proposta foi aplicada ao projeto de uma passarela de pedestres e ciclistas na Itália, evidenciando que, mesmo fora do escopo estrito da otimização, a literatura sobre pontes de madeira já reconhece a necessidade de tratar conjuntamente aspectos estruturais e de durabilidade desde as etapas iniciais de concepção.
 
 O conjunto desses trabalhos permite identificar uma ampliação das decisões e dos critérios incorporados à otimização de pontes: da busca de configurações de menor custo às formulações que articulam desempenho estrutural, impactos ambientais, confiabilidade e automação do projeto.
 Nesse contexto, o presente estudo concentra-se no dimensionamento das seções de longarinas de madeira roliça e de pranchas do tabuleiro, com uma formulação multiobjetivo e avaliação de perturbações dimensionais.

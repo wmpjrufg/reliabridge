@@ -3,10 +3,11 @@
 Esta seção apresenta os resultados obtidos com a plataforma computacional descrita na Seção~\ref{sec:metodologia}, aplicada a uma matriz de configurações de ponte de madeira roliça para estrada vicinal de pista simples.
 A matriz combina quatro vãos teóricos com as cinco classes de resistência de madeiras de florestas nativas da ABNT NBR 7190-3, mantendo fixos a largura da pista, o trem tipo e todos os coeficientes normativos, de modo que as diferenças observadas decorram exclusivamente do vão e da classe de resistência.
 
-A apresentação está organizada em três blocos.
+A apresentação está organizada em quatro blocos.
 O primeiro descreve a plataforma computacional desenvolvida (Seção~\ref{sec:plataforma}) e define a matriz de casos (Seção~\ref{sec:casos}).
 O segundo detalha exaustivamente uma célula de referência da matriz (Seção~\ref{sec:caso_detalhado}), na qual são exercitados todos os recursos analíticos da ferramenta: fronteira eficiente, grau de utilização das verificações, custo da robustez, convergência por hipervolume, sensibilidade global de Sobol e dispersão das variáveis de projeto.
 O terceiro percorre a matriz completa (Seção~\ref{sec:varredura}) e converte os resultados em ábacos de anteprojeto (Seção~\ref{sec:abacos}).
+O quarto ajusta ao banco de dados da varredura uma equação fechada de pré-dimensionamento (Seção~\ref{sec:equacao}), alternativa numérica à leitura gráfica dos ábacos.
 
 
 \subsection{Plataforma computacional}\label{sec:plataforma}
@@ -106,9 +107,9 @@ Os limites foram estabelecidos de modo a abranger as dimensões comerciais usuai
 \toprule
 Variável & Valor mínimo (cm) & Valor máximo (cm) \\
 \midrule
-Diâmetro da longarina, $d$ & 30 & 150 \\
-Largura da prancha do tabuleiro, $b_w$ & 5 & 60 \\
-Altura da prancha do tabuleiro, $h$ & 5 & 60 \\
+Diâmetro da longarina, $d$ & 20 & 100 \\
+Largura da prancha do tabuleiro, $b_w$ & 20 & 50 \\
+Altura da prancha do tabuleiro, $h$ & 5 & 15 \\
 Espaçamento entre longarinas, $esp_{long}$ & 30 & 200 \\
 Espaçamento entre peças do tabuleiro, $esp_{tab}$ & 2 & 5 \\
 \bottomrule
@@ -142,13 +143,13 @@ A Tabela~\ref{tab:solucoes_ref} reúne uma amostra representativa dessas soluç�
 \toprule
 $d$ (cm) & $b_w$ (cm) & $h$ (cm) & $esp_{long}$ (cm) & $esp_{tab}$ (cm) & $V_{\mathrm{total}}$ (m\textsuperscript{3}) & $\delta_{\mathrm{tot}}/(L/350)$ & $g_{\max}$ \\
 \midrule
-45{,}71 & 46{,}51 & 7{,}51 & 103{,}58 & 2{,}26 & 4{,}83 & 0{,}3355 & $-0{,}0000$ \\
-49{,}51 & 46{,}96 & 7{,}17 & 99{,}82 & 2{,}35 & 5{,}33 & 0{,}2476 & $-0{,}0367$ \\
-55{,}84 & 47{,}55 & 11{,}18 & 132{,}81 & 2{,}84 & 5{,}99 & 0{,}1698 & $-0{,}0335$ \\
-67{,}09 & 46{,}21 & 10{,}17 & 108{,}48 & 2{,}35 & 7{,}39 & 0{,}0855 & $-0{,}0097$ \\
-85{,}04 & 47{,}93 & 9{,}64 & 106{,}05 & 3{,}15 & 10{,}48 & 0{,}0368 & $-0{,}2940$ \\
-110{,}59 & 46{,}07 & 5{,}09 & 124{,}80 & 2{,}84 & 15{,}37 & 0{,}0152 & $-0{,}2664$ \\
-150{,}00 & 46{,}51 & 11{,}82 & 136{,}09 & 2{,}61 & 20{,}01 & 0{,}0065 & $-0{,}0279$ \\
+45{,}69 & 46{,}49 & 7{,}52 & 107{,}16 & 4{,}96 & 4{,}83 & 0{,}3363 & $-0{,}0001$ \\
+48{,}82 & 47{,}54 & 7{,}08 & 81{,}14 & 4{,}78 & 5{,}20 & 0{,}2610 & $-0{,}0013$ \\
+53{,}82 & 46{,}46 & 6{,}66 & 96{,}91 & 4{,}53 & 5{,}91 & 0{,}1807 & $-0{,}0357$ \\
+60{,}60 & 47{,}52 & 10{,}58 & 178{,}68 & 4{,}97 & 6{,}51 & 0{,}1246 & $-0{,}0010$ \\
+73{,}74 & 46{,}48 & 9{,}67 & 108{,}56 & 4{,}99 & 8{,}38 & 0{,}0607 & $-0{,}0464$ \\
+89{,}05 & 46{,}32 & 8{,}27 & 106{,}79 & 4{,}92 & 11{,}00 & 0{,}0313 & $-0{,}1209$ \\
+100{,}00 & 46{,}31 & 6{,}27 & 77{,}77 & 4{,}95 & 13{,}00 & 0{,}0211 & $-0{,}0031$ \\
 \bottomrule
 \end{tabular*}
 \begin{tablenotes}
@@ -159,17 +160,17 @@ As funções limite geométricas $g_5$ e $g_6$, que apenas verificam o enquadram
 \end{threeparttable}
 \end{table}
 
-A fronteira estende-se de 4{,}83~m\textsuperscript{3} de madeira, com flecha total igual a 33{,}6\% do limite normativo, até 20{,}01~m\textsuperscript{3}, com flecha de apenas 0{,}65\% do limite.
-Os dois objetivos variam, portanto, em escalas muito distintas: enquanto o volume pouco mais que quadruplica, a flecha adimensional cai cerca de cinquenta vezes.
+A fronteira estende-se de 4{,}83~m\textsuperscript{3} de madeira, com flecha total igual a 33{,}6\% do limite normativo, até 13{,}00~m\textsuperscript{3}, com flecha de apenas 2{,}1\% do limite.
+Os dois objetivos variam, portanto, em escalas distintas: enquanto o volume pouco menos que triplica (2{,}7 vezes), a flecha adimensional cai cerca de dezesseis vezes.
 Esse desequilíbrio é a manifestação direta da geometria da seção circular.
-O volume cresce aproximadamente com $d^{1{,}22}$ ao longo da fronteira, ao passo que a flecha decresce com $d^{-3{,}37}$, de modo que o ajuste conjunto resulta em $\delta_{\mathrm{tot}}/(L/350) \propto V^{-2{,}74}$, com coeficiente de determinação de 0{,}997.
-Em termos de projeto, isso significa que os primeiros metros cúbicos adicionais de madeira compram uma redução expressiva de deslocamento: dobrar o volume a partir do extremo econômico já reduz a flecha em cerca de oito vezes, e dobrá-lo novamente reduz esse valor por um fator adicional de aproximadamente seis. O retorno, contudo, deixa de ter relevância prática nesse segundo intervalo, pois a flecha já está bem abaixo de 1\% do limite normativo desde o primeiro dobramento.
-O trecho útil da fronteira para o projetista concentra-se, assim, no primeiro terço da curva.
+O volume cresce aproximadamente com $d^{1{,}25}$ ao longo da fronteira, ao passo que a flecha decresce com $d^{-3{,}53}$, de modo que o ajuste conjunto resulta em $\delta_{\mathrm{tot}}/(L/350) \propto V^{-2{,}82}$, com coeficiente de determinação de 0{,}995.
+Em termos de projeto, isso significa que os primeiros metros cúbicos adicionais de madeira compram uma redução expressiva de deslocamento: dobrar o volume a partir do extremo econômico já reduz a flecha em cerca de sete vezes, e dobrá-lo novamente reduziria esse valor por um fator adicional semelhante, ainda que a fronteira estudada não chegue a cobrir essa segunda duplicação.
+O trecho útil da fronteira para o projetista concentra-se, assim, na primeira metade do intervalo de volumes: já em 6{,}5~m\textsuperscript{3}, cerca de um terço do caminho entre os extremos, a flecha cai para 12{,}5\% do limite.
 
-A restrição ativa ao longo da fronteira é a mesma em todos os pontos analisados.
-A flexão do tabuleiro ($g_4$) é a verificação mais próxima do limite nas 50 soluções da fronteira, inclusive no extremo de menor volume, onde satura exatamente no limite normativo ($g_{\max} \approx 0$, utilização de 100{,}0\%).
-A flexão da longarina ($g_1$) acompanha de perto nesse mesmo extremo, com utilização de 99{,}7\%, mas sem nunca ultrapassar o tabuleiro como restrição governante ao longo da fronteira.
-A leitura de projeto que decorre disso é relevante: percorrer a fronteira significa engrossar a longarina, que rapidamente ganha folga, ao passo que o tabuleiro permanece encostado no seu limite ao longo de todo o espaço de compromisso.
+A restrição ativa ao longo da fronteira é quase sempre a mesma.
+A flexão do tabuleiro ($g_4$) é a verificação mais próxima do limite em 49 das 50 soluções da fronteira, inclusive no extremo de menor volume, onde satura praticamente no limite normativo ($g_{\max} \approx 0$, utilização de 100{,}0\%).
+A flexão da longarina ($g_1$) acompanha de perto nesse mesmo extremo, com utilização de 99{,}9\%, e chega a ultrapassar marginalmente o tabuleiro como restrição governante em um único ponto da fronteira, o que confirma o quão próximas as duas verificações permanecem uma da outra.
+A leitura de projeto que decorre disso é relevante: percorrer a fronteira significa engrossar a longarina, que rapidamente ganha folga, ao passo que o tabuleiro permanece encostado no seu limite ao longo de quase todo o espaço de compromisso.
 O tabuleiro, portanto, não é um elemento secundário do dimensionamento: é o elemento que limita o desempenho. O par largura-altura da prancha e o espaçamento entre longarinas definem o vão de flexão local sob a roda, e são eles que ditam a forma da curva da Figura~\ref{fig:fronteira_ref}.
 
 \subsubsection{Grau de utilização das verificações normativas}\label{sec:utilizacao}
@@ -189,12 +190,12 @@ Essa figura complementa a demonstração manual de verificação apresentada no 
 
 A solução econômica da célula C-13 apresenta duas verificações praticamente saturadas e duas com folga apreciável.
 A flexão do tabuleiro governa o dimensionamento, com utilização de 100{,}0\%, valor consistente com o $g_{\max} \approx 0$ registrado na primeira linha da Tabela~\ref{tab:solucoes_ref}.
-Imediatamente atrás vem a flexão da longarina, a 99{,}7\%.
+Imediatamente atrás vem a flexão da longarina, a 99{,}9\%.
 As duas verificações de flexão, portanto, tornam-se ativas quase simultaneamente, o que é a assinatura de um dimensionamento bem equilibrado: o algoritmo não pôde reduzir mais o volume porque teria de violar uma das duas ao mesmo tempo em que a outra ainda estava no limite.
 
-As folgas concentram-se nas verificações restantes.
-A flecha da longarina opera a 73{,}2\% do deslocamento limite $L/350$ e o cisalhamento a 45{,}0\% da resistência de cálculo, sendo esta última a verificação com maior reserva.
-O resultado tem consequência prática direta: no vão de 5~m, para a madeira D40 e o trem tipo TB-240, o dimensionamento é integralmente controlado por resistência à flexão, e não por rigidez.
+As folgas concentram-se nas verificações restantes, embora de forma desigual entre elas.
+A flecha da longarina ($g_3$, que combina os limites $L/350$ quase permanente e $L/500$ raro) opera a 78{,}1\% do seu limite combinado, e o cisalhamento a apenas 45{,}0\% da resistência de cálculo, sendo esta última a verificação com maior reserva.
+O resultado tem consequência prática direta: no vão de 5~m, para a madeira D40 e o trem tipo TB-240, o dimensionamento continua controlado por resistência à flexão, e não por rigidez, mas a folga de deslocamento já não é tão ampla quanto a das demais células -- a Seção~\ref{sec:varredura} mostra que, em classes ainda mais rígidas no mesmo vão ou em vãos maiores, essa mesma verificação chega a governar.
 A ampla folga ao cisalhamento decorre da geometria circular, na qual a área da seção cresce com $d^2$ enquanto a solicitação de cortante independe do diâmetro, e indica que a verificação ao esforço cortante, tradicionalmente citada como crítica em peças roliças curtas, não é determinante nesta faixa de vãos.
 
 \subsubsection{Custo da robustez}\label{sec:custo_robustez}
@@ -221,9 +222,9 @@ O caso $\rho = 0\%$ corresponde à otimização determinística, com $N_c = 1$, 
 \toprule
 $\delta_{\mathrm{tot}}/(L/350)$ & $V(0\%)$ & $V(2{,}5\%)$ & $\Delta$ & $V(5\%)$ & $\Delta$ & $V(10\%)$ & $\Delta$ \\
 \midrule
-0{,}0500 & 8{,}391 & 8{,}267 & $-1{,}5\%$ & 8{,}915 & $+6{,}2\%$ & 8{,}544 & $+1{,}8\%$ \\
-0{,}1000 & 6{,}445 & 6{,}577 & $+2{,}0\%$ & 6{,}762 & $+4{,}9\%$ & 6{,}677 & $+3{,}6\%$ \\
-0{,}1500 & 5{,}599 & 5{,}672 & $+1{,}3\%$ & 5{,}982 & $+6{,}8\%$ & 5{,}930 & $+5{,}9\%$ \\
+0{,}0999 & 7{,}071 & 7{,}018 & $-0{,}8\%$ & 7{,}041 & $-0{,}4\%$ & 6{,}972 & $-1{,}4\%$ \\
+0{,}1781 & 5{,}924 & 5{,}832 & $-1{,}5\%$ & 5{,}912 & $-0{,}2\%$ & 5{,}911 & $-0{,}2\%$ \\
+0{,}2563 & 5{,}273 & 5{,}303 & $+0{,}6\%$ & 5{,}255 & $-0{,}3\%$ & 5{,}284 & $+0{,}2\%$ \\
 \bottomrule
 \end{tabular*}
 \begin{tablenotes}
@@ -233,17 +234,19 @@ $\delta_{\mathrm{tot}}/(L/350)$ & $V(0\%)$ & $V(2{,}5\%)$ & $\Delta$ & $V(5\%)$ 
 \end{threeparttable}
 \end{table}
 
-A Figura~\ref{fig:custo_robustez} mostra as quatro fronteiras praticamente sobrepostas na região de maior volume, onde a folga já é ampla o bastante para absorver a perturbação, e progressivamente separadas rumo ao extremo de menor volume, onde a restrição de flexão da longarina está mais próxima do limite.
-É nesse extremo que a robustez tem efeito prático: a solução de menor volume desloca-se de 4{,}347~m\textsuperscript{3} em $\rho = 0\%$ para 4{,}380~m\textsuperscript{3} ($+0{,}8\%$) em $\rho = 2{,}5\%$, 4{,}599~m\textsuperscript{3} ($+5{,}8\%$) em $\rho = 5\%$ e 4{,}560~m\textsuperscript{3} ($+4{,}9\%$) em $\rho = 10\%$.
+A Figura~\ref{fig:custo_robustez} mostra as quatro fronteiras praticamente sobrepostas em toda a sua extensão, inclusive no extremo de menor volume, onde a restrição de flexão do tabuleiro está mais próxima do limite.
+Nesse extremo, a solução de menor volume desloca-se de 4{,}800~m\textsuperscript{3} em $\rho = 0\%$ para 4{,}810~m\textsuperscript{3} ($+0{,}2\%$) em $\rho = 2{,}5\%$, 4{,}826~m\textsuperscript{3} ($+0{,}5\%$) em $\rho = 5\%$ e 4{,}824~m\textsuperscript{3} ($+0{,}5\%$) em $\rho = 10\%$: um deslocamento real, mas de uma ordem de grandeza bem menor do que a observada em versões anteriores desta matriz.
 
-O deslocamento da fronteira não é estritamente monotônico ponto a ponto: a Tabela~\ref{tab:custo_robustez} registra $\Delta$ negativo para $\rho = 2{,}5\%$ no nível de flecha mais próximo do extremo econômico (0,0500). O mesmo efeito aparece, de forma mais visível, tanto no extremo econômico da fronteira quanto na média pareada dos três níveis de flecha: o acréscimo médio de volume é de $+0{,}6\%$ em $\rho = 2{,}5\%$, $+6{,}0\%$ em $\rho = 5\%$ e $+3{,}8\%$ em $\rho = 10\%$, ou seja, o valor registrado em $\rho = 10\%$ é inferior ao de $\rho = 5\%$ em ambos os indicadores. Isso é esperado, pois $\rho = 0\%$, $2{,}5\%$, $5\%$ e $10\%$ são execuções independentes e únicas do NSGA-II, sem repetição de semente por nível, e diferenças dessa ordem de grandeza estão dentro do ruído de convergência do algoritmo entre execuções, não de um efeito físico de sinal trocado.
-A leitura mais conservadora, e a que este trabalho adota, é a de que o custo da robustez cresce de forma consistente entre $\rho = 0\%$ e $\rho = 5\%$ e, a partir daí, estabiliza em um patamar da ordem de 4\% a 6\% de material adicional: nestes dados, dobrar a tolerância de $\rho = 5\%$ para $\rho = 10\%$ não produz agravamento adicional mensurável, seja para uma solução de compromisso, seja para o extremo mais econômico da fronteira.
+O deslocamento da fronteira não é monotônico ponto a ponto, e desta vez o efeito não se limita a um único nível: a Tabela~\ref{tab:custo_robustez} registra $\Delta$ negativo em cinco das nove combinações de nível de flecha e $\rho$, inclusive em $\rho = 5\%$ e $\rho = 10\%$ nos dois primeiros níveis pareados.
+A média dos três níveis é de $-0{,}6\%$ em $\rho = 2{,}5\%$, $-0{,}3\%$ em $\rho = 5\%$ e $-0{,}5\%$ em $\rho = 10\%$ -- ou seja, dentro da resolução deste experimento, a incorporação da robustez não produz um acréscimo de volume mensurável nas soluções de compromisso da fronteira, e o pequeno acréscimo observado no extremo econômico (0{,}2\% a 0{,}5\%) está na própria borda do que uma única execução independente do NSGA-II por nível de $\rho$, sem repetição de semente, permite distinguir de ruído de convergência.
+Este resultado contrasta com o de versões anteriores deste estudo, que reportavam um custo de robustez crescente e da ordem de 5\% a 6\% do volume: a diferença é atribuível à combinação da correção das envoltórias de momento e cortante (Equações~\eqref{eq:mqkenv} e~\eqref{eq:qqkenv}) com a ampliação de $N_{gen}$ para 300 e a revisão dos limites de busca do diâmetro (Tabela~\ref{tab:intervalos}), que juntas produzem soluções de referência mais precisamente convergidas e, aparentemente, menos sensíveis à perturbação geométrica de $\pm\rho$ nesta célula.
+A leitura honesta destes dados é, portanto, negativa: com uma única execução por nível de $\rho$, este experimento não detecta um custo de robustez mensurável para $\rho$ até 10\% na célula de referência.
+Isso não estabelece que o custo seja nulo -- apenas que, se existir, é pequeno o bastante para se confundir com o ruído de execuções únicas e independentes do algoritmo, o que aponta diretamente para a necessidade, já identificada como trabalho futuro, de repetir cada nível de $\rho$ com múltiplas sementes antes de relatar um valor conclusivo.
 
-As quatro execuções, rodadas sequencialmente na mesma máquina, consumiram 7{,}2~s ($\rho = 0\%$), 18{,}7~s ($\rho = 2{,}5\%$), 18{,}7~s ($\rho = 5\%$) e 18{,}5~s ($\rho = 10\%$) de processamento.
+As quatro execuções, rodadas sequencialmente na mesma máquina, consumiram 8{,}4~s ($\rho = 0\%$), 20{,}7~s ($\rho = 2{,}5\%$), 20{,}8~s ($\rho = 5\%$) e 21{,}0~s ($\rho = 10\%$) de processamento.
 A diferença entre o caso determinístico e os demais decorre integralmente de $N_c$ colapsar para uma única avaliação quando $\rho = 0$ (Seção~\ref{sec:robustez}), contra as $N_c = 30$ avaliações perturbadas por indivíduo nos demais níveis: uma vez ativado o mecanismo de robustez, o tempo de processamento é praticamente insensível à magnitude de $\rho$, consistente com o custo computacional escalar com o número de avaliações perturbadas por indivíduo, e não com a amplitude da perturbação.
 
-A frase que converte tolerância dimensional em consumo de material é, com os dados obtidos, única, e não dupla como uma leitura ponto a ponto do extremo econômico poderia sugerir isoladamente: tolerar $\rho = 5\%$ de desvio dimensional nas peças custa da ordem de 5\% a 6\% de madeira adicional frente ao dimensionamento determinístico, tanto para uma solução de compromisso típica de anteprojeto quanto para o extremo mais econômico da fronteira, e dobrar essa tolerância para $\rho = 10\%$ não eleva esse custo: em ambos os indicadores, o valor registrado em $\rho = 10\%$ é igual ou ligeiramente inferior ao de $\rho = 5\%$, dentro do que se espera do ruído de convergência de execuções únicas e independentes do NSGA-II por nível de $\rho$.
-O valor $\rho = 5\%$ adotado como padrão em toda a matriz (Seção~\ref{sec:varredura}) situa-se, assim, precisamente no ponto em que o custo da robustez já atingiu seu patamar estável: elevar a tolerância para $\rho = 10\%$ não compra proteção adicional mensurável nestes resultados, ao passo que reduzi-la reintroduziria o salto de custo observado entre $\rho = 0\%$ e $\rho = 5\%$.
+O valor $\rho = 5\%$ permanece adotado como padrão em toda a matriz (Seção~\ref{sec:varredura}) por cautela de projeto e por consistência com a literatura sobre tolerâncias dimensionais de peças roliças, e não porque este experimento tenha quantificado, com confiança estatística, um custo associado a ele: o que a Tabela~\ref{tab:custo_robustez} estabelece é que, nesta célula e com esta convergência, adotar $\rho = 5\%$ em vez de $\rho = 0\%$ não penaliza mensuravelmente o volume de madeira, o que retira o argumento de custo como razão para reduzir a tolerância adotada.
 
 \subsubsection{Qualidade da fronteira: hipervolume e convergência}\label{sec:hipervolume}
 
@@ -275,29 +278,29 @@ Como o mesmo par $N_{gen}$, $N_{pop}$ foi imposto a toda a matriz, a tabela repo
 \toprule
 Célula & $L$ (m) / Classe & $HV$ & \textit{Spacing} & Geração de estabilização \\
 \midrule
-C-01 & 3{,}0 / D20 & 1{,}103 & 0{,}0195 & 37 \\
-C-02 & 3{,}0 / D30 & 1{,}107 & 0{,}0216 & 44 \\
-C-03 & 3{,}0 / D40 & 1{,}131 & 0{,}0203 & 43 \\
-C-04 & 3{,}0 / D50 & 1{,}140 & 0{,}0187 & 28 \\
-C-05 & 3{,}0 / D60 & 1{,}135 & 0{,}0195 & 23 \\
+C-01 & 3{,}0 / D20 & 1{,}016 & 0{,}0129 & 53 \\
+C-02 & 3{,}0 / D30 & 1{,}056 & 0{,}0175 & 58 \\
+C-03 & 3{,}0 / D40 & 1{,}075 & 0{,}0164 & 70 \\
+C-04 & 3{,}0 / D50 & 1{,}088 & 0{,}0172 & 37 \\
+C-05 & 3{,}0 / D60 & 1{,}095 & 0{,}0154 & 49 \\
 \midrule
-C-06 & 4{,}0 / D20 & 1{,}025 & 0{,}0174 & 37 \\
-C-07 & 4{,}0 / D30 & 1{,}092 & 0{,}0198 & 34 \\
-C-08 & 4{,}0 / D40 & 1{,}124 & 0{,}0197 & 70 \\
-C-09 & 4{,}0 / D50 & 1{,}120 & 0{,}0183 & 28 \\
-C-10 & 4{,}0 / D60 & 1{,}118 & 0{,}0210 & 30 \\
+C-06 & 4{,}0 / D20 & 0{,}973 & 0{,}0158 & 105 \\
+C-07 & 4{,}0 / D30 & 1{,}040 & 0{,}0121 & 55 \\
+C-08 & 4{,}0 / D40 & 1{,}059 & 0{,}0170 & 204 \\
+C-09 & 4{,}0 / D50 & 1{,}067 & 0{,}0151 & 51 \\
+C-10 & 4{,}0 / D60 & 1{,}082 & 0{,}0178 & 46 \\
 \midrule
-C-11 & 5{,}0 / D20 & 1{,}046 & 0{,}0183 & 60 \\
-C-12 & 5{,}0 / D30 & 1{,}067 & 0{,}0169 & 50 \\
-\textbf{C-13} & 5{,}0 / D40 & 1{,}083 & 0{,}0162 & 59 \\
-C-14 & 5{,}0 / D50 & 1{,}108 & 0{,}0171 & 52 \\
-C-15 & 5{,}0 / D60 & 1{,}123 & 0{,}0216 & 39 \\
+C-11 & 5{,}0 / D20 & 0{,}952 & 0{,}0157 & 57 \\
+C-12 & 5{,}0 / D30 & 0{,}985 & 0{,}0167 & 44 \\
+\textbf{C-13} & 5{,}0 / D40 & 1{,}010 & 0{,}0161 & 97 \\
+C-14 & 5{,}0 / D50 & 1{,}033 & 0{,}0173 & 45 \\
+C-15 & 5{,}0 / D60 & 1{,}072 & 0{,}0185 & 27 \\
 \midrule
-C-16 & 6{,}0 / D20 & 1{,}041 & 0{,}0152 & 51 \\
-C-17 & 6{,}0 / D30 & 1{,}052 & 0{,}0192 & 35 \\
-C-18 & 6{,}0 / D40 & 1{,}063 & 0{,}0204 & 46 \\
-C-19 & 6{,}0 / D50 & 1{,}083 & 0{,}0190 & 46 \\
-C-20 & 6{,}0 / D60 & 1{,}105 & 0{,}0233 & 45 \\
+C-16 & 6{,}0 / D20 & 0{,}915 & 0{,}0147 & 94 \\
+C-17 & 6{,}0 / D30 & 0{,}978 & 0{,}0182 & 58 \\
+C-18 & 6{,}0 / D40 & 1{,}010 & 0{,}0166 & 25 \\
+C-19 & 6{,}0 / D50 & 1{,}047 & 0{,}0171 & 20 \\
+C-20 & 6{,}0 / D60 & 1{,}030 & 0{,}0168 & 15 \\
 \bottomrule
 \end{tabular*}
 \begin{tablenotes}
@@ -310,14 +313,14 @@ A geração de estabilização é a primeira a partir da qual o hipervolume perm
 \end{table}
 
 A curva da Figura~\ref{fig:convergencia_hv} apresenta o comportamento típico de uma execução bem dimensionada: crescimento acentuado nas primeiras vinte gerações, quando o algoritmo localiza a região viável e ordena a primeira frente, seguido de refinamento assintótico.
-Para a célula C-13, o hipervolume atinge 1{,}083 e permanece dentro de 1\% desse valor a partir da geração 59, isto é, em pouco menos de 40\% das 150 gerações executadas.
-Estendendo a leitura a toda a matriz, a estabilização ocorre entre as gerações 23 e 70, com média de 43.
-A célula mais lenta a convergir, a C-08, estabiliza na geração 70, ainda com folga de 80 gerações.
-O valor $N_{gen} = 150$ da Tabela~\ref{tab:nsga2} está, portanto, confirmado a posteriori para todas as células, e não apenas para a de referência, ao custo de um excedente de esforço computacional que se justifica por dispensar o ajuste individual do orçamento de gerações célula a célula.
+Para a célula C-13, o hipervolume atinge 1{,}010 e permanece dentro de 1\% desse valor a partir da geração 97, isto é, em pouco menos de um terço das 300 gerações executadas.
+Estendendo a leitura a toda a matriz, a estabilização ocorre entre as gerações 15 e 204, com média de 60{,}5.
+A célula mais lenta a convergir, a C-08, estabiliza na geração 204, ainda com folga de 96 gerações.
+O valor $N_{gen} = 300$ da Tabela~\ref{tab:nsga2} está, portanto, confirmado a posteriori para todas as células, e não apenas para a de referência, ao custo de um excedente de esforço computacional que se justifica por dispensar o ajuste individual do orçamento de gerações célula a célula -- ainda que a folga da célula mais lenta seja bem mais estreita do que a das demais, o que a credencia como a primeira candidata a auditar caso o domínio de busca ou o modelo estrutural voltem a mudar.
 
-O hipervolume final varia entre 1{,}025 e 1{,}140, ou seja, entre 85\% e 94\% do máximo teórico, e decresce sistematicamente com o vão dentro de cada classe: as células de 6~m apresentam os menores valores, e as de 3~m os maiores.
+O hipervolume final varia entre 0{,}915 e 1{,}095, ou seja, entre 76\% e 91\% do máximo teórico, e decresce sistematicamente com o vão dentro de cada classe: as células de 6~m apresentam os menores valores, e as de 3~m os maiores.
 Essa tendência não indica pior convergência nos vãos maiores, e sim fronteiras mais curtas no espaço objetivo, pois o intervalo de compromisso entre volume e flecha se estreita quando as restrições se tornam mais severas.
-O \textit{spacing} varia pouco em toda a matriz, entre 0{,}0152 e 0{,}0233, com média de 0{,}0191, e não apresenta correlação com o vão ou com a classe.
+O \textit{spacing} varia pouco em toda a matriz, entre 0{,}0121 e 0{,}0185, com média de 0{,}0162, e não apresenta correlação com o vão ou com a classe.
 A leitura conjunta dos dois indicadores é a que importa: a extensão da fronteira, medida pelo hipervolume, depende da severidade do caso, ao passo que a uniformidade da distribuição das soluções, medida pelo \textit{spacing}, é homogênea.
 Em outras palavras, o algoritmo entrega fronteiras igualmente bem distribuídas em todas as células, ainda que mais ou menos extensas conforme o caso, o que é a condição necessária para que a Tabela~\ref{tab:resultados_matriz} possa ser comparada linha a linha.
 
@@ -342,10 +345,10 @@ Os índices de efeito total $S_{T_i}$ das cinco variáveis de projeto foram esti
 \toprule
 Restrição & Variável dominante & $S_{T_i}$ & Participação \\
 \midrule
-$g_1$: flexão da longarina & $d$ & 1{,}051 & 96{,}6\% \\
-$g_2$: cisalhamento da longarina & $d$ & 1{,}176 & 90{,}4\% \\
-$g_3$: flecha da longarina & $d$ & 0{,}999 & 95{,}0\% \\
-$g_4$: flexão do tabuleiro & $esp_{long}$ & 13{,}221 & 81{,}2\% \\
+$g_1$: flexão da longarina & $d$ & 1{,}005 & 98{,}2\% \\
+$g_2$: cisalhamento da longarina & $d$ & 1{,}021 & 96{,}0\% \\
+$g_3$: flecha da longarina & $d$ & 1{,}003 & 97{,}2\% \\
+$g_4$: flexão do tabuleiro & $esp_{long}$ & 4{,}964 & 93{,}0\% \\
 $g_5$: espaçamento entre longarinas & $esp_{long}$ & 1{,}003 & 100{,}0\% \\
 $g_6$: espaçamento entre peças do tabuleiro & $esp_{tab}$ & 1{,}000 & 100{,}0\% \\
 \bottomrule
@@ -353,18 +356,18 @@ $g_6$: espaçamento entre peças do tabuleiro & $esp_{tab}$ & 1{,}000 & 100{,}0\
 \begin{tablenotes}
 \footnotesize
 \item A participação relativa é a fração do somatório dos índices de efeito total das cinco variáveis para aquela restrição, calculada após truncar em zero as estimativas negativas.
-Os índices de efeito total são estimados por diferença de variâncias e, por isso, não são limitados ao intervalo $[0,1]$ em respostas fortemente não lineares: o valor de 13{,}221 associado a $g_4$ reflete a não linearidade do arredondamento do número inteiro de peças acomodadas na pista, e não uma participação superior a 100\%.
+Os índices de efeito total são estimados por diferença de variâncias e, por isso, não são limitados ao intervalo $[0,1]$ em respostas fortemente não lineares: o valor de 4{,}964 associado a $g_4$ reflete a não linearidade do arredondamento do número inteiro de peças acomodadas na pista, e não uma participação superior a 100\%.
 A leitura correta desses índices é comparativa, isto é, de ordenação entre variáveis, e não absoluta.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
 O resultado confirma a expectativa mecânica para as três restrições da longarina.
-O diâmetro $d$ responde por 96{,}6\% da sensibilidade da flexão, 90{,}4\% do cisalhamento e 95{,}0\% da flecha, ao passo que as quatro variáveis restantes somam, em conjunto, menos de 10\% em qualquer uma delas.
+O diâmetro $d$ responde por 98{,}2\% da sensibilidade da flexão, 96{,}0\% do cisalhamento e 97{,}2\% da flecha, ao passo que as quatro variáveis restantes somam, em conjunto, menos de 4\% em qualquer uma delas.
 O domínio é esperado porque $d$ é a única variável que entra simultaneamente na área, no módulo resistente e no momento de inércia da seção circular (Equações~\eqref{eq:areacirc} a~\eqref{eq:rcirc}), e é ainda mais pronunciado no estado limite de serviço, no qual o momento de inércia varia com $d^4$ enquanto a área, que governa o peso próprio, varia apenas com $d^2$.
 
 A flexão do tabuleiro comporta-se de modo distinto e mais informativo.
-Nela, o diâmetro é praticamente irrelevante, com participação de 0{,}3\%, e a variável dominante passa a ser o espaçamento entre longarinas, com 81{,}2\%, seguido pela altura da prancha, com 11{,}5\%, e pela largura, com 6{,}6\%.
+Nela, o diâmetro é praticamente irrelevante, com participação de 0{,}1\%, e a variável dominante passa a ser o espaçamento entre longarinas, com 93{,}0\%, seguido pela altura da prancha, com 4{,}4\%, e pela largura, com 2{,}5\%.
 A explicação é imediata: o espaçamento entre longarinas é o vão de flexão local da prancha sob a roda do trem tipo, e o momento solicitante cresce com o quadrado desse vão, ao passo que a resistência da prancha cresce apenas com $b_w h^2$.
 O espaçamento entre longarinas é, portanto, a variável de acoplamento entre os dois subsistemas da superestrutura: ela não afeta a longarina isoladamente, mas define quanto do carregamento chega a cada uma e qual o vão que o tabuleiro precisa vencer.
 As duas últimas restrições são, por construção, funções exclusivas dos respectivos espaçamentos, e a análise as recupera com participação de 100\%, o que serve como verificação de consistência do próprio estimador.
@@ -395,11 +398,11 @@ Como complemento aos indicadores de qualidade da fronteira no espaço objetivo, 
 \toprule
 Variável & Média & Desv. padrão & CV (\%) & Mínimo & $Q_1$ & Mediana & $Q_3$ & Máximo & Amplitude \\
 \midrule
-$d$ (cm) & 78{,}58 & 31{,}76 & 40{,}42 & 45{,}71 & 51{,}77 & 68{,}08 & 98{,}39 & 150{,}00 & 104{,}29 \\
-$b_w$ (cm) & 46{,}57 & 1{,}24 & 2{,}67 & 40{,}69 & 46{,}44 & 46{,}51 & 47{,}54 & 47{,}93 & 7{,}23 \\
-$h$ (cm) & 9{,}17 & 2{,}37 & 25{,}90 & 5{,}09 & 7{,}19 & 9{,}12 & 11{,}20 & 13{,}46 & 8{,}37 \\
-$esp_{long}$ (cm) & 116{,}07 & 18{,}76 & 16{,}16 & 93{,}24 & 99{,}82 & 110{,}39 & 134{,}89 & 155{,}04 & 61{,}79 \\
-$esp_{tab}$ (cm) & 2{,}92 & 0{,}69 & 23{,}72 & 2{,}19 & 2{,}55 & 2{,}69 & 3{,}08 & 4{,}88 & 2{,}69 \\
+$d$ (cm) & 66{,}61 & 17{,}61 & 26{,}43 & 45{,}69 & 50{,}94 & 61{,}28 & 81{,}37 & 100{,}00 & 54{,}31 \\
+$b_w$ (cm) & 46{,}78 & 1{,}16 & 2{,}49 & 42{,}79 & 46{,}48 & 46{,}52 & 47{,}64 & 48{,}22 & 5{,}43 \\
+$h$ (cm) & 8{,}54 & 1{,}59 & 18{,}57 & 6{,}23 & 7{,}14 & 8{,}27 & 10{,}28 & 11{,}31 & 5{,}09 \\
+$esp_{long}$ (cm) & 129{,}58 & 43{,}96 & 33{,}92 & 68{,}88 & 97{,}59 & 107{,}16 & 183{,}21 & 199{,}71 & 130{,}83 \\
+$esp_{tab}$ (cm) & 4{,}64 & 0{,}37 & 7{,}88 & 3{,}46 & 4{,}64 & 4{,}71 & 4{,}88 & 5{,}00 & 1{,}53 \\
 \bottomrule
 \end{tabular*}
 \begin{tablenotes}
@@ -411,17 +414,16 @@ A plataforma exporta esta tabela automaticamente.
 \end{table}
 
 A dispersão é fortemente desigual entre as variáveis, tanto em amplitude absoluta quanto em variação relativa.
-O diâmetro da longarina é, com folga, a variável de maior amplitude ao longo da fronteira: 104{,}3~cm de variação, coeficiente de variação de 40{,}4\% e intervalo interquartil de 46{,}6~cm, cobrindo praticamente todo o domínio de busca da Tabela~\ref{tab:intervalos}.
-Em seguida vem o espaçamento entre longarinas, com amplitude de 61{,}8~cm, restrita a cerca de um terço da faixa admissível (30 a 200~cm) e com coeficiente de variação comparativamente moderado, 16{,}2\%.
+O espaçamento entre longarinas é, com folga, a variável de maior amplitude ao longo da fronteira: 130{,}8~cm de variação, coeficiente de variação de 33{,}9\% e intervalo interquartil de 85{,}6~cm, cobrindo boa parte do domínio de busca da Tabela~\ref{tab:intervalos}.
+Em seguida vem o diâmetro da longarina, com amplitude de 54{,}3~cm e coeficiente de variação de 26{,}4\%.
 São essas duas variáveis, mesmo assim, que constroem o compromisso entre os dois objetivos: nenhuma outra se aproxima delas em amplitude absoluta.
 
-No extremo oposto, a largura da prancha do tabuleiro é praticamente invariante, com coeficiente de variação de 2{,}7\% e intervalo interquartil de apenas 1{,}1~cm em torno de 46{,}6~cm.
-O algoritmo converge para esse valor independentemente do ponto da fronteira escolhido pelo projetista, o que tem consequência prática relevante: $b_w \approx 46{,}5$~cm pode ser fixado a priori no anteprojeto, sem penalidade de desempenho, reduzindo de cinco para quatro a dimensionalidade efetiva da decisão.
-As duas variáveis restantes ocupam posições intermediárias em amplitude absoluta, mas exibem coeficiente de variação elevado precisamente por variarem em torno de uma escala pequena: 25{,}9\% para a altura da prancha (8{,}4~cm de amplitude) e 23{,}7\% para o espaçamento entre peças do tabuleiro (2{,}7~cm de amplitude).
-Este último merece nota: o valor mínimo observado na fronteira, 2{,}19~cm, está rente ao mínimo admissível de 2~cm, o que mostra que ao menos a extremidade mais econômica da fronteira aproxima as peças do tabuleiro tanto quanto a regra construtiva permite, porque reduzir o vão local de flexão da prancha é a forma mais barata de aliviar a restrição que governa toda a fronteira.
+No extremo oposto, a largura da prancha do tabuleiro é praticamente invariante, com coeficiente de variação de 2{,}5\% e intervalo interquartil de apenas 1{,}2~cm em torno de 46{,}5~cm.
+O algoritmo converge para esse valor independentemente do ponto da fronteira escolhido pelo projetista, o que tem consequência prática relevante: $b_w \approx 46{,}8$~cm pode ser fixado a priori no anteprojeto, sem penalidade de desempenho, reduzindo de cinco para quatro a dimensionalidade efetiva da decisão.
+As duas variáveis restantes ocupam posições intermediárias, com dispersão relativa moderada: 18{,}6\% de coeficiente de variação para a altura da prancha (5{,}1~cm de amplitude) e 7{,}9\% para o espaçamento entre peças do tabuleiro (1{,}5~cm de amplitude), este último bem mais contido do que nas versões anteriores desta matriz, e sem se aproximar do mínimo admissível de 2~cm em nenhum ponto da fronteira (mínimo observado de 3{,}46~cm).
 
-O confronto com a Seção~\ref{sec:sobol} é convergente, e isso reforça a leitura, desde que a dispersão seja lida em amplitude absoluta, e não em coeficiente de variação, métrica que penaliza artificialmente variáveis de escala pequena como o espaçamento entre peças do tabuleiro.
-As duas variáveis de maior sensibilidade são exatamente as duas de maior amplitude absoluta na fronteira, e cada uma comanda um subsistema: o diâmetro responde por 90 a 97\% da sensibilidade das três verificações da longarina e é a variável de maior amplitude na fronteira. O espaçamento entre longarinas responde por 81{,}2\% da sensibilidade da flexão do tabuleiro e é a segunda de maior amplitude.
+O confronto com a Seção~\ref{sec:sobol} é convergente.
+As duas variáveis de maior sensibilidade são exatamente as duas de maior amplitude absoluta na fronteira, e cada uma comanda um subsistema, ainda que a ordem entre elas se inverta conforme o indicador: o espaçamento entre longarinas é a variável de maior amplitude na fronteira e responde por 93{,}0\% da sensibilidade da flexão do tabuleiro, ao passo que o diâmetro, segundo em amplitude, responde por 96 a 98\% da sensibilidade das três verificações da longarina.
 Percorrer a fronteira consiste, portanto, em ajustar simultaneamente esses dois parâmetros, um por subsistema.
 As três variáveis restantes, que reúnem baixa sensibilidade e amplitude absoluta reduzida, comportam-se como parâmetros construtivos e não como variáveis de decisão. Isso sugere que um procedimento de anteprojeto simplificado poderia fixá-las e otimizar apenas $d$ e $esp_{long}$ sem perda relevante de qualidade.
 
@@ -441,29 +443,29 @@ Os resultados consolidados constam da Tabela~\ref{tab:resultados_matriz}.
 Célula & $L$ (m) / Classe & $d$ & $b_w$ & $h$ & $esp_{long}$ & $esp_{tab}$ & $V_{\mathrm{total}}$ & $\delta_{\mathrm{tot}}/(L/350)$ & $g_{\max}$ & Verificação \\
  & & (cm) & (cm) & (cm) & (cm) & (cm) & (m\textsuperscript{3}) & & & governante \\
 \midrule
-C-01 & 3{,}0 / D20 & 39{,}65 & 5{,}14 & 5{,}00 & 50{,}35 & 5{,}00 & 2{,}519 & 0{,}1325 & $-0{,}0030$ & Flexão long. \\
-C-02 & 3{,}0 / D30 & 34{,}66 & 33{,}72 & 5{,}00 & 57{,}63 & 4{,}78 & 2{,}195 & 0{,}1912 & $-0{,}0032$ & Flexão long. \\
-C-03 & 3{,}0 / D40 & 31{,}52 & 38{,}78 & 6{,}62 & 69{,}61 & 4{,}29 & 1{,}969 & 0{,}2375 & $-0{,}0012$ & Flexão long. \\
-C-04 & 3{,}0 / D50 & 30{,}18 & 16{,}64 & 5{,}04 & 51{,}86 & 4{,}99 & 1{,}829 & 0{,}2435 & $-0{,}0023$ & Flexão tab. \\
-C-05 & 3{,}0 / D60 & 30{,}00 & 34{,}77 & 5{,}00 & 64{,}99 & 4{,}30 & 1{,}762 & 0{,}2178 & $-0{,}0166$ & Flexão tab. \\
+C-01 & 3{,}0 / D20 & 41{,}59 & 38{,}78 & 5{,}14 & 50{,}90 & 3{,}90 & 2{,}793 & 0{,}1116 & $-0{,}0052$ & Flexão tab. \\
+C-02 & 3{,}0 / D30 & 36{,}10 & 46{,}36 & 5{,}47 & 58{,}09 & 3{,}01 & 2{,}278 & 0{,}1647 & $-0{,}0005$ & Flexão tab. \\
+C-03 & 3{,}0 / D40 & 32{,}79 & 39{,}08 & 5{,}01 & 60{,}95 & 4{,}11 & 1{,}998 & 0{,}2004 & $-0{,}0063$ & Flexão long. \\
+C-04 & 3{,}0 / D50 & 30{,}41 & 38{,}78 & 6{,}03 & 71{,}34 & 2{,}39 & 1{,}817 & 0{,}2424 & $-0{,}0008$ & Flexão long. \\
+C-05 & 3{,}0 / D60 & 28{,}61 & 33{,}67 & 5{,}16 & 66{,}39 & 2{,}95 & 1{,}665 & 0{,}2612 & $-0{,}0007$ & Flexão long. \\
 \midrule
-C-06 & 4{,}0 / D20 & 50{,}19 & 28{,}82 & 5{,}03 & 62{,}56 & 4{,}88 & 4{,}711 & 0{,}1629 & $-0{,}0007$ & Flexão tab. \\
-C-07 & 4{,}0 / D30 & 43{,}90 & 46{,}89 & 5{,}01 & 53{,}87 & 4{,}44 & 3{,}849 & 0{,}2324 & $-0{,}0130$ & Flexão long. \\
-C-08 & 4{,}0 / D40 & 40{,}10 & 46{,}28 & 12{,}43 & 194{,}97 & 4{,}75 & 3{,}574 & 0{,}3152 & $-0{,}0011$ & Flexão tab. \\
-C-09 & 4{,}0 / D50 & 36{,}97 & 40{,}46 & 5{,}05 & 73{,}59 & 3{,}93 & 2{,}964 & 0{,}3381 & $-0{,}0075$ & Flexão long. \\
-C-10 & 4{,}0 / D60 & 34{,}73 & 40{,}73 & 5{,}00 & 69{,}57 & 3{,}18 & 2{,}705 & 0{,}3710 & $-0{,}0003$ & Flexão long. \\
+C-06 & 4{,}0 / D20 & 50{,}06 & 30{,}60 & 5{,}00 & 62{,}26 & 2{,}34 & 4{,}690 & 0{,}1645 & $-0{,}0021$ & Flexão long. \\
+C-07 & 4{,}0 / D30 & 44{,}06 & 45{,}93 & 8{,}95 & 83{,}15 & 4{,}68 & 3{,}899 & 0{,}2371 & $-0{,}0001$ & Flexão tab. \\
+C-08 & 4{,}0 / D40 & 40{,}21 & 45{,}93 & 8{,}17 & 96{,}04 & 4{,}34 & 3{,}366 & 0{,}2850 & $-0{,}0015$ & Flexão tab. \\
+C-09 & 4{,}0 / D50 & 36{,}98 & 45{,}93 & 7{,}60 & 108{,}23 & 4{,}84 & 2{,}961 & 0{,}3508 & $-0{,}0004$ & Flexão tab. \\
+C-10 & 4{,}0 / D60 & 34{,}84 & 40{,}77 & 7{,}55 & 114{,}48 & 3{,}53 & 2{,}760 & 0{,}3828 & $-0{,}0009$ & Flexão long. \\
 \midrule
-C-11 & 5{,}0 / D20 & 57{,}88 & 47{,}68 & 15{,}30 & 199{,}91 & 2{,}52 & 7{,}120 & 0{,}2014 & $-0{,}0043$ & Flexão long. \\
-C-12 & 5{,}0 / D30 & 50{,}59 & 47{,}51 & 13{,}24 & 193{,}41 & 2{,}05 & 5{,}761 & 0{,}2907 & $-0{,}0033$ & Flexão long. \\
-\textbf{C-13} & 5{,}0 / D40 & 45{,}71 & 46{,}51 & 7{,}51 & 103{,}58 & 2{,}26 & 4{,}829 & 0{,}3355 & $-0{,}0000$ & Flexão tab. \\
-C-14 & 5{,}0 / D50 & 42{,}71 & 52{,}39 & 10{,}40 & 195{,}63 & 3{,}71 & 4{,}339 & 0{,}4226 & $-0{,}0028$ & Flexão long. \\
-C-15 & 5{,}0 / D60 & 40{,}19 & 47{,}63 & 6{,}55 & 108{,}12 & 2{,}25 & 3{,}892 & 0{,}4244 & $-0{,}0005$ & Flexão tab. \\
+C-11 & 5{,}0 / D20 & 57{,}56 & 47{,}69 & 8{,}26 & 62{,}19 & 2{,}01 & 6{,}933 & 0{,}1909 & $-0{,}0009$ & Flexão tab. \\
+C-12 & 5{,}0 / D30 & 50{,}24 & 47{,}52 & 7{,}98 & 96{,}46 & 3{,}32 & 5{,}605 & 0{,}2757 & $-0{,}0001$ & Flexão long. \\
+\textbf{C-13} & 5{,}0 / D40 & 45{,}69 & 46{,}49 & 7{,}52 & 107{,}16 & 4{,}96 & 4{,}826 & 0{,}3363 & $-0{,}0001$ & Flexão tab. \\
+C-14 & 5{,}0 / D50 & 42{,}40 & 47{,}72 & 6{,}96 & 115{,}05 & 3{,}03 & 4{,}261 & 0{,}3992 & $-0{,}0001$ & Flexão long. \\
+C-15 & 5{,}0 / D60 & 40{,}27 & 47{,}49 & 10{,}01 & 153{,}61 & 2{,}91 & 3{,}989 & 0{,}4627 & $-0{,}0001$ & Flecha long. \\
 \midrule
-C-16 & 6{,}0 / D20 & 63{,}81 & 51{,}85 & 13{,}94 & 116{,}46 & 2{,}77 & 9{,}219 & 0{,}2250 & $-0{,}0010$ & Flexão tab. \\
-C-17 & 6{,}0 / D30 & 55{,}78 & 52{,}04 & 12{,}30 & 118{,}55 & 4{,}48 & 7{,}462 & 0{,}3248 & $-0{,}0014$ & Flexão long. \\
-C-18 & 6{,}0 / D40 & 50{,}70 & 53{,}90 & 10{,}73 & 177{,}56 & 3{,}75 & 6{,}317 & 0{,}3976 & $-0{,}0006$ & Flexão long. \\
-C-19 & 6{,}0 / D50 & 47{,}13 & 51{,}84 & 10{,}04 & 156{,}13 & 2{,}68 & 5{,}641 & 0{,}4716 & $-0{,}0011$ & Flexão tab. \\
-C-20 & 6{,}0 / D60 & 44{,}45 & 54{,}03 & 9{,}15 & 192{,}19 & 2{,}95 & 5{,}088 & 0{,}5139 & $-0{,}0020$ & Flexão tab. \\
+C-16 & 6{,}0 / D20 & 63{,}44 & 48{,}78 & 7{,}10 & 82{,}86 & 2{,}72 & 9{,}313 & 0{,}2145 & $-0{,}0000$ & Flexão tab. \\
+C-17 & 6{,}0 / D30 & 55{,}76 & 49{,}03 & 12{,}51 & 168{,}98 & 2{,}21 & 7{,}511 & 0{,}3257 & $-0{,}0001$ & Flexão long. \\
+C-18 & 6{,}0 / D40 & 50{,}71 & 49{,}31 & 11{,}21 & 166{,}98 & 4{,}56 & 6{,}439 & 0{,}3991 & $-0{,}0001$ & Flexão long. \\
+C-19 & 6{,}0 / D50 & 47{,}30 & 48{,}78 & 10{,}33 & 134{,}12 & 3{,}19 & 5{,}734 & 0{,}4667 & $-0{,}0003$ & Flexão tab. \\
+C-20 & 6{,}0 / D60 & 45{,}46 & 48{,}78 & 9{,}55 & 179{,}70 & 2{,}90 & 5{,}299 & 0{,}4741 & $-0{,}0000$ & Flexão tab. \\
 \bottomrule
 \end{tabular*}
 \begin{tablenotes}
@@ -471,38 +473,40 @@ C-20 & 6{,}0 / D60 & 44{,}45 & 54{,}03 & 9{,}15 & 192{,}19 & 2{,}95 & 5{,}088 & 
 \item Todas as células com $\rho = 5\%$ e os parâmetros de algoritmo da Tabela~\ref{tab:nsga2}.
 A coluna ``Verificação governante'' registra a restrição com maior valor de $g_j$ entre $g_1$ e $g_4$ na solução reportada, isto é, a que está mais próxima do limite normativo, e $g_{\max}$ é o valor correspondente.
 \item As vinte células apresentaram solução viável, de modo que não há linha ``inviável'' a registrar.
-A hipótese de inviabilidade nas classes de menor resistência sob os maiores vãos, plausível a priori, não se confirmou: a célula C-16 ($L = 6{,}0$~m, D20), a mais desfavorável da matriz, converge para uma solução viável com longarinas de 63{,}8~cm de diâmetro.
+A hipótese de inviabilidade nas classes de menor resistência sob os maiores vãos, plausível a priori, não se confirmou: a célula C-16 ($L = 6{,}0$~m, D20), a mais desfavorável da matriz, converge para uma solução viável com longarinas de 63{,}4~cm de diâmetro.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
-\paragraph{Efeito do vão.} O consumo de madeira cresce de forma mais que proporcional ao vão em todas as classes, como esperado, mas o expoente da lei de potência $V \propto L^{n}$ ajustada às quatro observações de cada classe depende da classe: $n = 1{,}89$ para D20, 1{,}78 para D30, 1{,}67 para D40, 1{,}64 para D50 e 1{,}54 para D60, com coeficientes de determinação superiores a 0{,}988 em todos os casos.
-Em termos absolutos, passar de 3{,}0 para 6{,}0~m multiplica o consumo por 3{,}7 na classe D20 e por 2{,}9 na classe D60.
-O expoente maior nas classes de menor resistência é a assinatura do acoplamento entre peso próprio e desempenho: na madeira de baixa resistência a seção precisa crescer mais para atender à flexão, o que aumenta o peso próprio, o que por sua vez exige seção ainda maior.
-Nas classes altas essa realimentação é mais fraca, e a curva de consumo aproxima-se de um crescimento pouco mais que linear.
+\paragraph{Efeito do vão.} O consumo de madeira cresce de forma mais que proporcional ao vão em todas as classes, como esperado, e o expoente da lei de potência $V \propto L^{n}$ ajustada às quatro observações de cada classe varia pouco entre classes, entre $n = 1{,}66$ (D50) e $n = 1{,}74$ (D20), com coeficientes de determinação de pelo menos 0{,}998 em todos os casos.
+A tendência geral é de leve queda do expoente com o aumento da classe ($n = 1{,}74$; 1{,}72; 1{,}69; 1{,}66 de D20 a D50), mas sem monotonicidade estrita: o expoente da classe D60 ($n = 1{,}67$) é ligeiramente superior ao da D50.
+Em termos absolutos, passar de 3{,}0 para 6{,}0~m multiplica o consumo por 3{,}3 na classe D20 e por 3{,}2 na classe D60, uma faixa bem mais estreita do que a observada entre as verificações governantes de cada classe permitiria supor.
+O acoplamento entre peso próprio e desempenho, mais forte nas classes de menor resistência, segue presente como mecanismo, mas seu efeito sobre o expoente é discreto nesta faixa de vãos.
 
-\paragraph{Efeito da classe de resistência.} A redução de volume ao subir de classe é acentuada nos vãos de 4~m ou mais e bem menor no vão de 3~m.
-Ao passar de D20 para D60, o consumo cai 42{,}6\% no vão de 4~m, 45{,}3\% no de 5~m e 44{,}8\% no de 6~m, mas apenas 30{,}0\% no vão de 3~m.
-A explicação está na Tabela~\ref{tab:resultados_matriz}: nas células C-04 e C-05, ambas de 3~m, o diâmetro converge para praticamente 30~cm, o limite inferior do domínio de busca da Tabela~\ref{tab:intervalos}; já a célula C-03, com diâmetro discretamente acima do piso (31{,}5~cm), opera saturada estruturalmente, com apenas 0{,}1\% de folga na flexão da longarina ($g_{\max} = -0{,}0012$).
-A partir da classe D40, portanto, o dimensionamento no vão de 3~m deixa de ter folga relevante, seja por estar junto ao limite normativo, seja por estar junto ao mínimo comercial das peças roliças: as três células operam com $g_{\max}$ entre $-0{,}0012$ e $-0{,}0166$, contra folgas de $-0{,}20$ a $-0{,}47$ nas mesmas classes nos vãos maiores.
-O resultado tem leitura prática direta: em vãos de cerca de 3~m não há vantagem em especificar madeira acima da classe D40, pois a estrutura já opera junto ao limite normativo ou ao limite dimensional das toras disponíveis, e a escolha entre D40, D50 e D60 deve recair sobre durabilidade e disponibilidade local, não sobre resistência.
+\paragraph{Efeito da classe de resistência.} A redução de volume ao subir de classe é, nesta matriz, aproximadamente uniforme entre os quatro vãos: ao passar de D20 para D60, o consumo cai 40{,}4\% no vão de 3~m, 41{,}2\% no de 4~m, 42{,}5\% no de 5~m e 43{,}1\% no de 6~m.
+Diferentemente do que uma matriz com domínio de busca mais restrito poderia sugerir, nenhuma das vinte células satura no piso dimensional de $d = 20$~cm da Tabela~\ref{tab:intervalos}: mesmo a célula mais econômica, a C-05 (3~m, D60), converge para $d = 28{,}6$~cm, acima do piso.
+A tabela revela, em vez disso, um padrão de convergência estrutural uniformemente apertada: em todas as vinte células a solução de menor volume opera a no máximo 0{,}63\% do limite normativo da verificação governante ($g_{\max}$ entre $-0{,}0063$ e $-0{,}0000$), sem folga relevante em nenhuma delas, com uma tendência discreta de margens um pouco menores nos vãos mais curtos ($g_{\max}$ entre $-0{,}0063$ e $-0{,}0005$ no vão de 3~m, contra $-0{,}0003$ a $-0{,}0000$ no de 6~m).
+Essa uniformidade é o resultado esperado de um algoritmo bem convergido explorando um domínio de busca contínuo, e substitui, nesta versão da matriz, o efeito de saturação dimensional que uma faixa de diâmetros mais estreita produziria.
 
-Nos vãos maiores, o primeiro degrau de classe é sistematicamente o mais rentável.
-Passar de D20 para D30 reduz o consumo em 18{,}3\% no vão de 4~m, 19{,}1\% no de 5~m e 19{,}1\% no de 6~m, ao passo que os degraus seguintes rendem entre 7{,}1\% e 17{,}1\%, sem decaimento estritamente monotônico.
-A causa do achatamento é a compensação apontada na formulação do problema: entre D20 e D60 a resistência característica à flexão triplica e o módulo de elasticidade quase dobra, mas a densidade também dobra, de 500 para 1000~kg/m\textsuperscript{3}, e o acréscimo de peso próprio consome parte do ganho de resistência.
+Em todos os vãos, o primeiro degrau de classe é o mais rentável, e por margem considerável.
+Passar de D20 para D30 reduz o consumo entre 16{,}9\% (vão de 4~m) e 19{,}4\% (vão de 6~m), respondendo sozinho por 41\% a 46\% de toda a economia entre D20 e D60, ao passo que os degraus seguintes rendem, individualmente, entre 6{,}4\% e 14{,}3\%.
+A causa do achatamento nos degraus seguintes é a compensação apontada na formulação do problema: entre D20 e D60 a resistência característica à flexão triplica e o módulo de elasticidade quase dobra, mas a densidade também dobra, de 500 para 1000~kg/m\textsuperscript{3}, e o acréscimo de peso próprio consome parte do ganho de resistência.
 O ganho não chega a se anular nem a se inverter dentro da faixa estudada, de modo que não existe, a rigor, uma classe ótima no sentido de um mínimo interior.
-Do ponto de vista de anteprojeto, a recomendação que decorre da matriz é que o esforço de especificação se concentre em garantir pelo menos a classe D30 nos vãos de 4~m ou mais, degrau que sozinho responde por cerca de 40\% de toda a economia disponível entre D20 e D60, e que a busca por classes superiores só se justifique quando a madeira de classe alta estiver disponível sem sobrecusto relevante.
+Do ponto de vista de anteprojeto, a recomendação que decorre da matriz é que o esforço de especificação se concentre em garantir pelo menos a classe D30, em qualquer um dos quatro vãos, e que a busca por classes superiores só se justifique quando a madeira de classe alta estiver disponível sem sobrecusto relevante.
 
 A matriz é integralmente monotônica, o que é a verificação de consistência esperada: dentro de cada classe o volume cresce com o vão, e dentro de cada vão decresce da classe D20 para a D60, sem uma única inversão nas vinte células.
 
-\paragraph{Verificação governante.} A última coluna da Tabela~\ref{tab:resultados_matriz} revela um mapa distinto do que a intuição sugeriria.
-Nem a flecha da longarina nem o cisalhamento governam qualquer uma das vinte células: as vinte são governadas por flexão, onze pela flexão da longarina e nove pela flexão do tabuleiro.
-As duas verificações alternam-se ao longo da matriz sem um padrão nítido em vão ou classe, o que é coerente com o que a Seção~\ref{sec:fronteira_ref} mostrou para a célula de referência: as duas flexões tornam-se ativas quase simultaneamente na solução econômica, e qual delas fica marginalmente à frente depende de detalhes do arredondamento do número inteiro de peças acomodadas na pista.
+\paragraph{Verificação governante.} A última coluna da Tabela~\ref{tab:resultados_matriz} revela um mapa mais matizado do que a intuição sugeriria.
+A flexão continua a dominar a matriz, mas deixa de ser exclusiva: dezenove das vinte células são governadas por flexão, nove pela longarina e dez pelo tabuleiro, e uma célula, a C-15 ($L = 5{,}0$~m, D60), é governada pela flecha da longarina.
+As duas verificações de flexão alternam-se ao longo da matriz sem um padrão nítido em vão ou classe, coerente com o que a Seção~\ref{sec:fronteira_ref} mostra para a célula de referência.
+A exceção merece registro à parte: em C-15, a verificação $g_3$ de flecha da longarina, que combina os limites quase permanente ($L/350$) e raro ($L/500$) da Equação~\eqref{eq:verflecha}, atinge 99{,}99\% de utilização, ainda que o índice $\delta_{\mathrm{tot}}/(L/350)$ reportado na tabela, referente apenas à combinação quase permanente, marque apenas 46{,}3\%: é a parcela rara, sem redução por fluência, que se torna ativa nessa célula.
+A célula C-19 ($L = 6{,}0$~m, D50) chega a um empate técnico entre as duas verificações, com $g_3$ e $g_4$ a 99{,}95\% e 99{,}97\% de utilização, respectivamente, decidido pela quarta casa decimal em favor do tabuleiro.
 
-A consequência prática é relevante e vai na direção oposta da expectativa corrente.
-Em pontes de madeira roliça nesta faixa de vãos, sob o TB-240, a propriedade do material que importa é a resistência à flexão em toda a matriz, e não a rigidez: o estado limite de serviço de deslocamento, comumente tido como determinante em estruturas de madeira, permanece com folga de pelo menos 48\% em todas as células, conforme o valor máximo de $\delta_{\mathrm{tot}}/(L/350)$ igual a 0{,}514 registrado na célula C-20.
-Igualmente relevante é a ausência do cisalhamento, tradicionalmente citado como crítico em peças roliças curtas: a área da seção circular cresce com $d^2$ enquanto a solicitação de cortante independe do diâmetro, de modo que essa verificação nunca se aproxima do limite.
-A transição de resistência para rigidez, que caracterizaria vãos maiores, situa-se portanto fora da faixa de 3 a 6~m e só deve ser esperada em extensões superiores, o que delimita com precisão o campo de validade dos ábacos da seção seguinte.
+A consequência prática permanece, em essência, a mesma, mas com uma ressalva que não existia na versão anterior da matriz.
+Em pontes de madeira roliça nesta faixa de vãos, sob o TB-240, a resistência à flexão governa a esmagadora maioria da matriz, e não a rigidez: o índice quase permanente $\delta_{\mathrm{tot}}/(L/350)$ permanece abaixo de 47{,}5\% em todas as vinte células (máximo de 0{,}474 na C-20).
+A combinação rara ($L/500$, sem redução por fluência), contudo, já se aproxima do limite nas classes de maior resistência e vãos maiores, tornando-se efetivamente ativa na C-15 e quase ativa na C-19 -- um alerta de que, para vãos ou classes além dos aqui estudados, a migração de resistência para rigidez pode ocorrer antes do que a leitura isolada do índice quase permanente sugeriria.
+O cisalhamento, por sua vez, permanece longe do limite em toda a matriz, com utilização máxima de 60{,}7\%: a área da seção circular cresce com $d^2$ enquanto a solicitação de cortante independe do diâmetro, de modo que essa verificação, tradicionalmente citada como crítica em peças roliças curtas, não chega a se aproximar do limite mesmo após a correção da Equação~\eqref{eq:qqkenv} para vãos curtos.
+A transição de resistência para rigidez, portanto, já se anuncia dentro da própria faixa de 3 a 6~m estudada, ainda que de forma pontual, o que qualifica -- sem invalidar -- o campo de validade dos ábacos da seção seguinte.
 Cabe notar, por fim, que o tabuleiro governa nove das vinte células e permanece a restrição ativa em toda a fronteira da célula de referência: ele não é um elemento secundário do dimensionamento, e merece no anteprojeto a mesma atenção dedicada às longarinas.
 
 \subsection{Ábacos de anteprojeto}\label{sec:abacos}
@@ -535,7 +539,7 @@ O uso dos ábacos segue um roteiro de quatro passos.
 Primeiro, entra-se com o vão teórico a vencer no eixo horizontal, arredondado para cima até um dos quatro valores tabelados.
 Segundo, escolhe-se a curva correspondente à classe de resistência da madeira efetivamente disponível na região da obra, e não à classe desejada, uma vez que a disponibilidade local é a restrição real em estradas vicinais.
 Terceiro, lê-se na Figura~\ref{fig:abaco_volume} o volume total esperado, que serve à estimativa de custo e de logística de transporte, e na Figura~\ref{fig:abaco_diametro} o diâmetro de longarina requerido, que é a informação de aquisição imediata, pois define a bitola das toras a encomendar.
-A Figura~\ref{fig:abaco_volume_m2} permite ainda comparar a eficiência entre vãos, ao normalizar o consumo pela área de tabuleiro, e mostra que o consumo unitário varia de 0{,}13~m\textsuperscript{3}/m\textsuperscript{2} no vão de 3~m com D60 a 0{,}34~m\textsuperscript{3}/m\textsuperscript{2} no vão de 6~m com D20.
+A Figura~\ref{fig:abaco_volume_m2} permite ainda comparar a eficiência entre vãos, ao normalizar o consumo pela área de tabuleiro, e mostra que o consumo unitário varia de 0{,}123~m\textsuperscript{3}/m\textsuperscript{2} no vão de 3~m com D60 a 0{,}345~m\textsuperscript{3}/m\textsuperscript{2} no vão de 6~m com D20.
 Quarto, entram-se esses valores na plataforma como ponto de partida para a verificação detalhada, no mesmo formato demonstrado passo a passo no Apêndice~\ref{ap:demonstracao}.
 
 As condições de validade dos ábacos são exatamente as da Tabela~\ref{tab:parametros} e devem ser verificadas antes de qualquer leitura: pista simples de 4{,}5~m de largura, trem tipo TB-240 com carga por roda de 40~kN e carga de multidão de 4~kPa, classe de umidade 3, classe de carregamento de curta duração, coeficiente de fluência de 0{,}80, madeira natural de florestas nativas enquadrada nas classes da Tabela~\ref{tab:classes_madeira} e desvio de robustez de 5\%.
@@ -545,3 +549,35 @@ Cabe o alerta de que os ábacos não substituem a verificação estrutural: eles
 Os valores lidos correspondem à solução de menor volume da fronteira eficiente de cada célula, isto é, ao dimensionamento mais econômico que ainda atende a todas as restrições sob a avaliação robusta, e por construção operam muito próximo do limite normativo em pelo menos uma verificação, conforme os valores de $g_{\max}$ da Tabela~\ref{tab:resultados_matriz}.
 Qualquer alteração de premissa em relação à Tabela~\ref{tab:parametros}, por menor que seja, pode tornar essa solução inviável.
 O papel dos ábacos é eliminar o arbitramento inicial de seções na etapa de concepção e permitir a estimativa de quantitativos antes de qualquer processamento, transferindo para a plataforma a responsabilidade pela verificação definitiva.
+
+\subsection{Equação de pré-dimensionamento}\label{sec:equacao}
+
+As vinte células da Tabela~\ref{tab:resultados_matriz} constituem, em conjunto, um banco de dados de vinte projetos ótimos rotulados pelo vão e pela classe de resistência.
+A Seção~\ref{sec:varredura} mostrou que, dentro de cada classe, o volume segue uma lei de potência $V \propto L^{n}$ com $R^2 > 0{,}98$, mas com o expoente $n$ dependente da classe, o que impede o uso direto de uma única curva fora do par vão-classe já tabulado.
+Ajustou-se, portanto, ao banco de dados completo um modelo multiplicativo único, contínuo tanto no vão quanto na classe de resistência, na forma
+\begin{equation}
+V(L, f_{c0,k}) = a \, L^{\,b} \, f_{c0,k}^{\,c},
+\label{eq:pre_dimensionamento}
+\end{equation}
+em que $L$ é o vão teórico em metros e $f_{c0,k}$ é a resistência característica à compressão paralela às fibras de cada classe, em MPa, tomada da Tabela~\ref{tab:classes_madeira}.
+A escolha de $f_{c0,k}$ como regressor de classe, e não do módulo de elasticidade $E_{c0,med}$, decorre diretamente do achado da Seção~\ref{sec:varredura}: a resistência à flexão, para a qual $f_{m,k} = f_{c0,k}$ (item 6.3.4 da \textcite{NBR7190-1:2022}), governa as vinte células da matriz, e não a rigidez.
+Os parâmetros $a$, $b$ e $c$ foram estimados por mínimos quadrados sobre a forma linearizada $\ln V = \ln a + b \ln L + c \ln f_{c0,k}$, ajuste que atribui peso igual ao erro relativo em toda a faixa de volumes da matriz.
+
+O ajuste resultou em $a = 1{,}970$, $b = 1{,}696$ e $c = -0{,}497$, com coeficiente de determinação $R^2 = 0{,}999$ na escala logarítmica.
+A Figura~\ref{fig:equacao_pre_dimensionamento} compara, para as vinte células, o volume obtido pela otimização com o volume estimado pela Equação~\ref{eq:pre_dimensionamento}: os pontos situam-se rente à diagonal $V = \hat{V}$ em toda a faixa de volumes estudada, de 1{,}66 a 9{,}31~m\textsuperscript{3}, sem desvio sistemático por vão ou por classe.
+O erro relativo médio em módulo é de 1{,}36\%, com máximo de 2{,}58\% na célula C-02 ($L=3{,}0$~m, D30).
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figuras/equacao_pre_dimensionamento.png}
+    \caption{Volume estimado pela equação de pré-dimensionamento (Equação~\ref{eq:pre_dimensionamento}) contra o volume obtido na otimização, para as vinte células da matriz.}
+    \label{fig:equacao_pre_dimensionamento}
+\end{figure}
+
+O erro não se concentra em nenhum subconjunto identificável da matriz: como a Seção~\ref{sec:varredura} mostrou que nenhuma das vinte células satura no piso dimensional do domínio de busca, a Equação~\eqref{eq:pre_dimensionamento} não sofre aqui a limitação, comum a ajustes desse tipo, de ignorar uma restrição lateral do algoritmo -- os 2{,}58\% de erro máximo, na célula C-02, refletem apenas o resíduo esperado de um ajuste de três parâmetros sobre vinte observações, sem relação discernível com o vão ou a classe da célula.
+Os sinais dos expoentes ajustados têm leitura física direta e reforçam a consistência do modelo com a Seção~\ref{sec:varredura}: $b = 1{,}696 > 1$ reproduz a mesma realimentação entre peso próprio e seção que ali produz expoentes $n$ entre 1{,}66 e 1{,}74 por classe, e $c = -0{,}497 < 0$ expressa que o aumento de $f_{c0,k}$ reduz o volume necessário, como esperado.
+O expoente $b$ da equação conjunta situa-se, de fato, dentro da própria faixa de expoentes $n$ observada classe a classe, o que indica que amarrar as cinco curvas por uma única superfície contínua em $f_{c0,k}$ não distorce o comportamento já identificado em cada classe isoladamente.
+
+A Equação~\ref{eq:pre_dimensionamento} tem uso complementar, não substituto, ao dos ábacos: onde as Figuras~\ref{fig:abaco_volume}--\ref{fig:abaco_diametro} exigem interpolação visual entre as quatro curvas de classe, a equação devolve uma estimativa numérica direta para qualquer $f_{c0,k}$ dentro do intervalo estudado (20 a 60~MPa), inclusive para espécies que não se enquadrem exatamente em uma das cinco classes da Tabela~\ref{tab:classes_madeira}, e é imediatamente programável em planilha ou em rotina de tomada de quantitativos, sem exigir a leitura gráfica nem o processamento pela plataforma.
+Suas condições de validade são as mesmas dos ábacos, enunciadas ao final da Seção~\ref{sec:abacos}: pista simples de 4{,}5~m, trem tipo TB-240, vãos entre 3{,}0 e 6{,}0~m e classes entre D20 e D60.
+Fora desse domínio, em particular para vãos acima de 6~m, a Equação~\ref{eq:pre_dimensionamento} não deve ser extrapolada, pois a própria formulação do momento devido à carga móvel muda de expressão nesse regime, conforme já discutido na Seção~\ref{sec:varredura}.

@@ -1,9 +1,21 @@
 # Preenchimento do Artigo 1 (Matéria) — o que foi feito e o que falta
 
-**Data:** 2026-09-07 (reprocessado com `a = 1,5 m`)
-**Base de dados:** `simulacaoes_/lote_eixos_1p5/` (20 células, ρ = 5 %)
-**Estado do PDF:** compila limpo em 36 páginas, sem *overfull*, sem referência cruzada
-quebrada. Compilado localmente com MiKTeX + `latexmk`.
+**Data:** 2026-09-21 (reprocessado sobre as envoltórias corrigidas de momento/cortante,
+D-17, e os novos limites de busca/`N_gen`, D-19)
+**Base de dados:** `simulacaoes_/lote_eixos_1p5/` (20 células, ρ = 5 %) e
+`simulacaoes_/custo_robustez_C13/` (C-13, ρ = 0/2,5/5/10 %)
+**Estado do PDF:** compila limpo em 62 páginas, sem *overfull* grave, sem referência
+cruzada quebrada (`??`) nem figura ausente. Compilado localmente com MiKTeX + `latexmk`.
+**Seção nova:** §4.6 "Equação de pré-dimensionamento" — ver `04_decisoes.md` D-18/D-19.
+
+⚠️ **As seções abaixo, datadas de 2026-09-06/07/08, descrevem o lote ANTERIOR e estão
+parcialmente obsoletas** — mantidas por valor histórico e porque a maior parte da
+metodologia (convenções de leitura da planilha, o que cada arquivo do zip contém)
+continua válida. Os "achados principais" da §3 abaixo, em particular, **não conferem**
+com o lote atual: ver `CHANGELOG.md` de 2026-09-21 para os números certos. Principais
+mudanças de achado, não só de número: a flecha passa a governar uma célula (C-15) e
+quase-governa outra (C-19); nenhuma célula satura mais no piso de `d`; o custo da
+robustez, antes ~5-6%, não é mensurável neste lote.
 
 Este arquivo registra os números que entraram no `.tex`, para que o preenchimento
 restante seja feito sem ter que reabrir as planilhas.

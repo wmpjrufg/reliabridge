@@ -5,6 +5,17 @@ primeiros itens não exigem rodar otimização nenhuma e destravam quase tudo.
 
 Legenda: ⬜ pendente · 🟦 em andamento · ✅ concluído
 
+## Artigo 3 — iniciado por solicitação em 21/09/2026
+
+- ✅ Estruturar proposta, aplicação e dataset de entradas em `paper/ia_explicavel/`.
+- ✅ Piloto computacional: 8/8 execuções com solução, registros reavaliados e volumes reconstruídos; resultados separados da matriz planejada. Auditoria física e convergência continuam pendentes.
+- ✅ Montar o boneco do novo recorte de capacidade de carga: título, resumo provisório, oito seções e entregas previstas.
+- ⬜ Auditar cargas no domínio de 3–10 m e fechar a convenção do multiplicador móvel com geometria fixa.
+- ⬜ Implementar e verificar rótulos de capacidade de serviço/resistência; redesenhar amostragem geométrica e grupos de validação.
+- ⬜ Executar a nova campanha, comparar referências mecânicas/modelos simples/regressão simbólica e verificar as cargas previstas. A matriz de 2.700 entradas anterior não contém esses rótulos.
+
+Estado canônico: [`11_paper_ia_explicavel.md`](11_paper_ia_explicavel.md).
+
 ---
 
 ## Bloco 0 — Bloqueadores (fazer antes de qualquer rodada)

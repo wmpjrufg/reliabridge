@@ -1,0 +1,30 @@
+{
+  "dataset_version": "0.1-exploratorio",
+  "span_m": [3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10],
+  "dead_load_kpa": [0.1, 0.5, 1, 2, 3, 5],
+  "width_m": [3.5, 4, 4.5],
+  "vehicles": {
+    "TB240": {"wheel_load_kn": 40, "crowd_load_kpa": 4, "axle_spacing_m": 1.5},
+    "TB450": {"wheel_load_kn": 75, "crowd_load_kpa": 5, "axle_spacing_m": 1.5}
+  },
+  "materials": {
+    "D20": {"density_kg_m3": 500, "fm_k_mpa": 20, "fv_k_mpa": 4, "E_gpa": 10},
+    "D30": {"density_kg_m3": 625, "fm_k_mpa": 30, "fv_k_mpa": 5, "E_gpa": 12},
+    "D40": {"density_kg_m3": 750, "fm_k_mpa": 40, "fv_k_mpa": 6, "E_gpa": 14.5},
+    "D50": {"density_kg_m3": 850, "fm_k_mpa": 50, "fv_k_mpa": 7, "E_gpa": 16.5},
+    "D60": {"density_kg_m3": 1000, "fm_k_mpa": 60, "fv_k_mpa": 8, "E_gpa": 19.5}
+  },
+  "fixed": {
+    "load_duration": "curta duração", "wood_type": "madeira natural", "moisture_class": 3,
+    "gamma_g": 1.3, "gamma_q": 1.5, "gamma_wc": 1.8, "gamma_wf": 1.4,
+    "psi2": 0.3, "phi": 0.8, "robustness_pct": 5
+  },
+  "bounds_cm": {"d": [20, 100], "bw": [20, 50], "h": [5, 15], "esp_long": [30, 200], "esp_tab": [2, 5]},
+  "optimizer": {"population": 50, "generations": 300, "robust_checks": 30, "seed": 1},
+  "sources": {
+    "materials": "paper/materia/04_methodology.tex, tab:classes_madeira; hipóteses do modelo existente, não nova auditoria normativa",
+    "vehicles": "pages/pre_sizing.py, VEICULOS_PADRAO",
+    "bounds": "batch_pre_sizing.py, LimitesBusca; vault/04_decisoes.md, D-19",
+    "new_ranges": "Proposta de planejamento em 2026-09-21; cargas e larguras ajustáveis"
+  }
+}

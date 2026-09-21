@@ -119,7 +119,7 @@ Esse critério permite representar uma peça de seção circular variável por u
 
 \subsection{Carga do trem tipo}\label{sec:trem_tipo}
 
-As cargas delimitadas nas pontes brasileiras são definidas pela \textcite{nbr7188}, que estabelece
+As cargas delimitadas nas pontes brasileiras são definidas pela \textcite{nbr7188} em seu item 5.1.1, que estabelece
 os requisitos para o projeto de pontes rodoviárias. A norma apresenta dois modelos de trem-tipo para uso: o TB-450 e o TB-240. Porém, por se tratar de estradas vicinais,
 serão contemplados apenas os detalhes do TB-240.
 Esse trem-tipo é caracterizado por um veículo de 240 kN de peso total, constituído por seis rodas e três eixos.
@@ -139,9 +139,15 @@ uniformemente distribuída de 4,0 kN/m² em seu entorno (multidão), conforme a 
 \subsubsection{Anatomia, fisiologia e comportamento mecânico da madeira}
 \label{sec:anatomia_madeira}
 
-A compreensão do comportamento estrutural da madeira parte de sua organização anatômica e das funções que desempenha na árvore viva.
-A madeira corresponde ao xilema secundário, tecido associado à condução de água e nutrientes minerais, ao armazenamento de substâncias e à sustentação da planta.
-Seu crescimento em espessura decorre da atividade do câmbio vascular, que produz xilema para o interior e floema para o exterior do tronco \parencite{WiedenhoeftEberhardt2021}.
+A compreensão do comportamento estrutural da madeira parte de sua
+organização anatômica e das funções que desempenha na árvore viva.
+A madeira corresponde ao xilema secundário, tecido associado à
+condução de água e nutrientes minerais, ao armazenamento de
+substâncias e à sustentação mecânica da planta.
+O crescimento em espessura do tronco decorre, em grande parte,
+da atividade do câmbio vascular, que produz xilema secundário
+em direção ao centro do tronco e floema secundário em direção
+à periferia \parencite{WiedenhoeftEberhardt2021}.
 
 Na seção transversal do tronco, distinguem-se medula, cerne, alburno, região cambial e cascas, conforme a Figura~\ref{fig:anatomia_madeira}.
 A medula ocupa a região central e está associada ao desenvolvimento inicial do caule.
@@ -163,16 +169,19 @@ Em espécies tropicais, os anéis podem ser pouco evidentes; sua utilização pa
 
 Essa organização dos tecidos estabelece a ligação entre a função biológica da madeira e seu comportamento como material de engenharia.
 
-A madeira é um material anisotrópico, pois suas propriedades físicas e mecânicas
-variam de acordo com a direção considerada. Em função da orientação e da
-disposição de suas fibras e demais elementos anatômicos, podem ser identificadas
-três direções principais: longitudinal, paralela às fibras e ao eixo predominante
-do tronco; radial, orientada do centro da seção transversal em direção à casca; e
-tangencial, tangente aos anéis de crescimento. Entre essas direções, a diferença
-de comportamento é particularmente significativa entre a direção longitudinal e
-as direções transversais, sendo usual, para fins estruturais, distinguir as
-propriedades paralelas às fibras das propriedades perpendiculares às fibras
-\parencite{CALIL2003}.
+A madeira apresenta comportamento anisotrópico, pois suas
+propriedades mecânicas dependem da direção considerada.
+Para sua descrição mecânica, é usual adotar uma representação
+ortotrópica, definida por três direções principais mutuamente
+perpendiculares: longitudinal, paralela às fibras; radial,
+perpendicular aos anéis de crescimento; e tangencial, tangente
+a esses anéis. As propriedades nessas direções são distintas,
+com diferenças expressivas entre a direção longitudinal e as
+direções transversais. Em diversas verificações estruturais,
+essa dependência direcional é expressa pela distinção entre
+propriedades paralelas e perpendiculares às fibras, sem que
+isso implique equivalência entre as direções radial e
+tangencial \parencite{SenalikFarber2021}.
 
 Essa anisotropia exerce influência direta na resistência mecânica empregada no
 dimensionamento. Na direção longitudinal, paralela às fibras, a madeira apresenta
@@ -180,27 +189,25 @@ maior capacidade de resistir a esforços normais, uma vez que a orientação das
 fibras favorece a transmissão das tensões ao longo do elemento. Por esse motivo,
 a resistência à compressão paralela às fibras, representada por $f_{c0}$, é uma
 propriedade fundamental nas verificações de elementos submetidos à compressão.
-A ABNT NBR 7190-3:2022 estabelece, inclusive, procedimento específico para
-determinação da resistência e da rigidez à compressão paralela às fibras
-\parencite{ABNT-NBR7190-3:2022}.
+A \textcite{ABNT-NBR7190-3:2022} estabelece, inclusive, procedimento específico para
+determinação da resistência e da rigidez à compressão paralela às fibras.
 
 De maneira semelhante, nas peças submetidas à flexão, as tensões normais atuantes
 são predominantemente paralelas às fibras, sendo utilizada a resistência à
-flexão, $f_M$, para a verificação da capacidade resistente da seção. A ABNT
-NBR 7190-1:2022 considera a resistência à flexão entre as propriedades
+flexão, $f_M$, para a verificação da capacidade resistente da seção. A \textcite{NBR7190-1:2022} considera a resistência à flexão entre as propriedades
 empregadas nas verificações dos elementos estruturais e estabelece critérios
 específicos para as tensões normais e para a estabilidade de peças submetidas
-à flexão \parencite{NBR7190-1:2022}.
+à flexão .
 
 Assim, nas verificações realizadas nesta seção, a orientação das fibras deve ser
 considerada na definição das propriedades resistentes adotadas. Para elementos
 em que as solicitações principais atuam paralelamente às fibras, como ocorre
 usualmente nas vigas submetidas à flexão e nos elementos submetidos à compressão
-axial, são empregadas, respectivamente, as resistências $f_M$ e $f_{c0}$.
+axial, são empregadas, respectivamente, as resistências $f_m$ e $f_{c0}$.
 Essa consideração é fundamental porque os valores de resistência obtidos para
 solicitações paralelas às fibras não podem ser simplesmente aplicados às
 solicitações perpendiculares ou inclinadas em relação às fibras, que apresentam
-comportamento mecânico distinto \parencite{CALIL2003,NBR7190-1:2022}.
+comportamento mecânico distinto.
 
 
 \subsubsection{Ponderadores para propriedades mecânicas}
@@ -229,7 +236,7 @@ k_{\mathrm{mod}} = k_{\mathrm{mod},1} \cdot k_{\mathrm{mod},2}
 \label{eq:2.99}
 \end{equation}
 
-O primeiro fator, $k_{\mathrm{mod},1}$, está associado à classe de carregamento, sendo definido em função da duração acumulada da ação variável principal da combinação e do tipo de madeira empregado, de acordo com o item 5.8.4.1 da norma. Os valores correspondentes às diferentes classes de carregamento e aos grupos de materiais são apresentados na Tabela \ref{tab:kmod1.q}.
+O primeiro fator, $k_{\mathrm{mod},1}$, está associado à classe de carregamento, sendo definido em função da duração acumulada da ação variável principal da combinação e do tipo de madeira empregado, de acordo com o item 5.8.4.1 da \textcite{NBR7190-1:2022}. Os valores correspondentes às diferentes classes de carregamento e aos grupos de materiais são apresentados na Tabela \ref{tab:kmod1.q}.
 
 \begin{table}[htpb!]
 \centering
@@ -290,15 +297,13 @@ Muito curta &
 \footnotesize\textsuperscript{a}\,Madeira serrada, madeira roliça, madeira laminada colada (MLC), madeira laminada colada cruzada (MLCC) e madeira laminada colada de lâminas paralelas (LVL).
 \end{table}
 
-A ABNT NBR 7190-1:2022 não classifica explicitamente a ação do tráfego rodoviário quanto à sua duração acumulada.
-O item 2.3.1.2 do \textcite{EN1995-2:2004} trata essa classificação como um parâmetro de determinação nacional, a ser fixado no Anexo Nacional de cada país signatário.
-O Anexo Nacional britânico a essa norma \parencite{BSNA-EN1995-2:2004} resolve essa indeterminação classificando as ações variáveis decorrentes da passagem de veículos e de pedestres como ações de \emph{curta duração} (\textit{short-term actions}), em razão de seu caráter transitório e não sustentado, distinto das ações permanentes ou de longa duração que dominam a Tabela \ref{tab:kmod1.q}.
-Na ausência de orientação equivalente na ABNT NBR 7190-1:2022, adota-se aqui essa mesma classificação para a ação variável principal da combinação -- o trem-tipo e a carga de multidão.
+A \textcite{NBR7190-1:2022} não classifica explicitamente a ação do tráfego rodoviário quanto à sua duração acumulada.
+O item 2.3.1.2 do \textcite{EN1995-2:2004} e o item NA.2.1 do Anexo Nacional britânico \textcite{BSNA-EN1995-2:2004} classificam as ações variáveis decorrentes da passagem de veículos e de pedestres como ações de \emph{curta duração} (\textit{short-term actions}), em razão de seu caráter transitório e não sustentado, distinto das ações permanentes ou de longa duração que dominam a Tabela \ref{tab:kmod1.q}. 
+
 A classe de umidade adotada permanece a (3), compatível com elementos estruturais expostos ao tempo, mas protegidos do contato direto com a água, condição típica das pontes de madeira roliça em estradas vicinais.
 
 O segundo fator, $k_{\mathrm{mod},2}$, está relacionado à classe de umidade à qual o elemento estrutural está submetido, bem como ao tipo de material utilizado, conforme especificado no item 5.8.4.2 da \textcite{NBR7190-1:2022}.
 Os valores normativos desse coeficiente, diferenciados entre madeiras maciças, produtos engenheirados e madeiras recompostas, encontram-se sistematizados na Tabela \ref{tab:kmod2.2}.
-
 
 \begin{table}[htpb!]
 \centering
@@ -340,8 +345,7 @@ Madeira laminada colada (LVL) & \\
 
 \subsubsection{Fluência}
 
-As flechas instantâneas, $\delta_{\mathrm{inst},G_i,k}$ e $\delta_{\mathrm{inst},Q_j,k}$, associadas respectivamente às ações permanentes e variáveis, são calculadas com o módulo de elasticidade médio à flexão, $E_{0,\mathrm{m}}$, e não com um módulo minorado pelo coeficiente de modificação: o fator $k_{\mathrm{mod}}$ reduz a resistência característica da madeira ($k_{\mathrm{mod},1} \cdot k_{\mathrm{mod},2} \cdot X_k$, Equação~\eqref{eq:2.099}), não a sua rigidez.
-O efeito do tempo sobre a rigidez é incorporado separadamente, por meio do coeficiente de fluência $\varphi$, que amplia as flechas instantâneas para obter as flechas finais $\delta_{\mathrm{fin},G_i,k}$ e $\delta_{\mathrm{fin},Q_j,k}$, conforme as Equações~\eqref{eq:flecha_fin_G} e~\eqref{eq:flecha_fin_Q}.
+As flechas instantâneas, $\delta_{\mathrm{inst},G_i,k}$ e $\delta_{\mathrm{inst},Q_j,k}$, associadas respectivamente às ações permanentes e variáveis, são calculadas com o módulo de elasticidade médio à flexão, $E_{0,\mathrm{m}}$. O efeito do tempo sobre a rigidez é incorporado separadamente, por meio do coeficiente de fluência $\varphi$, que amplia as flechas instantâneas para obter as flechas finais $\delta_{\mathrm{fin},G_i,k}$ e $\delta_{\mathrm{fin},Q_j,k}$, conforme as Equações~\eqref{eq:flecha_fin_G} e~\eqref{eq:flecha_fin_Q}.
 
 \begin{equation}
 \delta_{\mathrm{fin},G_i,k}
@@ -366,11 +370,11 @@ O efeito do tempo sobre a rigidez é incorporado separadamente, por meio do coef
 Segundo a \textcite{NBR7190-1:2022}, ``a madeira possui características distintas de outros materiais de construção, como, por exemplo, a significativa deformação ao longo do tempo (fluência)''.
 Em razão dessa condição, torna-se necessária a aplicação do coeficiente de fluência ($\varphi$) na estimativa dos deslocamentos finais ou efetivos, conforme as Equações~\eqref{eq:flecha_fin_G} e~\eqref{eq:flecha_fin_Q}.
 Esse coeficiente é definido em função do material e da classe de umidade à qual o sistema estrutural está exposto.
-Classes de umidade mais elevadas resultam em flechas mais acentuadas, conforme evidenciado pelos valores do coeficiente de fluência da Tabela 20 da \textcite{NBR7190-1:2022}, reproduzidos na Tabela \ref{tab:fluencia}.
+Classes de umidade mais elevadas resultam em flechas mais acentuadas, conforme evidenciado pelos valores do coeficiente de fluência da \ref{tab:fluencia}.
 
 \begin{table}[htpb!]
 \centering
-\caption{Coeficiente de fluência ($\varphi$) \parencite{NBR7190-1:2022}.}
+\caption{Coeficiente de fluência ($\varphi$). Adaptado do item 8.1 tabela 20 da \textcite{NBR7190-1:2022}.}
 \label{tab:fluencia}
 \footnotesize
 \begin{tabular}{
@@ -404,7 +408,7 @@ Para a classe de umidade (3) adotada neste trabalho, o coeficiente de fluência 
 
 \subsubsection{Limites normativos de flecha}
 
-Na verificação do Estado Limite de Serviço (ELS), a \textcite{NBR7190-1:2022} estabelece valores limites para as flechas, considerando-se a flecha instantânea ($\delta_{\mathrm{inst}}$) e a flecha final ($\delta_{\mathrm{fin}}$).
+Na verificação do Estado Limite de Serviço (ELS), o item 8.2 da \textcite{NBR7190-1:2022} estabelece valores limites para as flechas, considerando-se a flecha instantânea ($\delta_{\mathrm{inst}}$) e a flecha final ($\delta_{\mathrm{fin}}$).
 Esses valores limites dependem da configuração estática da estrutura e encontram-se apresentados na Tabela \ref{tab:flechas_limites}.
 
 \begin{table}[htpb!]
@@ -438,7 +442,7 @@ Logo, o dimensionamento de sistemas estruturais em madeira deve atender a esses 
 
 O sistema estrutural considerado é composto por um tabuleiro de pranchas retangulares de madeira, de largura $b_w$ e altura $h$, apoiado continuamente sobre longarinas circulares roliças de diâmetro $d$, tratadas analiticamente como vigas biapoiadas de vão $L$.
 As etapas de verificação seguem a sequência: determinação dos esforços solicitantes, verificação à flexão e ao cisalhamento da longarina, verificação da flecha e, por fim, verificação à flexão do tabuleiro.
-O procedimento de cálculo apresentado nesta seção segue os critérios normativos da ABNT NBR 7190-1 e o roteiro de dimensionamento do Manual de Projeto e Construção de Pontes de Madeira \parencite{CALIL2006}.
+O procedimento de cálculo apresentado nesta seção segue os critérios normativos da \textcite{NBR7190-1:2022} e o roteiro de dimensionamento do Manual de Projeto e Construção de Pontes de Madeira de \textcite{CALIL2006}.
 
 \subsubsection{Esforços}
 
@@ -491,7 +495,9 @@ q = q_A \cdot esp_{long,corr}
 \label{eq:qlong}
 \end{equation}
 
-Os efeitos dinâmicos são incorporados pelo coeficiente de impacto vertical ($CIV$), determinado pelas Equações~\eqref{eq:civ1} e~\eqref{eq:civ2} conforme o item 7.2.3 da \textcite{nbr7188}, sendo $LIV$ o comprimento característico da estrutura. %\tofill{(conferir, no item da norma, se corresponde ao vão da longarina ou ao comprimento total da ponte)}.
+O espaçamento corrigido entre longarinas $esp_{long,corr}$ corresponde a dimensão geométrica inteira que o otimizador usa em todo o seu processo de cálculo de restrições e cálculo da função objetivo. Como a otimização será tratada como continua esse valor precisa ser revisado para "dimensões comerciais" inteiras.
+
+Os efeitos dinâmicos são incorporados pelo coeficiente de impacto vertical ($CIV$), determinado pelas Equações~\eqref{eq:civ1} e~\eqref{eq:civ2} conforme o item 5.1.3.1 da \textcite{nbr7188}, sendo $LIV$ o comprimento característico da estrutura.
 
 \begin{equation}
 CIV = 1{,}35 \qquad \text{para } L \leq 10{,}0\ \text{m}
@@ -517,11 +523,11 @@ Q_{gk} = \frac{g\,L}{2}
 \label{eq:qgk}
 \end{equation}
 
-Para a carga variável, o trem-tipo é posicionado sobre o vão de modo a produzir o efeito mais desfavorável em cada verificação, e essa posição de pior caso é diferente para o momento fletor, para o cortante e para a reação de apoio \parencite{CALIL2006}.
+Os efeitos do trem tipo são empregados usados conceitos de análise de estruturas e a as recomendações de \textcite{CALIL2006}.
 
 \subsubsection*{Momento fletor e flecha}
 
-Para o momento fletor e para a flecha, o veículo é centralizado no vão: a roda central posiciona-se exatamente no meio do vão, com as duas rodas externas a uma distância $a$ dela, conforme a Figura~\ref{fig:posicao_momento_flecha}. Essa é a posição do Teorema de Barré para um grupo de cargas igualmente espaçadas cujo resultante coincide com a roda central.
+Para o momento fletor e para a flecha, o veículo é centralizado no vão: a roda central posiciona-se exatamente no meio do vão, com as duas rodas externas a uma distância $a$ dela, conforme a Figura~\ref{fig:posicao_momento_flecha}.
 
 \begin{figure}[!ht]
     \centering
@@ -530,7 +536,7 @@ Para o momento fletor e para a flecha, o veículo é centralizado no vão: a rod
     \label{fig:posicao_momento_flecha}
 \end{figure}
 
-O momento fletor máximo sob a roda central resulta da Equação~\eqref{eq:mqk30}, escrita para $3\,\text{m} < L \leq 6\,\text{m}$, faixa em que a parcela de multidão simétrica $c$ (Equação~\eqref{eq:cmomento}, aplicável apenas para $L > 6\,\text{m}$) ainda não existe, pois o próprio veículo, com as rodas externas a $2a = 3{,}0$~m uma da outra, já ocupa o vão quase por inteiro. Como se mostra adiante, essa expressão corresponde ao arranjo centralizado e só coincide com a envoltória de Barré a partir de $L \approx 3{,}34$~m.
+O momento fletor máximo sob a roda central resulta da Equação~\eqref{eq:mqk30}, escrita para $3\,\text{m} < L \leq 6\,\text{m}$. Já para vãos maiores que 6 metros a~Equação~\eqref{eq:mqk45} representa o esforço máximo.
 
 \begin{equation}
 c = \frac{L - 4a}{2}, \qquad \text{para } L > 6\,\text{m}
@@ -547,9 +553,9 @@ M_{qk} = \left(\frac{3\,P\,L}{4} - P\,a\right) + \frac{q\,c^2}{2}, \qquad \text{
 \label{eq:mqk45}
 \end{equation}
 
-A posição centralizada, contudo, só é a posição de Barré enquanto as três rodas permanecem efetivamente carregando o vão. Com as rodas externas a $L/2 \pm a$ do apoio esquerdo, elas alcançam os apoios quando $L = 2a$; a partir daí passam a ter braço nulo, ou a sair do vão, e o arranjo centralizado deixa de maximizar o momento. Para $a = 1{,}5$~m e $L = 3{,}0$~m, as rodas externas assentam exatamente sobre os apoios e a Equação~\eqref{eq:mqk30} degenera no caso de carga única centrada, $M_{qk} = PL/4$.
+A posição centralizada, contudo, só é a posição de máximo esforço enquanto as três rodas permanecem efetivamente carregando o vão. Com as rodas externas a $L/2 \pm a$ do apoio esquerdo, elas alcançam os apoios quando $L = 2a$; a partir daí passam a ter braço nulo, ou a sair do vão, e o arranjo centralizado deixa de maximizar o momento. Para $a = 1{,}5$~m e $L = 3{,}0$~m, as rodas externas assentam exatamente sobre os apoios e a Equação~\eqref{eq:mqk30} degenera no caso de carga única centrada, $M_{qk} = PL/4$.
 
-Nessa situação o máximo é obtido deslocando o comboio de modo que apenas duas rodas permaneçam no vão, posicionadas segundo o Teorema de Barré: o meio do vão bissecta a distância entre uma das cargas e a resultante do par. A condição fornece a posição $x = (2L-a)/4$ para a primeira roda e o momento da Equação~\eqref{eq:mqk2}, obtido maximizando $M(x) = P\,x\,(2L - 2x - a)/L$.
+Nesse caso, o momento máximo é encontrado posicionando o trem-tipo de forma que apenas duas rodas fiquem dentro do vão, seguindo o Teorema de Barré: o centro do vão deve ficar exatamente no ponto médio entre uma das cargas e a resultante do par. Essa condição leva à posição $x = (2L-a)/4$ para a primeira roda, e o momento máximo é dado pela Equação~\eqref{eq:mqk2}, obtida maximizando $M(x) = P\,x\,(2L - 2x - a)/L$.
 
 \begin{equation}
 M_{qk}^{(2)} = \frac{P\,(2L-a)^2}{8L}, \qquad \text{válida para } L \geq 1{,}5\,a
@@ -580,7 +586,7 @@ Para a reação de apoio, o veículo é posicionado encostado no apoio de intere
 
 \subsubsection*{Esforço cortante}
 
-Para o cortante, a Figura~\ref{fig:posicao_cortante} mostra o veículo afastado do apoio por $2h$, sendo $h$ a altura (ou o diâmetro, para seção circular) da peça: a norma admite avaliar o cortante em uma seção afastada do apoio, e não na face do apoio propriamente dita.
+Para o cortante, a Figura~\ref{fig:posicao_cortante} mostra o veículo afastado do apoio por $2h$, sendo $h$ a altura (ou o diâmetro, para seção circular) da peça: a \textcite{NBR7190-1:2022} permite avaliar o cortante em uma seção afastada do apoio, e não na face do apoio propriamente dita.
 Essa posição fornece a grandeza auxiliar $e$ da Equação~\eqref{eq:ecortante} e o cortante de cálculo $Q_{qk}$ da Equação~\eqref{eq:qqk}.
 
 \begin{figure}[!ht]
@@ -605,13 +611,14 @@ A Equação~\eqref{eq:qqk} pressupõe, contudo, que todo o esquema de carregamen
 Mantendo o posicionamento de referência da Figura~\ref{fig:posicao_cortante}, a expressão foi reescrita de modo a considerar explicitamente a extensão finita do vão, conforme a Equação~\eqref{eq:qqkenv}. As contribuições das rodas situadas além do apoio oposto e dos trechos inexistentes de carga distribuída são anuladas pelo operador $\max(\cdot\,,0)$.
 
 \begin{equation}
-Q_{qk} = \frac{P}{L}\Big[\max(L-2h,\,0) + \max(L-2h-a,\,0) + \max(L-2h-2a,\,0)\Big] + \frac{q}{2L}\Big[\max(L-2h-3a,\,0)\Big]^{2}
+\begin{split}
+Q_{qk} = \frac{P}{L}\Big[\max(L-2h,\,0) + \max(L-2h-a,\,0) &+ \max(L-2h-2a,\,0)\Big] \\
+&+ \frac{q}{2L}\Big[\max(L-2h-3a,\,0)\Big]^{2}
+\end{split}
 \label{eq:qqkenv}
 \end{equation}
 
-Essa reformulação preserva o afastamento $2h$, inclui somente as rodas efetivamente apoiadas no vão e elimina a parcela de multidão quando não há comprimento disponível. Quando o esquema completo cabe no vão, isto é, quando $L \geq 2h + 3a$, todos os operadores $\max$ tornam-se inativos e a Equação~\eqref{eq:qqkenv} recupera algebricamente a Equação~\eqref{eq:qqk}, que permanece no texto como formulação de referência e como caso de verificação da rotina numérica. É a Equação~\eqref{eq:qqkenv} que a plataforma avalia.
-
-Os esforços de cálculo, $M_{sd}$ e $Q_{sd}$, seguem a combinação normativa de ações da ABNT NBR 8681 \parencite{NBR8681:2025}.
+Os esforços de cálculo, $M_{sd}$ e $Q_{sd}$, seguem a combinação normativa de ações da \textcite{NBR8681:2025}
 Para o caso de uma ponte de vão único sujeita ao peso próprio e ao trem-tipo como única ação variável predominante, essa combinação se reduz à Equação~\eqref{eq:comb}, em que $\gamma_g$ e $\gamma_q$ são os coeficientes de ponderação das ações permanentes e variáveis, respectivamente, adotados conforme a Tabela~\ref{tab:ponderadores_acoes}.
 
 \begin{equation}

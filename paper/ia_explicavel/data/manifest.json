@@ -1,0 +1,20 @@
+{
+  "dataset_version": "0.1-exploratorio",
+  "created_utc": "2026-09-21T13:00:23.940855+00:00",
+  "n_scenarios": 2700,
+  "n_simulated_in_this_file": 0,
+  "counts_by_split": {
+    "train": 1800,
+    "validation_span": 360,
+    "test_span": 540
+  },
+  "config_sha256": "11600f5e54e7652e89eb6d282fd26396c50c17506aa9985b5591b5b227863c21",
+  "scenarios_sha256": "a45e904a96ef9544fdb8e2df24adc68d2dd56785a7f83d33aeb2b4e39ba830a9",
+  "source_sha256": {
+    "madeiras.py": "ffa3a07296e499cd5da09ad6faa4104409d21f62bddd8a806d6c93f7ddda2618",
+    "batch_pre_sizing.py": "2677dffc89b117e499e0f938557305a28ff8f15649e21e1dd1b8cdbae1e670f9",
+    "pages/pre_sizing.py": "9eba315c0c5b9b51438750e7c015f4746a175a91f21f241c6ffcb74bca6b5184",
+    "paper/materia/04_methodology.tex": "8f365c00cc3862a4fcae3a62e9d0be0683cf9cb12c6fca82b914b058f77f2164"
+  },
+  "note": "Entradas planejadas. Resultados ficam separados. A base antiga das 40 espécies NÃO foi usada."
+}

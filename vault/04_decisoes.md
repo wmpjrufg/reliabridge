@@ -259,6 +259,17 @@ Minha recomendação, **ainda sem decisão do Wanderlei** ("por enquanto"):
 - **Bloqueios que equação nenhuma resolve:** o trabalho é inteiramente ABNT/TB-240, e
   não há validação contra estrutura executada (razão original da D-15).
 
+**Parcialmente resolvida em 2026-09-21:** o Wanderlei pediu, nesta sessão, para
+acrescentar a equação de pré-dimensionamento **dentro do Artigo 1** (nova §4.6, ver
+D-19), não como artigo separado para o Structures.
+Optou-se pela versão mais simples possível — $V(L, f_{c0,k}) = a\,L^b\,f_{c0,k}^c$, dois
+parâmetros a mais que o $V \propto L^n$ por classe já existente em §4.4, só para amarrar
+as cinco classes numa superfície contínua — exatamente para não esbarrar na objeção já
+registrada acima ("regressão simbólica redescobriria a lei de potência"): não é
+apresentada como achado de ciência de dados, é uma conveniência de anteprojeto derivada
+do mesmo ajuste que já estava no texto. **A parte "Structures" da D-18 (P2 ampliado,
+multidimensional) continua em aberto e não foi tocada por esta mudança.**
+
 **Três pré-requisitos antes de qualquer DoE ampliado:**
 
 1. Acima de 6 m o momento troca de fórmula (multidão entra, eq:mqk45). Equação ajustada
@@ -272,3 +283,26 @@ Minha recomendação, **ainda sem decisão do Wanderlei** ("por enquanto"):
 O texto do próprio P1 cita `ritter1990`: vãos usuais de tora roliça vão de 6 a 18 m.
 A matriz cobre 3 a 6 m, toda na ponta baixa. Ampliar até 10-12 m resolve a crítica de
 relevância e dá amplitude para ajuste, de uma vez só.
+
+### D-19 · Limites de busca do diâmetro revisados e matriz reprocessada — 2026-09-21
+
+**Decisão (do autor, comunicada em 20/09, aplicada em 21/09):** `LimitesBusca.d` passa de
+`(30, 150)` cm para `(20, 100)` cm, `bw` de `(5, 60)` para `(20, 50)`, `h` de `(5, 60)`
+para `(5, 15)`, a partir de consulta do autor ao mercado de peças roliças e serradas.
+`N_gen` sobe de 150 para 300 no mesmo commit (`batch_pre_sizing.ParametrosAlgoritmo`).
+Detalhes técnicos em `09_lote_headless.md`, seção "Limites atuais para novas execuções".
+
+**Por que registrar como decisão, e não só como parâmetro:** o Artigo 1 já estava
+publicado (texto e figuras) sobre os limites antigos quando os novos foram fixados no
+código (commit `4d73523b`, 20/09 à noite) — só a `tab:nsga2` tinha sido atualizada para
+`N_gen=300`; `tab:intervalos` e a matriz de resultados continuaram no ar com os números
+de `d=30-150` até esta sessão. Reprocessado o lote completo (20 células + robustez da
+C-13) em 21/09 e o artigo inteiramente reescrito sobre os números novos — não é só
+"rodar de novo", o texto de §4.4 mudou de estrutura porque o efeito de saturação no piso
+de `d` que sustentava parte da narrativa anterior desapareceu com o piso mais baixo.
+Ver `CHANGELOG.md` de 21/09 para a lista completa do que mudou de achado, não só de
+número, incluindo a reversão do custo da robustez (~5-6% → não detectável nestes dados).
+
+**Não relitigar:** os novos limites (20-100 / 20-50 / 5-15 cm) são os vigentes. Se uma
+sessão futura encontrar `d: 30-150` em algum lugar do texto ou dos scripts, é resíduo a
+corrigir, não uma divergência a resolver.

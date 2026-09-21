@@ -1,5 +1,7 @@
 # Linha nova — ciência de dados + otimização
 
+> **Atualização em 21/09/2026:** o usuário solicitou iniciar o artigo 3. Proposta e dataset inicial em [`11_paper_ia_explicavel.md`](11_paper_ia_explicavel.md) e `paper/ia_explicavel/`. O texto abaixo registra ideias anteriores; a tabela antiga de espécies foi desativada em 20/09 e não foi usada na nova matriz. A condição antiga de aguardar o artigo 2 não impede o planejamento e piloto agora solicitados.
+
 **Status:** ideia declarada em 2026-08-12, ainda sem escopo fechado.
 **Origem:** o usuário quer explorar o modelo das 40 espécies como **problema de dados**,
 não só como estudo paramétrico.
