@@ -513,6 +513,12 @@ def momento_max_carga_permanente(p_gk: float, l: float) -> float:
 def momento_max_carga_variavel(l: float, p_rodak: float, p_qk: float, a: float) -> float:
     """Calcula o momento fletor máximo M_q,k conforme expressão normativa para longarinas das Classes 30 e 45.
 
+    Toma a envoltória de Barré sobre os arranjos possíveis do comboio: os três eixos
+    simétricos ao meio do vão, duas cargas no vão, ou uma só. O primeiro arranjo é a
+    forma fechada da apostila, 3*p_rodak*l/4 - p_rodak*a, e domina para l >= 2,23*a
+    (3,34 m quando a = 1,5 m); abaixo disso os eixos externos saem do vão e ela passa a
+    subestimar o momento — em 12,5 % no vão de 3 m.
+
     :param l: vão teórico da longarina [m]
     :param p_rodak: carga variável característica por roda [kN]
     :param p_qk: carga variável característica de multidão [kN/m]
@@ -521,12 +527,21 @@ def momento_max_carga_variavel(l: float, p_rodak: float, p_qk: float, a: float) 
     :return: momento fletor máximo devido à carga variável [kN·m]
     """
     
-    m_qk = (3 * p_rodak * l) / 4 - p_rodak * a
+    # Arranjo de referência: os três eixos simétricos em relação ao meio do vão, com a
+    # multidão nos trechos livres além do veículo (esta só entra em vão longo).
+    m_simetrico = (3 * p_rodak * l) / 4 - p_rodak * a
     if l > 6:
         c = (l - 4 * a) / 2
-        m_qk += p_qk * c**2 / 2
-        
-    return m_qk
+        m_simetrico += p_qk * c**2 / 2
+
+    # Vão curto: os eixos externos saem do vão (ou encostam nos apoios, com braço nulo)
+    # e o arranjo simétrico deixa de ser o que maximiza. Pelo teorema de Barré, com duas
+    # cargas no vão o máximo ocorre sob a primeira, posicionada em x = (2l - a)/4; com
+    # uma só carga, no meio do vão.
+    m_duas = p_rodak * (2 * l - a) ** 2 / (8 * l) if l >= 1.5 * a else 0.0
+    m_uma = p_rodak * l / 4
+
+    return max(m_simetrico, m_duas, m_uma)
 
 
 def cortante_max_carga_permanente(p_gk: float, l: float) -> float:
@@ -545,20 +560,34 @@ def cortante_max_carga_permanente(p_gk: float, l: float) -> float:
 
 def cortante_max_carga_variavel(l: float, p_rodak: float, p_qk: float, a: float, h: float) -> float:
     """Calcula a reação de apoio máxima devido à carga variável conforme esquema de trem-tipo.
-    
+
+    A primeira roda é afastada 2h do apoio (ABNT NBR 7190-1:2022, item 6.4.3: forças
+    concentradas a menos de 2h do apoio podem ser desprezadas no cortante) e somam-se
+    apenas as rodas e o trecho de multidão que cabem no vão. Quando o esquema completo
+    cabe, isto é l >= 2h + 3a, recupera a forma fechada (p_rodak/l)(6a + 3e) +
+    p_qk*e²/(2l), com e = l - 3a - 2h.
+
     :param l: vão teórico da viga [m]
     :param p_rodak: carga variável característica por roda [kN]
     :param p_qk: carga variável característica de multidão, já convertida em carga linear [kN/m]
     :param a: distância entre eixos [m]
-    :param h: altura média da viga [m]
+    :param h: altura da viga [m] (para seção circular, o próprio diâmetro)
 
     :return: Cortante máximo devido à carga variável [kN]
     """
 
-    e = l - 3 * a - 2 * h
-    v_qk = (p_rodak / l) * (6 * a + 3 * e) + (p_qk * e**2) / (2 * l)
+    # Rodas: só contribuem as que caem dentro do vão. O max(..., 0) impede que uma roda
+    # já além do apoio direito entre com braço negativo e subtraia do cortante.
+    v_rodas = (p_rodak / l) * (
+        max(l - 2 * h, 0.0)
+        + max(l - 2 * h - a, 0.0)
+        + max(l - 2 * h - 2 * a, 0.0)
+    )
 
-    return v_qk
+    # Multidão: o trecho disponível é nulo quando o veículo já ocupa todo o vão.
+    v_multidao = (p_qk / (2 * l)) * max(l - 2 * h - 3 * a, 0.0) ** 2
+
+    return v_rodas + v_multidao
 
 
 def flecha_max_carga_permanente(p_gk: float, l: float, e_modflex: float, i_x: float) -> float:
@@ -893,36 +922,37 @@ def checagem_flecha_viga(
     :param phi: Coeficiente de fluência para carga variável
 
     :return:  Analise da verificação de flecha com as seguintes chaves:
-                "delta_lim [m]": limite de flecha para carga total, 
-                "delta_lim_variavel [m]": limite de flecha para carga variável,
-                "delta_fluencia [m]": flecha máxima devido à fluência,
-                "delta_qk [m]": flecha máxima devido à carga variável, 
+                "delta_lim_total [m]": limite da flecha final (quase permanente), L/350,
+                "delta_lim_inst [m]": limite da flecha instantânea (rara), L/500,
+                "delta_fluencia [m]": flecha final, já com fluência,
+                "delta_inst [m]": flecha instantânea, permanente + variável, sem fluência,
                 "g_otimiz [-]": Equação Estado Limite no formato (S - R) / R, 
                 "g_confia [m]": Equação Estado Limite no formato R - S, 
                 "of [-]": Desempenho da viga em relação ao limite de flecha considerando fluência,
                 "analise": descrição se a viga passa ou não passa na verificação de flecha     
     """
 
-    # Verificação flecha total (flechas finais, combinação quase permanente,
-    # Tabela 21 da NBR 7190-1:2022: limite L/350)
-    # delta_fin = delta_gk*(1+phi) + delta_qk*psi2*(1+phi), conforme NBR 7190-1:
-    # a fluência amplia tanto a parcela permanente quanto a variável (ponderada por psi2).
+    # Flechas FINAIS, combinação quase permanente (Tabela 21 da NBR 7190-1:2022,
+    # limite L/350): a fluência amplia tanto a parcela permanente quanto a variável,
+    # esta última ponderada por psi2.
+    #   delta_fin = delta_gk*(1+phi) + delta_qk*psi2*(1+phi)
     delta_sd_1 = (1 + phi) * (delta_gk + psi2 * delta_qk)
     lim_1 = l / 350
     g_sd1 = (delta_sd_1 - lim_1) / lim_1
 
-    # Verificação flecha variável (flechas instantâneas, combinação rara de
-    # serviço, Tabela 21 da NBR 7190-1:2022: limite L/500)
-    delta_sd_2 = delta_qk
+    # Flechas INSTANTÂNEAS, combinação rara de serviço (Tabela 21 da NBR 7190-1:2022,
+    # limite L/500): soma das duas parcelas sem fluência. A combinação rara inclui a
+    # ação permanente, então entram delta_gk e delta_qk — não só a parcela variável.
+    delta_sd_2 = delta_gk + delta_qk
     lim_2 = l / 500
     g_sd2 = (delta_sd_2 - lim_2) / lim_2
     g_sd = max(g_sd1, g_sd2)
 
     return {
                 "delta_lim_total [m]": lim_1,
-                "delta_lim_variavel [m]": lim_2,
+                "delta_lim_inst [m]": lim_2,
                 "delta_fluencia [m]": delta_sd_1,
-                "delta_qk [m]": delta_sd_2,
+                "delta_inst [m]": delta_sd_2,
                 "g_otimiz [-]": g_sd,
                 "g_confia [m]": max(lim_1 - delta_sd_1, lim_2 - delta_sd_2),
                 "of [-]": delta_sd_1/lim_1,
@@ -958,8 +988,6 @@ def checagem_completa_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: flo
     # Geometria, Propriedades da seção transversal e coeficiente de correção para impacto vertical
     area, w_x, w_y, i_x, i_y, s_x, s_y, r_x, r_y, k_m = prop_madeiras(geo)
     ci = coef_impacto_vertical(l)
-    # CIV aplicado integralmente sobre os esforços variáveis, sem atenuação:
-    # o fator de 0,75 não consta na NBR 7188, então aux_ci passa a valer o próprio CIV.
     aux_ci = ci
 
     # Momentos fletores devido a carga permanente e variável
@@ -1029,9 +1057,10 @@ def checagem_completa_longarina_madeira_flexao(geo: dict, p_gk: float, p_qk: flo
                     "analise_cisalhamento": res_cis["analise"],
                     "delta_gk [m]": delta_gk,
                     "delta_qk [m]": delta_qk,
+                    "delta_inst [m]": res_flecha["delta_inst [m]"],
                     "delta_fluencia [m]": res_flecha["delta_fluencia [m]"],
                     "delta_lim_total [m]": res_flecha["delta_lim_total [m]"],
-                    "delta_lim_variavel [m]": res_flecha["delta_lim_variavel [m]"],
+                    "delta_lim_inst [m]": res_flecha["delta_lim_inst [m]"],
                     "g_flecha [-]": res_flecha["g_confia [m]"]
                 }
 
@@ -1592,14 +1621,28 @@ def gerar_relatorio_final(projeto, res, geo_real):
     m_qk_long_sem_impacto = relat_l.get("m_qk [kN.m]", 0.0) / relat_l.get("aux_ci", 1.0)
     v_qk_long_sem_impacto = relat_l.get("v_qk [kN]", 0.0) / relat_l.get("aux_ci", 1.0)
     c_momento = (l_m - 4.0 * projeto.a) / 2.0 if l_m > 6.0 else 0.0
-    e_cortante = l_m - 3.0 * projeto.a - 2.0 * d_m
+    # Candidatos da envoltória de Barré, iguais aos de momento_max_carga_variavel.
+    m_3_eixos = 3.0 * projeto.p_rodak * l_m / 4.0 - projeto.p_rodak * projeto.a
+    if l_m > 6.0:
+        m_3_eixos += relat_carga.get("p_qklong [kN/m]", 0.0) * c_momento**2 / 2.0
+    m_2_eixos = (
+        projeto.p_rodak * (2.0 * l_m - projeto.a) ** 2 / (8.0 * l_m)
+        if l_m >= 1.5 * projeto.a
+        else 0.0
+    )
+    m_1_eixo = projeto.p_rodak * l_m / 4.0
+    # Mesma geometria de cortante_max_carga_variavel: recuo de 2d limitado a L/2,
+    # três eixos a partir dele, e trecho livre de multidão nunca negativo.
+    posicoes_eixos = [2.0 * d_m + i * projeto.a for i in range(3)]
+    e_cortante = max(l_m - 2.0 * d_m - 3.0 * projeto.a, 0.0)
     b_flecha = (l_m - 2.0 * projeto.a) / 2.0
     aux_flecha = l_m**3 + 2.0 * b_flecha * (3.0 * l_m**2 - 4.0 * b_flecha**2)
     delta_total = res_f.get("delta_fluencia [m]")
-    delta_q = res_f.get("delta_qk [m]")
+    delta_q = relat_l.get("delta_qk [m]")
     delta_g = relat_l.get("delta_gk [m]")
+    delta_inst = res_f.get("delta_inst [m]")
     delta_lim_total = res_f.get("delta_lim_total [m]")
-    delta_lim_variavel = res_f.get("delta_lim_variavel [m]")
+    delta_lim_inst = res_f.get("delta_lim_inst [m]")
 
     # ------------------------------------------------------------------
     # Seção 3 — memória de cálculo (equações em LaTeX)
@@ -1728,16 +1771,20 @@ def gerar_relatorio_final(projeto, res, geo_real):
             r"&= \frac{" + f(relat_carga.get('p_glongk [kN/m]')) + r" \cdot (" + f(l_m) + r")^{2}}{8}",
             r"&= " + f(relat_l.get('m_gk [kN.m]')) + r"\ \text{kN}\cdot\text{m}",
         )
-        + "Momento fletor devido à carga móvel:\n\n"
+        + "Momento fletor devido à carga móvel. Toma-se a envoltória de Barré sobre os "
+        + "arranjos admissíveis do comboio, pois em vão curto as rodas externas alcançam "
+        + "os apoios e o arranjo centralizado deixa de ser o que maximiza:\n\n"
         + eq(
             r"c &= \frac{L - 4a}{2} = \frac{" + f(l_m) + r" - 4 \cdot " + f(projeto.a) + r"}{2} = " + f(c_momento) + r"\ \text{m}",
         )
         + eq(
-            r"M_{qk,0} &= \frac{3\,P_{roda}\,L}{4} - P_{roda}\,a + \frac{p_{qk,long}\,c^{2}}{2}",
-            r"&= \frac{3 \cdot " + f(projeto.p_rodak) + r" \cdot " + f(l_m) + r"}{4}"
-            r" - " + f(projeto.p_rodak) + r" \cdot " + f(projeto.a)
-            + r" + \frac{" + f(relat_carga.get('p_qklong [kN/m]')) + r" \cdot (" + f(c_momento) + r")^{2}}{2}",
-            r"&= " + f(m_qk_long_sem_impacto) + r"\ \text{kN}\cdot\text{m}",
+            r"M_{3} &= \frac{3\,P_{roda}\,L}{4} - P_{roda}\,a + \frac{p_{qk,long}\,c^{2}}{2}"
+            r" = " + f(m_3_eixos) + r"\ \text{kN}\cdot\text{m}",
+            r"M_{2} &= \frac{P_{roda}\,(2L-a)^{2}}{8L} = " + f(m_2_eixos) + r"\ \text{kN}\cdot\text{m}",
+            r"M_{1} &= \frac{P_{roda}\,L}{4} = " + f(m_1_eixo) + r"\ \text{kN}\cdot\text{m}",
+        )
+        + eq(
+            r"M_{qk,0} &= \max(M_{3},\ M_{2},\ M_{1}) = " + f(m_qk_long_sem_impacto) + r"\ \text{kN}\cdot\text{m}",
         )
         + eq(
             r"M_{qk} &= M_{qk,0} \cdot C_{i}",
@@ -1757,15 +1804,18 @@ def gerar_relatorio_final(projeto, res, geo_real):
             r"&= \frac{" + f(relat_carga.get('p_glongk [kN/m]')) + r" \cdot " + f(l_m) + r"}{2}",
             r"&= " + f(relat_l.get('v_gk [kN]')) + r"\ \text{kN}",
         )
-        + "Esforço cortante devido à carga móvel:\n\n"
+        + "Esforço cortante devido à carga móvel. Pelo item 6.4.3 da ABNT NBR 7190-1, as "
+        + "forças concentradas a menos de $2d$ do apoio são desprezadas, de modo que o "
+        + "primeiro eixo é encostado em $2d$ e só contribuem os eixos que caem dentro do vão:\n\n"
         + eq(
-            r"e &= L - 3a - 2d = " + f(l_m) + r" - 3 \cdot " + f(projeto.a)
-            + r" - 2 \cdot " + f(d_m) + r" = " + f(e_cortante) + r"\ \text{m}",
+            r"x_{i} &= 2d + (i-1)\,a = \{" + ",\\ ".join(f(x) for x in posicoes_eixos) + r"\}\ \text{m}",
+            r"e &= \max(L - 2d - 3a,\ 0) = " + f(e_cortante) + r"\ \text{m}",
         )
         + eq(
-            r"V_{qk,0} &= \frac{P_{roda}}{L}\,(6a + 3e) + \frac{p_{qk,long}\,e^{2}}{2L}",
-            r"&= \frac{" + f(projeto.p_rodak) + r"}{" + f(l_m) + r"} \cdot (6 \cdot " + f(projeto.a)
-            + r" + 3 \cdot " + f(e_cortante) + r")"
+            r"V_{qk,0} &= \frac{P_{roda}}{L}\sum_{i=1}^{3}\max(L - x_{i},\,0)"
+            r" + \frac{p_{qk,long}\,e^{2}}{2L}",
+            r"&= \frac{" + f(projeto.p_rodak) + r"}{" + f(l_m) + r"} \cdot ("
+            + " + ".join(f(max(l_m - x, 0.0)) for x in posicoes_eixos) + r")"
             + r" + \frac{" + f(relat_carga.get('p_qklong [kN/m]')) + r" \cdot (" + f(e_cortante) + r")^{2}}{2 \cdot " + f(l_m) + r"}",
             r"&= " + f(v_qk_long_sem_impacto) + r"\ \text{kN}",
         )
@@ -1850,23 +1900,26 @@ def gerar_relatorio_final(projeto, res, geo_real):
             + r"{48 \cdot " + f(projeto.e_modflex_long * 1000000.0) + r" \cdot " + f(relat_l.get('i_x [m4]'), 8) + r"}",
             r"&= " + f(delta_q, 6) + r"\ \text{m}",
         )
-        + "Flecha total, considerando a fluência:\n\n"
+        + "Flecha instantânea (combinação rara) e flecha final (quase permanente, com fluência):\n\n"
         + eq(
-            r"\delta_{total} &= (1 + \varphi)\,(\delta_{gk} + \psi_{2}\,\delta_{qk})",
+            r"\delta_{inst} &= \delta_{gk} + \delta_{qk}"
+            r" = " + f(delta_g, 6) + r" + " + f(delta_q, 6)
+            + r" = " + f(delta_inst, 6) + r"\ \text{m}",
+            r"\delta_{fin} &= (1 + \varphi)\,(\delta_{gk} + \psi_{2}\,\delta_{qk})",
             r"&= (1 + " + f(projeto.phi) + r") \cdot (" + f(delta_g, 6) + r" + " + f(projeto.psi2) + r" \cdot " + f(delta_q, 6) + r")",
             r"&= " + f(delta_total, 6) + r"\ \text{m}",
         )
         + "Limites normativos e funções de estado limite:\n\n"
         + eq(
-            r"\delta_{lim,total} &= \frac{L}{350} = \frac{" + f(l_m) + r"}{350} = " + f(delta_lim_total, 6) + r"\ \text{m}",
-            r"\delta_{lim,var} &= \frac{L}{500} = \frac{" + f(l_m) + r"}{500} = " + f(delta_lim_variavel, 6) + r"\ \text{m}",
+            r"\delta_{lim,fin} &= \frac{L}{350} = \frac{" + f(l_m) + r"}{350} = " + f(delta_lim_total, 6) + r"\ \text{m}",
+            r"\delta_{lim,inst} &= \frac{L}{500} = \frac{" + f(l_m) + r"}{500} = " + f(delta_lim_inst, 6) + r"\ \text{m}",
         )
         + eq(
-            r"g_{total} &= \frac{\delta_{total} - \delta_{lim,total}}{\delta_{lim,total}}"
+            r"g_{fin} &= \frac{\delta_{fin} - \delta_{lim,fin}}{\delta_{lim,fin}}"
             r" = \frac{" + f(delta_total, 6) + r" - " + f(delta_lim_total, 6) + r"}{" + f(delta_lim_total, 6) + r"}",
-            r"g_{var} &= \frac{\delta_{qk} - \delta_{lim,var}}{\delta_{lim,var}}"
-            r" = \frac{" + f(delta_q, 6) + r" - " + f(delta_lim_variavel, 6) + r"}{" + f(delta_lim_variavel, 6) + r"}",
-            r"g &= \max(g_{total},\ g_{var}) = " + f(res_f.get('g_otimiz [-]'), 4),
+            r"g_{inst} &= \frac{\delta_{inst} - \delta_{lim,inst}}{\delta_{lim,inst}}"
+            r" = \frac{" + f(delta_inst, 6) + r" - " + f(delta_lim_inst, 6) + r"}{" + f(delta_lim_inst, 6) + r"}",
+            r"g &= \max(g_{fin},\ g_{inst}) = " + f(res_f.get('g_otimiz [-]'), 4),
         )
         + "Resultado: " + status_icon(res_f) + ".\n"
 
@@ -2593,7 +2646,7 @@ def chamando_nsga2(
                     verbose: bool = True,
                     salvar_historico: bool = False,
                     pop_size: int = 50,
-                    n_gen: int = 150,
+                    n_gen: int = 300,
                     n_checagens: int = 30,
                 ):
     """Função para chamar o algoritmo NSGA-II para otimização do projeto estrutural.

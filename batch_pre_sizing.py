@@ -134,16 +134,16 @@ class LimitesBusca:
     """Intervalos de busca das cinco variáveis de projeto, em cm.
 
     Não vêm do `beam_data.xlsx`: na interface são widgets, passados como argumentos
-    separados a `chamando_nsga2` e `chamar_sobol`. Os padrões abaixo são os valores das
-    execuções já publicadas.
+    separados a `chamando_nsga2` e `chamar_sobol`. Os padrões abaixo são os limites
+    revisados para novas execuções; planilhas históricas mantêm seus valores explícitos.
 
     `esp_long` e `esp_tab` são ESPAÇAMENTOS em cm, não contagens de peças, apesar de
     `madeiras` chamá-los de `n_long` e `n_tab`.
     """
 
-    d: tuple[float, float] = (30.0, 150.0)
-    bw: tuple[float, float] = (5.0, 60.0)
-    h: tuple[float, float] = (5.0, 60.0)
+    d: tuple[float, float] = (20.0, 100.0)
+    bw: tuple[float, float] = (20.0, 50.0)
+    h: tuple[float, float] = (5.0, 15.0)
     esp_long: tuple[float, float] = (30.0, 200.0)
     esp_tab: tuple[float, float] = (2.0, 5.0)
 
@@ -163,7 +163,7 @@ class ParametrosAlgoritmo:
     """Parâmetros do NSGA-II. Padrões iguais aos de `chamando_nsga2`."""
 
     pop_size: int = 50
-    n_gen: int = 150
+    n_gen: int = 300
     n_checagens: int = 30
     verbose: bool = False
 
@@ -619,6 +619,7 @@ def ler_planilha_casos(caminho, *, idioma: str = "pt", aba: str = "Casos") -> li
     t = textos(idioma)
     df = pd.read_excel(caminho, sheet_name=aba, dtype={COLUNA_ID: str})
 
+    limites_padrao = LimitesBusca()
     casos: list[CasoBatch] = []
     vistos: set[str] = set()
 
@@ -638,19 +639,13 @@ def ler_planilha_casos(caminho, *, idioma: str = "pt", aba: str = "Casos") -> li
         }
         _validar_dados(dados, t, id_caso)
 
-        limites = LimitesBusca(
-            d=(float(_cfg(linha, "d_min", 30.0)), float(_cfg(linha, "d_max", 150.0))),
-            bw=(float(_cfg(linha, "bw_min", 5.0)), float(_cfg(linha, "bw_max", 60.0))),
-            h=(float(_cfg(linha, "h_min", 5.0)), float(_cfg(linha, "h_max", 60.0))),
-            esp_long=(
-                float(_cfg(linha, "esp_long_min", 30.0)),
-                float(_cfg(linha, "esp_long_max", 200.0)),
-            ),
-            esp_tab=(
-                float(_cfg(linha, "esp_tab_min", 2.0)),
-                float(_cfg(linha, "esp_tab_max", 5.0)),
-            ),
-        )
+        limites = LimitesBusca(**{
+            nome: (
+                float(_cfg(linha, f"{nome}_min", intervalo[0])),
+                float(_cfg(linha, f"{nome}_max", intervalo[1])),
+            )
+            for nome, intervalo in vars(limites_padrao).items()
+        })
         for nome, (minimo, maximo) in {
             "d": limites.d,
             "bw": limites.bw,
@@ -671,7 +666,7 @@ def ler_planilha_casos(caminho, *, idioma: str = "pt", aba: str = "Casos") -> li
                 limites=limites,
                 algoritmo=ParametrosAlgoritmo(
                     pop_size=int(_cfg(linha, "pop_size", 50)),
-                    n_gen=int(_cfg(linha, "n_gen", 150)),
+                    n_gen=int(_cfg(linha, "n_gen", 300)),
                     n_checagens=int(_cfg(linha, "n_checagens", 30)),
                 ),
                 sobol=ConfigSobol(

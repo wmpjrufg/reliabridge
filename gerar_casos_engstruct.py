@@ -8,6 +8,8 @@ protocolo de comparação da Seção 3 daquele artigo:
 
 As duas rodadas de um mesmo par espécie-vão usam configuração e semente idênticas, de
 modo que a diferença de volume seja atribuível só às propriedades do material.
+Os limites de busca vêm de `batch_pre_sizing.LimitesBusca`. Para atualizar somente
+os limites das planilhas existentes, execute `atualizar_limites_casos.py`.
 
 Uso:
     .venv\\Scripts\\python.exe gerar_casos_engstruct.py

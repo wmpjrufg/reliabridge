@@ -196,7 +196,7 @@ def avaliar_python(p):
         "(τ / f.v0.d)": rv["g_otimiz [-]"]+1,
         "δ.inst": (rl["delta_gk [m]"]+rl["delta_qk [m]"])*1000,
         "δ.fin": rf["delta_fluencia [m]"]*1000,
-        "(L / 500)": rf["delta_lim_variavel [m]"]*1000,
+        "(L / 500)": rf["delta_lim_inst [m]"]*1000,
         "(L / 350)": rf["delta_lim_total [m]"]*1000,
         "p.gtab.k": carga_tab, "M.gk.tab": rlt["m_gk [kN.m]"],
         "M.qk.tab.0": m.momento_max_carga_variavel_tabuleiro(p["roda_kn"], p["esp_long_m"], p["ar_m"]),

@@ -2,14 +2,19 @@
 
 Conforme D-06: só a célula de referência C-13 é reotimizada, para quatro níveis de
 desvio, ρ ∈ {0 %, 2,5 %, 5 %, 10 %}, mantendo todos os demais parâmetros do algoritmo
-(Tabela `tab:nsga2`: pop 50, 150 gerações, N_c = 30). O caso ρ = 0 % é o determinístico:
+(configuração atual: pop 50, 300 gerações, N_c = 30). Os limites de busca são os
+padrões atuais de `batch_pre_sizing.LimitesBusca`. O caso ρ = 0 % é o determinístico:
 `_criar_multiplicadores_robustez` (madeiras.py) já colapsa para uma única avaliação
 quando `rho <= 0`, então basta zerar o percentual — nenhum outro parâmetro muda.
 
 Uso:
-    .venv\\Scripts\\python.exe gerar_casos_robustez.py
+    .venv\\Scripts\\python.exe gerar_casos_robustez_materia.py
+
+Para atualizar somente os limites das planilhas existentes:
+    .venv\\Scripts\\python.exe atualizar_limites_casos.py
 """
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -18,26 +23,36 @@ sys.path.insert(0, str(RAIZ))
 
 import batch_pre_sizing as bps  # noqa: E402
 
-# Fonte dos dados de entrada: a C-13 já reprocessada com a = 1,5 m (D-13).
-REFERENCIA = RAIZ / "simulacaoes_" / "lote_eixos_1p5" / "simulacao_C_13" / "pre_sizing_package.zip"
+# A C-13 da entrada principal permite gerar o estudo antes de executar o NSGA-II.
+REFERENCIA = RAIZ / "batch_pre_sizing_casos_materia.xlsx"
 
 NIVEIS_RHO = [0.0, 2.5, 5.0, 10.0]
 
 
 def main() -> int:
-    saida = RAIZ / "robustez_casos_materia.xlsx"
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--saida", type=Path, default=RAIZ / "robustez_casos_materia.xlsx")
+    parser.add_argument("--referencia", type=Path, default=REFERENCIA,
+                        help="planilha principal contendo o caso C_13")
+    args = parser.parse_args()
+    saida = args.saida
     if saida.exists():
         print(f"{saida.name} já existe — apague antes se quiser regerar.", file=sys.stderr)
         return 1
 
-    if not REFERENCIA.exists():
-        print(f"ERRO: não achei {REFERENCIA}. Rode antes o lote principal (rodar_lote.py).",
+    if not args.referencia.exists():
+        print(f"ERRO: não achei a planilha principal {args.referencia}.",
               file=sys.stderr)
         return 1
 
     t = bps.textos("pt")
     chave_rho = t["percentual_robustez"]
-    dados_base = bps.ler_beam_data(REFERENCIA)
+    casos_base = bps.ler_planilha_casos(args.referencia)
+    referencia = next((caso for caso in casos_base if caso.id == "C_13"), None)
+    if referencia is None:
+        print(f"ERRO: caso C_13 ausente em {args.referencia}.", file=sys.stderr)
+        return 1
+    dados_base = referencia.dados
 
     casos = []
     for rho in NIVEIS_RHO:
@@ -49,6 +64,8 @@ def main() -> int:
             bps.CasoBatch(
                 id=caso_id,
                 dados=dados,
+                limites=referencia.limites,
+                algoritmo=referencia.algoritmo,
                 sobol=bps.ConfigSobol(ativo=False),  # a seção não pede Sobol por nível de ρ
             )
         )
@@ -57,7 +74,7 @@ def main() -> int:
     df.to_excel(saida, index=False, sheet_name="Casos")
 
     print(f"{saida.name}: {len(df)} casos (celula C-13, rho = {NIVEIS_RHO} %)")
-    print("fonte dos dados de entrada:", REFERENCIA.relative_to(RAIZ))
+    print("fonte dos dados de entrada:", args.referencia)
     return 0
 
 

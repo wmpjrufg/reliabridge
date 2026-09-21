@@ -1,5 +1,22 @@
 # Changelog da pesquisa
 
+## 2026-09-20
+
+- ⚠️ **O lote em `simulacaoes_/lote_eixos_1p5/` está DESATUALIZADO em relação ao
+  código.** Os zips são de 20:06 e o `madeiras.py` de 21:36. Momento, cortante e flecha
+  mudaram (D-17). **Não usar esses resultados para preencher texto** até re-rodar.
+- Corrigidas as envoltórias de momento (Barré) e cortante, e a combinação rara da
+  flecha. Ver **D-17**. A dedução já entrou em `03_projeto_madeira.tex`.
+- **O paper voltou a compilar.** Faltava `\usepackage{array}` no `preamble.tex` — é ele
+  que define `>{...}`, a coluna `m{}` e o `\arraybackslash`, usados 15 vezes; a tabela
+  de k_mod1 era a primeira a esbarrar neles. 59 páginas, zero erro, zero referência
+  quebrada.
+- Conferido o SMath do Wanderlei contra o código: batem em flexão (0,2677 vs 0,2678),
+  cisalhamento (0,1574) e flecha final. A única divergência era a combinação rara,
+  agora alinhada.
+- **Alvo do Artigo 1 reaberto** (D-18), sem decisão ainda.
+- Não commitado: `madeiras.py`, `03_projeto_madeira.tex`, `preamble.tex`.
+
 Uma linha por evento relevante. Novidades no topo.
 
 ---

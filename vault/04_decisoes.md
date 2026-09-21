@@ -198,3 +198,77 @@ ver adiante).
 
 **Consequência textual:** as duas referências cruzadas a `Apêndice B` (em §4.3.2 e §4.5)
 foram reescritas para apontar para o Apêndice A.
+
+### D-17 · Envoltórias de momento e cortante corrigidas — 2026-09-20
+
+As duas fórmulas fechadas da apostila supõem que o comboio inteiro cabe no vão. Quando
+não cabe, ambas contam carga que não existe. Corrigidas as duas, no mesmo espírito:
+preservar a forma fechada onde ela vale e tratar explicitamente o vão curto.
+
+**Cortante** (`cortante_max_carga_variavel`) — dedução de terceiro, conferida aqui:
+
+    Q_qk = (P/L)*[max(L-2h,0) + max(L-2h-a,0) + max(L-2h-2a,0)]
+         + (q/(2L))*max(L-2h-3a,0)**2
+
+Recupera `(P/L)(6a+3e) + q e²/(2L)` quando `L >= 2h+3a` (verificado em 17 076
+combinações, |dif| < 6e-14). O afastamento 2h é normativo, NBR 7190-1 item 6.4.3.
+Erro da forma antiga: +15 a +30 % em vão de 3 m, ~0 % em 6 m.
+
+**Momento** (`momento_max_carga_variavel`) — envoltória de Barré:
+
+    M_qk = max(3PL/4 - Pa,  P(2L-a)**2/(8L),  PL/4)
+
+O arranjo centralizado deixa de ser o de Barré quando as rodas externas alcançam os
+apoios (L = 2a). Em L = 3 m elas assentam exatamente sobre os apoios e a fórmula
+degenera em PL/4. Validado contra varredura bruta da posição do comboio: diferença
+zero de 2,5 a 6 m, e idêntico à forma antiga acima de 3,34 m e para vão longo.
+
+**Flecha** — combinação rara passou a incluir a parcela permanente
+(`delta_inst = delta_gk + delta_qk` contra L/500), como no SMath do Wanderlei. A
+combinação quase permanente não mudou. Chaves renomeadas: `delta_qk [m]` para
+`delta_inst [m]`, e `delta_lim_variavel [m]` para `delta_lim_inst [m]`.
+
+**Descartado:** o limitador `min(2h, L/2)` que eu havia proposto. Não é normativo e
+enfraqueceria o argumento no paper. O ponto cego (2h >= L zera o cortante) fica aberto
+de propósito; o lugar de resolver é um limite de esbeltez no espaço de busca.
+
+**Não era erro:** a conversão de `p_qk` de kPa para kN/m antes da chamada. Os dois
+termos de multidão precisam de kN/m — `q*c²/2` com q em kPa daria força, não momento,
+e o termo só fecha em `q*L²/8` quando a carga cobre o vão inteiro se q for kN/m.
+
+**Custo:** com as seções publicadas, C-01, C-02 e C-03 vão a ~110 % de utilização na
+flexão e C-04 a 100,2 % — inviáveis. Só C-05 sobrevive (85,5 %). O vão de 3 m tem de
+ser refeito, e com ele o achado de saturação em d = 30 cm a partir de D40.
+
+### D-18 · Alvo do Artigo 1 reaberto (substitui parcialmente a D-15) — 2026-09-20
+
+A D-15 fixava o Artigo 1 na Revista Matéria. **Reaberta pelo Wanderlei**, a partir de
+sugestão de consultor: escrever equações de pré-dimensionamento e mirar o Structures.
+
+Minha recomendação, **ainda sem decisão do Wanderlei** ("por enquanto"):
+
+- **Não converter o Artigo 1.** São 59 páginas em português, propositalmente extensas
+  para servir de base à dissertação — o oposto do que o Structures pede.
+- **Três papers sem canibalização:** P1 plataforma/método (Matéria, PT, quase pronto);
+  P2 equações de pré-dimensionamento do DoE ampliado (candidato a Structures);
+  P3 espécie vs. classe, 320 rodadas (Eng. Structures, tem lastro experimental).
+- **Discordo da ideia de IA explicável como está posta:** V ∝ L^n já ajusta com R² >
+  0,978 e dois parâmetros; regressão simbólica redescobriria a lei de potência e o
+  revisor diria isso. Só se sustenta se o espaço de projeto virar genuinamente
+  multidimensional (vão, classe, largura de pista, TB-240 e TB-450).
+- **Bloqueios que equação nenhuma resolve:** o trabalho é inteiramente ABNT/TB-240, e
+  não há validação contra estrutura executada (razão original da D-15).
+
+**Três pré-requisitos antes de qualquer DoE ampliado:**
+
+1. Acima de 6 m o momento troca de fórmula (multidão entra, eq:mqk45). Equação ajustada
+   cruzando 6 m tem de ser por partes, ou ter o regime como variável.
+2. **Inconsistência a resolver:** o momento usa zona de exclusão de multidão de `4a`
+   (`c = (L-4a)/2`) e o cortante usa `3a`. Mesmo veículo, dois comprimentos. Só aparece
+   acima de 6 m, por isso nunca incomodou até agora.
+3. Células que saturam no contorno (d = 30 cm no vão de 3 m) não são ótimos e envenenam
+   regressão — ampliar os limites ou excluir do ajuste.
+
+O texto do próprio P1 cita `ritter1990`: vãos usuais de tora roliça vão de 6 a 18 m.
+A matriz cobre 3 a 6 m, toda na ponta baixa. Ampliar até 10-12 m resolve a crítica de
+relevância e dá amplitude para ajuste, de uma vez só.

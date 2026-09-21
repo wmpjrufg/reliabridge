@@ -54,7 +54,40 @@ Para varrer robustez (§4.3.3 do artigo, ρ = 0 / 2,5 / 10 %), alterar a coluna
 
 ---
 
-## Limites de busca das 20 execuções publicadas
+## Limites atuais para novas execuções (20/09/2026)
+
+Os padrões de `batch_pre_sizing.LimitesBusca` e as três planilhas de entrada foram
+atualizados por solicitação do autor:
+
+| Variável | Limites (cm) |
+|---|---|
+| `d` | 20 – 100 |
+| `bw` | 20 – 50 |
+| `h` | 5 – 15 |
+| `esp_long` | 30 – 200 |
+| `esp_tab` | 2 – 5 |
+
+Os espaçamentos permanecem inalterados. A faixa de diâmetros foi indicada pelo autor
+a partir de sua consulta ao mercado. Os demais parâmetros foram preservados,
+inclusive `n_gen = 300` nas planilhas atuais.
+
+Para reaplicar os limites dimensionais atuais às planilhas existentes, sem mudar
+cargas, propriedades, configurações ou espaçamentos:
+
+```powershell
+.venv\Scripts\python.exe atualizar_limites_casos.py
+```
+
+Os geradores `gerar_casos_engstruct.py` e `gerar_casos_robustez_materia.py` já utilizam
+os padrões compartilhados. Planilhas com limites explícitos continuam respeitando
+esses valores ao serem lidas; os padrões só preenchem colunas ausentes ou vazias.
+O gerador de robustez lê a C-13 da planilha principal e herda seus limites e parâmetros
+do algoritmo; não depende mais de um ZIP de resultados de uma execução anterior.
+Atualizar entradas não recalcula resultados. Os resultados antigos e o artigo ainda
+precisam de novas simulações para representar este domínio. Usar uma pasta de saída
+nova ao rodar os lotes; `--retomar` sobre uma pasta antiga pode pular os casos já gravados.
+
+## Limites de busca das 20 execuções publicadas (histórico)
 
 Não estão no `beam_data.xlsx` (na interface são widgets sem valor padrão), mas foram
 **recuperados por inversão**: as colunas `longarina_g_esp` e `tabuleiro_g_esp` são função
@@ -70,7 +103,7 @@ gravados com erro de 3e-16.
 | `esp_tab` | 2 – 5 |
 
 `pop_size = 50`, `n_gen = 150`, `n_checagens = 30`, `ρ = 5 %`. São os padrões das
-dataclasses do módulo. `bw_max` e `h_max` não aparecem em nenhuma restrição gravada e
+dataclasses do módulo à época dessas execuções. `bw_max` e `h_max` não aparecem em nenhuma restrição gravada e
 foram determinados por impressão digital: rodando 6 gerações e comparando o número de
 soluções não dominadas por geração contra o `hypervolume_convergence.csv` de referência,
 só `bw_max = 60, h_max = 60` reproduz `[9, 19, 26, 25, 26, 30]`.
