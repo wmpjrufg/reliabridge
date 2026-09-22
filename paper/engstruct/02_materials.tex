@@ -1,16 +1,12 @@
 \section{Base experimental e representação por classes}\label{sec:materials}
 
-\subsection{Origem e alcance dos dados}\label{sec:dados}
+A base experimental adotada é exclusivamente o conjunto de 40 espécies nativas de folhosas experimentadas por \textcite{DiasLahr2004}. Os ensaios foram realizados no Laboratório de Madeiras e de Estruturas de Madeira (LaMEM), da Escola de Engenharia de São Carlos, Universidade de São Paulo, segundo os procedimentos da antiga \textcite{NBR7190:1997}. Para cada espécie, o lote investigado era constituído por 12 peças de madeira, com dimensões nominais de $12\times12\times300$~cm. De cada lote foi extraída, para cada modalidade de ensaio, uma amostra de 12 corpos de prova distribuídos aleatoriamente, de modo a representar o conjunto das peças, sem a retirada de mais de um corpo de prova da mesma peça. Conforme as determinações dessa norma, os corpos de prova eram isentos de defeitos, constituídos por madeira do cerne e retirados de regiões situadas a pelo menos 30~cm das extremidades das peças. Foram considerados os ensaios de compressão e tração paralelas às fibras, e as resistências e os módulos de elasticidade foram corrigidos para a umidade de referência de 12\%. Os dados gerais dessa base são apresentados na Tabela~\ref{tab:base_fabricio}.
 
-A base experimental reúne 40 espécies brasileiras de folhosas caracterizadas por \textcite{DiasLahr2004}. Os ensaios foram realizados no Laboratório de Madeiras e de Estruturas de Madeira (LaMEM), do Departamento de Engenharia de Estruturas da Escola de Engenharia de São Carlos, Universidade de São Paulo. Para cada espécie, o lote era formado por 12 tábuas e foram ensaiados 12 corpos de prova por propriedade, distribuídos aleatoriamente e sem a retirada de mais de um corpo de prova da mesma tábua. Os corpos de prova, isentos de defeitos, foram obtidos do cerne e afastados pelo menos 30~cm das extremidades das peças.
+Para a comparação contemporânea, as espécies foram reenquadradas nas classes D20 a D60 para madeiras de florestas nativas da atual \textcite{NBR7190-1:2022}, a partir dos valores publicados de $f_{c0,k}$. A Tabela~\ref{tab:resumo_classes} apresenta a distribuição resultante, enquanto os valores individuais de resistência e rigidez constam do Apêndice~\ref{ap:enquadramento}.
 
-A caracterização seguiu a ABNT NBR 7190:1997 \parencite{NBR7190:1997}, vigente à época do programa experimental. Os resultados de resistência e rigidez foram corrigidos para a umidade de referência de 12\%. O artigo-fonte apresenta a resistência característica à compressão paralela às fibras, $f_{c0,k}$, e os valores médios das propriedades físicas, de resistência e de rigidez, incluindo o módulo de elasticidade na compressão paralela às fibras, $E_{c0,m}$.
-
-Neste estudo, as espécies foram reenquadradas nas classes D20 a D60 para madeiras de florestas nativas da ABNT NBR 7190-3:2022 \parencite{NBR7190-3:2022}, a partir dos valores publicados de $f_{c0,k}$. A Tabela~\ref{tab:resumo_classes} apresenta a distribuição resultante. Os valores individuais de $f_{c0,k}$ e $E_{c0,m}$, juntamente com o módulo médio correspondente a cada classe normativa, constam do Apêndice~\ref{ap:enquadramento}.
-
-\begin{table}[!ht]
+\begin{table}[H]
 \centering
-\caption{Distribuição das espécies nas classes de resistência da ABNT NBR 7190-3:2022.}\label{tab:resumo_classes}
+\caption{Distribuição das espécies nas classes de resistência da ABNT NBR 7190-1:2022.}\label{tab:resumo_classes}
 \begin{tabular}{lrl}
 \toprule
 Classe & Número de espécies & IDs das espécies \\
@@ -25,3 +21,54 @@ Total & 40 & 01--40 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+Como diagnóstico exploratório da estrutura dos dados, $f_{c0,k}$ e $E_{c0,m}$ foram padronizados e submetidos ao agrupamento \textit{k}-means, considerando de dois a oito grupos e 100 inicializações para cada valor de $k$. A coesão e a separação das partições foram avaliadas pelo coeficiente médio de silhueta \parencite{Rousseeuw1987}. Esse coeficiente varia de $-1$ a $1$: valores próximos de $1$ indicam grupos compactos e bem separados; valores próximos de zero indicam observações situadas na transição entre grupos; e valores negativos sugerem que parte das observações está mais próxima de outro grupo do que daquele ao qual foi atribuída.
+
+Como a norma organiza a base em cinco classes de resistência, a solução do \textit{k}-means com $k=5$ foi examinada especificamente como uma partição comparável. Os centros obtidos, apresentados na Tabela~\ref{tab:centros_kmeans}, mostram uma progressão geral de resistência e rigidez, mas não reproduzem diretamente os cinco degraus normativos. Em particular, dois grupos são constituídos exclusivamente por espécies D60, enquanto espécies D40 e D50 aparecem misturadas nos grupos intermediários.
+
+\begin{table}[H]
+\centering
+\caption{Centros e composição da solução \textit{k}-means com cinco grupos.}\label{tab:centros_kmeans}
+\begin{tabular}{crrl}
+\toprule
+Grupo & $f_{c0,k}$ central (MPa) & $E_{c0,m}$ central (MPa) & Composição por classe normativa \\
+\midrule
+1 & 28,6 & 9\,249  & 3 D20 e 1 D30 \\
+2 & 47,0 & 13\,521 & 2 D30, 9 D40 e 5 D50 \\
+3 & 52,1 & 19\,814 & 2 D40 e 5 D50 \\
+4 & 68,0 & 16\,844 & 7 D60 \\
+5 & 81,9 & 21\,658 & 6 D60 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A Figura~\ref{fig:dispersao_base} mostra que espécies pertencentes à mesma classe ocupam intervalos amplos de rigidez experimental. A maior silhueta foi obtida com dois grupos, $s=0{,}489$, enquanto a solução com cinco grupos apresentou valor muito próximo, $s=0{,}485$ (Figura~\ref{fig:silhueta_kmeans}). Assim, a divisão em cinco grupos preserva praticamente a mesma qualidade global de separação da divisão em dois grupos, mas os valores intermediários, próximos de 0,5, indicam sobreposição apreciável, e não cinco conjuntos naturalmente isolados. A solução com dois grupos evidencia principalmente uma separação global entre madeiras de menor e maior resistência--rigidez; a solução com cinco grupos apenas detalha essa gradação.
+
+A correspondência entre a solução com cinco grupos e as cinco classes normativas foi medida pelo índice de Rand ajustado (ARI) \parencite{HubertArabie1985}. O ARI é igual a $1$ quando as duas partições coincidem, fica próximo de zero quando a concordância não supera a esperada ao acaso e pode assumir valores negativos quando a concordância é inferior à aleatória. O valor obtido, $\mathrm{ARI}=0{,}384$, indica concordância parcial: o \textit{k}-means reconhece a gradação geral presente nas classes, mas não reproduz suas fronteiras espécie por espécie. Isso é coerente com a diferença entre os critérios: a classe normativa é definida por limiares de $f_{c0,k}$, enquanto o agrupamento considera simultaneamente a resistência e a rigidez padronizadas.
+
+Na solução com dois grupos, todas as espécies D20, D30 e D40 permaneceram no grupo de menor resistência--rigidez, todas as espécies D60 ficaram no grupo superior e a classe D50 foi dividida igualmente, com cinco espécies em cada grupo. Na solução com cinco grupos, espécies D40 e D50 compartilharam agrupamentos, enquanto as D60 foram separadas em dois conjuntos com níveis distintos de rigidez. Portanto, essa análise tem caráter descritivo: ela evidencia a heterogeneidade existente dentro das classes e fornece contexto para a análise central do artigo, baseada nas diferenças de dimensionamento e de consumo de madeira entre a representação por espécie e por classe.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figuras/dispersao_resistencia_rigidez.png}
+\caption{Distribuição experimental por classe.}
+\label{fig:dispersao_base}
+\end{subfigure}\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figuras/silhueta_kmeans.png}
+\caption{Coeficiente médio de silhueta do \textit{k}-means.}
+\label{fig:silhueta_kmeans}
+\end{subfigure}
+\caption{Diagnóstico exploratório da estrutura conjunta de resistência e rigidez da base experimental.}
+\label{fig:agrupamento_base}
+\end{figure}
+
+Para quantificar a diferença entre cada espécie e os valores representativos de sua classe, foram calculados os desvios percentuais em relação à norma. Adotou-se $\Delta_f=100(f_{c0,k}^{\mathrm{exp}}/f_{c0,k}^{\mathrm{NBR}}-1)$ para a resistência e $\Delta_E=100(E_{c0,m}^{\mathrm{exp}}/E_{c0,m}^{\mathrm{NBR}}-1)$ para a rigidez. Assim, um valor positivo indica que a propriedade experimental da espécie supera o valor da classe, enquanto um valor negativo indica que ela é inferior. Como a resistência nominal é o limiar usado no próprio enquadramento, todos os valores de $\Delta_f$ são não negativos por construção; portanto, essa coluna expressa a margem acima do limite inferior da classe. Para a rigidez, que assume um único valor representativo em cada classe, os desvios podem ocorrer nos dois sentidos.
+
+\input{tabelas/tab_desvios_especies.tex}
+
+Os desvios de rigidez confirmam a sobreposição observada na análise de agrupamentos. Das 40 espécies, 23 apresentam $E_{c0,m}$ experimental inferior ao valor representativo de sua classe. A maior amplitude ocorre na classe D50, variando de $-38{,}3\%$ para a umirana a $+45{,}9\%$ para o angelim-saia. Isso mostra que duas espécies enquadradas na mesma classe de resistência podem ser representadas por um mesmo módulo normativo, embora apresentem rigidezes experimentais bastante distintas.
+

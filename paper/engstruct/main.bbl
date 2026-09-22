@@ -19,6 +19,105 @@
 
 \refsection{0}
   \datalist[entry]{apa/apasortcite//global/global}
+    \entry{NBR7190:1997}{manual}{}
+      \name{author}{1}{}{%
+        {{hash=38a912c39deb03f17ea4697c1f80c809}{%
+           family={{Associação Brasileira de Normas Técnicas}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=dbc972df93ca4baad78767d42f9efee4}{%
+           family={{NBR 7190}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Rio de Janeiro}%
+      }
+      \strng{namehash}{dbc972df93ca4baad78767d42f9efee4}
+      \strng{fullhash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{bibnamehash}{dbc972df93ca4baad78767d42f9efee4}
+      \strng{authorbibnamehash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{authornamehash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{authorfullhash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{shortauthorbibnamehash}{dbc972df93ca4baad78767d42f9efee4}
+      \strng{shortauthornamehash}{dbc972df93ca4baad78767d42f9efee4}
+      \strng{shortauthorfullhash}{dbc972df93ca4baad78767d42f9efee4}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{NBR 7190: Projeto de estruturas de madeira}
+      \field{year}{1997}
+    \endentry
+    \entry{NBR7190-1:2022}{manual}{}
+      \name{author}{1}{}{%
+        {{hash=38a912c39deb03f17ea4697c1f80c809}{%
+           family={{Associação Brasileira de Normas Técnicas}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=0fc82307349b8fe2ea3ef10607562969}{%
+           family={{NBR 7190-1}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Rio de Janeiro}%
+      }
+      \strng{namehash}{0fc82307349b8fe2ea3ef10607562969}
+      \strng{fullhash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{bibnamehash}{0fc82307349b8fe2ea3ef10607562969}
+      \strng{authorbibnamehash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{authornamehash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{authorfullhash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{shortauthorbibnamehash}{0fc82307349b8fe2ea3ef10607562969}
+      \strng{shortauthornamehash}{0fc82307349b8fe2ea3ef10607562969}
+      \strng{shortauthorfullhash}{0fc82307349b8fe2ea3ef10607562969}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{NBR 7190-1: Projeto de estruturas de madeira -- Parte 1: Critérios de dimensionamento}
+      \field{year}{2022}
+    \endentry
+    \entry{NBR7190-3:2022}{manual}{}
+      \name{author}{1}{}{%
+        {{hash=38a912c39deb03f17ea4697c1f80c809}{%
+           family={{Associação Brasileira de Normas Técnicas}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=e3cfaa7280cdf654b32983fedf2f0e0c}{%
+           family={{NBR 7190-3}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Rio de Janeiro}%
+      }
+      \strng{namehash}{e3cfaa7280cdf654b32983fedf2f0e0c}
+      \strng{fullhash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{bibnamehash}{e3cfaa7280cdf654b32983fedf2f0e0c}
+      \strng{authorbibnamehash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{authornamehash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{authorfullhash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{shortauthorbibnamehash}{e3cfaa7280cdf654b32983fedf2f0e0c}
+      \strng{shortauthornamehash}{e3cfaa7280cdf654b32983fedf2f0e0c}
+      \strng{shortauthorfullhash}{e3cfaa7280cdf654b32983fedf2f0e0c}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{NBR 7190-3: Projeto de estruturas de madeira -- Parte 3: Métodos de ensaio para corpos de prova isentos de defeitos para madeiras de florestas nativas}
+      \field{year}{2022}
+    \endentry
     \entry{blank2020}{article}{}
       \name{author}{2}{}{%
         {{un=0,uniquepart=base,hash=bc00b22eadc38e0f33edb0f8fe7e9f13}{%
@@ -283,6 +382,44 @@
       \verb https://www.ipef.br/publicacoes/scientia/nr65/cap10.pdf
       \endverb
     \endentry
+    \entry{HubertArabie1985}{article}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=d5d1d02dd8d174f83c61ea441c89cba6}{%
+           family={Hubert},
+           familyi={H\bibinitperiod},
+           given={Lawrence},
+           giveni={L\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=baebbb2356b9e79fc400b332e197f628}{%
+           family={Arabie},
+           familyi={A\bibinitperiod},
+           given={Phipps},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{fa62d725515e6d56c25bb670992fc030}
+      \strng{fullhash}{fa62d725515e6d56c25bb670992fc030}
+      \strng{bibnamehash}{fa62d725515e6d56c25bb670992fc030}
+      \strng{authorbibnamehash}{fa62d725515e6d56c25bb670992fc030}
+      \strng{authornamehash}{fa62d725515e6d56c25bb670992fc030}
+      \strng{authorfullhash}{fa62d725515e6d56c25bb670992fc030}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Classification}
+      \field{title}{Comparing partitions}
+      \field{volume}{2}
+      \field{year}{1985}
+      \field{pages}{193\bibrangedash 218}
+      \range{pages}{26}
+      \verb{doi}
+      \verb 10.1007/BF01908075
+      \endverb
+    \endentry
     \entry{Marti2013}{article}{}
       \name{author}{4}{}{%
         {{un=0,uniquepart=base,hash=ba03049ea1a356656a391595ba7a4f6a}{%
@@ -361,92 +498,6 @@
       \field{title}{NBR 7188: Ações devido ao tráfego de veículos rodoviários e de pedestres em pontes, viadutos e passarelas}
       \field{year}{2024}
     \endentry
-    \entry{NBR7190-1:2022}{manual}{}
-      \name{shortauthor}{1}{}{%
-        {{un=0,uniquepart=base,hash=25e485c3f2fbdf1b897e6899dd1f8bef}{%
-           family={ABNT},
-           familyi={A\bibinitperiod}}}%
-      }
-      \list{location}{1}{%
-        {Rio de Janeiro}%
-      }
-      \list{organization}{1}{%
-        {Associação Brasileira de Normas Técnicas}%
-      }
-      \strng{namehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{bibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthorbibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthornamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthorfullhash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \field{extraname}{2}
-      \field{sortinit}{N}
-      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
-      \field{extradate}{1}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{}
-      \true{uniqueprimaryauthor}
-      \field{labelnamesource}{shortauthor}
-      \field{labeltitlesource}{title}
-      \field{title}{NBR 7190-1: Projeto de estruturas de madeira -- Parte 1: Critérios de dimensionamento}
-      \field{year}{2022}
-    \endentry
-    \entry{NBR7190-3:2022}{manual}{}
-      \name{shortauthor}{1}{}{%
-        {{un=0,uniquepart=base,hash=25e485c3f2fbdf1b897e6899dd1f8bef}{%
-           family={ABNT},
-           familyi={A\bibinitperiod}}}%
-      }
-      \list{location}{1}{%
-        {Rio de Janeiro}%
-      }
-      \list{organization}{1}{%
-        {Associação Brasileira de Normas Técnicas}%
-      }
-      \strng{namehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{bibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthorbibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthornamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthorfullhash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \field{extraname}{3}
-      \field{sortinit}{N}
-      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
-      \field{extradate}{2}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{}
-      \true{uniqueprimaryauthor}
-      \field{labelnamesource}{shortauthor}
-      \field{labeltitlesource}{title}
-      \field{title}{NBR 7190-3: Projeto de estruturas de madeira -- Parte 3: Métodos de ensaio para corpos de prova isentos de defeitos para madeiras de florestas nativas}
-      \field{year}{2022}
-    \endentry
-    \entry{NBR7190:1997}{manual}{}
-      \name{shortauthor}{1}{}{%
-        {{un=0,uniquepart=base,hash=25e485c3f2fbdf1b897e6899dd1f8bef}{%
-           family={ABNT},
-           familyi={A\bibinitperiod}}}%
-      }
-      \list{location}{1}{%
-        {Rio de Janeiro}%
-      }
-      \list{organization}{1}{%
-        {Associação Brasileira de Normas Técnicas}%
-      }
-      \strng{namehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{bibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthorbibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthornamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthorfullhash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \field{extraname}{4}
-      \field{sortinit}{N}
-      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{}
-      \true{uniqueprimaryauthor}
-      \field{labelnamesource}{shortauthor}
-      \field{labeltitlesource}{title}
-      \field{title}{NBR 7190: Projeto de estruturas de madeira}
-      \field{year}{1997}
-    \endentry
     \entry{NBR8681:2025}{manual}{}
       \name{shortauthor}{1}{}{%
         {{un=0,uniquepart=base,hash=25e485c3f2fbdf1b897e6899dd1f8bef}{%
@@ -464,7 +515,7 @@
       \strng{shortauthorbibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \strng{shortauthornamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \strng{shortauthorfullhash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \field{extraname}{5}
+      \field{extraname}{2}
       \field{sortinit}{N}
       \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
       \field{extradatescope}{labelyear}
@@ -502,6 +553,38 @@
       \endverb
       \verb{url}
       \verb https://reliabridge.streamlit.app/
+      \endverb
+    \endentry
+    \entry{Rousseeuw1987}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=72d8129c9f4e6afddacb834fb2d8226f}{%
+           family={Rousseeuw},
+           familyi={R\bibinitperiod},
+           given={Peter\bibnamedelima J.},
+           giveni={P\bibinitperiod\bibinitdelim J\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{72d8129c9f4e6afddacb834fb2d8226f}
+      \strng{fullhash}{72d8129c9f4e6afddacb834fb2d8226f}
+      \strng{bibnamehash}{72d8129c9f4e6afddacb834fb2d8226f}
+      \strng{authorbibnamehash}{72d8129c9f4e6afddacb834fb2d8226f}
+      \strng{authornamehash}{72d8129c9f4e6afddacb834fb2d8226f}
+      \strng{authorfullhash}{72d8129c9f4e6afddacb834fb2d8226f}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Computational and Applied Mathematics}
+      \field{title}{Silhouettes: A graphical aid to the interpretation and validation of cluster analysis}
+      \field{volume}{20}
+      \field{year}{1987}
+      \field{pages}{53\bibrangedash 65}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1016/0377-0427(87)90125-7
       \endverb
     \endentry
     \entry{SimoesNegrao2005}{article}{}
@@ -602,6 +685,105 @@
     \endentry
   \enddatalist
   \datalist[entry]{apa/global//global/global}
+    \entry{NBR7190:1997}{manual}{}
+      \name{author}{1}{}{%
+        {{hash=38a912c39deb03f17ea4697c1f80c809}{%
+           family={{Associação Brasileira de Normas Técnicas}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=dbc972df93ca4baad78767d42f9efee4}{%
+           family={{NBR 7190}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Rio de Janeiro}%
+      }
+      \strng{namehash}{dbc972df93ca4baad78767d42f9efee4}
+      \strng{fullhash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{bibnamehash}{dbc972df93ca4baad78767d42f9efee4}
+      \strng{authorbibnamehash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{authornamehash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{authorfullhash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{shortauthorbibnamehash}{dbc972df93ca4baad78767d42f9efee4}
+      \strng{shortauthornamehash}{dbc972df93ca4baad78767d42f9efee4}
+      \strng{shortauthorfullhash}{dbc972df93ca4baad78767d42f9efee4}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{NBR 7190: Projeto de estruturas de madeira}
+      \field{year}{1997}
+    \endentry
+    \entry{NBR7190-1:2022}{manual}{}
+      \name{author}{1}{}{%
+        {{hash=38a912c39deb03f17ea4697c1f80c809}{%
+           family={{Associação Brasileira de Normas Técnicas}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=0fc82307349b8fe2ea3ef10607562969}{%
+           family={{NBR 7190-1}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Rio de Janeiro}%
+      }
+      \strng{namehash}{0fc82307349b8fe2ea3ef10607562969}
+      \strng{fullhash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{bibnamehash}{0fc82307349b8fe2ea3ef10607562969}
+      \strng{authorbibnamehash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{authornamehash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{authorfullhash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{shortauthorbibnamehash}{0fc82307349b8fe2ea3ef10607562969}
+      \strng{shortauthornamehash}{0fc82307349b8fe2ea3ef10607562969}
+      \strng{shortauthorfullhash}{0fc82307349b8fe2ea3ef10607562969}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{NBR 7190-1: Projeto de estruturas de madeira -- Parte 1: Critérios de dimensionamento}
+      \field{year}{2022}
+    \endentry
+    \entry{NBR7190-3:2022}{manual}{}
+      \name{author}{1}{}{%
+        {{hash=38a912c39deb03f17ea4697c1f80c809}{%
+           family={{Associação Brasileira de Normas Técnicas}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=e3cfaa7280cdf654b32983fedf2f0e0c}{%
+           family={{NBR 7190-3}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Rio de Janeiro}%
+      }
+      \strng{namehash}{e3cfaa7280cdf654b32983fedf2f0e0c}
+      \strng{fullhash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{bibnamehash}{e3cfaa7280cdf654b32983fedf2f0e0c}
+      \strng{authorbibnamehash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{authornamehash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{authorfullhash}{38a912c39deb03f17ea4697c1f80c809}
+      \strng{shortauthorbibnamehash}{e3cfaa7280cdf654b32983fedf2f0e0c}
+      \strng{shortauthornamehash}{e3cfaa7280cdf654b32983fedf2f0e0c}
+      \strng{shortauthorfullhash}{e3cfaa7280cdf654b32983fedf2f0e0c}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{NBR 7190-3: Projeto de estruturas de madeira -- Parte 3: Métodos de ensaio para corpos de prova isentos de defeitos para madeiras de florestas nativas}
+      \field{year}{2022}
+    \endentry
     \entry{blank2020}{article}{}
       \name{author}{2}{}{%
         {{un=0,uniquepart=base,hash=bc00b22eadc38e0f33edb0f8fe7e9f13}{%
@@ -866,6 +1048,44 @@
       \verb https://www.ipef.br/publicacoes/scientia/nr65/cap10.pdf
       \endverb
     \endentry
+    \entry{HubertArabie1985}{article}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=d5d1d02dd8d174f83c61ea441c89cba6}{%
+           family={Hubert},
+           familyi={H\bibinitperiod},
+           given={Lawrence},
+           giveni={L\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=baebbb2356b9e79fc400b332e197f628}{%
+           family={Arabie},
+           familyi={A\bibinitperiod},
+           given={Phipps},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{fa62d725515e6d56c25bb670992fc030}
+      \strng{fullhash}{fa62d725515e6d56c25bb670992fc030}
+      \strng{bibnamehash}{fa62d725515e6d56c25bb670992fc030}
+      \strng{authorbibnamehash}{fa62d725515e6d56c25bb670992fc030}
+      \strng{authornamehash}{fa62d725515e6d56c25bb670992fc030}
+      \strng{authorfullhash}{fa62d725515e6d56c25bb670992fc030}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Classification}
+      \field{title}{Comparing partitions}
+      \field{volume}{2}
+      \field{year}{1985}
+      \field{pages}{193\bibrangedash 218}
+      \range{pages}{26}
+      \verb{doi}
+      \verb 10.1007/BF01908075
+      \endverb
+    \endentry
     \entry{Marti2013}{article}{}
       \name{author}{4}{}{%
         {{un=0,uniquepart=base,hash=ba03049ea1a356656a391595ba7a4f6a}{%
@@ -944,92 +1164,6 @@
       \field{title}{NBR 7188: Ações devido ao tráfego de veículos rodoviários e de pedestres em pontes, viadutos e passarelas}
       \field{year}{2024}
     \endentry
-    \entry{NBR7190-1:2022}{manual}{}
-      \name{shortauthor}{1}{}{%
-        {{un=0,uniquepart=base,hash=25e485c3f2fbdf1b897e6899dd1f8bef}{%
-           family={ABNT},
-           familyi={A\bibinitperiod}}}%
-      }
-      \list{location}{1}{%
-        {Rio de Janeiro}%
-      }
-      \list{organization}{1}{%
-        {Associação Brasileira de Normas Técnicas}%
-      }
-      \strng{namehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{bibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthorbibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthornamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthorfullhash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \field{extraname}{2}
-      \field{sortinit}{N}
-      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
-      \field{extradate}{1}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{}
-      \true{uniqueprimaryauthor}
-      \field{labelnamesource}{shortauthor}
-      \field{labeltitlesource}{title}
-      \field{title}{NBR 7190-1: Projeto de estruturas de madeira -- Parte 1: Critérios de dimensionamento}
-      \field{year}{2022}
-    \endentry
-    \entry{NBR7190-3:2022}{manual}{}
-      \name{shortauthor}{1}{}{%
-        {{un=0,uniquepart=base,hash=25e485c3f2fbdf1b897e6899dd1f8bef}{%
-           family={ABNT},
-           familyi={A\bibinitperiod}}}%
-      }
-      \list{location}{1}{%
-        {Rio de Janeiro}%
-      }
-      \list{organization}{1}{%
-        {Associação Brasileira de Normas Técnicas}%
-      }
-      \strng{namehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{bibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthorbibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthornamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthorfullhash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \field{extraname}{3}
-      \field{sortinit}{N}
-      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
-      \field{extradate}{2}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{}
-      \true{uniqueprimaryauthor}
-      \field{labelnamesource}{shortauthor}
-      \field{labeltitlesource}{title}
-      \field{title}{NBR 7190-3: Projeto de estruturas de madeira -- Parte 3: Métodos de ensaio para corpos de prova isentos de defeitos para madeiras de florestas nativas}
-      \field{year}{2022}
-    \endentry
-    \entry{NBR7190:1997}{manual}{}
-      \name{shortauthor}{1}{}{%
-        {{un=0,uniquepart=base,hash=25e485c3f2fbdf1b897e6899dd1f8bef}{%
-           family={ABNT},
-           familyi={A\bibinitperiod}}}%
-      }
-      \list{location}{1}{%
-        {Rio de Janeiro}%
-      }
-      \list{organization}{1}{%
-        {Associação Brasileira de Normas Técnicas}%
-      }
-      \strng{namehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{bibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthorbibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthornamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthorfullhash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \field{extraname}{4}
-      \field{sortinit}{N}
-      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{}
-      \true{uniqueprimaryauthor}
-      \field{labelnamesource}{shortauthor}
-      \field{labeltitlesource}{title}
-      \field{title}{NBR 7190: Projeto de estruturas de madeira}
-      \field{year}{1997}
-    \endentry
     \entry{NBR8681:2025}{manual}{}
       \name{shortauthor}{1}{}{%
         {{un=0,uniquepart=base,hash=25e485c3f2fbdf1b897e6899dd1f8bef}{%
@@ -1047,7 +1181,7 @@
       \strng{shortauthorbibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \strng{shortauthornamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \strng{shortauthorfullhash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \field{extraname}{5}
+      \field{extraname}{2}
       \field{sortinit}{N}
       \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
       \field{extradatescope}{labelyear}
@@ -1085,6 +1219,38 @@
       \endverb
       \verb{url}
       \verb https://reliabridge.streamlit.app/
+      \endverb
+    \endentry
+    \entry{Rousseeuw1987}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=72d8129c9f4e6afddacb834fb2d8226f}{%
+           family={Rousseeuw},
+           familyi={R\bibinitperiod},
+           given={Peter\bibnamedelima J.},
+           giveni={P\bibinitperiod\bibinitdelim J\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{72d8129c9f4e6afddacb834fb2d8226f}
+      \strng{fullhash}{72d8129c9f4e6afddacb834fb2d8226f}
+      \strng{bibnamehash}{72d8129c9f4e6afddacb834fb2d8226f}
+      \strng{authorbibnamehash}{72d8129c9f4e6afddacb834fb2d8226f}
+      \strng{authornamehash}{72d8129c9f4e6afddacb834fb2d8226f}
+      \strng{authorfullhash}{72d8129c9f4e6afddacb834fb2d8226f}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Computational and Applied Mathematics}
+      \field{title}{Silhouettes: A graphical aid to the interpretation and validation of cluster analysis}
+      \field{volume}{20}
+      \field{year}{1987}
+      \field{pages}{53\bibrangedash 65}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1016/0377-0427(87)90125-7
       \endverb
     \endentry
     \entry{SimoesNegrao2005}{article}{}
