@@ -4,34 +4,32 @@ O protocolo separa três operações que costumam aparecer misturadas: a obtenç
 
 \subsection{Módulo de elasticidade comparado}\label{sec:modulo}
 
-A fonte experimental publica dois módulos por espécie: o módulo na compressão paralela às fibras, $E_{c0}$, e o módulo na flexão estática, $E_{M0}$. A ABNT NBR 7190-3:2022 tabela apenas $E_{c0,med}$ por classe de resistência. A comparação adota $E_{c0}$ nos dois lados de cada par, com o valor medido da espécie no cenário experimental e o valor da classe no cenário normativo. Essa escolha mantém a mesma propriedade nos dois membros e dispensa um fator de conversão entre módulos, que seria uma hipótese adicional introduzida apenas no lado normativo.
-
-Nas 40 espécies da base, a razão $E_{M0}/E_{c0}$ tem média de 0,97 e varia entre 0,73 e 1,13. A proximidade das médias sustenta o uso de um único módulo longitudinal no modelo de viga; a amplitude por espécie justifica não tratar os dois módulos como intercambiáveis caso a caso. O efeito de adotar $E_{M0}$ no lugar de $E_{c0}$ é reportado como análise de sensibilidade, e não como resultado principal.
+A comparação de rigidez emprega uma única propriedade, o módulo de elasticidade médio na compressão paralela às fibras, em suas duas representações: $E_{c0,m}^{\mathrm{exp}}$, medido na espécie e publicado por \textcite{DiasLahr2004}, e $E_{c0,m}^{\mathrm{NBR}}$, o valor tabelado por classe de resistência na ABNT NBR 7190-3:2022. O cenário experimental adota $E_{c0,m}^{\mathrm{exp}}$ e o cenário normativo adota $E_{c0,m}^{\mathrm{NBR}}$ da classe atribuída à espécie, mantendo a mesma propriedade física nos dois membros de cada par e dispensando qualquer fator de conversão entre módulos de modalidades de ensaio distintas.
 
 \subsection{Cenários de propriedade}\label{sec:cenarios}
 
-Para cada espécie $s$ e vão $L$, definem-se três cenários de propriedade sobre o mesmo modelo estrutural e o mesmo carregamento, conforme a Tabela~\ref{tab:cenarios}. O cenário \emph{esp} reúne as propriedades medidas da espécie e é o membro de referência dos dois experimentos. O cenário \emph{rig} difere de \emph{esp} apenas no módulo de elasticidade, substituído pelo da classe. O cenário \emph{cls} substitui o conjunto completo de propriedades pelos valores da classe.
+Para cada espécie $s$ e vão $L$, definem-se dois cenários de propriedade sobre o mesmo modelo estrutural e o mesmo carregamento, conforme a Tabela~\ref{tab:cenarios}. O cenário \emph{esp} reúne as propriedades medidas da espécie e é o membro de referência. O cenário \emph{cls} substitui o conjunto completo de propriedades pelos valores da classe.
 
 \begin{table}[!ht]
 \centering
 \caption{Cenários de propriedade de cada par espécie--vão.}
 \label{tab:cenarios}
 \footnotesize
-\begin{tabular}{llll}
+\begin{tabular}{lll}
 \toprule
-Propriedade & \emph{esp} & \emph{rig} & \emph{cls} \\
+Propriedade & \emph{esp} & \emph{cls} \\
 \midrule
-Módulo de elasticidade, $E_{c0}$ & medido & da classe & da classe \\
-Densidade aparente, $\rho_{ap}$ & medida & medida & da classe \\
-Resistência à flexão, $f_{m,k}$ & medida & medida & da classe \\
-Resistência ao cisalhamento, $f_{v0,k}$ & medida & medida & da classe \\
+Módulo de elasticidade, $E_{c0,m}$ & medido & da classe \\
+Densidade aparente, $\rho_{ap}$ & medida & da classe \\
+Resistência à flexão, $f_{m,k}$ & medida & da classe \\
+Resistência ao cisalhamento, $f_{v0,k}$ & medida & da classe \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Desses cenários decorrem dois experimentos. O experimento principal, \emph{esp} contra \emph{rig}, é controlado: como só o módulo muda, a diferença observada é atribuível à representação da rigidez. O experimento secundário, \emph{esp} contra \emph{cls}, reproduz a decisão de projeto efetivamente tomada quando se dimensiona pela classe, e nele o efeito da rigidez aparece combinado com os das demais propriedades. Reportar os dois separa o mecanismo da sua consequência prática, e a comparação entre eles indica em que medida as demais propriedades compensam ou reforçam o efeito da rigidez.
+A comparação \emph{esp} contra \emph{cls} reproduz a decisão de projeto efetivamente tomada: dimensionar com as propriedades da espécie ou com as da sua classe. Nela os efeitos da rigidez, da resistência e da densidade aparecem combinados, como ocorrem na prática.
 
-A resistência característica à flexão adota $f_{m,k}=f_{c0,k}$ nos dois lados, conforme o item 6.3.4 da \textcite{NBR7190-1:2022}. A espécie entra com o $f_{c0,k}$ publicado por \textcite{DiasLahr2004}, obtido pelo estimador de estatística de ordem da norma, e não por conversão simplificada a partir da média. A resistência característica ao cisalhamento da espécie é estimada a partir da média publicada, única forma disponível na fonte, e está marcada como valor estimado na base de dados; essa entrada é comum aos cenários \emph{esp} e \emph{rig} e, portanto, não interfere no experimento principal.
+A resistência característica à flexão adota $f_{m,k}=f_{c0,k}$ nos dois lados, conforme o item 6.3.4 da \textcite{NBR7190-1:2022}. A espécie entra com o $f_{c0,k}$ publicado por \textcite{DiasLahr2004}, obtido pelo estimador de estatística de ordem da norma, e não por conversão simplificada a partir da média. A resistência característica ao cisalhamento da espécie é estimada a partir da média publicada, única forma disponível na fonte, e está marcada como valor estimado na base de dados.
 
 \subsection{Comparação sob geometria fixa}\label{sec:geometria_fixa}
 
@@ -42,10 +40,10 @@ Antes do redimensionamento, a mesma estrutura é avaliada com as duas rigidezes,
 \end{equation}
 No regime elástico linear, com ações e geometria fixas e o deslocamento inversamente proporcional a um único módulo,
 \begin{equation}
-\frac{\delta_C}{\delta_R}=\frac{E_{c0,s}}{E_{c0,c_s}},
+\frac{\delta_C}{\delta_R}=\frac{E_{c0,m,s}^{\mathrm{exp}}}{E_{c0,m,c_s}^{\mathrm{NBR}}},
 \label{eq:razao_delta}
 \end{equation}
-em que $E_{c0,c_s}$ é o módulo da classe $c_s$ atribuída à espécie $s$. A Equação~\eqref{eq:razao_delta} serve como verificação analítica fechada da implementação sob essas condições, e não deve ser estendida a modelos com parcelas de deformação independentes desse módulo.
+em que $E_{c0,m,s}^{\mathrm{exp}}$ é o módulo experimental da espécie $s$ e $E_{c0,m,c_s}^{\mathrm{NBR}}$ é o módulo normativo da classe $c_s$ atribuída a ela. A Equação~\eqref{eq:razao_delta} serve como verificação analítica fechada da implementação sob essas condições, e não deve ser estendida a modelos com parcelas de deformação independentes desse módulo.
 
 \subsection{Redimensionamento}\label{sec:optimisation}
 
@@ -106,14 +104,18 @@ Mutação polinomial & $\eta_m=20$ \\
 Eliminação de duplicatas & Sim \\
 Níveis da grade de robustez, $N_c$ & 5 \\
 Amplitude relativa, $\rho$ & 5\% \\
-Sementes pareadas por cenário & 5 \\
+Semente (execução única por caso) & 1 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Repetição e separação entre efeito e ruído}\label{sec:sementes}
 
-Cada cenário é executado com sementes pareadas: os três cenários de um mesmo par espécie--vão compartilham a semente, e o conjunto é repetido para sementes distintas. Essa repetição é necessária porque uma execução única por condição não distingue um efeito de material da dispersão do próprio otimizador entre execuções. A diferença de volume é calculada par a par, dentro de cada semente, e só então agregada entre sementes, o que preserva o pareamento e permite reportar a dispersão da diferença junto com o seu valor central. Uma diferença cuja magnitude seja da ordem da dispersão entre sementes não será interpretada como efeito de material.
+\begin{fillblock}
+\noindent\textbf{[FASE ATUAL]} Nesta versão, a campanha usa uma execução por caso, com semente 1, como na campanha da Revista Matéria. A repetição com sementes pareadas descrita a seguir fica para a etapa seguinte, depois da análise da campanha de semente única.
+\end{fillblock}
+
+Cada cenário é executado com sementes pareadas: os dois cenários de um mesmo par espécie--vão compartilham a semente, e o conjunto é repetido para sementes distintas. Essa repetição é necessária porque uma execução única por condição não distingue um efeito de material da dispersão do próprio otimizador entre execuções. A diferença de volume é calculada par a par, dentro de cada semente, e só então agregada entre sementes, o que preserva o pareamento e permite reportar a dispersão da diferença junto com o seu valor central. Uma diferença cuja magnitude seja da ordem da dispersão entre sementes não será interpretada como efeito de material.
 
 \subsection{Diferença de volume e reavaliação do projeto}\label{sec:protocolo}
 
@@ -126,19 +128,48 @@ Um valor negativo indica que o projeto pela classe consome menos madeira, o que 
 
 Para separar consumo de desempenho, a geometria do projeto normativo é mantida e recalculada com as propriedades medidas da espécie, sem reotimizar:
 \begin{equation}
-U_{fin,s,L}^{C\rightarrow R}=\frac{\delta_{fin}(\mathbf{x}_C;E_{c0,s})}{L/350},
+U_{fin,s,L}^{C\rightarrow R}=\frac{\delta_{fin}(\mathbf{x}_C;E_{c0,m,s}^{\mathrm{exp}})}{L/350},
 \qquad
-U_{inst,s,L}^{C\rightarrow R}=\frac{\delta_{inst}(\mathbf{x}_C;E_{c0,s})}{L/500}.
+U_{inst,s,L}^{C\rightarrow R}=\frac{\delta_{inst}(\mathbf{x}_C;E_{c0,m,s}^{\mathrm{exp}})}{L/500}.
 \label{eq:reavaliacao}
 \end{equation}
 As duas utilizações são reportadas, pois um projeto pode atender a uma combinação e exceder a outra. Valores superiores a um indicam excedência do respectivo limite de serviço nessa reavaliação, sob as hipóteses de ações, fluência e propriedades adotadas. Esse resultado é uma frequência de excedência no conjunto analisado, e não uma probabilidade de falha nem demonstração de insegurança no estado limite último. As demais verificações e a admissibilidade geométrica são igualmente reavaliadas, distinguindo avaliação nominal e avaliação sob a grade de perturbação.
 
 \subsection{Matriz da campanha}\label{sec:campanha}
 
-A campanha cobre as 40 espécies da base, quatro vãos e os três cenários, repetidos com cinco sementes pareadas, totalizando 2400 execuções independentes do NSGA-II. Os vãos adotados são $L=3$, 5, 8 e 10~m, com largura de pista $B=4{,}5$~m, seção transversal usual de ponte vicinal de pista simples. Toda a faixa permanece no primeiro trecho do coeficiente de impacto e abaixo do limite de $10$~m, de modo que nenhuma mudança de expressão de carregamento atravessa a faixa comparada e possa ser confundida com efeito de material.
+A campanha cobre oito vãos, de $L=3$ a 10~m em passo de 1~m, com largura de pista $B=4{,}5$~m, seção transversal usual de ponte vicinal de pista simples. Cada caso corresponde a uma execução do NSGA-II com a configuração da Tabela~\ref{tab:otimizacao}. Toda a faixa permanece no primeiro trecho do coeficiente de impacto ($L\leq10$~m). A parcela de multidão do momento passa a atuar para $L>6$~m, mas, como cada comparação é feita entre cenários de mesmo vão, essa mudança não se confunde com efeito de material.
+
+A campanha é organizada em dois blocos. O primeiro é a base de classes, formada pelas cinco classes de resistência e pelos oito vãos, conforme a Tabela~\ref{tab:matriz_classes}. Como as propriedades de classe não dependem da espécie, cada célula dessa matriz constitui o cenário \emph{cls} de todas as espécies enquadradas na classe correspondente e não precisa ser repetida por espécie. O segundo bloco reúne as 40 espécies no cenário \emph{esp}, nos mesmos oito vãos. O total é de 40 casos de classe e 320 casos de espécie.
+
+\begin{table}[!ht]
+\centering
+\caption{Base de classes: identificação dos casos por vão e classe de resistência. Cada célula é o cenário \emph{cls} das espécies enquadradas na classe.}
+\label{tab:matriz_classes}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccccc}
+\toprule
+ & \multicolumn{5}{c}{Classe de resistência (ABNT NBR 7190-3:2022)} \\
+\cmidrule{2-6}
+Vão $L$ (m) & D20 & D30 & D40 & D50 & D60 \\
+\midrule
+3  & CLS\_D20\_L03 & CLS\_D30\_L03 & CLS\_D40\_L03 & CLS\_D50\_L03 & CLS\_D60\_L03 \\
+4  & CLS\_D20\_L04 & CLS\_D30\_L04 & CLS\_D40\_L04 & CLS\_D50\_L04 & CLS\_D60\_L04 \\
+5  & CLS\_D20\_L05 & CLS\_D30\_L05 & CLS\_D40\_L05 & CLS\_D50\_L05 & CLS\_D60\_L05 \\
+6  & CLS\_D20\_L06 & CLS\_D30\_L06 & CLS\_D40\_L06 & CLS\_D50\_L06 & CLS\_D60\_L06 \\
+7  & CLS\_D20\_L07 & CLS\_D30\_L07 & CLS\_D40\_L07 & CLS\_D50\_L07 & CLS\_D60\_L07 \\
+8  & CLS\_D20\_L08 & CLS\_D30\_L08 & CLS\_D40\_L08 & CLS\_D50\_L08 & CLS\_D60\_L08 \\
+9  & CLS\_D20\_L09 & CLS\_D30\_L09 & CLS\_D40\_L09 & CLS\_D50\_L09 & CLS\_D60\_L09 \\
+10 & CLS\_D20\_L10 & CLS\_D30\_L10 & CLS\_D40\_L10 & CLS\_D50\_L10 & CLS\_D60\_L10 \\
+\midrule
+Espécies na classe & 3 & 3 & 11 & 10 & 13 \\
+Casos \emph{esp} & 24 & 24 & 88 & 80 & 104 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 A verificação governante é identificada em cada solução pelas utilizações e folgas normalizadas, registrando restrições simultaneamente ativas. Não se pressupõe que a flecha governe nem que ocorra migração entre estados limites ao longo da faixa de vãos. Se o deslocamento governar em toda a faixa, a análise permanece centrada na magnitude das diferenças; se outra restrição limitar o volume, examina-se quanto isso reduz a sensibilidade do dimensionamento à rigidez, que é a condição sob a qual a representação por classe deixa de ser determinante.
 
 \subsection{Verificação da implementação}\label{sec:verificacao}
 
-A verificação independente compreende: a conferência da resposta sob geometria fixa contra a Equação~\eqref{eq:razao_delta}; a conferência das envoltórias das Equações~\eqref{eq:mqkenv} e~\eqref{eq:qqkenv} nos limites dos trechos de carregamento, em especial nos vãos curtos em que o diâmetro não é desprezível frente ao vão; a demonstração manual de um caso completo, reproduzida no Apêndice~\ref{ap:relatorio}; a repetição entre sementes; e a reavaliação das soluções selecionadas em sua geometria nominal. Os dados derivados e os scripts que geram a base experimental, a matriz de casos e as figuras são disponibilizados junto com o artigo.
+A verificação independente compreende a conferência da resposta sob geometria fixa contra a Equação~\eqref{eq:razao_delta}, a conferência das envoltórias das Equações~\eqref{eq:mqkenv} e~\eqref{eq:qqkenv} nos limites dos trechos de carregamento, em especial nos vãos curtos em que o diâmetro não é desprezível frente ao vão, a demonstração manual de um caso completo, a repetição entre sementes e a reavaliação das soluções selecionadas em sua geometria nominal. Os dados derivados e os scripts que geram a base experimental, a matriz de casos e as figuras são disponibilizados junto com o artigo.

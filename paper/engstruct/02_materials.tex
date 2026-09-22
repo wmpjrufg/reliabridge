@@ -6,7 +6,7 @@ Para a comparação contemporânea, as espécies foram reenquadradas nas classes
 
 \begin{table}[H]
 \centering
-\caption{Distribuição das espécies nas classes de resistência da ABNT NBR 7190-1:2022.}\label{tab:resumo_classes}
+\caption{Distribuição das espécies nas classes de resistência da \textcite{NBR7190-1:2022}.}\label{tab:resumo_classes}
 \begin{tabular}{lrl}
 \toprule
 Classe & Número de espécies & IDs das espécies \\
@@ -16,8 +16,6 @@ D30 & 3  & 10, 14, 19 \\
 D40 & 11 & 01, 02, 05, 08, 09, 11, 18, 22, 28, 34, 36 \\
 D50 & 10 & 06, 07, 12, 13, 20, 23, 30, 33, 39, 40 \\
 D60 & 13 & 03, 04, 17, 21, 24, 25, 26, 27, 29, 31, 32, 37, 38 \\
-\midrule
-Total & 40 & 01--40 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -42,11 +40,11 @@ Grupo & $f_{c0,k}$ central (MPa) & $E_{c0,m}$ central (MPa) & Composição por c
 \end{tabular}
 \end{table}
 
-A Figura~\ref{fig:dispersao_base} mostra que espécies pertencentes à mesma classe ocupam intervalos amplos de rigidez experimental. A maior silhueta foi obtida com dois grupos, $s=0{,}489$, enquanto a solução com cinco grupos apresentou valor muito próximo, $s=0{,}485$ (Figura~\ref{fig:silhueta_kmeans}). Assim, a divisão em cinco grupos preserva praticamente a mesma qualidade global de separação da divisão em dois grupos, mas os valores intermediários, próximos de 0,5, indicam sobreposição apreciável, e não cinco conjuntos naturalmente isolados. A solução com dois grupos evidencia principalmente uma separação global entre madeiras de menor e maior resistência--rigidez; a solução com cinco grupos apenas detalha essa gradação.
+A Figura~\ref{fig:dispersao_base} mostra que espécies pertencentes à mesma classe ocupam intervalos amplos de rigidez experimental. A maior silhueta foi obtida com dois grupos, $s=0{,}489$, enquanto a solução com cinco grupos apresentou valor muito próximo, $s=0{,}485$ (Figura~\ref{fig:silhueta_kmeans}). Assim, a divisão em cinco grupos preserva praticamente a mesma qualidade global de separação da divisão em dois grupos, mas os valores intermediários, próximos de 0,5, indicam uma sobreposição relevante, e não cinco conjuntos naturalmente isolados. A solução com dois grupos evidencia principalmente uma separação global entre madeiras de menor e maior resistência--rigidez. Já a solução com cinco grupos apenas detalha essa gradação.
 
-A correspondência entre a solução com cinco grupos e as cinco classes normativas foi medida pelo índice de Rand ajustado (ARI) \parencite{HubertArabie1985}. O ARI é igual a $1$ quando as duas partições coincidem, fica próximo de zero quando a concordância não supera a esperada ao acaso e pode assumir valores negativos quando a concordância é inferior à aleatória. O valor obtido, $\mathrm{ARI}=0{,}384$, indica concordância parcial: o \textit{k}-means reconhece a gradação geral presente nas classes, mas não reproduz suas fronteiras espécie por espécie. Isso é coerente com a diferença entre os critérios: a classe normativa é definida por limiares de $f_{c0,k}$, enquanto o agrupamento considera simultaneamente a resistência e a rigidez padronizadas.
+A correspondência entre a solução com cinco grupos e as cinco classes normativas foi medida pelo índice de Rand ajustado (ARI) \parencite{HubertArabie1985}. O ARI é igual a $1$ quando as duas partições coincidem, fica próximo de zero quando a concordância não supera a esperada ao acaso e pode assumir valores negativos quando a concordância é inferior à aleatória. O valor obtido, $\mathrm{ARI}=0{,}384$, indica concordância parcial. O \textit{k}-means reconhece a gradação geral presente nas classes, mas não reproduz suas fronteiras espécie por espécie, o que é coerente com a diferença entre os critérios. A classe normativa é definida por limiares de $f_{c0,k}$, enquanto o agrupamento considera simultaneamente a resistência e a rigidez padronizadas.
 
-Na solução com dois grupos, todas as espécies D20, D30 e D40 permaneceram no grupo de menor resistência--rigidez, todas as espécies D60 ficaram no grupo superior e a classe D50 foi dividida igualmente, com cinco espécies em cada grupo. Na solução com cinco grupos, espécies D40 e D50 compartilharam agrupamentos, enquanto as D60 foram separadas em dois conjuntos com níveis distintos de rigidez. Portanto, essa análise tem caráter descritivo: ela evidencia a heterogeneidade existente dentro das classes e fornece contexto para a análise central do artigo, baseada nas diferenças de dimensionamento e de consumo de madeira entre a representação por espécie e por classe.
+Na solução com dois grupos, todas as espécies D20, D30 e D40 permaneceram no grupo de menor resistência--rigidez, todas as espécies D60 ficaram no grupo superior e a classe D50 foi dividida igualmente, com cinco espécies em cada grupo. Na solução com cinco grupos, espécies D40 e D50 compartilharam agrupamentos, enquanto as D60 foram separadas em dois conjuntos com níveis distintos de rigidez. Portanto, essa análise tem caráter descritivo. Ela evidencia a heterogeneidade existente dentro das classes e fornece contexto para a análise central do artigo, baseada nas diferenças de dimensionamento e de consumo de madeira entre a representação por espécie e por classe.
 
 \begin{figure}[H]
 \centering

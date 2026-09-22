@@ -6,22 +6,19 @@ Esta seção define o modelo estrutural sobre o qual as representações de prop
 
 O sistema é uma superestrutura de vão único simplesmente apoiada, composta por pranchas retangulares de tabuleiro, de largura $b_w$ e altura $h$, apoiadas transversalmente sobre longarinas circulares de madeira roliça de diâmetro $d$, distribuídas ao longo da largura de pista $B$. O caminho das cargas vai do veículo para o tabuleiro, do tabuleiro para as longarinas e destas para os apoios. Cada longarina é tratada como viga biapoiada de vão $L$, e cada prancha como viga biapoiada vencendo o vão local entre longarinas.
 
-Peças roliças têm seção circular variável ao longo do comprimento. O item 9.7 da \textcite{NBR7190-1:2022} representa essa geometria por um diâmetro equivalente de cálculo, tomado na seção situada a $L/3$ da extremidade de menor diâmetro, conforme a Equação~\eqref{eq:deq}, com $d_1$ e $d_2$ os diâmetros das extremidades maior e menor:
-\begin{equation}
-d_{eq} = d_2 + \frac{d_1-d_2}{3}, \qquad d_{eq}\leq 1{,}5\,d_2.
-\label{eq:deq}
-\end{equation}
-O diâmetro $d$ manipulado pela otimização é esse diâmetro equivalente, e a peça é tratada como prismática de seção uniforme. O volume de uma peça prismática equivalente não é o volume comercial da tora afilada, o que deve ser observado ao converter o indicador de consumo em quantitativo de aquisição.
+O diâmetro $d$ manipulado pela otimização é o diâmetro equivalente da longarina de seção prismática.
 
 As propriedades das seções são
 \begin{equation}
+\begin{gathered}
 A_\ell=\frac{\pi d^2}{4},\quad
 I_\ell=\frac{\pi d^4}{64},\quad
 W_\ell=\frac{I_\ell}{d/2},\quad
-S_\ell=\frac{d^3}{12},\qquad
+S_\ell=\frac{d^3}{12},\\[4pt]
 A_t=b_wh,\quad
 I_t=\frac{b_wh^3}{12},\quad
 W_t=\frac{I_t}{h/2},
+\end{gathered}
 \label{eq:secoes}
 \end{equation}
 em que $S_\ell$ é o momento estático do semicírculo em relação ao diâmetro, empregado na verificação ao cisalhamento.
@@ -40,7 +37,7 @@ O volume de madeira da superestrutura é
 V(\mathbf{x})=n_\ell A_\ell L+n_t A_t B.
 \label{eq:volume}
 \end{equation}
-O indicador cobre longarinas e pranchas. Não representa custo, carbono incorporado, perdas de corte nem o volume de ligações, encontros e fundações.
+em que $n_\ell$ e $n_t$ são, respectivamente, o número de longarinas e de pranchas do tabuleiro efetivamente acomodados pela Equação~\eqref{eq:acomodacao}, e $A_\ell$, $A_t$ as áreas de seção transversal da Equação~\eqref{eq:secoes}. O indicador cobre longarinas e pranchas. Não representa custo, carbono incorporado, perdas de corte nem o volume de ligações, encontros e fundações.
 
 \subsection{Ações}\label{sec:acoes}
 
