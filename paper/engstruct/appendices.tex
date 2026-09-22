@@ -1,11 +1,83 @@
 \begin{appendices}
-\section{Rastreabilidade e auditoria da base experimental}\label{ap:enquadramento}
-\begin{fillblock}
-\noindent\textbf{[A PREENCHER]} Incluir tabela com ID e nomes da Tabela 1 de \textcite{Wolenski2020}, médias e DP das Tabelas 3--6, resistências características e classe publicada da Tabela 7, classe recalculada e classe obtida pela conversão simplificada. Registrar a tabela/página de origem, divergências e qualquer tratamento efetuado. Separar os valores transcritos dos calculados e das hipóteses de material. O módulo $E_{M0}$ não deve aparecer como dado medido da fonte.
-\end{fillblock}
 
 \section{Memorial de verificação e reprodutibilidade}\label{ap:relatorio}
+
 \begin{fillblock}
 \noindent\textbf{[A PREENCHER]} Apresentar as entradas e a conferência manual de um caso sob geometria fixa, seguida dos projetos R e C e da reavaliação C$\rightarrow$R. Documentar coeficientes, unidades, hipóteses complementares, sementes, critérios de convergência e tolerâncias de viabilidade. Disponibilizar os dados derivados e os scripts usados nas tabelas e figuras.
 \end{fillblock}
+
+\section{Propriedades experimentais e classificação atual}\label{ap:enquadramento}
+
+A Tabela~\ref{tab:base_fabricio} reúne os dados empregados para comparar a rigidez experimental de cada espécie com o valor atribuído pela classe de resistência. Os identificadores, nomes, valores de $f_{c0,k}$ e valores médios de $E_{c0}$ foram transcritos das Tabelas 1, 3 e 5 de \textcite{DiasLahr2004}. A classe e o módulo normativo foram atribuídos conforme a ABNT NBR 7190-3:2022 \parencite{NBR7190-3:2022}. Todos os valores referem-se à umidade de 12\%.
+
+\begingroup
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{@{}r p{0.34\textwidth} r c r r@{}}
+\caption{Base experimental e valores de rigidez das classes de resistência.}\label{tab:base_fabricio}\\
+\toprule
+ID & Nome & $f_{c0,k}$ & Classe & $E_{c0,m}^{\mathrm{exp}}$ & $E_{c0,m}^{\mathrm{NBR}}$ \\
+ & & (MPa) & & (MPa) & (MPa) \\
+\midrule
+\endfirsthead
+
+\multicolumn{6}{c}{\tablename\ \thetable\ -- continuação}\\
+\toprule
+ID & Nome & $f_{c0,k}$ & Classe & $E_{c0,m}^{\mathrm{exp}}$ & $E_{c0,m}^{\mathrm{NBR}}$ \\
+ & & (MPa) & & (MPa) & (MPa) \\
+\midrule
+\endhead
+
+\midrule
+\multicolumn{6}{r}{Continua na próxima página}\\
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+01 & Angelim-amargoso & 47,7 & D40 & 15\,940 & 14\,500 \\
+02 & Angelim-araroba & 45,3 & D40 & 12\,587 & 14\,500 \\
+03 & Angelim-ferro & 71,0 & D60 & 21\,263 & 19\,500 \\
+04 & Angelim-pedra-verdadeiro & 72,7 & D60 & 16\,695 & 19\,500 \\
+05 & Angelim-pedra & 44,5 & D40 & 11\,990 & 14\,500 \\
+06 & Angelim-saia & 51,1 & D50 & 24\,081 & 16\,500 \\
+07 & Angico-preto & 55,6 & D50 & 15\,375 & 16\,500 \\
+08 & Branquilho & 45,6 & D40 & 13\,813 & 14\,500 \\
+09 & Cafearana & 42,4 & D40 & 14\,185 & 14\,500 \\
+10 & Canafístula & 36,4 & D30 & 14\,613 & 12\,000 \\
+11 & Casca-grossa & 44,5 & D40 & 17\,936 & 14\,500 \\
+12 & Castelo & 54,5 & D50 & 11\,105 & 16\,500 \\
+13 & Catanudo & 51,0 & D50 & 13\,029 & 16\,500 \\
+14 & Cedro-amargo & 30,4 & D30 & 9\,601 & 12\,000 \\
+15 & Cedro-doce & 27,9 & D20 & 8\,358 & 10\,000 \\
+16 & Cedrorana & 28,9 & D20 & 10\,252 & 10\,000 \\
+17 & Champanhe & 96,2 & D60 & 23\,002 & 19\,500 \\
+18 & Copaíba & 44,1 & D40 & 14\,012 & 14\,500 \\
+19 & Cupiúba & 39,9 & D30 & 14\,125 & 12\,000 \\
+20 & Cutiúba & 55,3 & D50 & 18\,238 & 16\,500 \\
+21 & Garapa & 65,4 & D60 & 17\,718 & 19\,500 \\
+22 & Goiabão & 43,1 & D40 & 18\,717 & 14\,500 \\
+23 & Guaiçara & 58,9 & D50 & 14\,027 & 16\,500 \\
+24 & Guarucaia & 61,1 & D60 & 16\,214 & 19\,500 \\
+25 & Ipê & 62,9 & D60 & 17\,398 & 19\,500 \\
+26 & Itaúba & 68,4 & D60 & 17\,443 & 19\,500 \\
+27 & Jatobá & 78,7 & D60 & 22\,967 & 19\,500 \\
+28 & Louro-preto & 42,1 & D40 & 13\,536 & 14\,500 \\
+29 & Maçaranduba & 79,5 & D60 & 21\,900 & 19\,500 \\
+30 & Mandioqueira & 59,2 & D50 & 19\,274 & 16\,500 \\
+31 & Oiticica-amarela & 73,5 & D60 & 14\,719 & 19\,500 \\
+32 & Oiuchu & 72,3 & D60 & 17\,718 & 19\,500 \\
+33 & Parinari & 56,2 & D50 & 21\,881 & 16\,500 \\
+34 & Piolho & 43,7 & D40 & 13\,404 & 14\,500 \\
+35 & Quarubarana & 27,2 & D20 & 8\,783 & 10\,000 \\
+36 & Rabo-de-arraia & 48,7 & D40 & 14\,411 & 14\,500 \\
+37 & Sucupira & 90,5 & D60 & 20\,917 & 19\,500 \\
+38 & Tachi & 75,8 & D60 & 19\,901 & 19\,500 \\
+39 & Tatajuba & 55,0 & D50 & 18\,574 & 16\,500 \\
+40 & Umirana & 52,1 & D50 & 10\,178 & 16\,500 \\
+\end{longtable}
+\endgroup
+
+\noindent\footnotesize $f_{c0,k}$: resistência característica à compressão paralela às fibras; $E_{c0,m}^{\mathrm{exp}}$: módulo de elasticidade médio experimental na compressão paralela às fibras; $E_{c0,m}^{\mathrm{NBR}}$: módulo de elasticidade médio atribuído à classe pela ABNT NBR 7190-3:2022.\normalsize
+
 \end{appendices}

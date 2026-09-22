@@ -2,79 +2,26 @@
 
 \subsection{Origem e alcance dos dados}\label{sec:dados}
 
-A base experimental adotada é exclusivamente o conjunto de 40 espécies nativas de folhosas de \textcite{Wolenski2020}. Os ensaios foram realizados no Laboratório de Madeiras e de Estruturas de Madeira (LaMEM), da Escola de Engenharia de São Carlos, Universidade de São Paulo, seguindo os procedimentos da NBR 7190:1997, Anexo B. A fonte informa 12 corpos de prova por espécie para cada modalidade, compressão e tração paralelas às fibras, totalizando 960 determinações experimentais. Resistências e módulos foram corrigidos para 12\% de umidade.
+A base experimental reúne 40 espécies brasileiras de folhosas caracterizadas por \textcite{DiasLahr2004}. Os ensaios foram realizados no Laboratório de Madeiras e de Estruturas de Madeira (LaMEM), do Departamento de Engenharia de Estruturas da Escola de Engenharia de São Carlos, Universidade de São Paulo. Para cada espécie, o lote era formado por 12 tábuas e foram ensaiados 12 corpos de prova por propriedade, distribuídos aleatoriamente e sem a retirada de mais de um corpo de prova da mesma tábua. Os corpos de prova, isentos de defeitos, foram obtidos do cerne e afastados pelo menos 30~cm das extremidades das peças.
 
-As Tabelas 3 a 6 da fonte apresentam médias, desvios-padrão, coeficientes de variação e intervalos de confiança de $f_{c0}$, $f_{t0}$, $E_{c0}$ e $E_{t0}$. A Tabela 7 apresenta as resistências características e as classes históricas atribuídas pelos autores. Os resultados individuais ordenados e as covariâncias entre propriedades não são publicados. A Tabela~\ref{tab:base_fonte} delimita quais dados podem ser utilizados diretamente e quais exigem hipóteses adicionais.
+A caracterização seguiu a ABNT NBR 7190:1997 \parencite{NBR7190:1997}, vigente à época do programa experimental. Os resultados de resistência e rigidez foram corrigidos para a umidade de referência de 12\%. O artigo-fonte apresenta a resistência característica à compressão paralela às fibras, $f_{c0,k}$, e os valores médios das propriedades físicas, de resistência e de rigidez, incluindo o módulo de elasticidade na compressão paralela às fibras, $E_{c0,m}$.
 
-\begin{table}[!ht]
-\centering
-\caption{Dados disponíveis e limites da base de \textcite{Wolenski2020}.}\label{tab:base_fonte}
-\begin{tabular}{p{0.24\textwidth}p{0.28\textwidth}p{0.36\textwidth}}
-\toprule
-Informação & Localização na fonte & Uso nesta investigação \\
-\midrule
-Identificação de 40 espécies & Tabela 1 & Correspondência por ID e nome científico \\
-$f_{c0,m}$ e $f_{t0,m}$; DP e CV & Tabelas 3 e 4 & Comparação com estimativas simplificadas \\
-$E_{c0}$ e $E_{t0}$; DP e CV & Tabelas 5 e 6 & Análise de rigidez na modalidade correspondente \\
-$f_{c0,k}$ e $f_{t0,k}$; classe publicada & Tabela 7 & Entrada característica e auditoria de classe \\
-Classes C20, C30, C40 e C60 & Tabela 2 & Referência histórica da classificação \\
-$E_{M0}$, $f_{m,k}$, $f_{v0,k}$ e densidade por espécie & Não disponibilizados & Hipóteses de modelagem explicitadas separadamente \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-A população segue os identificadores e nomes científicos da fonte. Semelhança de nomes populares não basta para combinar amostras. A tabela de espécies utilizada em versões anteriores deste manuscrito foi retirada da análise, pois continha uma população e propriedades distintas, inclusive ensaios de flexão e cisalhamento não publicados nessa referência.
-
-\subsection{Resistência característica e classificação na fonte}\label{sec:enquadramento}
-
-O parâmetro de classificação utilizado pelos autores é a resistência característica à compressão paralela às fibras, $f_{c0,k}$, associada ao percentil de 5\% da resistência. O procedimento descrito na fonte ordena os resultados individuais de forma crescente e considera
-\begin{equation}
-\widehat f_k=1{,}10\left[\frac{2}{n/2-1}\sum_{i=1}^{n/2-1}f_{(i)}-f_{(n/2)}\right],
-\qquad f_k=\max\{f_{(1)},\;0{,}70\overline f,\;\widehat f_k\},
-\label{eq:caracteristico_fonte}
-\end{equation}
-com $n=12$, $f_{(i)}$ representando os resultados ordenados e $\overline f$ a média amostral. Portanto, $0{,}70\overline f$ é um dos limites desse procedimento, não um substituto automático dos valores característicos já publicados. Nesta investigação, a entrada experimental de referência é o valor da Tabela 7 da fonte. A aproximação $f_{c0,k}^{(0,70)}=0{,}70f_{c0,m}$ é utilizada apenas como cenário de sensibilidade para avaliar o efeito da conversão sobre o enquadramento.
-
-A Tabela 2 de \textcite{Wolenski2020} reproduz quatro classes da NBR 7190:1997, com os valores apresentados na Tabela~\ref{tab:classes_fonte}. A reprodução desse sistema constitui a etapa histórica de auditoria; não equivale à verificação de conformidade de um projeto com uma edição normativa atual.
+Neste estudo, as espécies foram reenquadradas nas classes D20 a D60 para madeiras de florestas nativas da ABNT NBR 7190-3:2022 \parencite{NBR7190-3:2022}, a partir dos valores publicados de $f_{c0,k}$. A Tabela~\ref{tab:resumo_classes} apresenta a distribuição resultante. Os valores individuais de $f_{c0,k}$ e $E_{c0,m}$, juntamente com o módulo médio correspondente a cada classe normativa, constam do Apêndice~\ref{ap:enquadramento}.
 
 \begin{table}[!ht]
 \centering
-\caption{Limiares e rigidez das classes históricas reproduzidos da Tabela 2 de \textcite{Wolenski2020}.}\label{tab:classes_fonte}
-\begin{tabular}{lrr}
+\caption{Distribuição das espécies nas classes de resistência da ABNT NBR 7190-3:2022.}\label{tab:resumo_classes}
+\begin{tabular}{lrl}
 \toprule
-Classe & $f_{c0,k}$ (MPa) & $E_{c0}$ (MPa) \\
+Classe & Número de espécies & IDs das espécies \\
 \midrule
-C20 & 20 & 9\,500 \\
-C30 & 30 & 14\,500 \\
-C40 & 40 & 19\,500 \\
-C60 & 60 & 24\,500 \\
+D20 & 3  & 15, 16, 35 \\
+D30 & 3  & 10, 14, 19 \\
+D40 & 11 & 01, 02, 05, 08, 09, 11, 18, 22, 28, 34, 36 \\
+D50 & 10 & 06, 07, 12, 13, 20, 23, 30, 33, 39, 40 \\
+D60 & 13 & 03, 04, 17, 21, 24, 25, 26, 27, 29, 31, 32, 37, 38 \\
+\midrule
+Total & 40 & 01--40 \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-Para tornar a auditoria reproduzível, o enquadramento recalculado é definido pela maior classe cujo limiar não supera a resistência característica informada:
-\begin{equation}
-c_s=\max\{c\in\mathcal C:f_{c0,k,s}\geq c\},
-\qquad \mathcal C=\{20,30,40,60\},
-\label{eq:classe_especie}
-\end{equation}
-em que $s$ identifica a espécie. Valores inferiores ao menor limiar ficam sem enquadramento nesse conjunto. Preservam-se separadamente a classe publicada e a classe recalculada, sem correções silenciosas da fonte.
-
-A Tabela 7 contém aparentes divergências frente aos limiares da Tabela 2: mandioqueira, oiticica-amarela e quina-rosa aparecem como C60 com 53,70, 58,00 e 55,00~MPa, respectivamente; piolho aparece como C40 com 39,80~MPa. Essas ocorrências serão registradas na auditoria e, quando possível, esclarecidas com os autores. Um exemplo da diferença entre conversão e valor publicado é o goiabão: $f_{c0,m}=48{,}46$~MPa e $f_{c0,k}=43{,}10$~MPa; a aproximação $0{,}70f_{c0,m}=33{,}92$~MPa o colocaria em C30 pela Equação~\ref{eq:classe_especie}, enquanto o valor publicado o coloca em C40.
-
-\begin{fillblock}
-\noindent\textbf{[ETAPA NORMATIVA PENDENTE]} Para o estudo de projeto contemporâneo, conferir a edição, a parte e a tabela normativa aplicáveis ao produto e definir o conjunto de classes correspondente. Um reenquadramento D20--D60 deve ser documentado como nova operação, sem transferir os módulos históricos C20--C60 nem apenas trocar a letra da classe. Concluir essa verificação antes das simulações estruturais.
-\end{fillblock}
-
-\subsection{Representação da rigidez e propriedades complementares}\label{sec:representacao}
-
-A comparação diretamente sustentada pela fonte é entre $E_{c0,s}$ experimental e $E_{c0,c_s}$ da classe. Define-se o erro assinado de representação por
-\begin{equation}
-\varepsilon_{E,s}=\left(\frac{E_{c0,c_s}}{E_{c0,s}}-1\right)100\%.
-\label{eq:erro_E}
-\end{equation}
-Valores positivos indicam que a classe atribui rigidez superior à média experimental. Essa diferença é um indicador de representação, não uma demonstração isolada de descumprimento de um limite estrutural. Serão reportados erros individuais, média do erro assinado, média do erro absoluto e dispersão por classe, com o número de espécies de cada grupo.
-
-O módulo de compressão não será identificado como módulo medido à flexão. Se o modelo exigir $E_{M0}$, será introduzida uma relação explícita $E_{M0}=\alpha_E E_{c0}$, com origem e domínio de aplicação a verificar e sensibilidade a $\alpha_E$. Uma mesma relação deverá ser aplicada aos dois cenários na comparação destinada a isolar a representação por classe. Os dados de $E_{t0}$ permitem análises complementares entre modalidades, mas não fornecem diretamente $E_{M0}$.
-
-Resistência à flexão, resistência ao cisalhamento e massa específica por espécie não são disponibilizadas na fonte. No experimento principal de substituição exclusiva da rigidez, suas hipóteses serão comuns aos dois cenários de cada par espécie--vão. Assim, o cenário com rigidez experimental não será apresentado como uma caracterização experimental completa da madeira. Comparações que também alterem resistências ou densidade serão identificadas como cenários adicionais dependentes de hipóteses.

@@ -1,5 +1,5 @@
 % $ biblatex auxiliary file $
-% $ biblatex bbl format version 3.3 $
+% $ biblatex bbl format version 3.2 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
@@ -18,8 +18,8 @@
 
 
 \refsection{0}
-  \datalist[entry]{apa/apasortcite//global/global/global}
-    \entry{blank2020}{article}{}{}
+  \datalist[entry]{apa/apasortcite//global/global}
+    \entry{blank2020}{article}{}
       \name{author}{2}{}{%
         {{un=0,uniquepart=base,hash=bc00b22eadc38e0f33edb0f8fe7e9f13}{%
            family={Blank},
@@ -39,12 +39,10 @@
       }
       \strng{namehash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
       \strng{fullhash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
-      \strng{fullhashraw}{b6fe2478ad222b8f2d893e70ceaf9a8c}
       \strng{bibnamehash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
       \strng{authorbibnamehash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
       \strng{authornamehash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
       \strng{authorfullhash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
-      \strng{authorfullhashraw}{b6fe2478ad222b8f2d893e70ceaf9a8c}
       \field{sortinit}{B}
       \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
       \field{extradatescope}{labelyear}
@@ -62,7 +60,7 @@
       \verb 10.1109/ACCESS.2020.2990567
       \endverb
     \endentry
-    \entry{CALIL2006}{book}{}{}
+    \entry{CALIL2006}{book}{}
       \name{author}{10}{}{%
         {{un=0,uniquepart=base,hash=285d9262175043b772c976a38b2a8ff0}{%
            family={Calil\bibnamedelima Júnior},
@@ -133,12 +131,10 @@
       }
       \strng{namehash}{0d44eed1caa6125e8060c0f7b8ced1dd}
       \strng{fullhash}{5d43757348dae0d9491069f865d7e338}
-      \strng{fullhashraw}{5d43757348dae0d9491069f865d7e338}
       \strng{bibnamehash}{5d43757348dae0d9491069f865d7e338}
       \strng{authorbibnamehash}{5d43757348dae0d9491069f865d7e338}
       \strng{authornamehash}{0d44eed1caa6125e8060c0f7b8ced1dd}
       \strng{authorfullhash}{5d43757348dae0d9491069f865d7e338}
-      \strng{authorfullhashraw}{5d43757348dae0d9491069f865d7e338}
       \field{sortinit}{C}
       \field{sortinithash}{4d103a86280481745c9c897c925753c0}
       \field{extradatescope}{labelyear}
@@ -150,7 +146,7 @@
       \field{title}{Manual de projeto e construção de pontes de madeira}
       \field{year}{2006}
     \endentry
-    \entry{Criado2024}{article}{}{}
+    \entry{Criado2024}{article}{}
       \name{author}{3}{}{%
         {{un=0,uniquepart=base,hash=fc22e09f2c4a8dedd21f58522407ee63}{%
            family={Criado},
@@ -173,12 +169,10 @@
       }
       \strng{namehash}{c5cecc3b37cf00a01a3e0090cc948e05}
       \strng{fullhash}{7c81525afd145457682fbfb0cc30034b}
-      \strng{fullhashraw}{7c81525afd145457682fbfb0cc30034b}
       \strng{bibnamehash}{7c81525afd145457682fbfb0cc30034b}
       \strng{authorbibnamehash}{7c81525afd145457682fbfb0cc30034b}
       \strng{authornamehash}{c5cecc3b37cf00a01a3e0090cc948e05}
       \strng{authorfullhash}{7c81525afd145457682fbfb0cc30034b}
-      \strng{authorfullhashraw}{7c81525afd145457682fbfb0cc30034b}
       \field{sortinit}{C}
       \field{sortinithash}{4d103a86280481745c9c897c925753c0}
       \field{extradatescope}{labelyear}
@@ -197,7 +191,7 @@
       \verb 10.1590/1809-4430-Eng.Agric.v44nepe20240057/2024
       \endverb
     \endentry
-    \entry{Deb2002}{article}{}{}
+    \entry{Deb2002}{article}{}
       \name{author}{4}{}{%
         {{un=0,uniquepart=base,hash=b11d1da0cc2920eef235d484e6b858ef}{%
            family={Deb},
@@ -226,12 +220,10 @@
       }
       \strng{namehash}{6943967d389ec1de2e10e25fbdf3b2a0}
       \strng{fullhash}{b08e5063396137513578f8d3ebd59c5d}
-      \strng{fullhashraw}{b08e5063396137513578f8d3ebd59c5d}
       \strng{bibnamehash}{b08e5063396137513578f8d3ebd59c5d}
       \strng{authorbibnamehash}{b08e5063396137513578f8d3ebd59c5d}
       \strng{authornamehash}{6943967d389ec1de2e10e25fbdf3b2a0}
       \strng{authorfullhash}{b08e5063396137513578f8d3ebd59c5d}
-      \strng{authorfullhashraw}{b08e5063396137513578f8d3ebd59c5d}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{extradatescope}{labelyear}
@@ -250,7 +242,48 @@
       \verb 10.1109/4235.996017
       \endverb
     \endentry
-    \entry{Marti2013}{article}{}{}
+    \entry{DiasLahr2004}{article}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=ce927ba44632e205ff194886d5e26f65}{%
+           family={Dias},
+           familyi={D\bibinitperiod},
+           given={Fabrício\bibnamedelima Moura},
+           giveni={F\bibinitperiod\bibinitdelim M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=4285be3a113acf56893e6c9a9156334c}{%
+           family={Lahr},
+           familyi={L\bibinitperiod},
+           given={Francisco\bibnamedelimb Antonio\bibnamedelima Rocco},
+           giveni={F\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim R\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{d5283bd31aca229b9ba3b87e3699a23b}
+      \strng{fullhash}{d5283bd31aca229b9ba3b87e3699a23b}
+      \strng{bibnamehash}{d5283bd31aca229b9ba3b87e3699a23b}
+      \strng{authorbibnamehash}{d5283bd31aca229b9ba3b87e3699a23b}
+      \strng{authornamehash}{d5283bd31aca229b9ba3b87e3699a23b}
+      \strng{authorfullhash}{d5283bd31aca229b9ba3b87e3699a23b}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Scientia Forestalis}
+      \field{number}{65}
+      \field{title}{Estimativa de propriedades de resistência e rigidez da madeira através da densidade aparente}
+      \field{year}{2004}
+      \field{pages}{102\bibrangedash 113}
+      \range{pages}{12}
+      \verb{urlraw}
+      \verb https://www.ipef.br/publicacoes/scientia/nr65/cap10.pdf
+      \endverb
+      \verb{url}
+      \verb https://www.ipef.br/publicacoes/scientia/nr65/cap10.pdf
+      \endverb
+    \endentry
+    \entry{Marti2013}{article}{}
       \name{author}{4}{}{%
         {{un=0,uniquepart=base,hash=ba03049ea1a356656a391595ba7a4f6a}{%
            family={Martí},
@@ -279,12 +312,10 @@
       }
       \strng{namehash}{9d652dff229d9e8faab7c781e1eede90}
       \strng{fullhash}{9ff2c04052a55e0d4b383e2ad961dfd8}
-      \strng{fullhashraw}{9ff2c04052a55e0d4b383e2ad961dfd8}
       \strng{bibnamehash}{9ff2c04052a55e0d4b383e2ad961dfd8}
       \strng{authorbibnamehash}{9ff2c04052a55e0d4b383e2ad961dfd8}
       \strng{authornamehash}{9d652dff229d9e8faab7c781e1eede90}
       \strng{authorfullhash}{9ff2c04052a55e0d4b383e2ad961dfd8}
-      \strng{authorfullhashraw}{9ff2c04052a55e0d4b383e2ad961dfd8}
       \field{sortinit}{M}
       \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
       \field{extradatescope}{labelyear}
@@ -302,7 +333,7 @@
       \verb 10.1016/j.engstruct.2012.09.014
       \endverb
     \endentry
-    \entry{nbr7188}{manual}{}{}
+    \entry{nbr7188}{manual}{}
       \name{shortauthor}{1}{}{%
         {{un=0,uniquepart=base,hash=25e485c3f2fbdf1b897e6899dd1f8bef}{%
            family={ABNT},
@@ -319,7 +350,6 @@
       \strng{shortauthorbibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \strng{shortauthornamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \strng{shortauthorfullhash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthorfullhashraw}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \field{extraname}{1}
       \field{sortinit}{N}
       \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
@@ -331,7 +361,7 @@
       \field{title}{NBR 7188: Ações devido ao tráfego de veículos rodoviários e de pedestres em pontes, viadutos e passarelas}
       \field{year}{2024}
     \endentry
-    \entry{NBR7190-1:2022}{manual}{}{}
+    \entry{NBR7190-1:2022}{manual}{}
       \name{shortauthor}{1}{}{%
         {{un=0,uniquepart=base,hash=25e485c3f2fbdf1b897e6899dd1f8bef}{%
            family={ABNT},
@@ -348,10 +378,10 @@
       \strng{shortauthorbibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \strng{shortauthornamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \strng{shortauthorfullhash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthorfullhashraw}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \field{extraname}{2}
       \field{sortinit}{N}
       \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradate}{1}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \true{uniqueprimaryauthor}
@@ -360,7 +390,7 @@
       \field{title}{NBR 7190-1: Projeto de estruturas de madeira -- Parte 1: Critérios de dimensionamento}
       \field{year}{2022}
     \endentry
-    \entry{NBR8681:2025}{manual}{}{}
+    \entry{NBR7190-3:2022}{manual}{}
       \name{shortauthor}{1}{}{%
         {{un=0,uniquepart=base,hash=25e485c3f2fbdf1b897e6899dd1f8bef}{%
            family={ABNT},
@@ -377,8 +407,64 @@
       \strng{shortauthorbibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \strng{shortauthornamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \strng{shortauthorfullhash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthorfullhashraw}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \field{extraname}{3}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradate}{2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{NBR 7190-3: Projeto de estruturas de madeira -- Parte 3: Métodos de ensaio para corpos de prova isentos de defeitos para madeiras de florestas nativas}
+      \field{year}{2022}
+    \endentry
+    \entry{NBR7190:1997}{manual}{}
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=25e485c3f2fbdf1b897e6899dd1f8bef}{%
+           family={ABNT},
+           familyi={A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Rio de Janeiro}%
+      }
+      \list{organization}{1}{%
+        {Associação Brasileira de Normas Técnicas}%
+      }
+      \strng{namehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \strng{bibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \strng{shortauthorbibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \strng{shortauthornamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \strng{shortauthorfullhash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \field{extraname}{4}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{NBR 7190: Projeto de estruturas de madeira}
+      \field{year}{1997}
+    \endentry
+    \entry{NBR8681:2025}{manual}{}
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=25e485c3f2fbdf1b897e6899dd1f8bef}{%
+           family={ABNT},
+           familyi={A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Rio de Janeiro}%
+      }
+      \list{organization}{1}{%
+        {Associação Brasileira de Normas Técnicas}%
+      }
+      \strng{namehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \strng{bibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \strng{shortauthorbibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \strng{shortauthornamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \strng{shortauthorfullhash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \field{extraname}{5}
       \field{sortinit}{N}
       \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
       \field{extradatescope}{labelyear}
@@ -389,7 +475,7 @@
       \field{title}{NBR 8681: Ações e segurança nas estruturas -- Procedimento}
       \field{year}{2025}
     \endentry
-    \entry{ReliaBridge2026}{misc}{}{}
+    \entry{ReliaBridge2026}{misc}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=c145ae842ca1d3bd87dc22e9ab38c230}{%
            family={{ReliaBridge}},
@@ -397,12 +483,10 @@
       }
       \strng{namehash}{c145ae842ca1d3bd87dc22e9ab38c230}
       \strng{fullhash}{c145ae842ca1d3bd87dc22e9ab38c230}
-      \strng{fullhashraw}{c145ae842ca1d3bd87dc22e9ab38c230}
       \strng{bibnamehash}{c145ae842ca1d3bd87dc22e9ab38c230}
       \strng{authorbibnamehash}{c145ae842ca1d3bd87dc22e9ab38c230}
       \strng{authornamehash}{c145ae842ca1d3bd87dc22e9ab38c230}
       \strng{authorfullhash}{c145ae842ca1d3bd87dc22e9ab38c230}
-      \strng{authorfullhashraw}{c145ae842ca1d3bd87dc22e9ab38c230}
       \field{sortinit}{R}
       \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
       \field{extradatescope}{labelyear}
@@ -420,7 +504,7 @@
       \verb https://reliabridge.streamlit.app/
       \endverb
     \endentry
-    \entry{SimoesNegrao2005}{article}{}{}
+    \entry{SimoesNegrao2005}{article}{}
       \name{author}{2}{}{%
         {{un=0,uniquepart=base,hash=90483f3e5cf5ddab8d3134a8ea9485cc}{%
            family={Simões},
@@ -437,12 +521,10 @@
       }
       \strng{namehash}{340399d9cc3faf5f6853ce919682f97d}
       \strng{fullhash}{340399d9cc3faf5f6853ce919682f97d}
-      \strng{fullhashraw}{340399d9cc3faf5f6853ce919682f97d}
       \strng{bibnamehash}{340399d9cc3faf5f6853ce919682f97d}
       \strng{authorbibnamehash}{340399d9cc3faf5f6853ce919682f97d}
       \strng{authornamehash}{340399d9cc3faf5f6853ce919682f97d}
       \strng{authorfullhash}{340399d9cc3faf5f6853ce919682f97d}
-      \strng{authorfullhashraw}{340399d9cc3faf5f6853ce919682f97d}
       \field{sortinit}{S}
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \field{extradatescope}{labelyear}
@@ -461,7 +543,7 @@
       \verb 10.1061/(ASCE)1084-0702(2005)10:1(39)
       \endverb
     \endentry
-    \entry{Wolenski2020}{article}{}{}
+    \entry{Wolenski2020}{article}{}
       \name{author}{5}{}{%
         {{un=0,uniquepart=base,hash=7d70efbd50f53b8446c8102d51a3d418}{%
            family={Wolenski},
@@ -496,12 +578,10 @@
       }
       \strng{namehash}{f0311afc5e91414588cf8112b890febb}
       \strng{fullhash}{46fc1a4b94531c552f9c8d38734912c2}
-      \strng{fullhashraw}{46fc1a4b94531c552f9c8d38734912c2}
       \strng{bibnamehash}{46fc1a4b94531c552f9c8d38734912c2}
       \strng{authorbibnamehash}{46fc1a4b94531c552f9c8d38734912c2}
       \strng{authornamehash}{f0311afc5e91414588cf8112b890febb}
       \strng{authorfullhash}{46fc1a4b94531c552f9c8d38734912c2}
-      \strng{authorfullhashraw}{46fc1a4b94531c552f9c8d38734912c2}
       \field{sortinit}{W}
       \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
       \field{extradatescope}{labelyear}
@@ -521,8 +601,8 @@
       \endverb
     \endentry
   \enddatalist
-  \datalist[entry]{apa/global//global/global/global}
-    \entry{blank2020}{article}{}{}
+  \datalist[entry]{apa/global//global/global}
+    \entry{blank2020}{article}{}
       \name{author}{2}{}{%
         {{un=0,uniquepart=base,hash=bc00b22eadc38e0f33edb0f8fe7e9f13}{%
            family={Blank},
@@ -542,12 +622,10 @@
       }
       \strng{namehash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
       \strng{fullhash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
-      \strng{fullhashraw}{b6fe2478ad222b8f2d893e70ceaf9a8c}
       \strng{bibnamehash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
       \strng{authorbibnamehash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
       \strng{authornamehash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
       \strng{authorfullhash}{b6fe2478ad222b8f2d893e70ceaf9a8c}
-      \strng{authorfullhashraw}{b6fe2478ad222b8f2d893e70ceaf9a8c}
       \field{sortinit}{B}
       \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
       \field{extradatescope}{labelyear}
@@ -565,7 +643,7 @@
       \verb 10.1109/ACCESS.2020.2990567
       \endverb
     \endentry
-    \entry{CALIL2006}{book}{}{}
+    \entry{CALIL2006}{book}{}
       \name{author}{10}{}{%
         {{un=0,uniquepart=base,hash=285d9262175043b772c976a38b2a8ff0}{%
            family={Calil\bibnamedelima Júnior},
@@ -636,12 +714,10 @@
       }
       \strng{namehash}{0d44eed1caa6125e8060c0f7b8ced1dd}
       \strng{fullhash}{5d43757348dae0d9491069f865d7e338}
-      \strng{fullhashraw}{5d43757348dae0d9491069f865d7e338}
       \strng{bibnamehash}{5d43757348dae0d9491069f865d7e338}
       \strng{authorbibnamehash}{5d43757348dae0d9491069f865d7e338}
       \strng{authornamehash}{0d44eed1caa6125e8060c0f7b8ced1dd}
       \strng{authorfullhash}{5d43757348dae0d9491069f865d7e338}
-      \strng{authorfullhashraw}{5d43757348dae0d9491069f865d7e338}
       \field{sortinit}{C}
       \field{sortinithash}{4d103a86280481745c9c897c925753c0}
       \field{extradatescope}{labelyear}
@@ -653,7 +729,7 @@
       \field{title}{Manual de projeto e construção de pontes de madeira}
       \field{year}{2006}
     \endentry
-    \entry{Criado2024}{article}{}{}
+    \entry{Criado2024}{article}{}
       \name{author}{3}{}{%
         {{un=0,uniquepart=base,hash=fc22e09f2c4a8dedd21f58522407ee63}{%
            family={Criado},
@@ -676,12 +752,10 @@
       }
       \strng{namehash}{c5cecc3b37cf00a01a3e0090cc948e05}
       \strng{fullhash}{7c81525afd145457682fbfb0cc30034b}
-      \strng{fullhashraw}{7c81525afd145457682fbfb0cc30034b}
       \strng{bibnamehash}{7c81525afd145457682fbfb0cc30034b}
       \strng{authorbibnamehash}{7c81525afd145457682fbfb0cc30034b}
       \strng{authornamehash}{c5cecc3b37cf00a01a3e0090cc948e05}
       \strng{authorfullhash}{7c81525afd145457682fbfb0cc30034b}
-      \strng{authorfullhashraw}{7c81525afd145457682fbfb0cc30034b}
       \field{sortinit}{C}
       \field{sortinithash}{4d103a86280481745c9c897c925753c0}
       \field{extradatescope}{labelyear}
@@ -700,7 +774,7 @@
       \verb 10.1590/1809-4430-Eng.Agric.v44nepe20240057/2024
       \endverb
     \endentry
-    \entry{Deb2002}{article}{}{}
+    \entry{Deb2002}{article}{}
       \name{author}{4}{}{%
         {{un=0,uniquepart=base,hash=b11d1da0cc2920eef235d484e6b858ef}{%
            family={Deb},
@@ -729,12 +803,10 @@
       }
       \strng{namehash}{6943967d389ec1de2e10e25fbdf3b2a0}
       \strng{fullhash}{b08e5063396137513578f8d3ebd59c5d}
-      \strng{fullhashraw}{b08e5063396137513578f8d3ebd59c5d}
       \strng{bibnamehash}{b08e5063396137513578f8d3ebd59c5d}
       \strng{authorbibnamehash}{b08e5063396137513578f8d3ebd59c5d}
       \strng{authornamehash}{6943967d389ec1de2e10e25fbdf3b2a0}
       \strng{authorfullhash}{b08e5063396137513578f8d3ebd59c5d}
-      \strng{authorfullhashraw}{b08e5063396137513578f8d3ebd59c5d}
       \field{sortinit}{D}
       \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
       \field{extradatescope}{labelyear}
@@ -753,7 +825,48 @@
       \verb 10.1109/4235.996017
       \endverb
     \endentry
-    \entry{Marti2013}{article}{}{}
+    \entry{DiasLahr2004}{article}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=ce927ba44632e205ff194886d5e26f65}{%
+           family={Dias},
+           familyi={D\bibinitperiod},
+           given={Fabrício\bibnamedelima Moura},
+           giveni={F\bibinitperiod\bibinitdelim M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=4285be3a113acf56893e6c9a9156334c}{%
+           family={Lahr},
+           familyi={L\bibinitperiod},
+           given={Francisco\bibnamedelimb Antonio\bibnamedelima Rocco},
+           giveni={F\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim R\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{d5283bd31aca229b9ba3b87e3699a23b}
+      \strng{fullhash}{d5283bd31aca229b9ba3b87e3699a23b}
+      \strng{bibnamehash}{d5283bd31aca229b9ba3b87e3699a23b}
+      \strng{authorbibnamehash}{d5283bd31aca229b9ba3b87e3699a23b}
+      \strng{authornamehash}{d5283bd31aca229b9ba3b87e3699a23b}
+      \strng{authorfullhash}{d5283bd31aca229b9ba3b87e3699a23b}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Scientia Forestalis}
+      \field{number}{65}
+      \field{title}{Estimativa de propriedades de resistência e rigidez da madeira através da densidade aparente}
+      \field{year}{2004}
+      \field{pages}{102\bibrangedash 113}
+      \range{pages}{12}
+      \verb{urlraw}
+      \verb https://www.ipef.br/publicacoes/scientia/nr65/cap10.pdf
+      \endverb
+      \verb{url}
+      \verb https://www.ipef.br/publicacoes/scientia/nr65/cap10.pdf
+      \endverb
+    \endentry
+    \entry{Marti2013}{article}{}
       \name{author}{4}{}{%
         {{un=0,uniquepart=base,hash=ba03049ea1a356656a391595ba7a4f6a}{%
            family={Martí},
@@ -782,12 +895,10 @@
       }
       \strng{namehash}{9d652dff229d9e8faab7c781e1eede90}
       \strng{fullhash}{9ff2c04052a55e0d4b383e2ad961dfd8}
-      \strng{fullhashraw}{9ff2c04052a55e0d4b383e2ad961dfd8}
       \strng{bibnamehash}{9ff2c04052a55e0d4b383e2ad961dfd8}
       \strng{authorbibnamehash}{9ff2c04052a55e0d4b383e2ad961dfd8}
       \strng{authornamehash}{9d652dff229d9e8faab7c781e1eede90}
       \strng{authorfullhash}{9ff2c04052a55e0d4b383e2ad961dfd8}
-      \strng{authorfullhashraw}{9ff2c04052a55e0d4b383e2ad961dfd8}
       \field{sortinit}{M}
       \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
       \field{extradatescope}{labelyear}
@@ -805,7 +916,7 @@
       \verb 10.1016/j.engstruct.2012.09.014
       \endverb
     \endentry
-    \entry{nbr7188}{manual}{}{}
+    \entry{nbr7188}{manual}{}
       \name{shortauthor}{1}{}{%
         {{un=0,uniquepart=base,hash=25e485c3f2fbdf1b897e6899dd1f8bef}{%
            family={ABNT},
@@ -822,7 +933,6 @@
       \strng{shortauthorbibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \strng{shortauthornamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \strng{shortauthorfullhash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthorfullhashraw}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \field{extraname}{1}
       \field{sortinit}{N}
       \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
@@ -834,7 +944,7 @@
       \field{title}{NBR 7188: Ações devido ao tráfego de veículos rodoviários e de pedestres em pontes, viadutos e passarelas}
       \field{year}{2024}
     \endentry
-    \entry{NBR7190-1:2022}{manual}{}{}
+    \entry{NBR7190-1:2022}{manual}{}
       \name{shortauthor}{1}{}{%
         {{un=0,uniquepart=base,hash=25e485c3f2fbdf1b897e6899dd1f8bef}{%
            family={ABNT},
@@ -851,10 +961,10 @@
       \strng{shortauthorbibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \strng{shortauthornamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \strng{shortauthorfullhash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthorfullhashraw}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \field{extraname}{2}
       \field{sortinit}{N}
       \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradate}{1}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \true{uniqueprimaryauthor}
@@ -863,7 +973,7 @@
       \field{title}{NBR 7190-1: Projeto de estruturas de madeira -- Parte 1: Critérios de dimensionamento}
       \field{year}{2022}
     \endentry
-    \entry{NBR8681:2025}{manual}{}{}
+    \entry{NBR7190-3:2022}{manual}{}
       \name{shortauthor}{1}{}{%
         {{un=0,uniquepart=base,hash=25e485c3f2fbdf1b897e6899dd1f8bef}{%
            family={ABNT},
@@ -880,8 +990,64 @@
       \strng{shortauthorbibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \strng{shortauthornamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \strng{shortauthorfullhash}{25e485c3f2fbdf1b897e6899dd1f8bef}
-      \strng{shortauthorfullhashraw}{25e485c3f2fbdf1b897e6899dd1f8bef}
       \field{extraname}{3}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradate}{2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{NBR 7190-3: Projeto de estruturas de madeira -- Parte 3: Métodos de ensaio para corpos de prova isentos de defeitos para madeiras de florestas nativas}
+      \field{year}{2022}
+    \endentry
+    \entry{NBR7190:1997}{manual}{}
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=25e485c3f2fbdf1b897e6899dd1f8bef}{%
+           family={ABNT},
+           familyi={A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Rio de Janeiro}%
+      }
+      \list{organization}{1}{%
+        {Associação Brasileira de Normas Técnicas}%
+      }
+      \strng{namehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \strng{bibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \strng{shortauthorbibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \strng{shortauthornamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \strng{shortauthorfullhash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \field{extraname}{4}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{NBR 7190: Projeto de estruturas de madeira}
+      \field{year}{1997}
+    \endentry
+    \entry{NBR8681:2025}{manual}{}
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=25e485c3f2fbdf1b897e6899dd1f8bef}{%
+           family={ABNT},
+           familyi={A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Rio de Janeiro}%
+      }
+      \list{organization}{1}{%
+        {Associação Brasileira de Normas Técnicas}%
+      }
+      \strng{namehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \strng{bibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \strng{shortauthorbibnamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \strng{shortauthornamehash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \strng{shortauthorfullhash}{25e485c3f2fbdf1b897e6899dd1f8bef}
+      \field{extraname}{5}
       \field{sortinit}{N}
       \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
       \field{extradatescope}{labelyear}
@@ -892,7 +1058,7 @@
       \field{title}{NBR 8681: Ações e segurança nas estruturas -- Procedimento}
       \field{year}{2025}
     \endentry
-    \entry{ReliaBridge2026}{misc}{}{}
+    \entry{ReliaBridge2026}{misc}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=c145ae842ca1d3bd87dc22e9ab38c230}{%
            family={{ReliaBridge}},
@@ -900,12 +1066,10 @@
       }
       \strng{namehash}{c145ae842ca1d3bd87dc22e9ab38c230}
       \strng{fullhash}{c145ae842ca1d3bd87dc22e9ab38c230}
-      \strng{fullhashraw}{c145ae842ca1d3bd87dc22e9ab38c230}
       \strng{bibnamehash}{c145ae842ca1d3bd87dc22e9ab38c230}
       \strng{authorbibnamehash}{c145ae842ca1d3bd87dc22e9ab38c230}
       \strng{authornamehash}{c145ae842ca1d3bd87dc22e9ab38c230}
       \strng{authorfullhash}{c145ae842ca1d3bd87dc22e9ab38c230}
-      \strng{authorfullhashraw}{c145ae842ca1d3bd87dc22e9ab38c230}
       \field{sortinit}{R}
       \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
       \field{extradatescope}{labelyear}
@@ -923,7 +1087,7 @@
       \verb https://reliabridge.streamlit.app/
       \endverb
     \endentry
-    \entry{SimoesNegrao2005}{article}{}{}
+    \entry{SimoesNegrao2005}{article}{}
       \name{author}{2}{}{%
         {{un=0,uniquepart=base,hash=90483f3e5cf5ddab8d3134a8ea9485cc}{%
            family={Simões},
@@ -940,12 +1104,10 @@
       }
       \strng{namehash}{340399d9cc3faf5f6853ce919682f97d}
       \strng{fullhash}{340399d9cc3faf5f6853ce919682f97d}
-      \strng{fullhashraw}{340399d9cc3faf5f6853ce919682f97d}
       \strng{bibnamehash}{340399d9cc3faf5f6853ce919682f97d}
       \strng{authorbibnamehash}{340399d9cc3faf5f6853ce919682f97d}
       \strng{authornamehash}{340399d9cc3faf5f6853ce919682f97d}
       \strng{authorfullhash}{340399d9cc3faf5f6853ce919682f97d}
-      \strng{authorfullhashraw}{340399d9cc3faf5f6853ce919682f97d}
       \field{sortinit}{S}
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
       \field{extradatescope}{labelyear}
@@ -964,7 +1126,7 @@
       \verb 10.1061/(ASCE)1084-0702(2005)10:1(39)
       \endverb
     \endentry
-    \entry{Wolenski2020}{article}{}{}
+    \entry{Wolenski2020}{article}{}
       \name{author}{5}{}{%
         {{un=0,uniquepart=base,hash=7d70efbd50f53b8446c8102d51a3d418}{%
            family={Wolenski},
@@ -999,12 +1161,10 @@
       }
       \strng{namehash}{f0311afc5e91414588cf8112b890febb}
       \strng{fullhash}{46fc1a4b94531c552f9c8d38734912c2}
-      \strng{fullhashraw}{46fc1a4b94531c552f9c8d38734912c2}
       \strng{bibnamehash}{46fc1a4b94531c552f9c8d38734912c2}
       \strng{authorbibnamehash}{46fc1a4b94531c552f9c8d38734912c2}
       \strng{authornamehash}{f0311afc5e91414588cf8112b890febb}
       \strng{authorfullhash}{46fc1a4b94531c552f9c8d38734912c2}
-      \strng{authorfullhashraw}{46fc1a4b94531c552f9c8d38734912c2}
       \field{sortinit}{W}
       \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
       \field{extradatescope}{labelyear}
