@@ -254,7 +254,7 @@ Cruzamento & SBX, $p_c = 0{,}90$, $\eta_c = 15$ \\
 Mutação & Polinomial, $\eta_m = 20$ \\
 Eliminação de duplicatas & Sim \\
 Semente aleatória & 1 \\
-Pontos da grade de robustez, $N_c$ & 5 \\
+Número de checagens robustas, $N_c$ & 30 \\
 Desvio de robustez, $\rho$ & 5\% \\
 \bottomrule
 \end{tabular*}
@@ -269,8 +269,7 @@ Sob condições reais, uma estrutura cujo projeto encontre-se no limite exato de
 Para mitigar esse efeito, o conceito de robustez deve ser incorporado de forma nativa ao processo algorítmico.
 A estratégia adotada consiste em manter as funções objetivo no valor nominal de projeto, mas avaliar a viabilidade de cada solução candidata também sob a influência de um conjunto de perturbações controladas.
 
-A perturbação é aplicada exclusivamente ao diâmetro da longarina, $d$: é a única das cinco variáveis de projeto com justificativa física direta, pois a madeira roliça possui variabilidade natural de diâmetro relevante para o comportamento estrutural, ao passo que perturbar os espaçamentos ($n_{long}$, $n_{tab}$) não altera o resultado -- o valor efetivo é recalculado a partir do número inteiro de peças escolhido, não do valor perturbado -- e perturbar a seção do tabuleiro ($b_w$, $h$) introduz descontinuidades no número viável de peças, de janela mais estreita que $\pm\rho$.
-Em vez de amostrar $\xi$ aleatoriamente, a perturbação segue uma grade determinística de cinco pontos, $\Lambda = \{-1,\,-\tfrac{1}{2},\,0,\,\tfrac{1}{2},\,1\}$: essa escolha elimina o viés de semente que uma amostragem aleatória de poucos pontos introduziria, ao mesmo tempo em que os cinco níveis bastam para capturar eventuais degraus de viabilidade dentro do intervalo $[-\rho,\,\rho]$, sem depender de a resposta ser monotônica.
+A perturbação é aplicada exclusivamente ao diâmetro da longarina, $d$. Tal condição é explicada pelo fato de que a madeira roliça possui variabilidade natural de diâmetro relevante para o comportamento estrutural. Em vez de amostrar $\xi$ aleatoriamente, a perturbação segue uma grade determinística de cinco pontos, $\Lambda = \{-1,\,-\tfrac{1}{2},\,0,\,\tfrac{1}{2},\,1\}$: essa escolha elimina o viés de semente que uma amostragem aleatória de poucos pontos introduziria, ao mesmo tempo em que os cinco níveis bastam para capturar eventuais degraus de viabilidade dentro do intervalo $[-\rho,\,\rho]$, sem depender de a resposta ser monotônica.
 Para um dado indivíduo $\mathbf{x} = (d, b_w, h, n_{long}, n_{tab})$, são geradas $N_c = |\Lambda| = 5$ realizações perturbadas, denotadas por $\tilde{\mathbf{x}}^{(c)}$, conforme definido na Equação~\eqref{eq:perturbacao}.
 
  \begin{equation}\tilde{d}^{(c)} = d\left(1 + \rho\,\lambda^{(c)}\right),\qquad \lambda^{(c)} \in \Lambda,\qquad \tilde{x}_i^{(c)} = x_i \ \text{para}\ i \neq d\label{eq:perturbacao}
@@ -287,3 +286,4 @@ Posteriormente, os valores das restrições nas $N_c$ realizações perturbadas 
 
 Por meio desta formulação, uma solução só é julgada admissível se todas as suas restrições permanecerem viáveis ($g_j \leq 0$) em cada ponto da grade de perturbação do diâmetro, ou seja, no pior caso: projetos configurados muito próximos das restrições violam ao menos um dos pontos desfavoráveis da grade, o que já basta para que sejam penalizados pelo mecanismo de viabilidade do algoritmo.
 O resultado é o deslocamento natural da fronteira de Pareto rumo a zonas mais conservadoras do espaço viável de projeto.
+

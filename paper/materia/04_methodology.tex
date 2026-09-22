@@ -1,7 +1,6 @@
 \section{Metodologia}\label{sec:metodologia}
 
-Esta seção detalha a metodologia desenvolvida para a análise otimizada e o projeto paramétrico de pontes de madeira roliça.
-Para a consecução deste objetivo, construiu-se uma plataforma computacional dedicada à definição automatizada das dimensões estruturais, especificamente das longarinas e das pranchas do tabuleiro.
+Esta seção detalha a metodologia desenvolvida para a análise otimizada e o projeto paramétrico de pontes de madeira roliça. Para alcançar os objetivos, construiu-se uma plataforma computacional dedicada à definição automatizada das dimensões estruturais, especificamente das longarinas e das pranchas do tabuleiro.
 
 O ambiente computacional foi integralmente desenvolvido em linguagem \textit{Python}, adotando uma arquitetura cliente-servidor flexível, com interface web construída por meio da biblioteca \textit{Streamlit} e disponibilizada em acesso livre \parencite{ReliaBridge2026}.
 A otimização multiobjetivo baseada em metaheurísticas é conduzida por algoritmos genéticos da biblioteca \texttt{pymoo} \parencite{blank2020}, enquanto a quantificação de incertezas e a análise de sensibilidade global estocástica são processadas pela biblioteca \texttt{UQpy} \parencite{Olivier2020}.
@@ -21,7 +20,7 @@ O Algoritmo~\ref{alg:avaliarmodelo} detalha o procedimento interno dessa funçã
 \Ensure Vetor de objetivos $\mathbf{f} = (f_1, f_2)$ e vetor de restrições $\mathbf{g} = (g_1,\ldots,g_6)$
 \State Executar a rotina de acomodação geométrica: determinar $n_{long}$, $n_{tab}$ e avaliar as restrições de espaçamento $g_5$ e $g_6$
 \State Definir as ações permanentes e variáveis (trem-tipo e multidão) atuantes sobre o tabuleiro
-\State Distribuir a reação do tabuleiro sobre as longarinas \Comment{acopla o carregamento das duas peças em um único carregamento da longarina}
+\State Distribuir a reação do tabuleiro sobre as longarinas (acopla o carregamento das duas peças em um único carregamento da longarina)
 \State \textbf{Longarina:} calcular os esforços solicitantes ($M_{sd}$, $V_{sd}$) e as flechas; avaliar $g_1$ (flexão), $g_2$ (cisalhamento) e $g_3$ (flecha, com fluência)
 \State \textbf{Tabuleiro:} calcular o momento solicitante sob a roda do trem-tipo; avaliar $g_4$ (flexão)
 \State Calcular $f_1$ (volume total de madeira, Equação~\eqref{eq:f1}) e $f_2$ (utilização da flecha, Equação~\eqref{eq:f2})
@@ -37,7 +36,7 @@ Para testar a ferramenta e demonstrar a aplicação direta do algoritmo implemen
 Essa configuração é representativa de acessos rurais e vias locais, nas quais a demanda por projetos em madeira é alta.
 
 A modelagem mecânica dos elementos estruturais acompanha rigorosamente as prescrições normativas brasileiras.
-As variações de características do material e a definição das propriedades adotadas nas simulações foram estabelecidas em conformidade com a ABNT NBR 7190-3:2022.
+As variações de características do material e a definição das propriedades adotadas nas simulações foram estabelecidas em conformidade com a \textcite{NBR7190-1:2022}.
 As propriedades elásticas e as classes de resistência de base para espécies de florestas nativas (D20 a D60), derivadas de ensaios em corpos de prova isentos de defeitos, estão dispostas na Tabela~\ref{tab:classes_madeira}.
 
 Ressalta-se que, conforme o item 6.3.4 da \textcite{NBR7190-1:2022}, no dimensionamento pelas classes da Tabela 2 da norma considera-se $f_{m,d} = f_{c0,d}$, o valor de cálculo da resistência à flexão igual ao da resistência à compressão paralela às fibras.
@@ -76,7 +75,7 @@ A representação conceitual do sistema pode ser observada na Figura~\ref{fig:si
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=0.5\textwidth]{figuras/caminhao.png}
+\includegraphics[width=0.75\textwidth]{figuras/caminhao.png}
 \caption{Representação conceitual do sistema estrutural da ponte de madeira.}
 \label{fig:sistema}
 \end{figure}
@@ -91,8 +90,8 @@ A partir dos espaçamentos e da largura da pista, o número de peças de cada fa
 
 As duas funções objetivo são ambas de minimização.
 A primeira, $f_1$, é o volume total de madeira consumido pela superestrutura, conforme a Equação~\eqref{eq:f1}, em que $n_{long}$ e $n_{tab}$ são as quantidades de longarinas e de peças do tabuleiro efetivamente acomodadas, $A_{long}$ e $A_{tab}$ as respectivas áreas de seção transversal e $b_{w,\mathrm{pista}}$ a largura da pista.
-A segunda, $f_2$, é a utilização do limite de serviço de deslocamento da longarina, definida na Equação~\eqref{eq:f2} como a razão entre a flecha total, já incluída a parcela de fluência, e o deslocamento limite normativo $L/350$ (combinação quase permanente, Tabela 21 da NBR 7190-1:2022).
-Minimizar $f_2$ equivale a maximizar o desempenho em serviço, e as duas funções são antagônicas: reduzir o volume de madeira aumenta necessariamente a flecha relativa.
+A segunda, $f_2$, é a utilização do limite de serviço de deslocamento da longarina, definida na Equação~\eqref{eq:f2} como a razão entre a flecha total, já incluída a parcela de fluência, e o deslocamento limite normativo $L/350$.
+Minimizar $f_2$ equivale a maximizar o desempenho em serviço, e as duas funções são concorrentes, pois reduzir o volume de madeira aumenta necessariamente a flecha relativa.
 
 \begin{equation}
 f_1(\mathbf{x}) = V_{\mathrm{total}} = n_{long}\,A_{long}\,L + n_{tab}\,A_{tab}\,b_{w,\mathrm{pista}}
@@ -105,10 +104,11 @@ f_2(\mathbf{x}) = \frac{\delta_{\mathrm{tot}}}{L/350}
 \end{equation}
 
 As soluções geradas devem satisfazer um conjunto rígido de seis equações de restrição normalizadas $g_j \leq 0$: tensão normal de flexão da longarina ($g_1$), cisalhamento da longarina ($g_2$), deformação limitante por flecha na longarina considerando a fluência ($g_3$), tensão normal à flexão no tabuleiro sob as rodas do trem tipo ($g_4$) e limites normativos estipulados para os espaçamentos mínimo e máximo das peças da superestrutura ($g_5$ e $g_6$).
-O procedimento normativo de cálculo das grandezas empregadas em $g_1$ a $g_4$ -- propriedades geométricas, esforços solicitantes e verificações de flexão, cisalhamento e flecha da longarina, além da flexão do tabuleiro -- está detalhado na Seção~\ref{sec:projeto_ponte}.
+O procedimento normativo de cálculo das propriedades geométricas, esforços solicitantes e verificações de flexão, cisalhamento e flecha da longarina, além da flexão do tabuleiro, está detalhado na Seção~\ref{sec:projeto_ponte}.
 
 Devido à elevada variabilidade natural do diâmetro da madeira roliça, a plataforma insere a robustez avaliando $N_c$ realizações para cada indivíduo, perturbando apenas o diâmetro da longarina em uma grade determinística de desvio $\rho = 5\%$ (Seção~\ref{sec:otimizacao}).
 
 Para mensurar o impacto que a incerteza dimensional de cada uma das cinco variáveis de projeto, ao longo de todo o seu domínio de busca, causa nas seis restrições normativas listadas, o sistema integra o cálculo de índices de sensibilidade de ordem total de Sobol ($S_{T_i}$), processados por simulação de Monte Carlo por intermédio da biblioteca \texttt{UQpy} \parencite{Olivier2020}.
 Esse índice revela numericamente ao projetista qual das características geométricas da ponte requer maior controle de qualidade de corte e execução em campo para evitar a falha sistêmica do tabuleiro.
+
 
