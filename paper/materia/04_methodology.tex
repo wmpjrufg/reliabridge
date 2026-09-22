@@ -10,7 +10,7 @@ A plataforma permite uma transição fluida entre o dimensionamento paramétrico
 Após o processamento algorítmico do modelo da ponte, o usuário obtém acesso integral ao memorial de cálculo gerado pela ferramenta.
 Esse relatório detalha o desempenho da estrutura frente aos esforços solicitantes e aos deslocamentos normativos, fornecendo um relatório completo das verificações de ruína e de serviço, com a indicação exata dos critérios em que a configuração da ponte obteve êxito ou falhou.
 
-O fluxo de avaliação de cada solução candidata segue a estrutura já apresentada no Algoritmo~\ref{alg:nsga2} (Seção~\ref{sec:nsga2}): para cada indivíduo $\mathbf{x}$ gerado pelo NSGA-II, o vetor de projeto é perturbado $N_c$ vezes e submetido à função \texttt{AvaliarModelo}, cujos resultados individuais são agregados pela média para compor os valores robustos das funções objetivo e das restrições daquele indivíduo.
+O fluxo de avaliação de cada solução candidata segue a estrutura já apresentada no Algoritmo~\ref{alg:nsga2} (Seção~\ref{sec:nsga2}): para cada indivíduo $\mathbf{x}$ gerado pelo NSGA-II, o diâmetro é perturbado ao longo de uma grade de $N_c$ pontos e cada realização é submetida à função \texttt{AvaliarModelo}, cujos resultados individuais são agregados pela média para compor os valores robustos das funções objetivo e das restrições daquele indivíduo.
 O Algoritmo~\ref{alg:avaliarmodelo} detalha o procedimento interno dessa função para um único vetor de projeto, nominal ou perturbado.
 
 \begin{algorithm}[!ht]
@@ -107,8 +107,8 @@ f_2(\mathbf{x}) = \frac{\delta_{\mathrm{tot}}}{L/350}
 As soluções geradas devem satisfazer um conjunto rígido de seis equações de restrição normalizadas $g_j \leq 0$: tensão normal de flexão da longarina ($g_1$), cisalhamento da longarina ($g_2$), deformação limitante por flecha na longarina considerando a fluência ($g_3$), tensão normal à flexão no tabuleiro sob as rodas do trem tipo ($g_4$) e limites normativos estipulados para os espaçamentos mínimo e máximo das peças da superestrutura ($g_5$ e $g_6$).
 O procedimento normativo de cálculo das grandezas empregadas em $g_1$ a $g_4$ -- propriedades geométricas, esforços solicitantes e verificações de flexão, cisalhamento e flecha da longarina, além da flexão do tabuleiro -- está detalhado na Seção~\ref{sec:projeto_ponte}.
 
-Devido à elevada incerteza dos parâmetros da madeira em estado natural, a plataforma insere a robustez estocástica efetuando $N_c$ realizações para cada indivíduo avaliado, gerando perturbações estatísticas uniformes ($\rho = 5\%$) nas variáveis dimensionais (Seção~\ref{sec:otimizacao}).
+Devido à elevada variabilidade natural do diâmetro da madeira roliça, a plataforma insere a robustez avaliando $N_c$ realizações para cada indivíduo, perturbando apenas o diâmetro da longarina em uma grade determinística de desvio $\rho = 5\%$ (Seção~\ref{sec:otimizacao}).
 
-Para mensurar o impacto que essas flutuações randômicas causam nas seis restrições normativas listadas, o sistema integra o cálculo de índices de sensibilidade de ordem total de Sobol ($S_{T_i}$), processados por simulação de Monte Carlo por intermédio da biblioteca \texttt{UQpy} \parencite{Olivier2020}.
+Para mensurar o impacto que a incerteza dimensional de cada uma das cinco variáveis de projeto, ao longo de todo o seu domínio de busca, causa nas seis restrições normativas listadas, o sistema integra o cálculo de índices de sensibilidade de ordem total de Sobol ($S_{T_i}$), processados por simulação de Monte Carlo por intermédio da biblioteca \texttt{UQpy} \parencite{Olivier2020}.
 Esse índice revela numericamente ao projetista qual das características geométricas da ponte requer maior controle de qualidade de corte e execução em campo para evitar a falha sistêmica do tabuleiro.
 

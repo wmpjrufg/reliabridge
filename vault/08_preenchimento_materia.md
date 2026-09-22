@@ -1,21 +1,30 @@
 # Preenchimento do Artigo 1 (Matéria) — o que foi feito e o que falta
 
-**Data:** 2026-09-21 (reprocessado sobre as envoltórias corrigidas de momento/cortante,
-D-17, e os novos limites de busca/`N_gen`, D-19)
+**Data:** 2026-09-22 (lote inteiramente re-rodado do zero: `lote_eixos_1p5/` e
+`custo_robustez_C13/` haviam sido apagados do disco; regenerados sobre os limites de
+busca atuais — `d` 20-100 cm, `h` 5-15 cm — já vigentes em `batch_pre_sizing_casos_materia.xlsx`
+desde 2026-09-20 mas ainda não reprocessados)
 **Base de dados:** `simulacaoes_/lote_eixos_1p5/` (20 células, ρ = 5 %) e
-`simulacaoes_/custo_robustez_C13/` (C-13, ρ = 0/2,5/5/10 %)
-**Estado do PDF:** compila limpo em 62 páginas, sem *overfull* grave, sem referência
+`simulacaoes_/custo_robustez_C13/` (C-13, ρ = 0/5/10/15/20 %, grade estendida a 20 % a
+pedido do autor)
+**Estado do PDF:** compila limpo em 64 páginas, sem *overfull* grave, sem referência
 cruzada quebrada (`??`) nem figura ausente. Compilado localmente com MiKTeX + `latexmk`.
-**Seção nova:** §4.6 "Equação de pré-dimensionamento" — ver `04_decisoes.md` D-18/D-19.
 
-⚠️ **As seções abaixo, datadas de 2026-09-06/07/08, descrevem o lote ANTERIOR e estão
-parcialmente obsoletas** — mantidas por valor histórico e porque a maior parte da
+⚠️ **Mudança de achado importante em §4.3.3 (custo da robustez):** ao contrário do lote
+de 2026-09-21 (custo não mensurável), este lote mostra um custo real e monotônico —
++6,0 % em ρ=5 %, +12,8 % em ρ=10 %, +20,6 % em ρ=15 %, +26,9 % em ρ=20 % no extremo de
+menor volume da C-13. A comparação por faixas pareadas de flecha (antigo `tab:custo_robustez`)
+foi abandonada por recomendação do orientador — ruidosa demais com uma execução por
+nível — em favor de comparar só o ponto de mínimo volume de cada fronteira.
+A Eq.~`eq:perturbacao`, o Algoritmo 1 e o apêndice A também foram corrigidos para
+descrever o que o código de fato faz desde a correção de D-06: grade determinística de
+5 pontos só no diâmetro `d`, não mais `N_c=30` realizações aleatórias em todas as
+variáveis (esse texto estava desatualizado independentemente da mudança de limites).
+
+⚠️ **As seções abaixo, datadas de 2026-09-06/07/08, descrevem lotes AINDA MAIS antigos e
+estão parcialmente obsoletas** — mantidas por valor histórico e porque a maior parte da
 metodologia (convenções de leitura da planilha, o que cada arquivo do zip contém)
-continua válida. Os "achados principais" da §3 abaixo, em particular, **não conferem**
-com o lote atual: ver `CHANGELOG.md` de 2026-09-21 para os números certos. Principais
-mudanças de achado, não só de número: a flecha passa a governar uma célula (C-15) e
-quase-governa outra (C-19); nenhuma célula satura mais no piso de `d`; o custo da
-robustez, antes ~5-6%, não é mensurável neste lote.
+continua válida. Os "achados principais" da §3 abaixo **não conferem** com o lote atual.
 
 Este arquivo registra os números que entraram no `.tex`, para que o preenchimento
 restante seja feito sem ter que reabrir as planilhas.
@@ -159,7 +168,39 @@ entre re-rodar ou registrar a diferença.
 | Apêndice B | anexar memorial exportado | exportar da plataforma |
 | `title_authors.tex` | e-mails institucionais, ORCID, CEPs | os autores |
 
-### §4.3.3, custo da robustez — FECHADO em 2026-09-08
+### §4.3.3, custo da robustez — REABERTA E FECHADA em 2026-09-22
+
+Grade estendida para ρ ∈ {0 %, 5 %, 10 %, 15 %, 20 %} (passo uniforme de 5 pontos
+percentuais, subindo até 20 % a pedido do autor para efeito de teste, e sobre os limites
+de busca atuais). `gerar_casos_robustez_materia.py` e `extrair_preenchimento_materia.py`
+atualizados para os 5 níveis. Por recomendação do orientador, a tabela por faixas
+pareadas de flecha (`tab:custo_robustez` no formato antigo) foi **abandonada** — ruidosa
+demais com uma única execução por nível — e substituída por uma tabela simples
+ρ × volume mínimo × Δ%, olhando só o extremo econômico de cada fronteira.
+
+**Tempos** (sequenciais, mesma máquina, sem Sobol): 1,6 s (ρ=0%), 3,0 s (ρ=5%),
+3,0 s (ρ=10%), 3,1 s (ρ=15%), 3,0 s (ρ=20%). Muito mais rápido que o lote de 2026-09-08
+porque a grade de robustez agora tem 5 pontos fixos em vez de `N_c=30` avaliações.
+
+**Achado — custo real e monotônico, ao contrário do lote de 2026-09-21:**
+
+| ρ | 0% | 5% | 10% | 15% | 20% |
+|---|---|---|---|---|---|
+| $V_{\min}$ (m³) | 4,800 | 5,090 | 5,414 | 5,788 | 6,091 |
+| Δ | — | +6,0% | +12,8% | +20,6% | +26,9% |
+
+Taxa marginal levemente crescente (~1,2 a 1,4% de volume por ponto de ρ), sem saturação
+até 20%. Ao contrário do lote anterior (custo não mensurável), a monotonicidade estrita
+nos 5 níveis dá confiança de que o efeito é real, não ruído — mesmo com uma única
+execução por nível. Preenchidos: `tab:custo_robustez` (novo formato), a discussão de
+§4.3.3, o bloco de conclusão correspondente e o resumo.
+
+Ver também o Apêndice A: a solução ali demonstrada (4ª das 7 representativas de C-13)
+tem $g_4$ nominal idêntico, a 4 casas decimais, ao $g_{\max}$ robusto publicado —
+consistente com o achado de Sobol de que $g_4$ (flexão do tabuleiro) é a verificação
+menos sensível a `d`, a única variável perturbada pela grade de robustez.
+
+### §4.3.3, custo da robustez — fechamento anterior, 2026-09-08 (histórico, números não conferem mais)
 
 Reotimizada só a C-13, para ρ ∈ {0 %, 2,5 %, 5 %, 10 %} (D-06). Scripts:
 `gerar_casos_robustez_materia.py` monta `robustez_casos_materia.xlsx` (4 linhas, a partir do `beam_data`
