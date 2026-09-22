@@ -2669,6 +2669,7 @@ def chamando_nsga2(
                     pop_size: int = 50,
                     n_gen: int = 300,
                     n_checagens: int = 30,
+                    seed: int = 1,
                 ):
     """Função para chamar o algoritmo NSGA-II para otimização do projeto estrutural.
 
@@ -2686,6 +2687,8 @@ def chamando_nsga2(
     :param pop_size: Tamanho da população do NSGA-II
     :param n_gen: Número de gerações
     :param n_checagens: Número de checagens da avaliação robusta por indivíduo
+    :param seed: Semente do NSGA-II. Execuções independentes de uma mesma configuração
+                 exigem sementes distintas; o padrão 1 reproduz as execuções anteriores.
 
     :return: DataFrame com a fronteira eficiente. Se salvar_historico for True,
              retorna a tupla (DataFrame, objeto de resultado do pymoo).
@@ -2757,7 +2760,7 @@ def chamando_nsga2(
         problem_b,
         algorithm,
         termination,
-        seed=1,
+        seed=int(seed),
         save_history=False,
         callback=callback_historico,
         verbose=verbose,

@@ -1,0 +1,165 @@
+\section{Projeto da ponte de madeira roliça}\label{sec:bridge_design}
+
+Esta seção define o modelo estrutural sobre o qual as representações de propriedade são comparadas. O procedimento segue os critérios da \textcite{NBR7190-1:2022}, as ações da \textcite{nbr7188} e o roteiro de dimensionamento de pontes de madeira de \textcite{CALIL2006}. O modelo é comum aos dois cenários de cada comparação, de modo que qualquer diferença observada entre eles decorra das propriedades do material, e não da formulação.
+
+\subsection{Sistema estrutural e geometria}\label{sec:sistema}
+
+O sistema é uma superestrutura de vão único simplesmente apoiada, composta por pranchas retangulares de tabuleiro, de largura $b_w$ e altura $h$, apoiadas transversalmente sobre longarinas circulares de madeira roliça de diâmetro $d$, distribuídas ao longo da largura de pista $B$. O caminho das cargas vai do veículo para o tabuleiro, do tabuleiro para as longarinas e destas para os apoios. Cada longarina é tratada como viga biapoiada de vão $L$, e cada prancha como viga biapoiada vencendo o vão local entre longarinas.
+
+Peças roliças têm seção circular variável ao longo do comprimento. O item 9.7 da \textcite{NBR7190-1:2022} representa essa geometria por um diâmetro equivalente de cálculo, tomado na seção situada a $L/3$ da extremidade de menor diâmetro, conforme a Equação~\eqref{eq:deq}, com $d_1$ e $d_2$ os diâmetros das extremidades maior e menor:
+\begin{equation}
+d_{eq} = d_2 + \frac{d_1-d_2}{3}, \qquad d_{eq}\leq 1{,}5\,d_2.
+\label{eq:deq}
+\end{equation}
+O diâmetro $d$ manipulado pela otimização é esse diâmetro equivalente, e a peça é tratada como prismática de seção uniforme. O volume de uma peça prismática equivalente não é o volume comercial da tora afilada, o que deve ser observado ao converter o indicador de consumo em quantitativo de aquisição.
+
+As propriedades das seções são
+\begin{equation}
+A_\ell=\frac{\pi d^2}{4},\quad
+I_\ell=\frac{\pi d^4}{64},\quad
+W_\ell=\frac{I_\ell}{d/2},\quad
+S_\ell=\frac{d^3}{12},\qquad
+A_t=b_wh,\quad
+I_t=\frac{b_wh^3}{12},\quad
+W_t=\frac{I_t}{h/2},
+\label{eq:secoes}
+\end{equation}
+em que $S_\ell$ é o momento estático do semicírculo em relação ao diâmetro, empregado na verificação ao cisalhamento.
+
+\subsection{Acomodação geométrica e volume}\label{sec:acomodacao}
+
+As duas variáveis de espaçamento manipuladas pela otimização são contínuas, mas a disposição construtiva exige número inteiro de peças. Para um comprimento disponível $D$, largura de peça $w$ e espaçamento livre proposto $s$, a rotina examina os inteiros adjacentes a $(D+s)/(w+s)$ e recalcula o espaçamento uniforme resultante:
+\begin{equation}
+s_{corr}=\frac{D-n\,w}{n-1},\qquad n\geq2.
+\label{eq:acomodacao}
+\end{equation}
+Empregam-se $(D,w)=(B,d)$ para as longarinas e $(D,w)=(L,b_w)$ para as pranchas. Entre os inteiros admissíveis, prevalece o que mantém o espaçamento dentro dos limites construtivos e, em caso de empate, o mais próximo do valor contínuo proposto. Essa operação introduz descontinuidades no espaço de projeto e permite que o número de peças varie durante a busca, de modo que o problema não se reduz a uma otimização contínua de seções com número fixo de elementos.
+
+O volume de madeira da superestrutura é
+\begin{equation}
+V(\mathbf{x})=n_\ell A_\ell L+n_t A_t B.
+\label{eq:volume}
+\end{equation}
+O indicador cobre longarinas e pranchas. Não representa custo, carbono incorporado, perdas de corte nem o volume de ligações, encontros e fundações.
+
+\subsection{Ações}\label{sec:acoes}
+
+A carga permanente decorre do peso próprio das peças, com peso específico $\gamma=9{,}81\rho_{ap}/1000$ em kN/m\textsuperscript{3}, somada a uma carga permanente adicional $p_{gk}$ correspondente ao rodeiro. Convertida para carga linear sobre cada longarina pela largura tributária $esp_{long,corr}$,
+\begin{equation}
+g_\ell=\gamma A_\ell+\left(p_{gk}+\frac{\gamma\,n_t A_t}{L}\right)esp_{long,corr}.
+\label{eq:carga_permanente}
+\end{equation}
+
+A carga móvel é o trem-tipo TB-240 da \textcite{nbr7188}, adotado por se tratar de estrada vicinal: veículo de 240~kN, seis rodas em três eixos espaçados de $a=1{,}5$~m, com carga por roda $P=40$~kN, acompanhado de carga de multidão $q_A=4{,}0$~kN/m\textsuperscript{2} no entorno da área de ocupação. A multidão é convertida em carga linear pela mesma largura tributária, $q=q_A\,esp_{long,corr}$.
+
+Os efeitos dinâmicos entram pelo coeficiente de impacto vertical do item 5.1.3.1 da \textcite{nbr7188}, que vale $CIV=1{,}35$ para $L\leq10{,}0$~m e $CIV=1+1{,}06\left[20/(LIV+50)\right]$ para $10{,}0<L\leq200{,}0$~m. O coeficiente multiplica uma única vez os esforços de origem variável. Toda a faixa de vãos desta campanha, de 3 a 10~m, permanece no primeiro trecho, de modo que $CIV$ é constante e não introduz degrau de formulação entre os vãos comparados.
+
+\subsection{Esforços solicitantes}\label{sec:esforcos}
+
+Adotam-se pequenas deformações e comportamento elástico linear de vigas de Euler--Bernoulli, sem deformação por cisalhamento. Para a carga permanente uniforme,
+\begin{equation}
+M_{gk}=\frac{g_\ell L^2}{8},\qquad
+Q_{gk}=\frac{g_\ell L}{2},\qquad
+\delta_{gk}=\frac{5\,g_\ell L^4}{384\,E\,I_\ell}.
+\label{eq:permanentes}
+\end{equation}
+
+Para o momento e a flecha, o veículo é centralizado no vão, com a roda central no meio e as externas afastadas de $a$. Esse arranjo, contudo, só maximiza o momento enquanto as três rodas efetivamente carregam o vão: com as rodas externas a $L/2\pm a$ do apoio, elas alcançam os apoios quando $L=2a$ e, abaixo disso, passam a ter braço nulo ou saem do vão. Nos vãos curtos o máximo ocorre com apenas duas rodas sobre o vão, na posição do teorema de Barré. A envoltória adotada é, portanto, o maior valor entre os arranjos admissíveis:
+\begin{equation}
+M_{qk}=\max\left(\frac{3PL}{4}-Pa\;,\;\;\frac{P(2L-a)^2}{8L}\;,\;\;\frac{PL}{4}\right),
+\label{eq:mqkenv}
+\end{equation}
+acrescida da parcela de multidão $q\,c^2/2$, com $c=(L-4a)/2$, quando $L>6$~m e o trecho carregado existe. O primeiro termo domina para $L\geq2{,}23\,a$, isto é, $L\geq3{,}34$~m com $a=1{,}5$~m, de modo que a Equação~\eqref{eq:mqkenv} coincide com a formulação centralizada em quase toda a faixa e dela difere apenas no vão de 3~m, em que a formulação centralizada subestimaria o momento em $12{,}5\%$.
+
+A flecha devida à carga móvel usa a mesma posição centralizada, com $b=(L-2a)/2$ a distância entre o apoio e a roda externa mais próxima:
+\begin{equation}
+\delta_{qk}=\frac{P}{48\,E\,I_\ell}\left[L^3+2b\left(3L^2-4b^2\right)\right].
+\label{eq:flechaq}
+\end{equation}
+
+Para o cortante, o veículo é afastado do apoio por $2d$, conforme a permissão da \textcite{NBR7190-1:2022} de avaliar o cortante em seção afastada do apoio, com o diâmetro no lugar da altura da peça. A expressão de referência pressupõe que todo o esquema caiba no vão, isto é, $L\geq2d+3a$, condição folgada em vigas usuais mas violada justamente nos vãos curtos desta campanha, em que o diâmetro da longarina roliça não é desprezível frente ao vão. Mantendo o posicionamento de referência, a envoltória é escrita de modo a considerar explicitamente a extensão finita do vão, anulando as contribuições das rodas situadas além do apoio oposto e dos trechos inexistentes de carga distribuída:
+\begin{equation}
+\begin{split}
+Q_{qk}=\frac{P}{L}\Big[\max(L-2d,\,0)+\max(L-2d-a,\,0)&+\max(L-2d-2a,\,0)\Big]\\
+&+\frac{q}{2L}\Big[\max(L-2d-3a,\,0)\Big]^{2}.
+\end{split}
+\label{eq:qqkenv}
+\end{equation}
+Sem esse tratamento, uma roda já situada além do apoio oposto entraria na soma com braço negativo, subtraindo do cortante, e a parcela de multidão somaria carga sobre um comprimento inexistente.
+
+Os esforços de cálculo seguem a combinação da \textcite{NBR8681:2025} para vão único com o trem-tipo como única ação variável predominante,
+\begin{equation}
+M_{sd}=\gamma_g M_{gk}+\gamma_q M_{qk}^{dyn},\qquad
+Q_{sd}=\gamma_g Q_{gk}+\gamma_q Q_{qk}^{dyn},
+\label{eq:combinacao}
+\end{equation}
+em que o sobrescrito $dyn$ explicita a inclusão do impacto e evita sua dupla aplicação.
+
+\subsection{Resistências de cálculo e fluência}\label{sec:resistencias}
+
+As resistências de cálculo seguem o método dos estados limites, com minoração pelos coeficientes de modificação e de ponderação da resistência:
+\begin{equation}
+f_{m,d}=\frac{k_{mod}f_{m,k}}{\gamma_{wf}},\qquad
+f_{v0,d}=\frac{k_{mod}f_{v0,k}}{\gamma_{wc}},\qquad
+k_{mod}=k_{mod,1}k_{mod,2}.
+\label{eq:resistencias}
+\end{equation}
+O fator $k_{mod,1}$ é associado à classe de carregamento e $k_{mod,2}$ à classe de umidade, ambos pelo item 5.8.4 da \textcite{NBR7190-1:2022}. A \textcite{NBR7190-1:2022} não classifica explicitamente a ação do tráfego rodoviário quanto à duração acumulada; adota-se a classe de curta duração, seguindo o item 2.3.1.2 do \textcite{EN1995-2:2004} e o item NA.2.1 do anexo nacional britânico \textcite{BSNA-EN1995-2:2004}, que enquadram as ações de passagem de veículos e pedestres como ações de curta duração. A classe de umidade 3 corresponde a elementos expostos ao tempo mas protegidos do contato direto com a água, condição típica da tipologia estudada. Os valores adotados constam da Tabela~\ref{tab:coeficientes}.
+
+\begin{table}[!ht]
+\centering
+\caption{Coeficientes normativos adotados, comuns a todos os casos da campanha.}
+\label{tab:coeficientes}
+\footnotesize
+\begin{tabular}{llc}
+\toprule
+Coeficiente & Condição adotada & Valor \\
+\midrule
+$k_{mod,1}$ & Carregamento de curta duração & 0,90 \\
+$k_{mod,2}$ & Classe de umidade 3, madeira roliça & 0,80 \\
+$\gamma_{wf}$ & Tensões normais & 1,40 \\
+$\gamma_{wc}$ & Tensões de cisalhamento & 1,80 \\
+$\gamma_g$ & Ação permanente desfavorável & 1,30 \\
+$\gamma_q$ & Ação variável (trem-tipo e multidão) & 1,50 \\
+$\psi_2$ & Combinação quase permanente & 0,30 \\
+$\varphi$ & Fluência, classe de umidade 3 & 0,80 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+O módulo de elasticidade empregado nas flechas não é minorado pelos coeficientes de resistência. O efeito do tempo entra separadamente pelo coeficiente de fluência $\varphi$, que amplia as flechas instantâneas. A flecha final da combinação quase permanente e a flecha instantânea da combinação rara são verificadas em paralelo, contra os limites da Tabela 21 da \textcite{NBR7190-1:2022}:
+\begin{equation}
+\delta_{fin}=(1+\varphi)\left(\delta_{gk}+\psi_2\delta_{qk}\right),\qquad
+U_{fin}=\frac{\delta_{fin}}{L/350},\qquad
+U_{inst}=\frac{\delta_{gk}+\delta_{qk}}{L/500}.
+\label{eq:servico}
+\end{equation}
+As duas verificações são exigidas simultaneamente porque um projeto pode atender a uma e exceder a outra: a primeira é reduzida por $\psi_2$ mas ampliada pela fluência, e a segunda não. Por isso a reavaliação de desempenho descrita na Seção~\ref{sec:protocolo} reporta as duas.
+
+\subsection{Verificações e restrições normalizadas}\label{sec:restricoes}
+
+A prancha do tabuleiro é verificada isoladamente como viga biapoiada vencendo o vão local entre longarinas. O momento permanente segue a forma da Equação~\eqref{eq:permanentes} com $esp_{long,corr}$ no lugar de $L$, e o momento devido a uma roda isolada centrada nesse vão é
+\begin{equation}
+M_{qk,t}=\frac{P}{4}\left(esp_{long,corr}-a_r\right)CIV_t,
+\label{eq:mqktab}
+\end{equation}
+com $a_r=0{,}45$~m o comprimento efetivo de contato da roda e $CIV_t$ calculado com o vão local como referência. A expressão pressupõe vão local superior ao comprimento de contato, condição verificada em todas as soluções admissíveis pelos limites de espaçamento da Tabela~\ref{tab:intervalos}.
+
+As quatro verificações mecânicas são escritas na forma normalizada $g_j\leq0$, de modo que o valor de $g_j$ exprima diretamente a margem relativa ao limite:
+\begin{align}
+g_1&=\frac{|M_{sd,\ell}|}{W_\ell f_{m,d,\ell}}-1,&
+g_2&=\frac{4|Q_{sd,\ell}|}{3A_\ell f_{v0,d,\ell}}-1,\label{eq:g12}\\
+g_3&=\max\left(U_{fin},\,U_{inst}\right)-1,&
+g_4&=\frac{|M_{sd,t}|}{W_t f_{m,d,t}}-1.
+\label{eq:g34}
+\end{align}
+A forma de $g_2$ decorre de a tensão máxima de cisalhamento da seção circular maciça ser $\tau_{\max}=Q S_\ell/(I_\ell d)=4Q/(3A_\ell)$, obtida substituindo-se as propriedades da Equação~\eqref{eq:secoes}.
+
+Duas restrições geométricas completam o conjunto, impondo que os espaçamentos corrigidos permaneçam nos intervalos construtivos. Para cada família de peças,
+\begin{equation}
+g_{esp}=\max\left\{\frac{s_{min}-s_{corr}}{s_{min}},\;\frac{s_{corr}-s_{max}}{s_{max}}\right\}\leq0,
+\label{eq:restricao_espaco}
+\end{equation}
+com $g_5$ para as longarinas e $g_6$ para o tabuleiro. Configurações sem acomodação geométrica admissível são rejeitadas. Esses limites são parâmetros construtivos do estudo e não são apresentados como exigências normativas.
+
+As seis restrições não constituem verificação completa de uma ponte. Estabilidade lateral, compressão normal às fibras nos apoios, ligações, durabilidade e demais modos não representados devem ser avaliados separadamente em projeto executivo. O escopo aqui é a superestrutura, que é onde a representação das propriedades do material se manifesta no consumo de madeira.

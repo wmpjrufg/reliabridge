@@ -80,4 +80,28 @@ ID & Nome & $f_{c0,k}$ & Classe & $f_{m,m}^{\mathrm{exp}}$ & $f_{m,k}^{\mathrm{N
 
 \noindent\footnotesize $f_{c0,k}$: resistência característica à compressão paralela às fibras; $f_{m,m}^{\mathrm{exp}}$: resistência média experimental à flexão; $f_{m,k}^{\mathrm{NBR}}$: resistência característica à flexão, calculada por $f_{m,k}=f_{c0,k}/0{,}77$, conforme o item 4.3 da ABNT NBR 7190-3:2022; $E_{c0,m}^{\mathrm{exp}}$: módulo de elasticidade médio experimental na compressão paralela às fibras; $E_{c0,m}^{\mathrm{NBR}}$: módulo de elasticidade médio atribuído à classe pela ABNT NBR 7190-3:2022.\normalsize
 
+\subsection*{Propriedades normativas das classes de resistência}\label{ap:classes}
+
+A Tabela~\ref{tab:classes_madeira} reúne as propriedades que a ABNT NBR 7190-3:2022 atribui às classes de resistência de madeiras de folhosas de florestas nativas. São esses os valores empregados no cenário normativo dos experimentos da Seção~\ref{sec:cenarios}, em substituição às propriedades medidas de cada espécie da Tabela~\ref{tab:base_fabricio}. Todos se referem à condição padrão de umidade de 12\%.
+
+\begin{table}[!ht]
+\centering
+\caption{Propriedades das classes de resistência de folhosas de florestas nativas, conforme a ABNT NBR 7190-3:2022.}
+\label{tab:classes_madeira}
+\footnotesize
+\begin{tabular}{lccccc}
+\toprule
+Classe & $f_{c0,k}$ (MPa) & $f_{m,k}$ (MPa) & $f_{v0,k}$ (MPa) & $E_{c0,med}$ (MPa) & $\rho_{ap,med}$ (kg/m\textsuperscript{3}) \\
+\midrule
+D20 & 20 & 20 & 4 & 10\,000 & 500 \\
+D30 & 30 & 30 & 5 & 12\,000 & 625 \\
+D40 & 40 & 40 & 6 & 14\,500 & 750 \\
+D50 & 50 & 50 & 7 & 16\,500 & 850 \\
+D60 & 60 & 60 & 8 & 19\,500 & 1\,000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\footnotesize A classe de cada espécie é a maior cujo $f_{c0,k}$ tabelado não supera o $f_{c0,k}$ publicado para a espécie. A resistência característica à flexão adotada no dimensionamento é $f_{m,k}=f_{c0,k}$, conforme o item 6.3.4 da \textcite{NBR7190-1:2022}, que admite $f_{m,d}=f_{c0,d}$ quando a classe provém dessa tabela; como $k_{mod}$ e $\gamma_{wf}$ são comuns às duas verificações, a equivalência se transfere aos valores característicos. A coluna $f_{m,k}^{\mathrm{NBR}}$ da Tabela~\ref{tab:base_fabricio} reporta a relação alternativa $f_{m,k}=f_{c0,k}/0{,}77$ aplicada ao característico de cada espécie, apresentada para permitir a conferência da classificação, e não empregada no dimensionamento.\normalsize
+
 \end{appendices}

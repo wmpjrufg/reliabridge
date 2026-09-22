@@ -1,0 +1,24 @@
+\section{Considerações finais}\label{sec:conclusoes}
+
+Este trabalho apresentou uma abordagem de projeto inteligente para pontes de madeira roliça de estradas vicinais, implementada em uma plataforma computacional de acesso livre na qual a modelagem paramétrica dos elementos estruturais é integralmente acoplada a uma rotina de otimização robusta multiobjetivo em conformidade com a \textcite{NBR7190-1:2022}.
+O dimensionamento passa a ser obtido sem arbitramento inicial de seções: o projetista fornece vão, largura de pista, trem tipo e propriedades do material, e recebe o conjunto completo de soluções de compromisso, em vez de verificar uma seção previamente escolhida por experiência ou analogia.
+A plataforma percorreu as vinte células da matriz sem intervenção manual e sem ajuste individual de parâmetros do algoritmo, com fronteiras convergidas e uniformemente distribuídas em todas elas, a um custo computacional de cerca de 2~min para a matriz completa em um computador pessoal.
+
+A incorporação da robustez tem custo real, mas modesto.
+Na célula de referência, a solução de menor volume da fronteira encareceu 6{,}0\% em $\rho = 5\%$ em relação ao caso determinístico, e esse acréscimo cresceu de forma monotônica até 26{,}9\% em $\rho = 20\%$, em troca de proteção contra a violação de estados limites sob o desvio dimensional natural da madeira roliça.
+
+O consumo de madeira cresce com o vão segundo uma lei de potência de expoente entre 1{,}64 e 1{,}73, pouco dependente da classe, e o primeiro degrau de classe é o mais rentável: a passagem de D20 para D30 reduz o consumo em 17 a 21\%, contra 4 a 12\% de cada degrau seguinte, pois o acréscimo de densidade das classes superiores consome parte do ganho de resistência.
+Esses resultados foram condensados em ábacos de anteprojeto e em uma equação de pré-dimensionamento $V(L, f_{c0,k}) = a\,L^{b}\,f_{c0,k}^{c}$, ajustada com $R^2 = 0{,}999$ e erro relativo médio de 1{,}3\%, que permitem estimar o volume de madeira e o diâmetro das longarinas sem executar uma otimização completa.
+
+Na faixa de 3 a 6~m sob o TB-240, a flexão governa integralmente a matriz, quinze células pelo tabuleiro e cinco pela longarina, e o cisalhamento permanece longe do limite, com utilização máxima de 60{,}2\%.
+O tabuleiro, portanto, não é um elemento secundário do dimensionamento e merece a mesma atenção de projeto dedicada às longarinas.
+A flecha da longarina, contudo, já se aproxima do limite nas células de vão e classe mais severos, sinal de que a migração de resistência para rigidez começa a se anunciar dentro da própria faixa estudada.
+
+A análise de sensibilidade global mostrou que o diâmetro das peças roliças e o espaçamento entre longarinas concentram praticamente toda a variabilidade das funções limite, o primeiro nas verificações da longarina e o segundo na flexão do tabuleiro.
+Em obra vicinal, na qual o controle de qualidade é necessariamente limitado, isso direciona o controle rigoroso à seleção das toras e ao posicionamento das longarinas, ao passo que as dimensões das pranchas do tabuleiro admitem tolerâncias de execução mais folgadas.
+
+\subsection*{Limitações e trabalhos futuros}
+
+O escopo restringe-se à superestrutura de pontes de vão único simplesmente apoiadas, sob o trem tipo TB-240 e as classes normativas de resistência, sem o dimensionamento das ligações, dos encontros e das fundações.
+A robustez tratada é de natureza geométrica, restrita ao diâmetro da longarina, e o custo da robustez baseou-se em uma única execução do NSGA-II por nível de $\rho$.
+Como trabalhos futuros, destacam-se a repetição dessas execuções com múltiplas sementes, a incorporação da variabilidade das propriedades mecânicas e das ações por meio de análises de confiabilidade (FORM ou simulação de Monte Carlo), o emprego de propriedades experimentais de espécies nativas específicas e a validação contra o projeto de uma ponte vicinal efetivamente executada.

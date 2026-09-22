@@ -159,6 +159,34 @@
       \verb 10.1109/ACCESS.2020.2990567
       \endverb
     \endentry
+    \entry{BSNA-EN1995-2:2004}{manual}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=44ea1b356dcd7bfe0ece54601fb6bcec}{%
+           family={{BSI}},
+           familyi={B\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {London}%
+      }
+      \list{organization}{1}{%
+        {British Standards Institution}%
+      }
+      \strng{namehash}{44ea1b356dcd7bfe0ece54601fb6bcec}
+      \strng{fullhash}{44ea1b356dcd7bfe0ece54601fb6bcec}
+      \strng{bibnamehash}{44ea1b356dcd7bfe0ece54601fb6bcec}
+      \strng{authorbibnamehash}{44ea1b356dcd7bfe0ece54601fb6bcec}
+      \strng{authornamehash}{44ea1b356dcd7bfe0ece54601fb6bcec}
+      \strng{authorfullhash}{44ea1b356dcd7bfe0ece54601fb6bcec}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{UK National Annex to Eurocode 5: Design of timber structures -- Part 2: Bridges (NA to BS EN 1995-2:2004)}
+      \field{year}{2004}
+    \endentry
     \entry{CALIL2006}{book}{}
       \name{author}{10}{}{%
         {{un=0,uniquepart=base,hash=285d9262175043b772c976a38b2a8ff0}{%
@@ -244,6 +272,34 @@
       \field{note}{ISBN 85-98156-19-1}
       \field{title}{Manual de projeto e construção de pontes de madeira}
       \field{year}{2006}
+    \endentry
+    \entry{EN1995-2:2004}{manual}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=d9434c3c9d9a321ea4e6f00e5f358a31}{%
+           family={{CEN}},
+           familyi={C\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Brussels}%
+      }
+      \list{organization}{1}{%
+        {European Committee for Standardization}%
+      }
+      \strng{namehash}{d9434c3c9d9a321ea4e6f00e5f358a31}
+      \strng{fullhash}{d9434c3c9d9a321ea4e6f00e5f358a31}
+      \strng{bibnamehash}{d9434c3c9d9a321ea4e6f00e5f358a31}
+      \strng{authorbibnamehash}{d9434c3c9d9a321ea4e6f00e5f358a31}
+      \strng{authornamehash}{d9434c3c9d9a321ea4e6f00e5f358a31}
+      \strng{authorfullhash}{d9434c3c9d9a321ea4e6f00e5f358a31}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{EN 1995-2: Eurocode 5 -- Design of timber structures -- Part 2: Bridges}
+      \field{year}{2004}
     \endentry
     \entry{Criado2024}{article}{}
       \name{author}{3}{}{%
@@ -624,63 +680,6 @@
       \range{pages}{6}
       \verb{doi}
       \verb 10.1061/(ASCE)1084-0702(2005)10:1(39)
-      \endverb
-    \endentry
-    \entry{Wolenski2020}{article}{}
-      \name{author}{5}{}{%
-        {{un=0,uniquepart=base,hash=7d70efbd50f53b8446c8102d51a3d418}{%
-           family={Wolenski},
-           familyi={W\bibinitperiod},
-           given={Anderson\bibnamedelimb Renato\bibnamedelima Vobornik},
-           giveni={A\bibinitperiod\bibinitdelim R\bibinitperiod\bibinitdelim V\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=ce927ba44632e205ff194886d5e26f65}{%
-           family={Dias},
-           familyi={D\bibinitperiod},
-           given={Fabrício\bibnamedelima Moura},
-           giveni={F\bibinitperiod\bibinitdelim M\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=78aa455d505b4210e88b05819735cff4}{%
-           family={Peixoto},
-           familyi={P\bibinitperiod},
-           given={Rodrigo\bibnamedelima Guerra},
-           giveni={R\bibinitperiod\bibinitdelim G\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=11df167126ba4a8f70541ac79c4e20df}{%
-           family={Christoforo},
-           familyi={C\bibinitperiod},
-           given={André\bibnamedelima Luís},
-           giveni={A\bibinitperiod\bibinitdelim L\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=4285be3a113acf56893e6c9a9156334c}{%
-           family={Lahr},
-           familyi={L\bibinitperiod},
-           given={Francisco\bibnamedelimb Antonio\bibnamedelima Rocco},
-           giveni={F\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim R\bibinitperiod},
-           givenun=0}}%
-      }
-      \strng{namehash}{f0311afc5e91414588cf8112b890febb}
-      \strng{fullhash}{46fc1a4b94531c552f9c8d38734912c2}
-      \strng{bibnamehash}{46fc1a4b94531c552f9c8d38734912c2}
-      \strng{authorbibnamehash}{46fc1a4b94531c552f9c8d38734912c2}
-      \strng{authornamehash}{f0311afc5e91414588cf8112b890febb}
-      \strng{authorfullhash}{46fc1a4b94531c552f9c8d38734912c2}
-      \field{sortinit}{W}
-      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{}
-      \true{uniqueprimaryauthor}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{journaltitle}{Ambiente Construído}
-      \field{number}{1}
-      \field{title}{Models for estimation of mechanical properties of compressive and tensile strength in the parallel direction to the grains}
-      \field{volume}{20}
-      \field{year}{2020}
-      \field{pages}{263\bibrangedash 276}
-      \range{pages}{14}
-      \verb{doi}
-      \verb 10.1590/s1678-86212020000100373
       \endverb
     \endentry
   \enddatalist
@@ -825,6 +824,34 @@
       \verb 10.1109/ACCESS.2020.2990567
       \endverb
     \endentry
+    \entry{BSNA-EN1995-2:2004}{manual}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=44ea1b356dcd7bfe0ece54601fb6bcec}{%
+           family={{BSI}},
+           familyi={B\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {London}%
+      }
+      \list{organization}{1}{%
+        {British Standards Institution}%
+      }
+      \strng{namehash}{44ea1b356dcd7bfe0ece54601fb6bcec}
+      \strng{fullhash}{44ea1b356dcd7bfe0ece54601fb6bcec}
+      \strng{bibnamehash}{44ea1b356dcd7bfe0ece54601fb6bcec}
+      \strng{authorbibnamehash}{44ea1b356dcd7bfe0ece54601fb6bcec}
+      \strng{authornamehash}{44ea1b356dcd7bfe0ece54601fb6bcec}
+      \strng{authorfullhash}{44ea1b356dcd7bfe0ece54601fb6bcec}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{UK National Annex to Eurocode 5: Design of timber structures -- Part 2: Bridges (NA to BS EN 1995-2:2004)}
+      \field{year}{2004}
+    \endentry
     \entry{CALIL2006}{book}{}
       \name{author}{10}{}{%
         {{un=0,uniquepart=base,hash=285d9262175043b772c976a38b2a8ff0}{%
@@ -910,6 +937,34 @@
       \field{note}{ISBN 85-98156-19-1}
       \field{title}{Manual de projeto e construção de pontes de madeira}
       \field{year}{2006}
+    \endentry
+    \entry{EN1995-2:2004}{manual}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=d9434c3c9d9a321ea4e6f00e5f358a31}{%
+           family={{CEN}},
+           familyi={C\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Brussels}%
+      }
+      \list{organization}{1}{%
+        {European Committee for Standardization}%
+      }
+      \strng{namehash}{d9434c3c9d9a321ea4e6f00e5f358a31}
+      \strng{fullhash}{d9434c3c9d9a321ea4e6f00e5f358a31}
+      \strng{bibnamehash}{d9434c3c9d9a321ea4e6f00e5f358a31}
+      \strng{authorbibnamehash}{d9434c3c9d9a321ea4e6f00e5f358a31}
+      \strng{authornamehash}{d9434c3c9d9a321ea4e6f00e5f358a31}
+      \strng{authorfullhash}{d9434c3c9d9a321ea4e6f00e5f358a31}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{EN 1995-2: Eurocode 5 -- Design of timber structures -- Part 2: Bridges}
+      \field{year}{2004}
     \endentry
     \entry{Criado2024}{article}{}
       \name{author}{3}{}{%
@@ -1290,63 +1345,6 @@
       \range{pages}{6}
       \verb{doi}
       \verb 10.1061/(ASCE)1084-0702(2005)10:1(39)
-      \endverb
-    \endentry
-    \entry{Wolenski2020}{article}{}
-      \name{author}{5}{}{%
-        {{un=0,uniquepart=base,hash=7d70efbd50f53b8446c8102d51a3d418}{%
-           family={Wolenski},
-           familyi={W\bibinitperiod},
-           given={Anderson\bibnamedelimb Renato\bibnamedelima Vobornik},
-           giveni={A\bibinitperiod\bibinitdelim R\bibinitperiod\bibinitdelim V\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=ce927ba44632e205ff194886d5e26f65}{%
-           family={Dias},
-           familyi={D\bibinitperiod},
-           given={Fabrício\bibnamedelima Moura},
-           giveni={F\bibinitperiod\bibinitdelim M\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=78aa455d505b4210e88b05819735cff4}{%
-           family={Peixoto},
-           familyi={P\bibinitperiod},
-           given={Rodrigo\bibnamedelima Guerra},
-           giveni={R\bibinitperiod\bibinitdelim G\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=11df167126ba4a8f70541ac79c4e20df}{%
-           family={Christoforo},
-           familyi={C\bibinitperiod},
-           given={André\bibnamedelima Luís},
-           giveni={A\bibinitperiod\bibinitdelim L\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=4285be3a113acf56893e6c9a9156334c}{%
-           family={Lahr},
-           familyi={L\bibinitperiod},
-           given={Francisco\bibnamedelimb Antonio\bibnamedelima Rocco},
-           giveni={F\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim R\bibinitperiod},
-           givenun=0}}%
-      }
-      \strng{namehash}{f0311afc5e91414588cf8112b890febb}
-      \strng{fullhash}{46fc1a4b94531c552f9c8d38734912c2}
-      \strng{bibnamehash}{46fc1a4b94531c552f9c8d38734912c2}
-      \strng{authorbibnamehash}{46fc1a4b94531c552f9c8d38734912c2}
-      \strng{authornamehash}{f0311afc5e91414588cf8112b890febb}
-      \strng{authorfullhash}{46fc1a4b94531c552f9c8d38734912c2}
-      \field{sortinit}{W}
-      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{}
-      \true{uniqueprimaryauthor}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{journaltitle}{Ambiente Construído}
-      \field{number}{1}
-      \field{title}{Models for estimation of mechanical properties of compressive and tensile strength in the parallel direction to the grains}
-      \field{volume}{20}
-      \field{year}{2020}
-      \field{pages}{263\bibrangedash 276}
-      \range{pages}{14}
-      \verb{doi}
-      \verb 10.1590/s1678-86212020000100373
       \endverb
     \endentry
   \enddatalist

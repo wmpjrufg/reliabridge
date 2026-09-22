@@ -1,0 +1,19 @@
+coluna,origem,natureza,descricao
+id,Tabela 1,medida,numero da especie na fonte
+nome,Tabela 1,medida,nome vulgar
+nome_cientifico,Tabela 1,medida,nome cientifico
+rho_ap_kgm3,Tabela 4,medida,densidade aparente a 12% de umidade
+f_c0_m_MPa,Tabela 4,medida,"compressao paralela, valor medio"
+f_c0_k_MPa,Tabela 3,medida,"compressao paralela, caracteristico publicado"
+f_M_m_MPa,Tabela 5,medida,"flexao, valor medio"
+f_v0_m_MPa,Tabela 4,medida,"cisalhamento, valor medio"
+E_c0_m_MPa,Tabela 5,medida,"modulo na compressao paralela, medio"
+E_M0_m_MPa,Tabela 5,medida,"modulo na flexao estatica, medio"
+classe_D,derivada,calculada,"maior classe D com f_c0,k <= caracteristico"
+classe_historica_C,Tabela 3,medida,classe C da NBR 7190:1997 publicada
+E_c0_classe_MPa,NBR 7190-3:2022,normativa,"E_c0,med da classe"
+rho_classe_kgm3,NBR 7190-3:2022,normativa,densidade da classe
+f_mk_classe_MPa,NBR 7190-1:2022,normativa,"f_m,k = f_c0,k, item 6.3.4"
+f_v0k_classe_MPa,NBR 7190-3:2022,normativa,"f_v0,k da classe"
+razao_E_M0_E_c0,derivada,calculada,razao entre os dois modulos medidos
+desvio_E_vs_classe_pct,derivada,calculada,E_c0 medido contra E_c0 da classe

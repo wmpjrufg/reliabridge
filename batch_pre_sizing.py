@@ -165,6 +165,7 @@ class ParametrosAlgoritmo:
     pop_size: int = 50
     n_gen: int = 300
     n_checagens: int = 30
+    seed: int = 1
     verbose: bool = False
 
 
@@ -329,6 +330,7 @@ def rodar_caso(
                 pop_size=caso.algoritmo.pop_size,
                 n_gen=caso.algoritmo.n_gen,
                 n_checagens=caso.algoritmo.n_checagens,
+                seed=caso.algoritmo.seed,
             )
         except ValueError as exc:
             art.status = "erro_nsga"
@@ -668,6 +670,7 @@ def ler_planilha_casos(caminho, *, idioma: str = "pt", aba: str = "Casos") -> li
                     pop_size=int(_cfg(linha, "pop_size", 50)),
                     n_gen=int(_cfg(linha, "n_gen", 300)),
                     n_checagens=int(_cfg(linha, "n_checagens", 30)),
+                    seed=int(_cfg(linha, "seed", 1)),
                 ),
                 sobol=ConfigSobol(
                     ativo=_para_bool(linha.get(PREFIXO_CONFIG + "sobol"), True),
@@ -702,6 +705,7 @@ def montar_planilha_casos(casos: list[CasoBatch]) -> pd.DataFrame:
                 f"{PREFIXO_CONFIG}pop_size": c.algoritmo.pop_size,
                 f"{PREFIXO_CONFIG}n_gen": c.algoritmo.n_gen,
                 f"{PREFIXO_CONFIG}n_checagens": c.algoritmo.n_checagens,
+                f"{PREFIXO_CONFIG}seed": c.algoritmo.seed,
                 f"{PREFIXO_CONFIG}sobol": c.sobol.ativo,
                 f"{PREFIXO_CONFIG}sobol_n_samples": c.sobol.n_samples,
                 f"{PREFIXO_CONFIG}ativo": c.ativo,

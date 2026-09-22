@@ -1,0 +1,123 @@
+% Esquema vetorial original; proporções didáticas, sem escala.
+% Seção do tronco com setor removido e detalhe celular de uma conífera.
+\begin{tikzpicture}[
+  x=1cm,y=1cm,
+  every node/.style={font=\footnotesize},
+  chamada/.style={thin,draw=black!75},
+  contorno/.style={draw=black!80,line width=0.55pt}
+]
+\def\topo{2.6}
+\def\altura{3.3}
+\def\achatamento{0.43}
+
+% Casca: superfícies externas visíveis do tronco.
+\foreach \inicio/\fim in {180/290,345/360} {
+  \path[contorno,fill=black!32]
+    ({2.8*cos(\inicio)},{\topo+2.8*\achatamento*sin(\inicio)})
+    arc[start angle=\inicio,end angle=\fim,x radius=2.8,y radius=1.204]
+    -- ({2.8*cos(\fim)},{\topo-\altura+2.8*\achatamento*sin(\fim)})
+    arc[start angle=\fim,end angle=\inicio,x radius=2.8,y radius=1.204]
+    -- cycle;
+}
+% Fissuras estilizadas da casca; sem reproduzir uma espécie particular.
+\foreach \ang in {184,193,...,283} {
+  \foreach \z in {0.15,1.05,1.95} {
+    \draw[black!55,line width=0.35pt]
+      ({2.8*cos(\ang)},{\topo-\z+1.204*sin(\ang)})
+      -- ++(-0.035,-0.22) -- ++(0.055,-0.19) -- ++(-0.02,-0.22);
+  }
+}
+
+% Faces radiais expostas pelo corte: da medula à casca.
+\foreach \ang in {-70,-15} {
+  \foreach \ra/\rb/\tom in {0/0.13/55,0.13/1.60/18,1.60/2.42/4,2.42/2.48/65,2.48/2.62/20,2.62/2.80/40} {
+    \path[draw=black!55,line width=0.3pt,fill=black!\tom]
+      ({\ra*cos(\ang)},{\topo+\ra*\achatamento*sin(\ang)})
+      -- ({\rb*cos(\ang)},{\topo+\rb*\achatamento*sin(\ang)})
+      -- ({\rb*cos(\ang)},{\topo-\altura+\rb*\achatamento*sin(\ang)})
+      -- ({\ra*cos(\ang)},{\topo-\altura+\ra*\achatamento*sin(\ang)})
+      -- cycle;
+  }
+  \foreach \r in {0.40,0.66,0.92,1.18,1.44,1.70,1.96,2.22} {
+    \draw[black!40,line width=0.4pt]
+      ({\r*cos(\ang)},{\topo+\r*\achatamento*sin(\ang)})
+      -- ({\r*cos(\ang)},{\topo-\altura+\r*\achatamento*sin(\ang)});
+  }
+}
+
+% Seção transversal: setor frontal direito removido (290 a 345 graus).
+\foreach \r/\tom in {2.80/40,2.62/20,2.48/65,2.42/4,1.60/18,0.13/55} {
+  \path[contorno,fill=black!\tom]
+    (0,\topo) -- ({\r*cos(-15)},{\topo+\r*\achatamento*sin(-15)})
+    arc[start angle=-15,end angle=290,x radius=\r,y radius={\r*\achatamento}]
+    -- cycle;
+}
+% Anéis de crescimento: faixa estreita escura representa o lenho tardio.
+\foreach \r in {0.40,0.66,0.92,1.18,1.44,1.70,1.96,2.22} {
+  \draw[black!55,line width=1.05pt]
+    ({\r*cos(-15)},{\topo+\r*\achatamento*sin(-15)})
+    arc[start angle=-15,end angle=290,x radius=\r,y radius={\r*\achatamento}];
+}
+% Raios em posições selecionadas para legibilidade.
+\foreach \ang in {32,70,112,152,190,228,265} {
+  \draw[white,line width=1.8pt]
+    ({0.16*cos(\ang)},{\topo+0.16*\achatamento*sin(\ang)})
+    -- ({2.40*cos(\ang)},{\topo+2.40*\achatamento*sin(\ang)});
+  \draw[black!55,line width=0.35pt]
+    ({0.16*cos(\ang)},{\topo+0.16*\achatamento*sin(\ang)})
+    -- ({2.40*cos(\ang)},{\topo+2.40*\achatamento*sin(\ang)});
+}
+
+% Identificação das regiões; linhas terminam no tecido correspondente.
+\node[anchor=east,align=right] at (-3.25,3.9) {Anéis de\\crescimento};
+\draw[chamada] (-3.15,3.9) -- (-2.55,3.9) -- (-1.2,3.40);
+\fill (-1.2,3.40) circle (1.15pt);
+\node[anchor=east] at (-3.25,2.6) {Raios};
+\draw[chamada] (-3.15,2.6) -- (-2.85,2.6) -- (-1.59,2.96);
+\fill (-1.59,2.96) circle (1.15pt);
+\node[anchor=south] at (0,4.25) {Medula};
+\draw[chamada] (0,4.2) -- (0,2.6);
+\fill (0,2.6) circle (1.15pt);
+\node[anchor=east,align=right] at (-3.25,-0.15) {Casca externa\\(ritidoma)};
+\draw[chamada] (-3.15,-0.15) -- (-2.75,-0.15) -- (-2.35,0.3);
+\fill (-2.35,0.3) circle (1.15pt);
+
+\node[anchor=west,align=left] at (3.30,1.30) {Casca interna\\(floema)};
+\draw[chamada] (3.20,1.30) -- (2.85,1.30) -- (2.46,0.85);
+\fill (2.46,0.85) circle (1.15pt);
+\node[anchor=west] at (3.30,0.25) {Região cambial};
+\draw[chamada] (3.20,0.25) -- (2.75,0.25) -- (2.366,0.0);
+\fill (2.366,0.0) circle (1.15pt);
+\node[anchor=west] at (3.30,-0.65) {Alburno};
+\draw[chamada] (3.20,-0.65) -- (2.65,-0.65) -- (1.93,-0.30);
+\fill (1.93,-0.30) circle (1.15pt);
+\node[anchor=west] at (3.30,-1.55) {Cerne};
+\draw[chamada] (3.20,-1.55) -- (2.0,-1.55) -- (1.0,-0.50);
+\fill (1.0,-0.50) circle (1.15pt);
+
+% Detalhe celular: exemplo de conífera com transição nítida.
+\draw[chamada,dashed] (1.95,2.97) -- (3.50,3.50);
+\draw[contorno] (1.82,2.94) ellipse (0.23 and 0.15);
+\begin{scope}[shift={(3.50,3.45)}]
+  \node[anchor=south,font=\footnotesize\bfseries] at (1.40,1.70) {Detalhe de um anel};
+  \node[anchor=south,font=\scriptsize] at (1.40,1.38) {Exemplo em conífera};
+  \fill[black!8] (0,0) rectangle (1.72,1.15);
+  \fill[black!55] (1.72,0) rectangle (2.80,1.15);
+  \foreach \x in {0.05,0.61,1.17} {
+    \foreach \y in {0.06,0.60} {
+      \draw[fill=white,draw=black!65,line width=0.35pt]
+        (\x,\y) rectangle ++(0.49,0.47);
+    }
+  }
+  \foreach \x in {1.79,2.05,2.31,2.57} {
+    \foreach \y in {0.09,0.63} {
+      \path[fill=white] (\x,\y) rectangle ++(0.15,0.39);
+    }
+  }
+  \draw[contorno] (0,0) rectangle (2.80,1.15);
+  \node[anchor=north,font=\scriptsize,align=center] at (0.85,-0.06) {Lenho\\inicial};
+  \node[anchor=north,font=\scriptsize,align=center] at (2.26,-0.06) {Lenho\\tardio};
+  \draw[-{Latex[length=1.5mm]},thin] (0,-0.90) -- (2.80,-0.90);
+  \node[anchor=north,font=\scriptsize] at (1.40,-0.96) {Crescimento radial};
+\end{scope}
+\end{tikzpicture}
