@@ -2325,13 +2325,30 @@ class ProjetoOtimo(ElementwiseProblem):
                         )
 
     def _criar_multiplicadores_robustez(self) -> np.ndarray:
+        """Grade determinística de tolerância, aplicada só ao diâmetro da longarina (d).
+
+        Só `d` é perturbado: é a única variável com justificativa física direta
+        (variabilidade natural do diâmetro da madeira roliça) e a única sem o
+        efeito de quantização de `restringir_espaco`. Perturbar esp_long/esp_tab
+        não muda nada (o espaçamento corrigido é recalculado só a partir do
+        número inteiro de peças escolhido, não do valor perturbado que entrou);
+        perturbar bw explode g6 porque bw é o `largura_peca` do arranjo do
+        tabuleiro e sua janela de contagem viável é mais estreita que ±5%. Ver
+        vault/historico/experimentos/E2_quais_variaveis_perturbar.md.
+
+        A grade fixa (em vez de sorteio aleatório) evita o viés de semente que
+        antes deslocava sistematicamente a média para baixo de 1,0, e os cinco
+        pontos {-ρ, -ρ/2, 0, +ρ/2, +ρ} bastam para pegar eventuais degraus de
+        `restringir_espaco` dentro do intervalo sem depender de monotonicidade.
+        """
         rho = self.perc_robustez / 100.0
         if rho <= 0.0 or self.n_checagens <= 1:
             return np.ones((1, 5), dtype=float)
 
-        rng = np.random.default_rng(1)
-        xi = rng.uniform(-1.0, 1.0, size=(self.n_checagens, 5))
-        return 1.0 + rho * xi
+        niveis = np.linspace(-1.0, 1.0, 5)
+        multiplicadores = np.ones((niveis.size, 5), dtype=float)
+        multiplicadores[:, 0] = 1.0 + rho * niveis
+        return multiplicadores
 
     def calcular_objetivos_restricoes_otimizacao(
         self,
@@ -2508,20 +2525,24 @@ class ProjetoOtimo(ElementwiseProblem):
         esp_long = float(x[3])
         esp_tab  = float(x[4])
 
-        # Cálculo dos objetivos e restrições para avaliação robusta (média de várias checagens para cada indivíduo)
-        dados = []
+        # Objetivos no ponto nominal: o volume e a utilização da flecha são os do
+        # projeto tal como especificado, não uma média sobre cenários hipotéticos.
+        f_nominal, _, *_ = self.calcular_objetivos_restricoes_otimizacao(d, bw, h, esp_long, esp_tab)
+
+        # Restrições no pior caso entre as checagens de robustez (grade de
+        # tolerância no diâmetro, ver `_criar_multiplicadores_robustez`): a
+        # solução só é viável se sobreviver a todos os desvios de ±ρ, não em
+        # média sobre eles.
         x_nominal = np.array([d, bw, h, esp_long, esp_tab], dtype=float)
+        restricoes = []
         for multiplicador in self.multiplicadores_robustez:
             x_perturbado = x_nominal * multiplicador
-            f, g, *_ = self.calcular_objetivos_restricoes_otimizacao(*x_perturbado)
-            resultado = {'f1': f[0], 'f2': f[1], 'g1': g[0], 'g2': g[1], 'g3': g[2], 'g4': g[3], 'g5': g[4], 'g6': g[5]}
-            dados.append(resultado)
-        df = pd.DataFrame(dados)
-        f = df[['f1', 'f2']].mean().tolist()
-        g = df[['g1', 'g2', 'g3', 'g4', 'g5', 'g6']].mean().tolist()
+            _, g, *_ = self.calcular_objetivos_restricoes_otimizacao(*x_perturbado)
+            restricoes.append(g)
+        g_pior_caso = np.max(np.array(restricoes, dtype=float), axis=0).tolist()
 
-        out["F"] = np.array(f, dtype=float)
-        out["G"] = np.array(g, dtype=float)
+        out["F"] = np.array(f_nominal, dtype=float)
+        out["G"] = np.array(g_pior_caso, dtype=float)
 
 
 def _normalizar_chave_excel(chave: str) -> str:
