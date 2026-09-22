@@ -1,11 +1,14 @@
 """Monta a planilha de casos do custo da robustez (Artigo 1, §4.3.3).
 
-Conforme D-06: só a célula de referência C-13 é reotimizada, para quatro níveis de
-desvio, ρ ∈ {0 %, 2,5 %, 5 %, 10 %}, mantendo todos os demais parâmetros do algoritmo
-(configuração atual: pop 50, 300 gerações, N_c = 30). Os limites de busca são os
-padrões atuais de `batch_pre_sizing.LimitesBusca`. O caso ρ = 0 % é o determinístico:
-`_criar_multiplicadores_robustez` (madeiras.py) já colapsa para uma única avaliação
-quando `rho <= 0`, então basta zerar o percentual — nenhum outro parâmetro muda.
+Conforme D-06: só a célula de referência C-13 é reotimizada, para cinco níveis de
+desvio, ρ ∈ {0 %, 5 %, 10 %, 15 %, 20 %} (grade em passo uniforme de 5 pontos
+percentuais, estendida até 20 % para efeito de teste), mantendo todos os demais
+parâmetros do algoritmo (configuração atual: pop 50, 300 gerações). Os limites de
+busca são os padrões atuais de `batch_pre_sizing.LimitesBusca`. O caso ρ = 0 % é o
+determinístico: `_criar_multiplicadores_robustez` (madeiras.py) já colapsa para uma
+única avaliação quando `rho <= 0`, então basta zerar o percentual — nenhum outro
+parâmetro muda. Para ρ > 0, a perturbação é uma grade determinística de 5 pontos
+aplicada só ao diâmetro `d` (ver docstring de `_criar_multiplicadores_robustez`).
 
 Uso:
     .venv\\Scripts\\python.exe gerar_casos_robustez_materia.py
@@ -26,7 +29,7 @@ import batch_pre_sizing as bps  # noqa: E402
 # A C-13 da entrada principal permite gerar o estudo antes de executar o NSGA-II.
 REFERENCIA = RAIZ / "batch_pre_sizing_casos_materia.xlsx"
 
-NIVEIS_RHO = [0.0, 2.5, 5.0, 10.0]
+NIVEIS_RHO = [0.0, 5.0, 10.0, 15.0, 20.0]
 
 
 def main() -> int:

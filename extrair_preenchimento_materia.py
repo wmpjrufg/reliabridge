@@ -28,7 +28,7 @@ ROBUSTEZ = RAIZ / "simulacaoes_" / "custo_robustez_C13"
 CLASSES = ["D20", "D30", "D40", "D50", "D60"]
 VAOS = [3.0, 4.0, 5.0, 6.0]
 FC0K = {"D20": 20.0, "D30": 30.0, "D40": 40.0, "D50": 50.0, "D60": 60.0}
-NIVEIS_RHO = [("rho000", 0.0), ("rho025", 2.5), ("rho050", 5.0), ("rho100", 10.0)]
+NIVEIS_RHO = [("rho000", 0.0), ("rho050", 5.0), ("rho100", 10.0), ("rho150", 15.0), ("rho200", 20.0)]
 
 GCOLS = ["longarina_g_m", "longarina_g_v", "longarina_g_f", "tabuleiro_g_m"]
 GLABEL = {
@@ -85,14 +85,54 @@ def secao_matriz() -> pd.DataFrame:
         gmax_nome = max(gvals, key=gvals.get)
         L = VAOS[(i - 1) // 5]
         classe = CLASSES[(i - 1) % 5]
-        linhas.append({
+        linha = {
             "cel": f"C-{i:02d}", "L": L, "classe": classe,
             "d": b.d_cm, "bw": b.bw_cm, "h": b.h_cm, "esp_long": b.esp_cm, "esp_tab": b.esp_tab_cm,
             "V": b.of_volume_m3, "delta_ratio": b.of_fator_flecha,
             "g_max": gvals[gmax_nome], "verificacao": GLABEL[gmax_nome],
             "Vm2": b.of_volume_m3 / (L * 4.5),
-        })
+        }
+        linha.update(gvals)
+        linhas.append(linha)
     return pd.DataFrame(linhas)
+
+
+def secao_verificacao_governante(M: pd.DataFrame) -> None:
+    print("\n=== Verificacao governante: contagem e quase-empates ===")
+    print(M["verificacao"].value_counts().to_string())
+    ordenado = M[GCOLS].apply(lambda row: row.sort_values(ascending=False).to_numpy(), axis=1, result_type="expand")
+    margem = ordenado[0] - ordenado[1]
+    M2 = M.assign(margem_1o_2o=margem).sort_values("margem_1o_2o")
+    print("  cinco menores margens entre 1a e 2a verificacao mais proxima do limite:")
+    print(M2[["cel", "L", "classe", "verificacao", "margem_1o_2o"] + GCOLS].head(5).round(5).to_string(index=False))
+    for c in GCOLS:
+        util = (1 + M[c]) * 100
+        piores = M.loc[util.nlargest(3).index]
+        print(f"  maior utilizacao em {GLABEL[c]}: "
+              f"{', '.join(f'{r.cel}={100*(1+r[c]):.2f}%' for _, r in piores.iterrows())}")
+
+
+def secao_equacao(M: pd.DataFrame) -> None:
+    print("\n=== Equacao de pre-dimensionamento V = a * L^b * fc0k^c ===")
+    fc0k = M["classe"].map(FC0K)
+    X = np.column_stack([np.ones(len(M)), np.log(M.L.to_numpy(float)), np.log(fc0k.to_numpy(float))])
+    y = np.log(M.V.to_numpy(float))
+    coef, *_ = np.linalg.lstsq(X, y, rcond=None)
+    ln_a, b, c = coef
+    a = np.exp(ln_a)
+    pred_ln = X @ coef
+    ss_res = np.sum((y - pred_ln) ** 2)
+    ss_tot = np.sum((y - y.mean()) ** 2)
+    r2 = 1 - ss_res / ss_tot
+    print(f"  a={a:.4f}  b={b:.4f}  c={c:.4f}  R2(log)={r2:.4f}")
+    Vhat = a * M.L.to_numpy(float) ** b * fc0k.to_numpy(float) ** c
+    erro_pct = pd.Series((Vhat - M.V.to_numpy(float)) / M.V.to_numpy(float) * 100, index=M.index)
+    Merr = M.assign(Vhat=Vhat, erro_pct=erro_pct)
+    print(f"  V observado: min={M.V.min():.2f}  max={M.V.max():.2f}")
+    print(f"  erro relativo medio |erro| = {erro_pct.abs().mean():.2f}%  "
+          f"max |erro| = {erro_pct.abs().max():.2f}% na celula "
+          f"{Merr.loc[erro_pct.abs().idxmax(), 'cel']}")
+    print(Merr[["cel", "L", "classe", "V", "Vhat", "erro_pct"]].round(3).to_string(index=False))
 
 
 def secao_efeito_vao_classe(M: pd.DataFrame) -> None:
@@ -190,40 +230,26 @@ def secao_utilizacao(df_c13: pd.DataFrame) -> None:
 
 
 def secao_robustez() -> pd.DataFrame:
+    """Custo da robustez (§4.3.3): só o extremo de menor volume da fronteira.
+
+    Por recomendação do orientador, a comparação por faixas pareadas de flecha foi
+    abandonada (ruidosa, um único ponto por faixa por execução) em favor de olhar
+    apenas para a solução de menor `of_volume_m3` de cada fronteira -- o ponto que a
+    Tabela `tab:resultados_matriz` já usa como representante de cada célula.
+    """
     fronts = {}
     for nome, rho in NIVEIS_RHO:
         fronts[rho] = ler_front(ROBUSTEZ / f"simulacao_{nome}")
 
-    print("\n=== Robustez: extremo economico por rho ===")
-    vmins = {}
+    print("\n=== Robustez: extremo economico por rho (tab:custo_robustez) ===")
+    linhas = []
+    base = fronts[0.0].of_volume_m3.min()
     for rho, df in fronts.items():
         vmin = df.of_volume_m3.min()
-        vmins[rho] = vmin
-        print(f"  rho={rho}%: Vmin={vmin:.3f} m3")
-    base = vmins[0.0]
-    for rho in (2.5, 5.0, 10.0):
-        print(f"    delta vs rho=0: {(vmins[rho]-base)/base*100:+.1f}%")
-
-    print("\n=== Robustez: niveis pareados de flecha ===")
-    faixa_min = max(df.of_fator_flecha.min() for df in fronts.values())
-    faixa_max = min(df.of_fator_flecha.max() for df in fronts.values())
-    alvos = np.linspace(faixa_min, faixa_max, 5)[1:4]
-    print(f"  faixa comum de delta_ratio: [{faixa_min:.4f}, {faixa_max:.4f}]; alvos: {alvos.round(4)}")
-    tabela = []
-    for alvo in alvos:
-        linha = {"delta_ratio_alvo": alvo}
-        for rho, df in fronts.items():
-            idx = (df.of_fator_flecha - alvo).abs().idxmin()
-            linha[f"V(rho={rho})"] = df.loc[idx, "of_volume_m3"]
-            linha[f"delta_real(rho={rho})"] = df.loc[idx, "of_fator_flecha"]
-        tabela.append(linha)
-    tab = pd.DataFrame(tabela)
-    for rho in (2.5, 5.0, 10.0):
-        tab[f"delta%(rho={rho})"] = (tab[f"V(rho={rho})"] - tab["V(rho=0.0)"]) / tab["V(rho=0.0)"] * 100
-    print(tab.round(4).to_string(index=False))
-    print("  media dos 3 niveis:")
-    for rho in (2.5, 5.0, 10.0):
-        print(f"    rho={rho}%: delta medio = {tab[f'delta%(rho={rho})'].mean():+.1f}%")
+        delta = (vmin - base) / base * 100
+        linhas.append({"rho_pct": rho, "V_min_m3": vmin, "delta_pct": delta})
+        print(f"  rho={rho:>4}%: Vmin={vmin:.4f} m3  delta vs rho=0: {delta:+.2f}%")
+    tab = pd.DataFrame(linhas)
 
     print("\n=== Robustez: tempos de execucao ===")
     resumo_path = ROBUSTEZ / "_lote_resumo.xlsx"
@@ -301,6 +327,8 @@ def main() -> int:
     print(M.round(4).to_string(index=False))
 
     secao_efeito_vao_classe(M)
+    secao_verificacao_governante(M)
+    secao_equacao(M)
     df_c13 = secao_c13_fronteira()
     secao_utilizacao(df_c13)
 

@@ -37,7 +37,7 @@ ROBUSTEZ = RAIZ / "simulacaoes_" / "custo_robustez_C13"
 FIG_PT = RAIZ / "paper" / "materia" / "figuras"
 FIG_EN = FIG_PT / "en"
 
-NIVEIS_RHO = [("rho000", 0.0), ("rho025", 2.5), ("rho050", 5.0), ("rho100", 10.0)]
+NIVEIS_RHO = [("rho000", 0.0), ("rho050", 5.0), ("rho100", 10.0), ("rho150", 15.0), ("rho200", 20.0)]
 
 CLASSES = ["D20", "D30", "D40", "D50", "D60"]
 VAOS = [3.0, 4.0, 5.0, 6.0]
@@ -190,14 +190,15 @@ def _fmt_rho(rho: float, idioma: str) -> str:
 
 
 def figura_custo_robustez(idioma: str) -> None:
-    """Sobrepõe as quatro fronteiras da célula C-13 (ρ = 0/2,5/5/10 %), §4.3.3."""
+    """Sobrepõe as cinco fronteiras da célula C-13 (ρ = 0/5/10/15/20 %), §4.3.3."""
     t = bps.textos(idioma)
     fig, ax = plt.subplots(figsize=(13 * CM, 10 * CM))
+    n = len(NIVEIS_RHO) - 1
     for k, (nome, rho) in enumerate(NIVEIS_RHO):
         z = zipfile.ZipFile(ROBUSTEZ / f"simulacao_{nome}" / "pre_sizing_package.zip")
         df = pd.read_excel(io.BytesIO(z.read("pre_sizing_results_optimized.xlsx")))
         ax.plot(df["of_volume_m3"], df["of_fator_flecha"], MARCADORES[k], markersize=4,
-                color=COR, alpha=0.35 + 0.65 * k / 3, label=_fmt_rho(rho, idioma))
+                color=COR, alpha=0.35 + 0.65 * k / n, label=_fmt_rho(rho, idioma))
     estilo(ax, t["tag_x_fig"], t["tag_y_fig"])
     ax.legend(fontsize=9, frameon=False)
     fig.tight_layout()
