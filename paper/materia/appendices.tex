@@ -208,4 +208,49 @@ A razão é a própria Seção~\ref{sec:sobol}: como a grade de robustez perturb
 Isso não generaliza para toda a fronteira: a Seção~\ref{sec:custo_robustez} mostra que o volume da solução de menor volume, também governada pela flexão do tabuleiro, ainda assim cresce de forma mensurável e monotônica com $\rho$, porque é a viabilidade das demais verificações sob a grade de perturbação, em especial $g_1$ (flexão da longarina, a mais sensível a $d$), que efetivamente desloca o diâmetro ótimo, e por consequência o volume, mesmo quando $g_4$ permanece a verificação nominalmente mais próxima do limite.
 As duas leituras, nominal e robusta, seguem complementares, e não intercambiáveis, na leitura de uma solução da fronteira.
 
+\section{Hipervolume e convergência da matriz completa}\label{ap:hv}
+
+Este apêndice reúne o hipervolume final ($HV$), o \textit{spacing} da fronteira e a geração de estabilização das vinte células da matriz, complementando a leitura agregada da Seção~\ref{sec:hipervolume}.
+
+\begin{table}[!ht]
+\caption{Hipervolume final, \textit{spacing} e geração de estabilização das vinte células da matriz.\label{tab:hv}}
+\begin{threeparttable}
+\begin{tabular*}{\columnwidth}{@{\extracolsep\fill}llccc@{\extracolsep\fill}}
+\toprule
+Célula & $L$ (m) / Classe & $HV$ & \textit{Spacing} & Geração de estabilização \\
+\midrule
+C-01 & 3{,}0 / D20 & 1{,}018 & 0{,}0150 & 124 \\
+C-02 & 3{,}0 / D30 & 1{,}041 & 0{,}0160 & 68 \\
+C-03 & 3{,}0 / D40 & 1{,}070 & 0{,}0169 & 69 \\
+C-04 & 3{,}0 / D50 & 1{,}096 & 0{,}0171 & 50 \\
+C-05 & 3{,}0 / D60 & 1{,}105 & 0{,}0158 & 97 \\
+\midrule
+C-06 & 4{,}0 / D20 & 0{,}972 & 0{,}0181 & 95 \\
+C-07 & 4{,}0 / D30 & 1{,}023 & 0{,}0165 & 73 \\
+C-08 & 4{,}0 / D40 & 1{,}045 & 0{,}0158 & 110 \\
+C-09 & 4{,}0 / D50 & 1{,}040 & 0{,}0184 & 153 \\
+C-10 & 4{,}0 / D60 & 1{,}082 & 0{,}0146 & 47 \\
+\midrule
+C-11 & 5{,}0 / D20 & 0{,}907 & 0{,}0136 & 113 \\
+C-12 & 5{,}0 / D30 & 0{,}991 & 0{,}0203 & 98 \\
+\textbf{C-13} & 5{,}0 / D40 & 1{,}017 & 0{,}0173 & 40 \\
+C-14 & 5{,}0 / D50 & 1{,}042 & 0{,}0195 & 21 \\
+C-15 & 5{,}0 / D60 & 1{,}036 & 0{,}0166 & 41 \\
+\midrule
+C-16 & 6{,}0 / D20 & 0{,}890 & 0{,}0173 & 119 \\
+C-17 & 6{,}0 / D30 & 0{,}964 & 0{,}0156 & 53 \\
+C-18 & 6{,}0 / D40 & 1{,}024 & 0{,}0182 & 101 \\
+C-19 & 6{,}0 / D50 & 1{,}020 & 0{,}0174 & 90 \\
+C-20 & 6{,}0 / D60 & 1{,}024 & 0{,}0148 & 42 \\
+\bottomrule
+\end{tabular*}
+\begin{tablenotes}
+\footnotesize
+\item Ponto de referência $r_1 = r_2 = 1{,}1$ no espaço objetivo normalizado pelos pontos ideal e nadir de cada execução, o que fixa em 1{,}21 o valor máximo teórico do indicador.
+O \textit{spacing} é o desvio padrão das distâncias entre soluções consecutivas da fronteira final, no mesmo espaço normalizado. Valores menores indicam distribuição mais uniforme.
+A geração de estabilização é a primeira a partir da qual o hipervolume permanece dentro de 1\% do valor final.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
 \end{appendices}
