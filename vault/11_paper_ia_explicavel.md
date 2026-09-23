@@ -1,28 +1,48 @@
-# Artigo 3 — IA explicável para capacidade de carga
+# Artigo 3 — pré-dimensionamento explícito
 
-**Atualização de recorte em 21/09/2026:** após discutir capacidade de carga, o usuário solicitou o boneco do artigo. Roteiro atual em [`05_boneco_capacidade_carga.md`](../paper/ia_explicavel/05_boneco_capacidade_carga.md): geometria fixa, limites de serviço/resistência e identificação do governante; pré-dimensionamento como aplicação secundária. O dataset e o piloto descritos abaixo são da etapa anterior de otimização, não rótulos de capacidade.
+**Pasta e estado canônico:** [paper/ia_explicavel/README.md](../paper/ia_explicavel/README.md). Desenho científico em [`01_proposta.md`](../paper/ia_explicavel/01_proposta.md).
 
-Criado por solicitação do usuário em 21/09/2026, a partir da sugestão do professor de ampliar vãos, cargas permanentes e trens-tipo.
+Criado em 21/09/2026 a partir da sugestão do professor de ampliar vãos, cargas permanentes e trens-tipo.
 
-**Pasta e estado canônico:** [paper/ia_explicavel/README.md](../paper/ia_explicavel/README.md).
+## Refinamento de 22/09/2026 — o achado que reorganizou o artigo
 
-Proposta independente dos dois manuscritos existentes: equações explícitas multidimensionais para pontes roliças de 3 a 10 m, com avaliação fora do treinamento e reanálise das geometrias previstas. Prioridade editorial sugerida: Structures; decisão de submissão ainda não tomada.
+A leitura do núcleo estabeleceu que o modelo estrutural é inteiramente algébrico e monótono nas variáveis de projeto. Duas consequências, ambas decisivas.
+
+**A capacidade de carga não sustenta um artigo de IA.** Para geometria fixa, os esforços são lineares no multiplicador do carregamento móvel e as resistências não dependem dele. O multiplicador limite de cada verificação sai por inversão exata. Ajustar regressão simbólica a esse rótulo aprende uma função já conhecida em forma fechada, e um revisor de revista de estruturas aponta isso. O boneco de capacidade foi marcado como superado, com registro do que dele vira seção.
+
+**O dimensionamento admite solução direta.** A única descontinuidade é a contagem inteira de peças em `restringir_espaco`. Fixadas `n_long` e `n_tab`, os espaçamentos corrigidos ficam determinados e as verificações viram um sistema monótono de três incógnitas. As contagens admissíveis são poucas, então a enumeração exaustiva resolve o problema. O marco zero do artigo é implementar isso e medir contra o NSGA-II.
+
+O piloto já indica que o alvo atual não está convergido, com 15,2 % de folga de volume entre cenários. Treinar sobre ele ajustaria ruído do otimizador.
+
+## Desfechos possíveis e alvo editorial
+
+| Desfecho | Artigo | Revista |
+|---|---|---|
+| A — solução direta exata e rápida | Método direto, metaheurística desnecessária nesta classe de problema | Engineering Structures ou Advances in Engineering Software |
+| B — exata, mas ramificada demais para comunicar | Mapa de regimes e equações compactas verificadas | Structures |
+| C — a solução direta não fecha | Metamodelo explícito da otimização | Structures, ou EAAI |
+
+Alvo padrão enquanto o marco zero não roda, **Structures**. O artigo 2 já vai para Engineering Structures, e dois manuscritos próximos da mesma equipe na mesma revista em sequência curta enfraquecem os dois.
+
+## Mudança de material
+
+A campanha passa a usar as propriedades medidas das 40 espécies de `paper/engstruct/dados/base_especies.csv`, com partição por espécie, no lugar das cinco classes colineares. As classes ficam como linha de comparação com o artigo 2.
+
+## Bloqueadores
+
+- **B-01** · `esp_long_corr`, espaçamento livre, é usado como largura tributária da longarina e como vão do tabuleiro. O valor entre eixos seria `esp_long_corr + d`. No artigo 2 o desvio se cancela na comparação pareada; no artigo 3 as dimensões absolutas vão publicadas como regra de projeto e ele não se cancela. É o bloqueador mais sério.
+- **B-02** · Em `scripts/dataset.py`, `volume_robust_mean_m3` é idêntico a `volume_nominal_m3`, porque o núcleo avalia os objetivos no ponto nominal, e `g_robust_mean` é o pior caso sobre a grade de diâmetro. `02_dataset.md` descreve trinta perturbações aleatórias com média, o que o código não faz.
+- **B-03** · Transições de envoltória em `L ≈ 3,34 m` e `L = 6 m` são trocas de expressão do modelo.
+- **B-04** · Domínio das cargas em vão longo ainda em auditoria.
 
 ## Estado atual
 
-- Estrutura da pesquisa, aplicação em anteprojeto, revistas e referências iniciais documentadas.
-- Matriz de 2.700 entradas JSONL gerada, com configuração reproduzível e separação por vão.
-- Gerador/executor acrescentado somente na nova pasta, usando o núcleo existente. Piloto exploratório concluído: oito execuções com solução viável na média robusta e nominalmente; reavaliação e reconstrução de volumes conferidas. Resumo em `paper/ia_explicavel/results/PILOTO.md`.
-- Nenhuma equação de IA treinada ou conclusão de desempenho alegada.
-- A conferência cruzada encontrou uma geometria viável com volume médio 15,2% menor que a referência de um piloto. Investigar convergência/seleção do alvo antes de treinar; o relatório preserva os valores originais.
-- A tabela antiga das 40 espécies, desativada em 20/09, não foi usada.
-
-## Decisões de planejamento, ainda propostas
-
-Interpretar “tb4540” como TB-450; incluir p_gk = 0,1/0,5/1/2/3/5 kPa e larguras 3,5/4,0/4,5 m. Manter os limites da D-19 e robustez 5%. Preservar perfis vinculados às cinco classes; efeitos independentes das propriedades só poderão ser investigados numa base apropriada.
-
-A solicitação atual autoriza iniciar a estrutura do artigo 3; substitui, para esta etapa de planejamento e piloto, a sugestão antiga de aguardar o fechamento do artigo 2 em `07_linha_ciencia_de_dados.md`. Não pressupõe o resultado de nenhum dos outros artigos.
+- Proposta, aplicação, estratégia editorial e bloqueadores documentados.
+- Matriz de 2.700 entradas JSONL por classe gerada, agora histórica.
+- Piloto exploratório concluído, 8 de 8 execuções com solução viável, volumes reconstruídos. Resumo em `paper/ia_explicavel/results/PILOTO.md`.
+- Nenhuma equação treinada, nenhuma alegação de desempenho.
+- Solucionador direto ainda não implementado.
 
 ## Próximo marco
 
-Fechar a convenção do multiplicador de carga, auditar o modelo e implementar a determinação de capacidade de geometrias fixas. Redesenhar a amostragem e as partições antes da nova campanha. O boneco está pronto, mas o executor e o dataset de capacidade ainda não foram produzidos. Os resultados do piloto anterior não são resultados do novo recorte.
+Implementar o solucionador direto e compará-lo ao NSGA-II nos oito casos do piloto, em volume, tempo e reprodutibilidade. Só depois redesenhar amostragem, partições e campanha.

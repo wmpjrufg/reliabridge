@@ -1,86 +1,98 @@
-# Campanha de semente única — Artigo 2 (Engineering Structures)
+# Campanha do Artigo 2 (Engineering Structures): espécie x classe
 
-Mesma receita da Revista Matéria: uma execução do NSGA-II por caso, semente 1, população 50,
-300 gerações, robustez de 5% no diâmetro (grade de 5 pontos, pior caso) e os mesmos limites de
-busca (d 20–100, b_w 20–50, h 5–15, esp_long 30–200, esp_tab 2–5 cm). Muda só a faixa de vãos,
-de 3 a 10 m em passo de 1 m, e entra o bloco de espécies de Dias e Lahr (2004).
+Receita da Revista Matéria (NSGA-II com população 50, 300 gerações, robustez de 5% no
+diâmetro com grade de 5 pontos no pior caso), com quatro mudanças:
 
-## O que tem na pasta
+- vãos de 3 a 10 m em passo de 1 m;
+- bloco de espécies de Dias e Lahr (2004);
+- teto de esp_long ampliado de 200 para 250 cm (na primeira rodada, 5 soluções de espécie
+  encostaram no teto em 6 e 8 m);
+- 5 sementes por caso, ficando com o menor volume entre elas.
+
+Os demais limites de busca são os da Matéria: d 20–100, b_w 20–50, h 5–15, esp_tab 2–5 cm.
+
+## Por que 5 sementes
+
+Com o teto de 250 cm, a execução única de CLS_D40_L05 parou 2,2% acima do volume já
+conhecido. Num teste com 8 sementes em 4 casos, a distância do menor volume de k sementes
+até o melhor das 8 foi:
+
+| Sementes | Média | Pior caso |
+|---|---|---|
+| 1 | 0,2% a 1,9% | até 7,2% |
+| 3 | 0,02% a 0,30% | até 1,8% |
+| 5 | 0,01% a 0,10% | até 0,9% |
+
+Com 5 sementes o erro de otimização fica abaixo de 1% no pior caso, bem abaixo dos ΔV que
+o artigo compara.
+
+## Arquivos
 
 | Arquivo | Para quê |
 |---|---|
-| `casos_engstruct_semente1.xlsx` | Planilha de casos (360), pronta para rodar. Abas extras: `Matriz_vao_classe` e `Especies` |
-| `gerar_casos.py` | Regera a planilha (só se mudar vão ou base) |
+| `gerar_casos.py` | Gera `casos_engstruct.xlsx` (360 casos × 5 sementes = 1800 execuções) |
 | `rodar_paralelo.py` | Roda em paralelo, um caso por núcleo. **Use este na máquina potente** |
 | `rodar.py` | Mesma coisa em série, pelo `rodar_lote.py` de sempre |
-| `consolidar.py` | Junta tudo em `consolidado.xlsx` (volumes, governante, pares espécie × classe) |
+| `consolidar.py` | Junta tudo em `consolidado.xlsx`, com a melhor semente de cada caso e a dispersão |
+| `diagnosticar_limites.py` | Detalha as execuções com variável no limite do intervalo (`limites_diagnostico.xlsx`) |
+| `casos_engstruct_semente1_OBSOLETA.xlsx` | Planilha antiga (semente única, teto de 200 cm). Não usar |
 
 ## Casos
 
-- **Base de classes (`CLS_Dxx_Lyy`), 40 casos:** 5 classes × 8 vãos. É a matriz vão × classe,
-  igual à da Matéria. Ela serve também de cenário "cls" de todas as espécies, porque as
-  propriedades da classe não dependem da espécie.
-- **Espécies (`Enn_Lyy_esp`), 320 casos:** 40 espécies × 8 vãos, com todas as propriedades
-  medidas da espécie.
+- **Base de classes (`CLS_Dxx_Lyy_sN`):** 5 classes × 8 vãos. É a matriz vão × classe e
+  serve de cenário "classe" de todas as espécies. Sobol só na semente 1.
+- **Espécies (`Enn_Lyy_esp_sN`):** 40 espécies × 8 vãos, com as propriedades medidas.
 
-Só entram cenários que existem como decisão de projeto: projetar pela espécie ou pela classe.
+## Sequência na máquina potente
 
-## Passo a passo na máquina potente
-
-Na raiz do repositório, com o `.venv` do projeto (pymoo 0.6.1.6, UQpy 4.2.1):
+Na raiz do repositório, com o `.venv` do projeto:
 
 ```bat
-REM 1) base de classes (~40 casos, poucos minutos)
-.venv\Scripts\python.exe simulacao_engstructures\rodar_paralelo.py --filtro CLS_
+REM 0) guardar a rodada anterior (senão o rodar_paralelo pula tudo)
+ren simulacao_engstructures\resultados resultados_esp200_semente1
 
-REM 2) conferir: os casos de 3 a 6 m têm de bater com a Matéria
-.venv\Scripts\python.exe simulacao_engstructures\consolidar.py
+REM 1) gerar a planilha nova (1800 execuções)
+.venv\Scripts\python.exe simulacao_engstructures\gerar_casos.py --forcar
 
-REM 3) espécies
+REM 2) rodar tudo em paralelo
 .venv\Scripts\python.exe simulacao_engstructures\rodar_paralelo.py
 
-REM 4) consolidar de novo
+REM 3) consolidar e diagnosticar
 .venv\Scripts\python.exe simulacao_engstructures\consolidar.py
+.venv\Scripts\python.exe simulacao_engstructures\diagnosticar_limites.py
 ```
 
-O padrão é usar (núcleos − 1) processos; para mudar, use `--processos 12`. O script pula
-o que já tem pacote gravado, então pode interromper e relançar à vontade.
+Se a execução for interrompida, rode o passo 2 de novo: ele pula o que já tem pacote
+gravado. Para rodar só uma parte, use `--filtro` (por exemplo `--filtro CLS_` ou
+`--filtro _s1`). Para usar menos núcleos, use `--processos 12`.
 
 ## Tempo
 
-No teste em uma máquina de 2 núcleos, 8 casos (de 3 a 10 m) rodaram em 48 s: de 12 a 26 s
-por caso com 4 processos disputando 2 núcleos. Com um núcleo por processo, conte algo entre
-6 e 12 s por caso. As 360 rodadas ficam em torno de 1 h em série e em cerca de 5 min
-com 16 processos.
+Entre 6 e 12 s por execução e por núcleo. As 1800 execuções levam de 3 a 6 h em série, ou
+de 12 a 25 min com 16 processos.
 
-## Conferências feitas antes de entregar
+## Saída do consolidar.py (`consolidado.xlsx`)
 
-- A planilha é lida e validada por `batch_pre_sizing.ler_planilha_casos` sem erro (360 casos).
-- As entradas de `CLS_D40_L05` são idênticas às da C-13 da Matéria.
-- Rodei `CLS_D20_L03`, `CLS_D40_L05` e `CLS_D60_L06` e comparei com a Matéria: 2,987 contra
-  2,988 m³, 5,090 contra 5,090 m³ e 5,637 contra 5,632 m³. A diferença máxima é de 0,09%.
-- Rodei também `CLS_D20_L10`, `CLS_D60_L10`, `E40_L05_esp` e `E40_L10_esp` (umirana, E 38%
-  abaixo da classe), todos com status ok.
+- `Casos`: uma linha por caso, com a melhor semente: dimensões, V, utilizações (U = 1 + g),
+  verificação governante, `no_limite`, `semente_melhor`, `V_min/max/media_sementes`,
+  `dispersao_pct` = V_max/V_min − 1 e `governante_igual_nas_sementes`.
+- `Execucoes`: uma linha por execução (caso × semente).
+- `Matriz_volume`, `Matriz_governante` e `Matriz_dispersao`: base de classes, vão × classe.
+- `Conferencia_Materia`: CLS de 3 a 6 m contra a Matéria. Como a Matéria usou teto de 200 cm
+  e uma semente, diferenças de 1 a 2% são esperadas, e o volume novo tende a ser menor.
+- `Pares`: por espécie e vão, V_esp, V_cls, ΔV = V_cls/V_esp − 1, as dispersões dos dois lados,
+  `dV_acima_ruido` (|ΔV| maior que a soma das dispersões), governantes e
+  `U_flecha_CtoR_est`, a utilização de flecha do projeto da classe com o E da espécie
+  (U_cls × E_cls/E_esp). Essa estimativa ignora a troca de densidade.
+
+No terminal, o consolidar mostra a mediana, o p90 e o máximo da dispersão entre sementes e
+quantos pares têm ΔV acima do ruído.
 
 ## Pontos de atenção
 
 1. **Flecha variável sem multidão.** `flecha_max_carga_variavel` só soma as rodas. Para
-   L > 6 m, a multidão entra no momento, mas não na flecha. Pela minha conta, isso subestima
-   a flecha em cerca de 4% a 6% em 10 m. A comparação é pareada no mesmo vão, então o ΔV
-   quase não muda, mas o vão em que a flecha passa a governar fica um pouco adiado.
-   Esse item já constava das pendências do PREENCHIMENTO.md.
-2. **Limites de busca.** Em 10 m, algumas soluções chegam perto do teto (E40_L10_esp com
-   esp_long = 197,9 cm, para um teto de 200 cm). O `consolidar.py` marca na coluna
-   `no_limite` os casos com variável encostada no limite. Se aparecerem muitos, vale
-   ampliar o intervalo antes da rodada com sementes.
-
-## Saída do consolidar.py (`consolidado.xlsx`)
-
-- `Casos`: solução de menor volume de cada caso, com dimensões, V, utilizações (U = 1 + g),
-  verificação governante e `no_limite`.
-- `Matriz_volume` e `Matriz_governante`: base de classes, vão × classe.
-- `Conferencia_Materia`: CLS de 3 a 6 m contra os volumes publicados na Matéria.
-- `Pares`: por espécie e vão, V_esp, V_cls, ΔV_cls = V_cls/V_esp − 1 (a decisão entre
-  espécie e classe), governantes, e `U_flecha_CtoR_est`, que é a utilização de
-  flecha do projeto da classe com o E da espécie (U_cls × E_cls/E_esp). Essa estimativa
-  ignora a troca de densidade.
+   L > 6 m, a multidão entra no momento, mas não na flecha, o que subestima a flecha em
+   cerca de 4% a 6% em 10 m. Já consta das pendências do PREENCHIMENTO.md.
+2. **Limites construtivos.** Na primeira rodada, h no mínimo (3 e 4 m) e esp_tab nos limites
+   apareceram em 23 casos. São limites construtivos, esperados. O `diagnosticar_limites.py`
+   separa esses dos limites de domínio.

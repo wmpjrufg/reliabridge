@@ -61,11 +61,13 @@ Variável & Mínimo (cm) & Máximo (cm) \\
 Diâmetro da longarina, $d$ & 20 & 100 \\
 Largura da prancha do tabuleiro, $b_w$ & 20 & 50 \\
 Altura da prancha do tabuleiro, $h$ & 5 & 15 \\
-Espaçamento entre longarinas, $esp_{long}$ & 30 & 200 \\
+Espaçamento entre longarinas, $esp_{long}$ & 30 & 250 \\
 Espaçamento entre peças do tabuleiro, $esp_{tab}$ & 2 & 5 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+Os intervalos coincidem com os adotados no estudo anterior da plataforma, exceto o teto do espaçamento entre longarinas, ampliado de 200 para 250~cm. Com o teto original, algumas soluções de menor volume em vãos de 6 e 8~m encostavam no limite, o que tornaria o volume condicionado pelo intervalo de busca e não pela mecânica. O mesmo valor limita o espaçamento corrigido da restrição geométrica, de modo que a ampliação vale também para a disposição construída.
 
 O problema é biobjetivo, minimizando o volume de madeira da Equação~\eqref{eq:volume} e a utilização do limite de serviço, sujeito às seis restrições da Seção~\ref{sec:restricoes}:
 \begin{equation}
@@ -104,18 +106,16 @@ Mutação polinomial & $\eta_m=20$ \\
 Eliminação de duplicatas & Sim \\
 Níveis da grade de robustez, $N_c$ & 5 \\
 Amplitude relativa, $\rho$ & 5\% \\
-Semente (execução única por caso) & 1 \\
+Sementes por caso & 5 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Repetição e separação entre efeito e ruído}\label{sec:sementes}
 
-\begin{fillblock}
-\noindent\textbf{[FASE ATUAL]} Nesta versão, a campanha usa uma execução por caso, com semente 1, como na campanha da Revista Matéria. A repetição com sementes pareadas descrita a seguir fica para a etapa seguinte, depois da análise da campanha de semente única.
-\end{fillblock}
+Cada caso é executado com cinco sementes, e adota-se a solução de menor volume entre elas. Como todas as sementes buscam no mesmo domínio, esse menor volume está sempre mais próximo do ótimo do que qualquer execução isolada. A escolha do número de sementes decorreu de um teste com oito sementes em quatro casos representativos: a execução única chegou a ficar 7,2\% acima do melhor volume das oito, ao passo que o menor volume de cinco sementes ficou, no pior caso, 0,9\% acima dele e, em média, 0,1\%.
 
-Cada cenário é executado com sementes pareadas: os dois cenários de um mesmo par espécie--vão compartilham a semente, e o conjunto é repetido para sementes distintas. Essa repetição é necessária porque uma execução única por condição não distingue um efeito de material da dispersão do próprio otimizador entre execuções. A diferença de volume é calculada par a par, dentro de cada semente, e só então agregada entre sementes, o que preserva o pareamento e permite reportar a dispersão da diferença junto com o seu valor central. Uma diferença cuja magnitude seja da ordem da dispersão entre sementes não será interpretada como efeito de material.
+A dispersão entre sementes, $100\,(V_{\max}/V_{\min}-1)$, é reportada para cada caso. Uma diferença de volume entre os projetos pela espécie e pela classe cuja magnitude não supere a soma das dispersões dos dois lados do par não será interpretada como efeito de material.
 
 \subsection{Diferença de volume e reavaliação do projeto}\label{sec:protocolo}
 
@@ -139,7 +139,7 @@ As duas utilizações são reportadas, pois um projeto pode atender a uma combin
 
 A campanha cobre oito vãos, de $L=3$ a 10~m em passo de 1~m, com largura de pista $B=4{,}5$~m, seção transversal usual de ponte vicinal de pista simples. Cada caso corresponde a uma execução do NSGA-II com a configuração da Tabela~\ref{tab:otimizacao}. Toda a faixa permanece no primeiro trecho do coeficiente de impacto ($L\leq10$~m). A parcela de multidão do momento passa a atuar para $L>6$~m, mas, como cada comparação é feita entre cenários de mesmo vão, essa mudança não se confunde com efeito de material.
 
-A campanha é organizada em dois blocos. O primeiro é a base de classes, formada pelas cinco classes de resistência e pelos oito vãos, conforme a Tabela~\ref{tab:matriz_classes}. Como as propriedades de classe não dependem da espécie, cada célula dessa matriz constitui o cenário \emph{cls} de todas as espécies enquadradas na classe correspondente e não precisa ser repetida por espécie. O segundo bloco reúne as 40 espécies no cenário \emph{esp}, nos mesmos oito vãos. O total é de 40 casos de classe e 320 casos de espécie.
+A campanha é organizada em dois blocos. O primeiro é a base de classes, formada pelas cinco classes de resistência e pelos oito vãos, conforme a Tabela~\ref{tab:matriz_classes}. Como as propriedades de classe não dependem da espécie, cada célula dessa matriz constitui o cenário \emph{cls} de todas as espécies enquadradas na classe correspondente e não precisa ser repetida por espécie. O segundo bloco reúne as 40 espécies no cenário \emph{esp}, nos mesmos oito vãos. O total é de 40 casos de classe e 320 casos de espécie, cada um executado com cinco sementes, somando 1800 execuções do NSGA-II.
 
 \begin{table}[!ht]
 \centering

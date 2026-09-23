@@ -1,5 +1,11 @@
 # Boneco do artigo 3 — capacidade de carga
 
+> **Superado em 22/09/2026.** Este boneco tratava a capacidade de geometrias fixas como pergunta central de um artigo de IA. O modelo estrutural é algébrico e os esforços são lineares no multiplicador do carregamento móvel, de modo que o multiplicador limite sai por **inversão exata**, sem ajuste e sem erro. Regressão simbólica sobre esse rótulo aprenderia uma função já conhecida em forma fechada. O recorte atual está em [`01_proposta.md`](01_proposta.md).
+>
+> **O que sobrevive e vira seção do artigo de pré-dimensionamento.** A convenção do multiplicador da seção 2.3, a definição separada de `lambda_ELS`, `lambda_ELU` e `lambda_lim` da seção 2.4, o mapa de estados limites governantes da seção 5.1 e o exemplo de aplicação da seção 6. Tudo obtido por inversão, sem campanha de dados própria.
+>
+> **O que não sobrevive.** A base de capacidade da seção 3, a regressão simbólica de `lambda` da seção 4.2 e as métricas de superestimação da seção 4.4, que só fariam sentido contra um rótulo aproximado. O termo *capacidade* também precisa de cuidado na redação, porque `lambda` mede atendimento às verificações do modelo, não ruptura.
+
 **Versão de planejamento — 21/09/2026.** Recorte adotado para este roteiro após a discussão com o usuário: capacidade de carga de geometrias fixas como pergunta central; pré-dimensionamento como aplicação secundária. Não há dataset de capacidade calculado nem equações ajustadas nesta etapa.
 
 ## Título de trabalho

@@ -1,30 +1,45 @@
 # Enquadramento editorial e leitura inicial
 
-Consulta em 21/09/2026. As avaliações de adequação abaixo são recomendações, não garantias de aceite. Não foram usados fatores de impacto ou Qualis como critérios, nem foram verificados custos de publicação.
+**Refinado em 22/09/2026.** As avaliações são recomendações, não garantias de aceite. Não foram usados fator de impacto nem Qualis como critério, nem verificados custos de publicação.
 
-## Prioridade sugerida
+## A escolha depende do marco zero
 
-| Revista | Adequação à proposta | O que precisa aparecer no artigo |
+O alvo editorial não se decide agora, porque a contribuição ainda não existe. Ela depende de qual dos três desfechos do solucionador direto, descritos em [`01_proposta.md`](01_proposta.md), se confirmar.
+
+| Desfecho do marco zero | Revista indicada | Argumento de venda |
 |---|---|---|
-| **Structures** | Primeira opção: equações de projeto, otimização e caminho claro para uso em engenharia | Ganho demonstrado frente à expressão simples, avaliação fora do treinamento, verificação das geometrias e aplicação convincente |
-| **Engineering Structures** | Alternativa mais ambiciosa se surgirem resultados mecânicos generalizáveis e validação consistente | Explicar regimes/interações e justificar a generalização; a IA precisa acrescentar conhecimento ao projeto |
-| **Engineering Applications of Artificial Intelligence** | Opção condicional se a contribuição metodológica de IA se tornar central | Método com novidade própria, comparação rigorosa e dados/código reproduzíveis; aplicar pacote padrão e SHAP seria uma contribuição fraca |
+| A — solução direta exata e rápida, metaheurística desnecessária | **Engineering Structures** ou **Advances in Engineering Software** | Resultado metodológico com alcance além da madeira roliça, mais as equações de projeto como entrega prática |
+| B — solução direta exata, mas ramificada demais para comunicar | **Structures** | Regra de projeto verificada, com mapa de regimes e domínio declarado |
+| C — a solução direta não fecha, o metamodelo é necessário | **Structures**, com **Engineering Applications of Artificial Intelligence** como alternativa | Metamodelo explícito de otimização, com verificação estrutural das previsões |
 
-Para **Structures**, a página oficial da Institution of Structural Engineers inclui projeto, mecânica, otimização e aplicações com caminho para adoção na prática. Isso sustenta a escolha de escopo: [Structures — IStructE](https://www.istructe.org/about-us/what-we-do/structures-journal/).
+## Recomendação enquanto isso
 
-Para **Engineering Structures**, existem precedentes próximos de expressões empíricas e regressão simbólica em madeira, listados abaixo. Isso mostra afinidade temática, mas também significa que “usar regressão simbólica em madeira” não pode ser a única alegação de novidade. Página editorial para conferir na preparação da submissão: [Engineering Structures](https://www.sciencedirect.com/journal/engineering-structures).
+Escrever para **Structures** como alvo padrão. É a revista da Institution of Structural Engineers que acolhe projeto, mecânica, otimização e aplicações com caminho para a prática, o que é exatamente o formato de regra de anteprojeto com domínio e erro conhecidos. Página oficial para conferir o escopo, [Structures — IStructE](https://www.istructe.org/about-us/what-we-do/structures-journal/).
 
-Para **Engineering Applications of Artificial Intelligence**, verificar o escopo e as exigências vigentes quando o método estiver definido: [página da revista](https://www.sciencedirect.com/journal/engineering-applications-of-artificial-intelligence). Não é o alvo prioritário do desenho atual.
+Há uma razão adicional. O artigo 2 está indo para **Engineering Structures**, e enviar dois manuscritos próximos, da mesma equipe e sobre a mesma ponte, à mesma revista em sequência curta enfraquece os dois. Reservar Engineering Structures para o caso em que o achado do marco zero for forte o bastante para carregar o artigo sozinho, [página da revista](https://www.sciencedirect.com/journal/engineering-structures).
+
+Para **Engineering Applications of Artificial Intelligence**, conferir escopo e exigências quando o método estiver definido, [página da revista](https://www.sciencedirect.com/journal/engineering-applications-of-artificial-intelligence). Aplicar um pacote padrão de regressão simbólica e gráficos SHAP seria contribuição fraca ali.
+
+Descartados por ora. **Journal of Bridge Engineering** pede validação experimental ou ponte instrumentada, que este trabalho não tem. **Construction and Building Materials** e revistas de material só entram se o eixo virar a indexação das espécies. **Results in Engineering** e similares aceitam rápido e custam prestígio, então ficam como último recurso.
+
+## O que precisa aparecer no manuscrito, em qualquer revista
+
+Ganho demonstrado frente à expressão simples do artigo 1 e frente à inversão analítica. Avaliação fora do treinamento com partição por espécie. Reanálise completa das geometrias previstas, com taxa de violação relatada. Tempo comparado. Domínio de validade explícito.
+
+O que não sustenta novidade sozinho, base maior, gráficos SHAP, R² alto, ou usar regressão simbólica em madeira, que já tem precedente publicado.
 
 ## Referências de partida
 
-1. Cranmer, M. **Interpretable Machine Learning for Science with PySR and SymbolicRegression.jl** (2023). Fundamenta a obtenção de modelos simbólicos interpretáveis. [Artigo e metadados](https://arxiv.org/abs/2305.01582). Regressão simbólica é candidata; não foi instalada nem executada nesta etapa.
-2. **Two-dimensional estimation of service load limit in CLT plates** (Engineering Structures, 2025). Precedente de regressão simbólica para elementos de madeira, diferente da tipologia de pontes roliças. [Página do artigo](https://www.sciencedirect.com/science/article/abs/pii/S0141029625000926).
-3. **Simple empirical equations to predict temperature rise and deformation history in structural members under standard fires** (Engineering Structures, 2025). Precedente de expressões explícitas e validação experimental, com sistemas de madeira entre os exemplos. [Página do artigo](https://www.sciencedirect.com/science/article/pii/S0141029625012726).
-4. **Evaluating fire resistance of timber columns using explainable machine learning models**. Precedente de IA explicável em madeira, em outro fenômeno e elemento. [Página do artigo](https://www.sciencedirect.com/science/article/pii/S0141029623013251).
+1. Cranmer, M. **Interpretable Machine Learning for Science with PySR and SymbolicRegression.jl** (2023). Fundamenta a obtenção de modelos simbólicos interpretáveis, [artigo e metadados](https://arxiv.org/abs/2305.01582). A biblioteca ainda não foi instalada nem executada.
+2. **Two-dimensional estimation of service load limit in CLT plates** (Engineering Structures, 2025). Precedente de regressão simbólica em elemento de madeira, tipologia diferente, [página do artigo](https://www.sciencedirect.com/science/article/abs/pii/S0141029625000926).
+3. **Simple empirical equations to predict temperature rise and deformation history in structural members under standard fires** (Engineering Structures, 2025). Precedente de expressões explícitas com validação experimental, [página do artigo](https://www.sciencedirect.com/science/article/pii/S0141029625012726).
+4. **Evaluating fire resistance of timber columns using explainable machine learning models**. Precedente de IA explicável em madeira, outro fenômeno e outro elemento, [página do artigo](https://www.sciencedirect.com/science/article/pii/S0141029623013251).
+5. Dias, F. M.; Rocco Lahr, F. A. **Estimativa de propriedades de resistência e rigidez da madeira através da densidade aparente**. Scientia Forestalis, n. 65, p. 102-113, 2004. Base das 40 espécies, já auditada em `paper/engstruct/dados/`.
 
-A consulta das páginas ScienceDirect encontrou restrições de acesso em alguns links; títulos e descrições disponíveis nos resultados da busca foram suficientes para indicar leituras, não para uma revisão sistemática ou uma análise integral dos métodos. Conferir texto completo e metadados antes de gerar as citações finais do manuscrito.
+Falta uma leitura que o artigo 3 exige e que os quatro primeiros itens não cobrem. Literatura de metamodelo substituto de otimização estrutural, e literatura que compare metaheurística com solução direta em problemas de projeto de pequena dimensão. Sem ela não dá para posicionar o desfecho A.
+
+A consulta das páginas ScienceDirect encontrou restrição de acesso em alguns links. Títulos e descrições bastaram para indicar leitura, não para revisão sistemática. Conferir o texto integral antes de gerar as citações finais.
 
 ## Recorte da originalidade a demonstrar
 
-O argumento promissor é combinar **domínio multidimensional de pontes roliças + equações explícitas + tratamento dos regimes/disposição inteira + avaliação do desempenho das geometrias previstas**. A busca inicial não prova ineditismo. Antes de escrever “primeiro estudo”, fazer uma revisão específica de pontes de madeira, dimensionamento preliminar, regressão simbólica e modelos substitutos de otimização, com busca e critérios documentados.
+A combinação promissora reúne domínio multidimensional de pontes roliças, propriedades contínuas de espécies reais, solução direta do dimensionamento e verificação estrutural das geometrias previstas. A busca inicial não prova ineditismo. Antes de escrever "primeiro estudo", fazer revisão específica de pontes de madeira, dimensionamento preliminar, regressão simbólica e metamodelos de otimização, com busca e critérios documentados.

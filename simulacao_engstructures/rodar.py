@@ -20,7 +20,7 @@ from rodar_lote import main  # noqa: E402
 if __name__ == "__main__":
     raise SystemExit(
         main(
-            planilha_padrao=str(PASTA / "casos_engstruct_semente1.xlsx"),
+            planilha_padrao=str(PASTA / "casos_engstruct.xlsx"),
             destino_padrao=str(PASTA / "resultados"),
             descricao=__doc__,
         )

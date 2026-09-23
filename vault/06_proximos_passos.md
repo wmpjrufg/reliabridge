@@ -9,10 +9,13 @@ Legenda: ⬜ pendente · 🟦 em andamento · ✅ concluído
 
 - ✅ Estruturar proposta, aplicação e dataset de entradas em `paper/ia_explicavel/`.
 - ✅ Piloto computacional: 8/8 execuções com solução, registros reavaliados e volumes reconstruídos; resultados separados da matriz planejada. Auditoria física e convergência continuam pendentes.
-- ✅ Montar o boneco do novo recorte de capacidade de carga: título, resumo provisório, oito seções e entregas previstas.
-- ⬜ Auditar cargas no domínio de 3–10 m e fechar a convenção do multiplicador móvel com geometria fixa.
-- ⬜ Implementar e verificar rótulos de capacidade de serviço/resistência; redesenhar amostragem geométrica e grupos de validação.
-- ⬜ Executar a nova campanha, comparar referências mecânicas/modelos simples/regressão simbólica e verificar as cargas previstas. A matriz de 2.700 entradas anterior não contém esses rótulos.
+- ✅ Montar o boneco do recorte de capacidade de carga. **Superado em 22/09** — a capacidade sai por inversão exata e não sustenta um artigo de IA.
+- ✅ Refinar o plano em 22/09: recorte de pré-dimensionamento, material contínuo por espécie, estratégia editorial condicionada e quatro bloqueadores nomeados.
+- ⬜ **P-30 · Marco zero.** Implementar o solucionador direto, enumeração das disposições inteiras mais solução monótona das três dimensões, e comparar ao NSGA-II nos oito casos do piloto em volume, tempo e reprodutibilidade. Decide a identidade do artigo e a revista.
+- ⬜ **P-31 · B-01.** Resolver largura tributária e vão do tabuleiro, hoje ambos iguais ao espaçamento livre `esp_long_corr`. Afeta os três artigos, mas só no artigo 3 o desvio deixa de se cancelar.
+- ⬜ **P-32 · B-02.** Corrigir os rótulos de `scripts/dataset.py` e o texto de `02_dataset.md`, que descreve média sobre trinta perturbações aleatórias enquanto o código faz pior caso sobre grade determinística no diâmetro.
+- ⬜ **P-33 ·** Redesenhar a campanha sobre as 40 espécies com propriedades contínuas e partição por espécie. Só depois de P-30, porque a solução direta muda a ordem de grandeza do custo.
+- ⬜ **P-34 ·** Revisão bibliográfica de metamodelo substituto de otimização estrutural e de comparações entre metaheurística e solução direta em problemas pequenos de projeto. Sem ela não dá para posicionar o desfecho A.
 
 Estado canônico: [`11_paper_ia_explicavel.md`](11_paper_ia_explicavel.md).
 

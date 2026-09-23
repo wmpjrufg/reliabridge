@@ -1,57 +1,47 @@
-# Artigo 3 — Equações explicáveis de capacidade de carga
+# Artigo 3 — pré-dimensionamento explícito de pontes de madeira roliça
 
-**Recorte atual:** capacidade de carga de geometrias fixas, com limites de serviço e resistência separados; pré-dimensionamento como aplicação secundária. O [boneco do artigo](05_boneco_capacidade_carga.md) contém título, resumo provisório, sumário comentado e figuras/tabelas propostas. Ele orienta a próxima etapa.
+**Estado em 22/09/2026.** Plano refinado. Recorte, pré-dimensionamento por solução direta e expressões explícitas, com a capacidade de carga como operação inversa das mesmas verificações. Nenhuma equação ajustada, nenhuma campanha executada.
 
-**Atenção à versão dos dados:** a matriz e o piloto abaixo pertencem à proposta anterior de otimização de dimensões. Foram preservados como histórico; não são o dataset de capacidade. O novo estudo precisa acrescentar geometrias fixas e calcular os multiplicadores de carga. A robustez média de 5% do piloto anterior não define automaticamente a capacidade do novo estudo.
+O documento que orienta o trabalho é [`01_proposta.md`](01_proposta.md). Ele contém o achado que reorganizou o artigo, o modelo estrutural é algébrico e monótono, de onde saem duas consequências. A capacidade de carga de geometria fixa se obtém por inversão exata e não sustenta um artigo de IA. O próprio problema de dimensionamento admite solução direta por enumeração das disposições inteiras.
 
-## Histórico da primeira etapa: pré-dimensionamento por otimização
+## Marco zero, antes de qualquer campanha
 
-**Criado em 21/09/2026. Estado: proposta e dataset de entradas; piloto computacional exploratório.**
+Implementar o solucionador direto e medi-lo contra o NSGA-II nos oito casos do piloto. O resultado decide a identidade do artigo e o alvo editorial, conforme a tabela de desfechos em [`01_proposta.md`](01_proposta.md) e em [`04_revistas_e_referencias.md`](04_revistas_e_referencias.md).
 
-**Conferência concluída:** 2.700 entradas auditadas e oito execuções do piloto com solução. As soluções selecionadas foram reavaliadas no núcleo e seus volumes nominais reconstruídos; resultados em [PILOTO.md](results/PILOTO.md). Isso verifica a integração dos dados, não substitui a validação física do modelo.
+O piloto já indica que o alvo atual não está convergido. Uma geometria transferida entre cenários reduziu 15,2 % do volume em relação à solução escolhida pelo NSGA-II. Treinar sobre esse alvo ajustaria ruído do otimizador.
 
-**Achado do piloto:** uma geometria transferida entre cargas passou nas verificações e reduziu em 15,2% o volume médio em relação ao alvo escolhido para L=3 m/TB-450/p_gk=0,1 kPa. Portanto, a qualidade do alvo econômico precisa ser revista antes do treinamento. O diagnóstico e as saídas originais foram preservados.
+## Arquivos
 
-**Título anterior:** Equações multidimensionais explicáveis para o pré-dimensionamento de pontes de madeira roliça sob diferentes cargas rodoviárias.
+| Arquivo | Conteúdo | Estado |
+|---|---|---|
+| [01_proposta.md](01_proposta.md) | Pergunta, desfechos possíveis, alvo, comparações e bloqueadores | **Atual** |
+| [04_revistas_e_referencias.md](04_revistas_e_referencias.md) | Estratégia editorial condicionada ao marco zero | **Atual** |
+| [03_aplicacao.md](03_aplicacao.md) | Uso em anteprojeto e estudo de aplicação proposto | Válido, entradas de material a atualizar |
+| [02_dataset.md](02_dataset.md) | Planejamento, campos e partições | **Desatualizado**, ver B-02 |
+| [05_boneco_capacidade_carga.md](05_boneco_capacidade_carga.md) | Boneco do recorte de capacidade | **Superado**, aproveitável como seção |
+| [config.json](config.json) | Faixas, propriedades, trens-tipo e parâmetros editáveis | Válido |
+| [data/cenarios.jsonl](data/cenarios.jsonl) | 2.700 cenários de entrada por classe de resistência | Histórico |
+| [scripts/dataset.py](scripts/dataset.py) | Gerador e executor do piloto de otimização | Rótulos a corrigir, ver B-02 |
+| [results/PILOTO.md](results/PILOTO.md) | Oito execuções calculadas e a conferência de integração | Válido |
 
-**Título em inglês:** Explainable multidimensional preliminary-design equations for roundwood bridges under different road loads.
+Os 2.700 cenários **não são 2.700 pontes nem 2.700 simulações concluídas**. O arquivo de entradas não contém dimensões previstas nem resultados. A existência de um arquivo de resultado registra uma execução, e o campo `status` diz se houve solução utilizável.
 
-Proposta: usar o ReliaBridge para produzir cenários de projeto, aprender expressões matemáticas compactas e verificar quanto elas preservam o desempenho das soluções de referência. A contribuição pretendida é uma regra de anteprojeto com domínio e erro conhecidos. Aumento do dataset, gráficos SHAP ou um bom R² isoladamente não sustentam a novidade.
+## Mudança de material, de classe para espécie
 
-## O que foi preparado
+A matriz histórica varre cinco classes de resistência, cujos perfis são colineares e impedem separar o efeito de rigidez, resistência e densidade. A campanha nova usa as propriedades medidas das 40 espécies de `paper/engstruct/dados/base_especies.csv`, com partição por espécie. As classes ficam como linha de comparação, ligando o resultado ao artigo 2.
 
-| Arquivo | Conteúdo |
-|---|---|
-| [05_boneco_capacidade_carga.md](05_boneco_capacidade_carga.md) | **Roteiro atual:** capacidade de carga, resumo e sumário comentado |
-| [01_proposta.md](01_proposta.md) | Pergunta, hipóteses, distinção dos outros artigos e método |
-| [02_dataset.md](02_dataset.md) | Planejamento, campos, partições, rótulos e pendências |
-| [03_aplicacao.md](03_aplicacao.md) | Uso em anteprojeto e estudo de aplicação proposto |
-| [04_revistas_e_referencias.md](04_revistas_e_referencias.md) | Revistas candidatas e fontes consultadas |
-| [config.json](config.json) | Faixas, propriedades, trens-tipo e parâmetros editáveis |
-| [data/cenarios.jsonl](data/cenarios.jsonl) | 2.700 cenários de entrada, uma linha JSON por cenário |
-| [data/manifest.json](data/manifest.json) | Contagens e hashes das fontes |
-| [scripts/dataset.py](scripts/dataset.py) | Gerador e executor com gravação por caso/semente |
-| `results/piloto/` | Resultados efetivamente calculados, separados das entradas |
-| [results/PILOTO.md](results/PILOTO.md) | Resumo dos resultados calculados e da conferência de integração |
+## Bloqueadores
 
-Os 2.700 cenários **não são 2.700 pontes construídas nem 2.700 simulações concluídas**. O arquivo de entradas não contém dimensões previstas ou resultados inventados. A existência de um arquivo de resultado registra uma execução; seu campo `status` informa se houve solução utilizável.
+Detalhados em [`01_proposta.md`](01_proposta.md).
 
-## Matriz inicial
+- **B-01** · `esp_long_corr` é usado como largura tributária e como vão do tabuleiro, quando o valor entre eixos seria `esp_long_corr + d`. No artigo 2 o desvio se cancela na comparação pareada, aqui não.
+- **B-02** · `volume_robust_mean_m3` é idêntico a `volume_nominal_m3` e `g_robust_mean` é pior caso, não média. Renomear e corrigir `02_dataset.md`.
+- **B-03** · As transições de envoltória em `L ≈ 3,34 m` e `L = 6 m` são trocas de expressão do modelo, não comportamento estrutural.
+- **B-04** · Domínio das cargas em vão longo ainda em auditoria.
 
-**15 vãos × 6 cargas × 2 trens-tipo × 5 classes × 3 larguras = 2.700 cenários.**
+## Executar o que existe
 
-- Vão: 3,0 a 10,0 m, a cada 0,5 m.
-- Carga permanente adicional `p_gk`: 0,1; 0,5; 1; 2; 3; 5 kPa. O nível 0,1 mantém uma ligação com o artigo 1. A faixa ampliada é proposta, sujeita à caracterização do revestimento real.
-- TB-240 e TB-450, conforme os presets existentes. “tb4540” foi interpretado provisoriamente como TB-450.
-- Classes: D20, D30, D40, D50 e D60.
-- Largura de pista: 3,5; 4,0; 4,5 m, como cenários de pista única; não se está generalizando para múltiplas faixas.
-- Robustez geométrica: 5%; demais fatores preservados em `config.json`.
-
-**Não foi usada a tabela antiga das 40 espécies.** Ela está explicitamente desativada no repositório. Uma segunda versão com propriedades experimentais exige a base auditada e hipóteses de conversão documentadas. Nesta primeira versão, as propriedades são vinculadas à classe.
-
-## Executar
-
-Na raiz do repositório, com o ambiente já existente:
+Na raiz do repositório, com o ambiente já existente.
 
 ```powershell
 .venv/Scripts/python.exe paper/ia_explicavel/scripts/dataset.py gerar
@@ -60,16 +50,6 @@ Na raiz do repositório, com o ambiente já existente:
 .venv/Scripts/python.exe paper/ia_explicavel/scripts/verificar.py
 ```
 
-O piloto usa oito combinações dos extremos de vão e carga, ambos os veículos, D40 e largura 4,5 m. Usa os mesmos 50 indivíduos, 300 gerações e 30 perturbações por avaliação do protocolo atual. Não calcula Sobol nem exporta figuras por caso. O executor aceita outras sementes do otimizador; as perturbações geométricas continuam com a semente 1 do núcleo.
+O piloto usa oito combinações dos extremos de vão e carga, ambos os veículos, D40 e largura 4,5 m, com 50 indivíduos e 300 gerações. Resultados existentes da mesma versão são preservados, e o executor exige arquivar os antigos se o código ou a configuração mudou. Não dispara a matriz completa implicitamente.
 
-Resultados existentes da mesma versão são preservados. Se o código ou a configuração mudou, o executor exige arquivar os resultados antigos antes de reutilizar o destino. Não dispara a matriz completa implicitamente. Para uma campanha selecionada, pode-se repetir `--case-id` no comando.
-
-## Pendências do protocolo anterior de otimização
-
-1. Resolver a revisão de cargas para vãos longos, incluindo as zonas de exclusão `4a` e `3a`, a envoltória e a distribuição transversal. Não tratar os oito pilotos como validação dessas hipóteses.
-2. Confirmar o domínio físico da carga permanente e da largura; manter os limites comerciais atuais, identificando resultados que os atingem.
-3. Medir convergência e repetibilidade em casos representativos, congelar o protocolo e executar a campanha.
-4. Ajustar referências simples e regressão simbólica, reservando os conjuntos de validação e teste previamente definidos.
-5. Reavaliar as geometrias previstas e relatar falhas, subestimativas e necessidade de redimensionamento.
-
-Revista prioritária sugerida: **Structures**, condicionada a resultados que demonstrem ganho e generalização. Não há manuscrito pronto nem equação final treinada nesta etapa.
+Mediana medida no piloto, 21,2 s por caso. A campanha por espécie precisa de dimensionamento próprio, que só faz sentido depois do marco zero, porque a solução direta muda a ordem de grandeza do custo.

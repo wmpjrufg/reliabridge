@@ -28,7 +28,7 @@ for _var in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUME
 
 PASTA = Path(__file__).resolve().parent
 RAIZ = PASTA.parent
-PLANILHA = PASTA / "casos_engstruct_semente1.xlsx"
+PLANILHA = PASTA / "casos_engstruct.xlsx"
 DESTINO = PASTA / "resultados"
 
 
