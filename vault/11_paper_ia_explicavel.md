@@ -4,7 +4,19 @@
 
 Criado em 21/09/2026 a partir da sugestão do professor de ampliar vãos, cargas permanentes e trens-tipo.
 
-## Refinamento de 22/09/2026 — o achado que reorganizou o artigo
+## A pergunta de projeto, fechada em 22/09/2026
+
+**Até onde a ponte de madeira roliça serve, e o que define esse limite.** A restrição que fecha a fronteira não é normativa, é o diâmetro comercial de tora disponível. No piloto, o diâmetro ótimo vai de 32,8 cm em `L = 3 m` com TB-240 a 82,0 cm em `L = 10 m` com TB-450, contra teto de busca de 100 cm.
+
+Decompõe em três, qual verificação governa e onde troca, qual propriedade medida dimensiona, e quanto custa projetar para TB-450 em vez de TB-240 (no piloto, mais 36 % de madeira a 10 m).
+
+O solucionador direto é **instrumento**, não contribuição. Ele é o que torna a grade de 24.300 casos computável em minutos, contra 142 horas de NSGA-II sem garantia de ótimo. A comparação entre os dois vira nota de método ou apêndice.
+
+A campanha **não precisa de sementes**, porque o solucionador é determinístico e a grade de robustez já é determinística. Sementes sobram em dois lugares, a comparação com NSGA-II, onde viram medida da folga da metaheurística, e a regressão simbólica, onde viram teste de estabilidade da forma selecionada.
+
+Pendência que virou condição do artigo, o **diâmetro comercial máximo de tora** (P-13). Sem ele a curva de fronteira não tem eixo vertical.
+
+## O achado que reorganizou o artigo
 
 A leitura do núcleo estabeleceu que o modelo estrutural é inteiramente algébrico e monótono nas variáveis de projeto. Duas consequências, ambas decisivas.
 
@@ -45,4 +57,11 @@ A campanha passa a usar as propriedades medidas das 40 espécies de `paper/engst
 
 ## Próximo marco
 
-Implementar o solucionador direto e compará-lo ao NSGA-II nos oito casos do piloto, em volume, tempo e reprodutibilidade. Só depois redesenhar amostragem, partições e campanha.
+Escrever `solver_direto.py` e conferir contra os oito casos do piloto, em volume e tempo. Depois decidir B-01 e rodar a grade.
+
+## Em aberto ao fim da discussão de 22/09
+
+- **Diâmetro comercial máximo de tora**, por espécie ou por região, e a fonte. Sem isso não há fronteira.
+- **B-01**, se corrige agora, e o que isso faz com os resultados já publicados do artigo 1.
+- Passo do vão na grade, 0,5 m ou 1,0 m, e se os seis níveis de `p_gk` se sustentam fisicamente.
+- Revisão bibliográfica de metamodelo substituto de otimização estrutural e de fronteiras de aplicabilidade de tipologia.

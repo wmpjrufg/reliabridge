@@ -1,14 +1,18 @@
 # Artigo 3 — pré-dimensionamento explícito de pontes de madeira roliça
 
-**Estado em 22/09/2026.** Plano refinado. Recorte, pré-dimensionamento por solução direta e expressões explícitas, com a capacidade de carga como operação inversa das mesmas verificações. Nenhuma equação ajustada, nenhuma campanha executada.
+**Estado em 22/09/2026.** Plano refinado em discussão com o usuário. Nenhuma equação ajustada, nenhuma campanha executada, solucionador direto ainda não escrito.
 
-O documento que orienta o trabalho é [`01_proposta.md`](01_proposta.md). Ele contém o achado que reorganizou o artigo, o modelo estrutural é algébrico e monótono, de onde saem duas consequências. A capacidade de carga de geometria fixa se obtém por inversão exata e não sustenta um artigo de IA. O próprio problema de dimensionamento admite solução direta por enumeração das disposições inteiras.
+**Pergunta do artigo.** Até onde a ponte de madeira roliça serve, e o que define esse limite. A restrição que fecha a fronteira não é normativa, é o diâmetro comercial de tora disponível.
 
-## Marco zero, antes de qualquer campanha
+O documento que orienta o trabalho é [`01_proposta.md`](01_proposta.md), que traz a campanha de 24.300 casos, o que sai dela, a ordem de trabalho e a seção **Onde paramos**, com o que ficou decidido e o que continua em aberto.
 
-Implementar o solucionador direto e medi-lo contra o NSGA-II nos oito casos do piloto. O resultado decide a identidade do artigo e o alvo editorial, conforme a tabela de desfechos em [`01_proposta.md`](01_proposta.md) e em [`04_revistas_e_referencias.md`](04_revistas_e_referencias.md).
+## Duas consequências de o modelo ser algébrico
 
-O piloto já indica que o alvo atual não está convergido. Uma geometria transferida entre cenários reduziu 15,2 % do volume em relação à solução escolhida pelo NSGA-II. Treinar sobre esse alvo ajustaria ruído do otimizador.
+O dimensionamento admite **solução direta**, por enumeração das disposições inteiras e solução do sistema monótono de três dimensões. É o que torna a grade completa computável em minutos, contra 142 horas de NSGA-II, e é o que permite fazer a pergunta de projeto em todo o domínio em vez de em alguns casos.
+
+A **capacidade de carga sai por inversão exata**, porque os esforços são lineares no multiplicador do carregamento móvel. Não sustenta um artigo de IA e entra como leitura inversa das mesmas expressões.
+
+O piloto indica que o alvo do NSGA-II não está convergido, com 15,2 % de folga de volume entre cenários. Treinar sobre ele ajustaria ruído do otimizador.
 
 ## Arquivos
 
