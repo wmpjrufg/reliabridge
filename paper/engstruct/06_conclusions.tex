@@ -1,15 +1,15 @@
 \section{Conclusões}\label{sec:conclusions}
 
-A investigação foi formulada para quantificar o efeito da representação por classes sobre a previsão de deslocamentos e o consumo de madeira, utilizando a base experimental de \textcite{DiasLahr2004}. O protocolo distingue a conversão de resistência média em característica, a substituição da rigidez e o redimensionamento. A conclusão sobre atendimento ao estado limite de serviço será baseada na reavaliação do projeto por classe, e não apenas no sinal da diferença de rigidez ou de volume.
+Este trabalho comparou, para 40 espécies tropicais e vãos de 3 a 10~m, o projeto ótimo de uma ponte de madeira roliça obtido com as propriedades da espécie e o obtido com as propriedades da sua classe de resistência, e reavaliou o segundo com as propriedades da espécie. As conclusões a seguir valem para a tipologia, as ações e a faixa de vãos estudadas.
 
-\begin{fillblock}
-\noindent\textbf{[CONCLUSÕES QUANTITATIVAS PENDENTES]} Após concluir as análises, responder com valores e limites de validade:
-\begin{enumerate}[nosep]
-\item Quanto a conversão simplificada altera o enquadramento em relação aos valores característicos publicados?
-\item Qual o erro de previsão de deslocamento introduzido pela representação da rigidez por classe, sob geometria fixa?
-\item Quanto o redimensionamento altera o volume de madeira e em quais casos o projeto por classe excede o limite de serviço quando reavaliado com a rigidez experimental?
-\item Como essas diferenças dependem do vão, das restrições ativas e das hipóteses de propriedades complementares?
-\item Em quais condições os resultados justificam caracterização adicional da rigidez para a aplicação estudada?
-\end{enumerate}
-Não concluir previamente pela inadequação das classes, pela existência de um vão crítico ou pela superioridade de um sistema normativo. Efeitos pequenos, ausência de excedências e ausência de migração do estado limite governante também são desfechos admissíveis.
-\end{fillblock}
+O projeto pela classe só consumiu menos madeira que o projeto pela espécie quando era inadequado para ela. Nos 215 pares em que o projeto pela classe atendeu a todos os estados limites com as propriedades da espécie, ele consumiu sempre mais madeira, com mediana de 6,9\% e máximo de 23,1\%. Os 86 pares com diferença de volume negativa estão todos entre os que violaram o limite de serviço. A economia aparente do projeto pela classe é, nesses casos, apenas a contrapartida de uma rigidez superestimada.
+
+O risco introduzido pela representação por classe está inteiramente na rigidez. Como o enquadramento é feito pelo piso da resistência característica, nenhuma verificação de resistência foi excedida na reavaliação, enquanto a flecha foi excedida em 105 dos 320 pares, com utilização de até 1,59. As violações cresceram com o vão e com a classe, porque a razão entre módulo e resistência das classes diminui de D20 para D60 e as classes altas entram no regime de flecha mais cedo: a partir de 5~m na D60, de 6~m na D50 e de 9~m na D40, enquanto D20 e D30 permaneceram governadas por resistência em toda a faixa.
+
+A adequação do projeto pela classe pode ser verificada antes de qualquer reotimização. A utilização de flecha reavaliada acompanhou a razão entre o módulo da classe e o da espécie com expoente de 1,00, e o critério de que a razão entre o módulo da espécie e o da classe supere a utilização de flecha do projeto pela classe classificou corretamente 318 dos 320 pares. Quando o módulo da espécie é desconhecido, o menor valor observado em cada classe delimita a faixa de vãos em que o projeto pela classe atendeu a todas as espécies da base, de 10~m na D20 a apenas 3~m nas classes D50 e D60.
+
+Quando o projeto pela classe é admissível, a economia obtida ao projetar pela espécie é previsível por leis de escala sem parâmetros ajustados. No regime de resistência, a diferença de volume segue a raiz quadrada da margem de resistência, com erro quadrático médio de 1,3\%, o que leva a um limiar de cerca de 10\% de margem para 5\% de economia. No regime de flecha, a rigidez passa a dominar, com peso proporcional à fração de volume nas longarinas, e a previsão tem erro quadrático médio de 0,7\%. Um coeficiente único para toda a campanha explicaria apenas 66\% da variância, o que mostra que a decisão entre espécie e classe precisa considerar o regime governante do projeto.
+
+Do ponto de vista metodológico, a comparação entre projetos ótimos exige controlar o erro do otimizador. A dispersão do volume mínimo entre sementes chegou a 9,9\%, da mesma ordem das diferenças de volume medidas, e o rótulo da verificação governante mudou entre sementes em 309 dos 360 casos. Adotar o menor volume entre várias sementes e definir o regime pela utilização, e não pelo rótulo, foram condições para que as diferenças observadas pudessem ser atribuídas ao material.
+
+Os desdobramentos imediatos são incluir a parcela de multidão na flecha variável, estender a análise à variabilidade das propriedades dentro de cada espécie, com base em resultados individuais de ensaio, e associar o limiar econômico $\tau$ ao custo real de caracterização, que distingue a ponte isolada de um programa com várias pontes da mesma espécie.

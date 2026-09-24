@@ -126,18 +126,54 @@ Para cada par, sejam $\mathbf{x}_R$ e $\mathbf{x}_C$ os projetos obtidos nos cen
 \end{equation}
 Um valor negativo indica que o projeto pela classe consome menos madeira, o que não constitui, por si só, evidência de violação de limite: pode decorrer de a classe atribuir à espécie uma rigidez superior à medida, caso em que o projeto é menos conservador, ou de a verificação governante não ser sensível à rigidez.
 
-Para separar consumo de desempenho, a geometria do projeto normativo é mantida e recalculada com as propriedades medidas da espécie, sem reotimizar:
+Para separar consumo de desempenho, a geometria do projeto normativo é mantida e reavaliada, sem reotimizar, com o conjunto completo de propriedades medidas da espécie, $\mathbf{p}_s^{\mathrm{exp}}$, que reúne rigidez, densidade e resistências, pelo mesmo modelo da otimização:
 \begin{equation}
-U_{fin,s,L}^{C\rightarrow R}=\frac{\delta_{fin}(\mathbf{x}_C;E_{c0,m,s}^{\mathrm{exp}})}{L/350},
+U_{fin,s,L}^{C\rightarrow R}=\frac{\delta_{fin}(\mathbf{x}_C;\mathbf{p}_s^{\mathrm{exp}})}{L/350},
 \qquad
-U_{inst,s,L}^{C\rightarrow R}=\frac{\delta_{inst}(\mathbf{x}_C;E_{c0,m,s}^{\mathrm{exp}})}{L/500}.
+U_{inst,s,L}^{C\rightarrow R}=\frac{\delta_{inst}(\mathbf{x}_C;\mathbf{p}_s^{\mathrm{exp}})}{L/500}.
 \label{eq:reavaliacao}
 \end{equation}
+A reavaliação é feita em duas condições: com o diâmetro nominal e no pior caso da grade de perturbação da Equação~\eqref{eq:agregacao_robusta}. A segunda é o critério de aceitação aplicado aos dois projetos na otimização e é a condição de referência na comparação.
 As duas utilizações são reportadas, pois um projeto pode atender a uma combinação e exceder a outra. Valores superiores a um indicam excedência do respectivo limite de serviço nessa reavaliação, sob as hipóteses de ações, fluência e propriedades adotadas. Esse resultado é uma frequência de excedência no conjunto analisado, e não uma probabilidade de falha nem demonstração de insegurança no estado limite último. As demais verificações e a admissibilidade geométrica são igualmente reavaliadas, distinguindo avaliação nominal e avaliação sob a grade de perturbação.
+
+\subsection{Regimes, leis de escala e critério de decisão}\label{sec:escala}
+
+Na solução de menor volume, várias verificações ficam simultaneamente próximas do limite, e a identificação de uma única verificação governante é instável: pequenas diferenças entre execuções trocam a verificação de maior utilização sem alterar o volume de forma relevante (Seção~\ref{sec:res_ruido}). O regime de cada projeto é, por isso, definido pela utilização da flecha final, e não pelo rótulo da verificação de maior utilização. Um projeto está em regime de flecha quando $U_{fin}\geq0{,}99$ e em regime de resistência quando $U_{fin}<0{,}99$. Um par espécie--vão pertence ao regime de flecha ou ao de resistência quando os dois projetos do par estão no mesmo regime, e ao regime misto nos demais casos.
+
+Com topologia fixa e peso próprio pequeno frente às ações variáveis, as dimensões que minimizam o volume respondem às propriedades do material por leis de potência simples. No regime de resistência, o módulo resistente da longarina circular cresce com $d^3$ e o da prancha com $h^2$, de modo que, para o mesmo esforço, o volume da longarina varia com $f^{-2/3}$ e o do tabuleiro com $f^{-1/2}$. A razão entre os volumes dos projetos pela classe e pela espécie fica então limitada por
+\begin{equation}
+(1+\Delta_f)^{1/2}\leq\frac{V_{cls}}{V_{esp}}\leq(1+\Delta_f)^{2/3},
+\label{eq:escala_resistencia}
+\end{equation}
+com $\Delta_f=f_{c0,k}^{\mathrm{exp}}/f_{c0,k}^{\mathrm{NBR}}-1$, não negativo por construção do enquadramento. No regime de flecha, a flecha da longarina varia com $1/(E\,d^4)$, e o volume de longarina que a mantém no limite varia com $E^{-1/2}$, enquanto o tabuleiro continua governado pela resistência. Sendo $s_\ell$ a fração do volume total que está nas longarinas,
+\begin{equation}
+\frac{V_{cls}}{V_{esp}}\approx(1+\Delta_f)^{(1-s_\ell)/2}\,(1+\Delta_E)^{s_\ell/2},
+\label{eq:escala_flecha}
+\end{equation}
+com $\Delta_E=E_{c0,m}^{\mathrm{exp}}/E_{c0,m}^{\mathrm{NBR}}-1$, que pode ter qualquer sinal. As Equações~\eqref{eq:escala_resistencia} e~\eqref{eq:escala_flecha} não têm parâmetros ajustados e são confrontadas com os resultados da otimização na Seção~\ref{sec:res_escala}. Para medir o peso de cada propriedade sem impor a forma dessas relações, ajusta-se também, por mínimos quadrados e separadamente em cada regime, o modelo
+\begin{equation}
+\ln\frac{V_{cls}}{V_{esp}}=b_f\ln(1+\Delta_f)+b_E\ln(1+\Delta_E)+b_\rho\ln(1+\Delta_\rho),
+\label{eq:regressao}
+\end{equation}
+com $\Delta_\rho=\rho_{ap}^{\mathrm{exp}}/\rho_{ap}^{\mathrm{NBR}}-1$.
+
+Quanto ao limite de serviço, a Equação~\eqref{eq:razao_delta} aplicada à geometria do projeto pela classe fornece
+\begin{equation}
+U_{fin}^{C\rightarrow R}\approx U_{fin,cls}\,\frac{E_{c0,m}^{\mathrm{NBR}}}{E_{c0,m}^{\mathrm{exp}}},
+\label{eq:u_ctor}
+\end{equation}
+em que $U_{fin,cls}$ é a utilização da flecha do projeto pela classe, conhecida pelo projetista antes de qualquer caracterização da espécie. O projeto pela classe atende ao limite de serviço com a espécie quando
+\begin{equation}
+\frac{E_{c0,m}^{\mathrm{exp}}}{E_{c0,m}^{\mathrm{NBR}}}\geq U_{fin,cls}.
+\label{eq:criterio}
+\end{equation}
+A aproximação desconsidera a mudança de peso próprio entre espécie e classe, cujo efeito é medido pela reavaliação completa da Equação~\eqref{eq:reavaliacao}.
+
+As Equações~\eqref{eq:escala_resistencia} a~\eqref{eq:criterio} compõem um critério de decisão em dois passos. Primeiro, a Equação~\eqref{eq:criterio} indica se o projeto pela classe é admissível para a espécie. Se não for, a caracterização da rigidez ou o projeto pela espécie deixam de ser opcionais. Se for, as Equações~\eqref{eq:escala_resistencia} e~\eqref{eq:escala_flecha} estimam a economia de madeira que o projeto pela espécie proporcionaria, e a caracterização compensa quando essa economia supera um limiar $\tau$ fixado pelo projetista. Adota-se $\tau=5\%$ na apresentação dos resultados, valor que excede com folga o erro residual de otimização estimado na Seção~\ref{sec:sementes}.
 
 \subsection{Matriz da campanha}\label{sec:campanha}
 
-A campanha cobre oito vãos, de $L=3$ a 10~m em passo de 1~m, com largura de pista $B=4{,}5$~m, seção transversal usual de ponte vicinal de pista simples. Cada caso corresponde a uma execução do NSGA-II com a configuração da Tabela~\ref{tab:otimizacao}. Toda a faixa permanece no primeiro trecho do coeficiente de impacto ($L\leq10$~m). A parcela de multidão do momento passa a atuar para $L>6$~m, mas, como cada comparação é feita entre cenários de mesmo vão, essa mudança não se confunde com efeito de material.
+A campanha cobre oito vãos, de $L=3$ a 10~m em passo de 1~m, com largura de pista $B=4{,}5$~m, seção transversal usual de ponte vicinal de pista simples. Cada caso é executado com a configuração da Tabela~\ref{tab:otimizacao}. Toda a faixa permanece no primeiro trecho do coeficiente de impacto ($L\leq10$~m). A parcela de multidão do momento passa a atuar para $L>6$~m, mas, como cada comparação é feita entre cenários de mesmo vão, essa mudança não se confunde com efeito de material.
 
 A campanha é organizada em dois blocos. O primeiro é a base de classes, formada pelas cinco classes de resistência e pelos oito vãos, conforme a Tabela~\ref{tab:matriz_classes}. Como as propriedades de classe não dependem da espécie, cada célula dessa matriz constitui o cenário \emph{cls} de todas as espécies enquadradas na classe correspondente e não precisa ser repetida por espécie. O segundo bloco reúne as 40 espécies no cenário \emph{esp}, nos mesmos oito vãos. O total é de 40 casos de classe e 320 casos de espécie, cada um executado com cinco sementes, somando 1800 execuções do NSGA-II.
 
@@ -172,4 +208,4 @@ A verificação governante é identificada em cada solução pelas utilizações
 
 \subsection{Verificação da implementação}\label{sec:verificacao}
 
-A verificação independente compreende a conferência da resposta sob geometria fixa contra a Equação~\eqref{eq:razao_delta}, a conferência das envoltórias das Equações~\eqref{eq:mqkenv} e~\eqref{eq:qqkenv} nos limites dos trechos de carregamento, em especial nos vãos curtos em que o diâmetro não é desprezível frente ao vão, a demonstração manual de um caso completo, a repetição entre sementes e a reavaliação das soluções selecionadas em sua geometria nominal. Os dados derivados e os scripts que geram a base experimental, a matriz de casos e as figuras são disponibilizados junto com o artigo.
+A verificação independente compreende a conferência da resposta sob geometria fixa contra a Equação~\eqref{eq:razao_delta}, a conferência das envoltórias das Equações~\eqref{eq:mqkenv} e~\eqref{eq:qqkenv} nos limites dos trechos de carregamento, em especial nos vãos curtos em que o diâmetro não é desprezível frente ao vão, a demonstração manual de um caso completo, a repetição entre sementes e a reavaliação das soluções selecionadas em sua geometria nominal. A rotina de reavaliação da Equação~\eqref{eq:reavaliacao}, aplicada à geometria de cada projeto pela classe com as próprias propriedades da classe, reproduz as utilizações registradas na otimização com diferença máxima de $1{,}4\times10^{-15}$. Os dados derivados e os scripts que geram a base experimental, a matriz de casos e as figuras são disponibilizados junto com o artigo.
