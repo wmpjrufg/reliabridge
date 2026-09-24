@@ -1,15 +1,13 @@
 \section{Metodologia}\label{sec:metodologia}
 
-Esta seção detalha a metodologia desenvolvida para a análise otimizada e o projeto paramétrico de pontes de madeira roliça. Para alcançar os objetivos, construiu-se uma plataforma computacional dedicada à definição automatizada das dimensões estruturais, especificamente das longarinas e das pranchas do tabuleiro.
+Esta seção detalha o framework de análise e otimização desenvolvido para o dimensionamento paramétrico de pontes de madeira roliça, especificamente das longarinas e das pranchas do tabuleiro.
 
-O ambiente computacional foi integralmente desenvolvido em linguagem \textit{Python}, adotando uma arquitetura cliente-servidor flexível, com interface web construída por meio da biblioteca \textit{Streamlit} e disponibilizada em acesso livre \parencite{ReliaBridge2026}.
+O framework foi implementado em linguagem \textit{Python} e disponibilizado em acesso livre por meio da plataforma \textit{ReliaBridge} \parencite{ReliaBridge2026}.
 A otimização multiobjetivo baseada em metaheurísticas é conduzida por algoritmos genéticos da biblioteca \texttt{pymoo} \parencite{blank2020}, enquanto a quantificação de incertezas e a análise de sensibilidade global estocástica são processadas pela biblioteca \texttt{UQpy} \parencite{Olivier2020}.
 
-A plataforma permite uma transição fluida entre o dimensionamento paramétrico tradicional e a concepção orientada por otimização de Pareto.
-Após o processamento algorítmico do modelo da ponte, o usuário obtém acesso integral ao memorial de cálculo gerado pela ferramenta.
-Esse relatório detalha o desempenho da estrutura frente aos esforços solicitantes e aos deslocamentos normativos, fornecendo um relatório completo das verificações de ruína e de serviço, com a indicação exata dos critérios em que a configuração da ponte obteve êxito ou falhou.
+Para cada solução processada, a plataforma disponibiliza o memorial de cálculo completo, com a indicação dos esforços solicitantes, dos deslocamentos e do resultado de cada verificação normativa de ruína e de serviço.
 
-O fluxo de avaliação de cada solução candidata segue a estrutura já apresentada no Algoritmo~\ref{alg:nsga2} (Seção~\ref{sec:nsga2}): para cada indivíduo $\mathbf{x}$ gerado pelo NSGA-II, o diâmetro é perturbado ao longo de uma grade de $N_c$ pontos e cada realização é submetida à função \texttt{AvaliarModelo}, cujos resultados individuais são agregados pela média para compor os valores robustos das funções objetivo e das restrições daquele indivíduo.
+O fluxo de avaliação de cada solução candidata segue a estrutura já apresentada no Algoritmo~\ref{alg:nsga2} (Seção~\ref{sec:nsga2}): para cada indivíduo $\mathbf{x}$ gerado pelo NSGA-II, o diâmetro é perturbado ao longo de uma grade de $N_c$ pontos e cada realização é submetida à função \texttt{AvaliarModelo}. As funções objetivo permanecem calculadas no ponto nominal $\mathbf{x}$, sem qualquer agregação sobre a grade; as restrições, por sua vez, são agregadas pelo operador de pior caso (máximo, componente a componente) entre as $N_c$ realizações perturbadas, conforme a Seção~\ref{sec:robustez}.
 O Algoritmo~\ref{alg:avaliarmodelo} detalha o procedimento interno dessa função para um único vetor de projeto, nominal ou perturbado.
 
 \begin{algorithm}[!ht]
@@ -21,7 +19,7 @@ O Algoritmo~\ref{alg:avaliarmodelo} detalha o procedimento interno dessa funçã
 \State Executar a rotina de acomodação geométrica: determinar $n_{long}$, $n_{tab}$ e avaliar as restrições de espaçamento $g_5$ e $g_6$
 \State Definir as ações permanentes e variáveis (trem-tipo e multidão) atuantes sobre o tabuleiro
 \State Distribuir a reação do tabuleiro sobre as longarinas (acopla o carregamento das duas peças em um único carregamento da longarina)
-\State \textbf{Longarina:} calcular os esforços solicitantes ($M_{sd}$, $V_{sd}$) e as flechas; avaliar $g_1$ (flexão), $g_2$ (cisalhamento) e $g_3$ (flecha, com fluência)
+\State \textbf{Longarina:} calcular os esforços solicitantes ($M_{sd}$, $Q_{sd}$) e as flechas; avaliar $g_1$ (flexão), $g_2$ (cisalhamento) e $g_3$ (flecha, com fluência)
 \State \textbf{Tabuleiro:} calcular o momento solicitante sob a roda do trem-tipo; avaliar $g_4$ (flexão)
 \State Calcular $f_1$ (volume total de madeira, Equação~\eqref{eq:f1}) e $f_2$ (utilização da flecha, Equação~\eqref{eq:f2})
 \State \Return $\mathbf{f}, \mathbf{g}$
@@ -59,11 +57,6 @@ D50 & 50 & 50,0 & 7 & 16 500 & 850 \\
 D60 & 60 & 60,0 & 8 & 19 500 & 1 000 \\
 \bottomrule
 \end{tabular*}
-%\begin{tablenotes}
-\footnotesize
-%\item \textbf{Nota 1:} Valores extraídos em conformidade com a ABNT NBR 7190-3:2022, referentes ao teor de umidade de 12\%.
-%\item \textbf{Nota 2:} A resistência característica à flexão ($f_{m,k}$) é tomada igual a $f_{c0,k}$, conforme o item 6.3.4 da ABNT NBR 7190-1:2022 ($f_{m,d} = f_{c0,d}$ no dimensionamento pela Tabela 2 da norma).
-%\end{tablenotes}
 \end{threeparttable}
 \end{table}
 \subsection{Sistema estrutural e modelo paramétrico}\label{sec:sistema}
@@ -75,7 +68,7 @@ A representação conceitual do sistema pode ser observada na Figura~\ref{fig:si
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=0.75\textwidth]{figuras/caminhao.png}
+\includegraphics[width=0.71\textwidth]{figuras/caminhao.png}
 \caption{Representação conceitual do sistema estrutural da ponte de madeira.}
 \label{fig:sistema}
 \end{figure}

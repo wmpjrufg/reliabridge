@@ -1,14 +1,14 @@
 \section{Considerações finais}\label{sec:conclusoes}
 
-Este trabalho apresentou uma abordagem de projeto inteligente para pontes de madeira roliça de estradas vicinais, implementada em uma plataforma computacional de acesso livre na qual a modelagem paramétrica dos elementos estruturais é integralmente acoplada a uma rotina de otimização robusta multiobjetivo em conformidade com a \textcite{NBR7190-1:2022}.
+Este trabalho investigou, por meio de um framework paramétrico de otimização robusta multiobjetivo em conformidade com a \textcite{NBR7190-1:2022}, como o vão, a classe de resistência e a variabilidade dimensional controlam o consumo de material, o desempenho estrutural e os estados limites governantes de pontes de madeira roliça em estradas vicinais.
 O dimensionamento passa a ser obtido sem arbitramento inicial de seções: o projetista fornece vão, largura de pista, trem tipo e propriedades do material, e recebe o conjunto completo de soluções de compromisso, em vez de verificar uma seção previamente escolhida por experiência ou analogia.
-A plataforma percorreu as vinte células da matriz sem intervenção manual e sem ajuste individual de parâmetros do algoritmo, com fronteiras convergidas e uniformemente distribuídas em todas elas, a um custo computacional de cerca de 2~min para a matriz completa em um computador pessoal.
+O framework percorreu as vinte células da matriz sem intervenção manual e sem ajuste individual de parâmetros do algoritmo, com fronteiras convergidas e uniformemente distribuídas em todas elas, a um custo computacional de cerca de 2~min para a matriz completa em um computador pessoal.
 
 A incorporação da robustez tem custo real, mas modesto.
 Na célula de referência, a solução de menor volume da fronteira encareceu 6{,}0\% em $\rho = 5\%$ em relação ao caso determinístico, e esse acréscimo cresceu de forma monotônica até 26{,}9\% em $\rho = 20\%$, em troca de proteção contra a violação de estados limites sob o desvio dimensional natural da madeira roliça.
 
 O consumo de madeira cresce com o vão segundo uma lei de potência de expoente entre 1{,}64 e 1{,}73, pouco dependente da classe, e o primeiro degrau de classe é o mais rentável: a passagem de D20 para D30 reduz o consumo em 17 a 21\%, contra 4 a 12\% de cada degrau seguinte, pois o acréscimo de densidade das classes superiores consome parte do ganho de resistência.
-Esses resultados foram condensados em ábacos de anteprojeto e em uma equação de pré-dimensionamento $V(L, f_{c0,k}) = a\,L^{b}\,f_{c0,k}^{c}$, ajustada com $R^2 = 0{,}999$ e erro relativo médio de 1{,}3\%, que permitem estimar o volume de madeira e o diâmetro das longarinas sem executar uma otimização completa.
+Esses resultados foram condensados em ábacos de anteprojeto e em uma equação de pré-dimensionamento $V(L, f_{c0,k}) = a\,L^{b}\,f_{c0,k}^{c}$, ajustada com $R^2 = 0{,}999$ e erro relativo médio de 1{,}3\% dentro do domínio de vãos e classes investigado, e disponibilizados por meio da plataforma computacional de acesso livre, que permitem estimar o volume de madeira e o diâmetro das longarinas sem executar uma otimização completa.
 
 Na faixa de 3 a 6~m sob o TB-240, a flexão governa integralmente a matriz, quinze células pelo tabuleiro e cinco pela longarina, e o cisalhamento permanece longe do limite, com utilização máxima de 60{,}2\%.
 O tabuleiro, portanto, não é um elemento secundário do dimensionamento e merece a mesma atenção de projeto dedicada às longarinas.

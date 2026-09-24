@@ -48,6 +48,7 @@
 \newcommand{\tofill}[1]{\textcolor{red}{#1}}
 \newenvironment{fillblock}{\color{red}}{\color{black}}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{orcidlink}
 %\usepackage{orcidlink}
 \usepackage[title]{appendix}
 \usepackage{mathrsfs}
@@ -80,7 +81,7 @@
 % Customize line spacing
 \IfFileExists{setspace.sty}{%
   \usepackage{setspace}
-  \singlespacing
+  \onehalfspacing
 }{%
   \linespread{1.25} % Fallback close to 1.5 line spacing
 }
@@ -110,6 +111,28 @@
 \captionsetup[table]{position=top} % caption position for tables
 \captionsetup[table]{labelfont=bf} % caption label
 \captionsetup[figure]{labelfont=bf} % caption label
+\captionsetup{skip=6pt} % espaço reduzido entre float e legenda (era 10pt)
+
+% Aperta o espaço em branco reservado para figuras/tabelas: os padrões do LaTeX
+% (textfloatsep=20pt, floatsep/intextsep=12pt) são generosos demais para um
+% artigo com ~20 floats.
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+
+% Aperta o espaçamento antes/depois dos títulos de seção (o \titleformat acima
+% só mudou a numeração, o espaçamento continuava o padrão do LaTeX).
+\IfFileExists{titlesec.sty}{%
+  \titlespacing*{\section}{0pt}{2.0ex plus 0.5ex minus 0.2ex}{1.2ex plus 0.2ex}
+  \titlespacing*{\subsection}{0pt}{1.6ex plus 0.4ex minus 0.2ex}{0.8ex plus 0.2ex}
+  \titlespacing*{\subsubsection}{0pt}{1.4ex plus 0.4ex minus 0.2ex}{0.6ex plus 0.2ex}
+}{}
+
+% Aperta levemente a altura das linhas de tabela (era o padrão 1.0).
+\renewcommand{\arraystretch}{0.9}
+
+% Aperta o espaçamento vertical de itemize/enumerate (ex.: lista de objetivos).
+\setlist{noitemsep, topsep=4pt}
 
 % Define the unnumbered list
 \makeatletter

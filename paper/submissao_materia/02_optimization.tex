@@ -4,26 +4,12 @@ Neste trabalho, o dimensionamento das longarinas e das pranchas do tabuleiro é 
 
 \subsection{Histórico da otimização de pontes}\label{sec:historico_otimizacao_pontes}
 
-A aplicação de técnicas de otimização ao projeto de pontes antecede a difusão dos algoritmos evolutivos.
-Na década de 1970, \textcite{Aguilar1973} apresentaram um procedimento computacional baseado em programação dinâmica para selecionar configurações econômicas de pontes rodoviárias com múltiplos vãos simplesmente apoiados.
-Posteriormente, \textcite{Brar1984} empregaram programação geométrica na solução de dois problemas de projeto de pontes, comparando o custo de uma das soluções obtidas com o de um projeto usual.
-Na década de 1990, essa abordagem foi ampliada para considerar diferentes níveis de decisão e múltiplos critérios de desempenho.
-\textcite{CohnLounis1994} organizaram o projeto ótimo de superestruturas de pontes de concreto em três níveis: otimização dos componentes, da configuração estrutural e do sistema global.
-Em paralelo, \textcite{SimoesNegrao1994} formularam um problema multiobjetivo com metas de redução de custo e de tensões em pontes metálicas estaiadas, adotando como variáveis as dimensões das seções e as posições de ancoragem dos estais no tabuleiro e nas torres.
+A aplicação de técnicas de otimização ao projeto de pontes concentra-se, historicamente, em pontes de concreto e aço, antecedendo a própria difusão dos algoritmos evolutivos. Essa aplicação evoluiu de procedimentos determinísticos voltados à minimização de custo \parencite{Aguilar1973, Brar1984} para formulações que articulam múltiplos níveis de decisão, do componente à configuração estrutural, e múltiplos critérios de desempenho \parencite{CohnLounis1994, SimoesNegrao1994}.
+A adoção de metaheurísticas ampliou essa formulação a problemas com numerosas variáveis discretas e verificações estruturais acopladas \parencite{Marti2013, GarciaSeguraYepes2016}, incorporando em seguida metas de confiabilidade ao longo da vida útil \parencite{GarciaSegura2017} e, mais recentemente, modelagem tridimensional acoplada a busca local \parencite{deMoraes2025}.
 
-Uma vertente posterior passou a explorar metaheurísticas para tratar problemas com numerosas variáveis discretas e verificações estruturais acopladas.
-\textcite{Marti2013} aplicaram uma estratégia híbrida de recozimento simulado com operador de mutação ao projeto de pontes rodoviárias com vigas pré-moldadas e protendidas de seção em U.
-\textcite{GarciaSeguraYepes2016} empregaram busca harmônica multiobjetivo no projeto de pontes rodoviárias de concreto pós-tensionado com seção caixão, minimizando o custo e as emissões de CO\textsubscript{2} e maximizando um fator global de segurança.
-Em seguida, \textcite{GarciaSegura2017} estenderam a investigação ao desempenho ao longo da vida útil de pontes sujeitas à corrosão, articulando alternativas de projeto inicial e estratégias de manutenção sob uma meta de confiabilidade.
-Mais recentemente, \textcite{deMoraes2025} combinaram modelagem tridimensional, algoritmo genético, análise por elementos finitos e busca local pelo método Simplex no projeto de pontes com vigas de concreto protendido.
+Para a madeira, os antecedentes concentram-se em passarelas estaiadas de madeira laminada colada, sistema estrutural distinto das pontes rodoviárias de madeira roliça estudadas neste trabalho. \textcite{Negrao1999} tratou a minimização de custo variando dimensões dos elementos e propriedades do material, e \textcite{SimoesNegrao2005} formulou um procedimento de projeto ótimo baseado em confiabilidade, integrando análise por elementos finitos, análise de sensibilidade e uma formulação multicritério de custo, tensões, deslocamentos e confiabilidade.
+Esses antecedentes demonstram que tanto a busca de soluções econômicas quanto a consideração de incertezas já fazem parte da pesquisa sobre pontes de madeira, mas sem tratamento conjunto da variabilidade dimensional da madeira roliça e de uma formulação multiobjetivo, foco deste trabalho.
 
-No caso da madeira, há antecedentes específicos de otimização de passarelas estaiadas.
-\textcite{Negrao1999} investigou a minimização de custo mediante a alteração das dimensões dos elementos, das características dos estais e de parâmetros geométricos, incluindo a escolha de propriedades associadas às classes de madeira laminada colada.
-Posteriormente, \textcite{SimoesNegrao2005} apresentaram um procedimento de projeto ótimo baseado em confiabilidade para passarelas estaiadas de madeira laminada colada, integrando análise por elementos finitos, análise de sensibilidade e uma formulação multicritério que considera custo, tensões, deslocamentos e confiabilidade.
-Esses antecedentes demonstram que tanto a busca de soluções econômicas quanto a consideração de incertezas já fazem parte da pesquisa sobre pontes de madeira, embora em sistemas estruturais distintos das pontes rodoviárias de madeira roliça estudadas neste trabalho.
-
-O conjunto desses trabalhos permite identificar uma ampliação das decisões e dos critérios incorporados à otimização de pontes: da busca de configurações de menor custo às formulações que articulam desempenho estrutural, impactos ambientais, confiabilidade e automação do projeto.
-Nesse contexto, o presente estudo concentra-se no dimensionamento das seções de longarinas de madeira roliça e de pranchas do tabuleiro, com uma formulação multiobjetivo e avaliação de perturbações dimensionais.
 Esse tratamento de robustez, detalhado na Seção~\ref{sec:robustez}, avalia a resposta das soluções às variações prescritas nas dimensões; ele não corresponde, por si só, à imposição de uma probabilidade de falha ou de um índice-alvo de confiabilidade.
 A formulação multiobjetivo utilizada é apresentada a seguir.
 
@@ -59,15 +45,7 @@ representa o vetor $n$-dimensional de variáveis de projeto.
 O espaço de projeto viável é delimitado pelas restrições de desigualdade $g_j(\mathbf{x})$, restrições de igualdade $h_k(\mathbf{x})$ e restrições de domínio definidas pelos limites inferior $x_i^{(L)}$ e superior $x_i^{(U)}$, que em conjunto estabelecem o domínio admissível $(D)$ \parencite{DEB2009}.
 
 Objetivos inicialmente concebidos como problemas de maximização são convertidos em problemas equivalentes de minimização mediante a multiplicação das respectivas funções objetivo por $-1$, garantindo uma estrutura computacional unificada.
-A Figura~\ref{fig:pareto} ilustra o espaço de soluções de um problema biobjetivo típico, destacando a diversidade de configurações viáveis e o conceito de fronteira de Pareto.
 
- \begin{figure}[htpb!]
- \centering
- \includegraphics[width=0.6\textwidth]{figuras/z_types_frontier.png}
- \caption{Possíveis soluções de um problema de otimização multiobjetivo \parencite{DEB2009}.}
- \label{fig:pareto}
- \end{figure}
- 
  \subsection{Algoritmo de otimização NSGA-II} \label{sec:nsga2}
  
  Desenvolvido por \textcite{DEB2009}, este algoritmo evolutivo consolidou-se na literatura por sua capacidade de aproximar de forma eficiente o conjunto ótimo de Pareto. 
@@ -131,7 +109,7 @@ Cruzamento & SBX, $p_c = 0{,}90$, $\eta_c = 15$ \\
 Mutação & Polinomial, $\eta_m = 20$ \\
 Eliminação de duplicatas & Sim \\
 Semente aleatória & 1 \\
-Número de checagens robustas, $N_c$ & 30 \\
+Número de pontos da grade de robustez, $N_c$ & 5 \\
 Desvio de robustez, $\rho$ & 5\% \\
 \bottomrule
 \end{tabular*}

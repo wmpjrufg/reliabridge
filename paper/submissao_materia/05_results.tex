@@ -1,40 +1,19 @@
 \section{Resultados e discussão}\label{sec:resultados}
 
-Esta seção apresenta os resultados obtidos com a plataforma computacional descrita na Seção~\ref{sec:metodologia}, aplicada a uma matriz de configurações de ponte de madeira roliça para estrada vicinal de pista simples.
+Esta seção apresenta os resultados obtidos com o framework de otimização descrito na Seção~\ref{sec:metodologia}, aplicado a uma matriz de configurações de ponte de madeira roliça para estrada vicinal de pista simples.
 A matriz combina quatro vãos teóricos com as cinco classes de resistência de madeiras de florestas nativas da \textcite{NBR7190-1:2022}, mantendo fixos a largura da pista, o trem tipo e todos os coeficientes normativos, de modo que as diferenças observadas decorram exclusivamente do vão e da classe de resistência.
 
 A apresentação está organizada em quatro blocos.
-O primeiro descreve a plataforma computacional desenvolvida (Seção~\ref{sec:plataforma}) e define a matriz de casos (Seção~\ref{sec:casos}).
+O primeiro descreve o framework computacional desenvolvido (Seção~\ref{sec:plataforma}) e define a matriz de casos (Seção~\ref{sec:casos}).
 O segundo detalha uma célula de referência da matriz (Seção~\ref{sec:caso_detalhado}), na qual são exercitados todos os recursos analíticos da ferramenta: convergência por hipervolume, fronteira eficiente, grau de utilização das verificações, custo da robustez, sensibilidade global de Sobol e dispersão das variáveis de projeto.
 O terceiro percorre a matriz completa (Seção~\ref{sec:varredura}) e converte os resultados em ábacos de anteprojeto (Seção~\ref{sec:abacos}).
 O quarto ajusta ao banco de dados da varredura uma equação fechada de pré-dimensionamento (Seção~\ref{sec:equacao}), alternativa numérica à leitura gráfica dos ábacos.
 
 
-\subsection{Plataforma computacional}\label{sec:plataforma}
+\subsection{Framework computacional}\label{sec:plataforma}
 
-Como principal produto de engenharia deste trabalho, foi desenvolvida uma plataforma computacional de acesso livre para o dimensionamento de pontes de madeira, capaz de realizar a verificação completa dos elementos estruturais em conformidade com as \textcite{NBR7190-1:2022} e \textcite{nbr7188}, disponível nos idiomas português e inglês \parencite{ReliaBridge2026}.
-A interface, ilustrada nas Figuras~\ref{fig:tela_inicial} e~\ref{fig:interface_dim}, é organizada em módulos que permitem a navegação sequencial entre as etapas de dimensionamento por otimização, projeto detalhado dos elementos e análise dos resultados.
-Ao final do processamento, a ferramenta disponibiliza para download a planilha de dados de entrada, os resultados do pré-dimensionamento, as estatísticas descritivas das variáveis de projeto e as figuras geradas.
-
-\begin{figure}[!ht]
-    \centering
-    \begin{subfigure}{0.8\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{figuras/inicio.png}
-        \caption{Tela inicial da plataforma computacional.}
-        \label{fig:tela_inicial}
-    \end{subfigure}
-
-    \vspace{0.3cm}
-    \begin{subfigure}{0.8\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{figuras/predimencionamento.png}
-        \caption{Módulo de dimensionamento por otimização.}
-        \label{fig:interface_dim}
-    \end{subfigure}
-    \caption{Interface da plataforma computacional.}
-    \label{fig:interface}
-\end{figure}
+O framework de análise e otimização descrito na Seção~\ref{sec:metodologia} foi implementado em uma plataforma computacional de acesso livre para o dimensionamento de pontes de madeira, capaz de realizar a verificação completa dos elementos estruturais em conformidade com as \textcite{NBR7190-1:2022} e \textcite{nbr7188} \parencite{ReliaBridge2026}.
+Para cada solução processada, a plataforma disponibiliza a fronteira eficiente, o memorial de verificação e as estatísticas descritivas das variáveis de projeto, servindo como instrumento de implementação e transferência dos resultados deste trabalho ao projetista.
 
 \subsection{Definição da matriz de casos de estudo}\label{sec:casos}
 
@@ -143,7 +122,7 @@ A Figura~\ref{fig:convergencia_hv} apresenta a evolução do hipervolume em fun�
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.6\textwidth]{figuras/convergencia_hv.png}
+    \includegraphics[width=0.45\textwidth]{figuras/en/convergencia_hv.png}
     \caption{Evolução do hipervolume ao longo das gerações do NSGA-II.}
     \label{fig:convergencia_hv}
 \end{figure}
@@ -159,7 +138,7 @@ A Tabela~\ref{tab:solucoes_ref} reúne uma amostra representativa dessas soluç�
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.6\textwidth]{figuras/pareto_frontier_C13.png}
+    \includegraphics[width=0.6\textwidth]{figuras/en/pareto_frontier_C13.png}
     \caption{Fronteira eficiente da célula de referência C-13 ($L = 5{,}0$~m, D40, $\rho = 5\%$).}
     \label{fig:fronteira_ref}
 \end{figure}
@@ -213,7 +192,7 @@ A solução analisada é a de menor volume de madeira da fronteira, primeira lin
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.75\textwidth]{figuras/utilizacao_C13.png}
+    \includegraphics[width=0.65\textwidth]{figuras/en/utilizacao_C13.png}
     \caption{Grau de utilização de cada verificação normativa para a solução selecionada da fronteira robusta da célula C-13.}
     \label{fig:utilizacao}
 \end{figure}
@@ -243,7 +222,7 @@ A comparação é feita em um único ponto de cada fronteira, a solução de men
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.7\textwidth]{figuras/custo_robustez_C13.png}
+    \includegraphics[width=0.7\textwidth]{figuras/en/custo_robustez_C13.png}
     \caption{Fronteiras eficientes da célula C-13 para $\rho = 0\%$, $5\%$, $10\%$, $15\%$ e $20\%$.}
     \label{fig:custo_robustez}
 \end{figure}
@@ -282,7 +261,7 @@ Os índices de efeito total $S_{T_i}$ das cinco variáveis de projeto foram esti
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.85\textwidth]{figuras/sobol_heatmap_C13.png}
+    \includegraphics[width=0.85\textwidth]{figuras/en/sobol_heatmap_C13.png}
     \caption{Índices de Sobol de efeito total ($S_{T_i}$) das variáveis de projeto sobre as restrições, célula C-13.}
     \label{fig:sobol}
 \end{figure}
@@ -314,7 +293,7 @@ Os índices de efeito total são estimados por diferença de variâncias e, por 
 
 O resultado confirma a expectativa mecânica para as três restrições da longarina.
 O diâmetro $d$ responde por 98{,}2\% da sensibilidade da flexão, 96{,}0\% do cisalhamento e 97{,}2\% da flecha, ao passo que as quatro variáveis restantes somam, em conjunto, menos de 4\% em qualquer uma delas.
-O domínio é esperado porque $d$ é a única variável que entra simultaneamente na área, no módulo resistente e no momento de inércia da seção circular (Equações~\eqref{eq:areacirc} a~\eqref{eq:rcirc}), e é ainda mais pronunciado no estado limite de serviço, no qual o momento de inércia varia com $d^4$ enquanto a área, que governa o peso próprio, varia apenas com $d^2$.
+O domínio é esperado porque $d$ é a única variável que entra simultaneamente na área, no módulo resistente e no momento de inércia da seção circular, e é ainda mais pronunciado no estado limite de serviço, no qual o momento de inércia varia com $d^4$ enquanto a área, que governa o peso próprio, varia apenas com $d^2$.
 
 A flexão do tabuleiro comporta-se de modo distinto e mais informativo.
 Nela, o diâmetro é praticamente irrelevante, com participação de 0{,}1\%, e a variável dominante passa a ser o espaçamento entre longarinas, com 93{,}0\%, seguido pela altura da prancha, com 4{,}4\%, e pela largura, com 2{,}5\%.
@@ -334,7 +313,7 @@ Como complemento aos indicadores de qualidade da fronteira no espaço objetivo, 
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.75\textwidth]{figuras/boxplot_variaveis_C13.png}
+    \includegraphics[width=0.75\textwidth]{figuras/en/boxplot_variaveis_C13.png}
     \caption{Dispersão das variáveis de projeto ao longo da fronteira eficiente da célula C-13.}
     \label{fig:boxplot}
 \end{figure}
@@ -358,7 +337,6 @@ $esp_{tab}$ (cm) & 3{,}44 & 1{,}14 & 33{,}14 & 2{,}18 & 2{,}44 & 2{,}56 & 4{,}68
 \begin{tablenotes}
 \footnotesize
 \item Estatísticas calculadas sobre as 50 soluções não dominadas da fronteira final.
-A plataforma exporta esta tabela automaticamente.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -369,7 +347,7 @@ Em seguida vem o diâmetro da longarina, com amplitude de 52{,}2~cm e coeficient
 São essas duas variáveis, mesmo assim, que constroem o compromisso entre os dois objetivos: nenhuma outra se aproxima delas em amplitude absoluta.
 
 No extremo oposto, a largura da prancha do tabuleiro é praticamente invariante, com coeficiente de variação de 0{,}4\% e intervalo interquartil de apenas 0{,}01~cm em torno de 45{,}5~cm.
-O algoritmo converge para esse valor independentemente do ponto da fronteira escolhido pelo projetista, o que tem consequência prática ainda mais marcada do que em versões anteriores da matriz: $b_w \approx 45{,}5$~cm pode ser fixado a priori no anteprojeto, sem penalidade de desempenho, reduzindo de cinco para quatro a dimensionalidade efetiva da decisão.
+O algoritmo converge para esse valor independentemente do ponto da fronteira escolhido pelo projetista, o que tem uma consequência prática direta: $b_w \approx 45{,}5$~cm pode ser fixado a priori no anteprojeto, sem penalidade de desempenho, reduzindo de cinco para quatro a dimensionalidade efetiva da decisão.
 As duas variáveis restantes ocupam posições intermediárias, mas com leitura distinta entre si. A altura da prancha tem coeficiente de variação de 17{,}9\% (4{,}4~cm de amplitude), moderado, enquanto o espaçamento entre peças do tabuleiro tem 33{,}1\% (2{,}8~cm de amplitude), bem mais disperso, aproximando-se do mínimo admissível de 2~cm em pelo menos um ponto da fronteira (mínimo observado de 2{,}18~cm, a apenas 0{,}18~cm do piso do domínio de busca).
 
 O confronto com a Seção~\ref{sec:sobol} é convergente.
@@ -455,9 +433,6 @@ A combinação rara ($L/500$, sem redução por fluência), contudo, já se apro
 
 O cisalhamento, por sua vez, permanece longe do limite em toda a matriz, com utilização máxima de 60{,}2\%. A área da seção circular cresce com $d^2$ enquanto a solicitação de cortante independe do diâmetro, de modo que essa verificação, tradicionalmente citada como crítica em peças roliças curtas, não chega a se aproximar do limite mesmo após a correção da Equação~\eqref{eq:qqkenv} para vãos curtos.
 
-A proximidade da flecha da longarina ao limite nas três células mais severas, ainda que sem chegar a governar, já sinaliza a transição de resistência para rigidez dentro da própria faixa de 3 a 6~m estudada, o que qualifica, sem invalidar, o campo de validade dos ábacos da seção seguinte.
-Cabe notar, por fim, que o tabuleiro governa quinze das vinte células e permanece a restrição ativa em toda a fronteira da célula de referência. Ele não é um elemento secundário do dimensionamento, e merece no anteprojeto a mesma atenção dedicada às longarinas.
-
 \subsection{Ábacos de anteprojeto}\label{sec:abacos}
 
 Os resultados da Tabela~\ref{tab:resultados_matriz} foram convertidos em ábacos de consulta direta, destinados ao uso do projetista na etapa de concepção, antes de qualquer processamento computacional.
@@ -465,24 +440,24 @@ A Figura~\ref{fig:abaco_volume} apresenta o volume total de madeira em função 
 
 \begin{figure}[!ht]
     \centering
-    \begin{subfigure}{0.48\textwidth}
+    \begin{subfigure}{0.40\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figuras/abaco_volume_vs_vao.png}
+        \includegraphics[width=\textwidth]{figuras/en/abaco_volume_vs_vao.png}
         \caption{Volume total de madeira em função do vão teórico.}
         \label{fig:abaco_volume}
     \end{subfigure}
     \hfill
-    \begin{subfigure}{0.48\textwidth}
+    \begin{subfigure}{0.40\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figuras/abaco_volume_por_m2.png}
+        \includegraphics[width=\textwidth]{figuras/en/abaco_volume_por_m2.png}
         \caption{Consumo de madeira por metro quadrado de tabuleiro.}
         \label{fig:abaco_volume_m2}
     \end{subfigure}
 
-    \vspace{0.3cm}
-    \begin{subfigure}{0.48\textwidth}
+    \vspace{0.05cm}
+    \begin{subfigure}{0.40\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{figuras/abaco_diametro_vs_vao.png}
+        \includegraphics[width=\textwidth]{figuras/en/abaco_diametro_vs_vao.png}
         \caption{Diâmetro de longarina requerido em função do vão teórico.}
         \label{fig:abaco_diametro}
     \end{subfigure}
@@ -509,12 +484,13 @@ Os parâmetros $a$, $b$ e $c$ foram estimados por mínimos quadrados sobre a for
 
 
 O ajuste resultou em $a = 2{,}290$, $b = 1{,}683$ e $c = -0{,}518$, com coeficiente de determinação $R^2 = 0{,}999$ na escala logarítmica.
+Esse valor descreve a qualidade do ajuste sobre o próprio conjunto de vinte células usado na análise, e não constitui uma validação externa do modelo. A Equação~\eqref{eq:pre_dimensionamento} é uma relação de pré-dimensionamento (um modelo substituto) ajustada ao domínio investigado, válida para vãos de 3,0 a 6,0~m, classes de resistência D20 a D60, a configuração estrutural de pista simples e o trem tipo TB-240 adotados neste trabalho.
 A Figura~\ref{fig:equacao_pre_dimensionamento} compara, para as vinte células, o volume obtido pela otimização com o volume estimado pela Equação~\ref{eq:pre_dimensionamento}: os pontos situam-se rente à diagonal $V = \hat{V}$ em toda a faixa de volumes estudada, de 1{,}75 a 9{,}98~m\textsuperscript{3}, sem desvio sistemático por vão ou por classe.
 O erro relativo médio em módulo é de 1{,}31\%, com máximo de 5{,}32\% na célula C-08 ($L=4{,}0$~m, D40).
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.6\textwidth]{figuras/equacao_pre_dimensionamento.png}
+    \includegraphics[width=0.4\textwidth]{figuras/en/equacao_pre_dimensionamento.png}
     \caption{Volume estimado pela equação de pré-dimensionamento (Equação~\ref{eq:pre_dimensionamento}) contra o volume obtido na otimização, para as vinte células da matriz.}
     \label{fig:equacao_pre_dimensionamento}
 \end{figure}
