@@ -1,0 +1,141 @@
+\section{Optimization}\label{sec:otimizacao}
+
+In this work, the design of the girders and deck planks is treated as a sizing optimization problem \parencite{BendsoeSigmund2003}, in which the topology of the structural system, that is, the number and arrangement of the members, is defined \textit{a priori} by the designer, and the algorithm searches for the optimal dimensions of these members within the prescribed bounds.
+
+\subsection{Background on bridge optimization}\label{sec:historico_otimizacao_pontes}
+
+The application of optimization techniques to bridge design has historically concentrated on concrete and steel bridges and predates the widespread use of evolutionary algorithms. It evolved from deterministic procedures aimed at cost minimization \parencite{Aguilar1973, Brar1984} to formulations that combine multiple decision levels, from the component to the structural configuration, and multiple performance criteria \parencite{CohnLounis1994, SimoesNegrao1994}.
+The adoption of metaheuristics extended this formulation to problems with numerous discrete variables and coupled structural checks \parencite{Marti2013, GarciaSeguraYepes2016}, subsequently incorporating reliability targets over the service life \parencite{GarciaSegura2017} and, more recently, three-dimensional modelling coupled with local search \parencite{deMoraes2025}.
+
+For timber, the precedents focus on cable-stayed glued laminated timber footbridges, a structural system distinct from the roundwood highway bridges studied in this work. \textcite{Negrao1999} addressed cost minimization by varying member dimensions and material properties, and \textcite{SimoesNegrao2005} formulated a reliability-based optimum design procedure integrating finite element analysis, sensitivity analysis and a multi-criteria formulation of cost, stresses, displacements and reliability.
+These precedents show that both the search for economical solutions and the consideration of uncertainties are already part of timber bridge research, but without the joint treatment of the dimensional variability of roundwood and a multi-objective formulation, which is the focus of this work.
+
+The robustness treatment adopted here, detailed in Section~\ref{sec:robustez}, evaluates the response of the solutions to prescribed dimensional variations and does not, by itself, correspond to imposing a probability of failure or a target reliability index.
+The multi-objective formulation used is presented next.
+
+\subsection{Multi-objective optimization framework}\label{sec:otim_multiobjetivo}
+
+A multi-objective optimization problem involves the simultaneous minimization and/or maximization of multiple objective functions, subject to a set of constraints that define the feasibility of the candidate solutions.
+Unlike single-objective optimization, this formulation does not lead to a single global optimum.
+Instead, it results in a set of Pareto-optimal solutions, each representing a distinct trade-off between competing performance criteria.
+
+The general mathematical formulation of a multi-objective optimization problem can be expressed as in Eq.~\eqref{eq:mop}.
+
+\begin{equation}
+\left\{
+\begin{array}{ll}
+f_m(\mathbf{x}), & m = 1,2,\ldots,M; \\
+g_j(\mathbf{x}) \leq 0, & j = 1,2,\ldots,J; \\
+h_k(\mathbf{x}) = 0, & k = 1,2,\ldots,K; \\
+x_i^{(L)} \leq x_i \leq x_i^{(U)}, & i = 1,2,\ldots,n.
+\end{array}
+\right.
+\label{eq:mop}
+\end{equation}
+
+In this formulation, the vector of objective functions is defined by Eq.~\eqref{eq:fx}.
+
+ \begin{equation}
+ f(\mathbf{x}) = \left(f_1(\mathbf{x}), f_2(\mathbf{x}), \ldots, f_M(\mathbf{x})\right)^T\label{eq:fx}
+ \end{equation}
+
+where $\mathbf{x} = (x_1, x_2, \ldots, x_n)^T$ is the $n$-dimensional vector of design variables.
+The feasible design space is bounded by the inequality constraints $g_j(\mathbf{x})$, the equality constraints $h_k(\mathbf{x})$ and the side constraints defined by the lower and upper bounds $x_i^{(L)}$ and $x_i^{(U)}$, which together establish the admissible domain $(D)$ \parencite{DEB2009}.
+
+Objectives originally conceived as maximization problems are converted into equivalent minimization problems by multiplying the corresponding objective functions by $-1$, ensuring a unified computational structure.
+
+ \subsection{NSGA-II optimization algorithm} \label{sec:nsga2}
+
+Developed by \textcite{DEB2009}, this evolutionary algorithm has become established in the literature for its ability to efficiently approximate the Pareto-optimal set.
+NSGA-II preserves the vector nature of the multi-objective problem and searches for a diverse set of non-dominated solutions without resorting to scalarization (weighted sum) of the objective functions.
+The core mechanism of the algorithm is fast non-dominated sorting.
+At each generation, the whole population is evaluated and sorted into successive non-dominated fronts $\mathcal{F}_1, \mathcal{F}_2, \ldots, \mathcal{F}_k$.
+The first front ($\mathcal{F}_1$) gathers the currently optimal solutions of that generation and constitutes the current approximation of the Pareto front.
+The next front ($\mathcal{F}_2$) contains the solutions that would be non-dominated if the individuals of $\mathcal{F}_1$ were disregarded, and so on. To prevent premature convergence to a single region and to maintain a uniform spread along the front, the algorithm uses the crowding distance operator.
+This metric estimates the density of solutions around a given individual by computing the hypervolume formed by its nearest neighbours.
+For a problem with $M$ objective functions, the crowding distance $d_i$ of individual $i$ is computed by Eq.~\eqref{eq:crowding}.
+
+ \begin{equation}d_i = \sum_{m=1}^{M} \frac{f_m(\mathbf{x}_{i+1}) - f_m(\mathbf{x}_{i-1})}{f_m^{\max} - f_m^{\min}}
+ \label{eq:crowding}
+ \end{equation}
+
+NSGA-II employs a strongly elitist strategy.
+At each cycle, the parent and offspring populations are merged and sorted first by Pareto rank and, in case of a tie within the same front, by the largest crowding distance.
+Algorithm~\ref{alg:nsga2} summarizes the evolutionary logic and the flow of structural evaluations, incorporating the protection against uncertainty described in Section~\ref{sec:robustez}.
+
+ \begin{algorithm}[!ht]
+ \caption{Robust multi-objective optimization via NSGA-II}
+ \label{alg:nsga2}
+ \begin{algorithmic}[1]
+ \Require Bounds $[x_i^{(L)}, x_i^{(U)}]$, population size $N_{pop}$, generations $N_{gen}$, robustness deviation $\rho$, robustness grid $\Lambda = \{-1,\,-\tfrac{1}{2},\,0,\,\tfrac{1}{2},\,1\}$
+ \Ensure Efficient front $\mathcal{F}_1$
+ \State Initialize population $P_0$ by random sampling in $[x_i^{(L)}, x_i^{(U)}]$
+ \For{each generation $t = 0$ to $N_{gen}-1$}
+   \For{each individual $\mathbf{x} = (d, b_w, h, esp_{long}, esp_{tab}) \in P_t$}
+     \State $(\mathbf{F}, \cdot) \gets$ \Call{EvaluateModel}{$\mathbf{x}$} \Comment{objectives at the nominal point, no aggregation}
+     \State $\mathbf{G} \gets -\boldsymbol{\infty}$
+     \For{each $\lambda \in \Lambda$} \Comment{robustness grid, applied to $d$ only}
+       \State $\tilde{d} \gets d\,(1 + \rho\,\lambda)$
+       \State $\tilde{\mathbf{x}} \gets (\tilde{d},\,b_w,\,h,\,esp_{long},\,esp_{tab})$
+       \State $(\cdot, \mathbf{g}) \gets$ \Call{EvaluateModel}{$\tilde{\mathbf{x}}$}
+       \State $\mathbf{G} \gets \max(\mathbf{G}, \mathbf{g})$ \Comment{component-wise, worst case}
+     \EndFor
+   \EndFor
+   \State $Q_t \gets$ tournament selection, SBX crossover and polynomial mutation on $P_t$
+   \State $R_t \gets P_t \cup Q_t$
+   \State Sort $R_t$ into non-dominated fronts $\{\mathcal{F}_1, \mathcal{F}_2, \ldots\}$
+   \State $P_{t+1} \gets$ best $N_{pop}$ individuals by Pareto rank and crowding distance
+ \EndFor
+ \State \Return $\mathcal{F}_1$
+ \end{algorithmic}
+ \end{algorithm}
+
+The evolution of the generations relies on genetic operators suited to continuous variables.
+The combined use of simulated binary crossover (SBX) and polynomial mutation (PM) refines local solutions in the search space, while the systematic elimination of duplicates preserves the genetic diversity of the population and prevents premature convergence.
+The configuration parameters adopted in all runs of this work are listed in Table~\ref{tab:nsga2}.
+
+\begin{table}[!ht]
+\caption{NSGA-II configuration parameters.\label{tab:nsga2}}
+\begin{tabular*}{\columnwidth}{@{\extracolsep\fill}lc@{\extracolsep\fill}}
+\toprule
+Parameter & Value \\
+\midrule
+Population size, $N_{pop}$ & 50 \\
+Number of generations, $N_{gen}$ & 300 \\
+Initial sampling & Uniform random \\
+Crossover & SBX, $p_c = 0.90$, $\eta_c = 15$ \\
+Mutation & Polynomial, $\eta_m = 20$ \\
+Duplicate elimination & Yes \\
+Random seed & 1 \\
+Number of robustness grid points, $N_c$ & 5 \\
+Robustness deviation, $\rho$ & 5\% \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+ \subsection{Robustness in optimization}\label{sec:robustez}
+
+In structural engineering, purely deterministic optimization tends to place the optimal solutions exactly on the mathematical boundary of the active constraints.
+This characteristic makes them extremely sensitive to small variations in the design variables.
+In practice, this sensitivity is aggravated by the inherent variability of the physical properties of the materials and by the natural tolerances of manufacturing, cutting and assembly of the members.
+Under real conditions, a structure whose design lies exactly on the deterministic feasibility limit has a high probability of violating safety requirements or serviceability limit states if its final dimensions deviate even slightly from those specified.
+To mitigate this effect, the concept of robustness must be incorporated natively into the algorithmic process.
+The strategy adopted keeps the objective functions at the nominal design value, but also evaluates the feasibility of each candidate solution under a set of controlled perturbations.
+
+The perturbation is applied exclusively to the girder diameter, $d$, because roundwood exhibits a natural diameter variability that is relevant to the structural behaviour. Instead of sampling the perturbation randomly, it follows a deterministic five-point grid, $\Lambda = \{-1,\,-\tfrac{1}{2},\,0,\,\tfrac{1}{2},\,1\}$. This choice eliminates the seed bias that random sampling with few points would introduce, while the five levels suffice to capture possible feasibility steps within the interval $[-\rho,\,\rho]$ without relying on a monotonic response.
+For a given individual $\mathbf{x} = (d,\allowbreak b_w,\allowbreak h,\allowbreak esp_{long},\allowbreak esp_{tab})$, $N_c = |\Lambda| = 5$ perturbed realizations, denoted by $\tilde{\mathbf{x}}^{(c)}$, are generated as defined in Eq.~\eqref{eq:perturbacao}.
+
+ \begin{equation}\tilde{d}^{(c)} = d\left(1 + \rho\,\lambda^{(c)}\right),\qquad \lambda^{(c)} \in \Lambda,\qquad \tilde{x}_i^{(c)} = x_i \ \text{for}\ i \neq d\label{eq:perturbacao}
+ \end{equation}
+
+The term $\rho$ represents the magnitude of the parametric deviation tolerated by the design with respect to the nominal diameter, and $\lambda^{(c)}$ runs over the five points of the grid $\Lambda$.
+When $\rho = 0$, the grid collapses to the single point $\lambda = 0$ and the procedure reduces to the standard deterministic evaluation ($N_c = 1$).
+In each cycle, the perturbed evaluations are processed independently in the analytical model, but only the constraints are re-evaluated at these points, while the objective functions remain computed at the nominal point $\mathbf{x}$, without any aggregation over the grid.
+The constraint values of the $N_c$ perturbed realizations are then aggregated by the worst-case (maximum) operator, according to Eq.~\eqref{eq:gmed}.
+
+ \begin{equation}g_j(\mathbf{x}) = \max_{c=1,\ldots,N_c}\ g_j\!\left(\tilde{\mathbf{x}}^{(c)}\right)
+ \label{eq:gmed}
+ \end{equation}
+
+With this formulation, a solution is deemed admissible only if all its constraints remain satisfied ($g_j \leq 0$) at every point of the diameter perturbation grid, that is, in the worst case. Designs set too close to the constraints violate at least one of the unfavourable grid points, which is enough for them to be penalized by the feasibility mechanism of the algorithm.
+The result is a natural shift of the Pareto front towards more conservative regions of the feasible design space.

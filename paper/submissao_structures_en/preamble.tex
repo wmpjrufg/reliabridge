@@ -1,0 +1,170 @@
+% Language setting
+\usepackage[american]{babel}
+
+% Set page size and margins
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2.5cm,right=2.5cm,marginparwidth=1.75cm]{geometry}
+
+%----------- APA style references & citations (starting) ---
+% Useful packages
+%\usepackage[natbibapa]{apacite} % APA-style citations.
+
+\usepackage[style=apa, backend=biber, uniquename=false]{biblatex} % APA sem diferenciação por iniciais nas citações
+\addbibresource{references.bib} % Your .bib file
+
+% Formatting DOI in APA-7 style
+%\renewcommand{\doiprefix}{https://doi.org/}
+
+% Add additional APA 7th edition requirements
+\DeclareLanguageMapping{american}{american-apa} % Set language mapping
+\DeclareFieldFormat[article]{volume}{\apanum{#1}} % Format volume number
+
+% Modify 'and' to '&' in the bibliography
+\renewcommand*{\finalnamedelim}{%
+  \ifnumgreater{\value{liststop}}{2}{\finalandcomma}{}%
+  \addspace\&\space}
+  
+%----------- APA style references & citations (ending) ---
+
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{patterns,arrows.meta,shapes.geometric,positioning,calc}
+\definecolor{flowblue}{RGB}{162,195,224} % cor de preenchimento do fluxograma metodologico
+% Comando para as sugestoes de resultados de alto impacto (destaque em vermelho)
+\newcommand{\sugestao}[1]{%
+  \par\medskip\noindent
+  \colorbox{red!8}{\parbox{0.98\linewidth}{%
+    \color{red}\small\textbf{[SUGESTAO DE ALTO IMPACTO]}\ #1}}%
+  \par\medskip}
+
+% Marcadores de conteudo pendente (numeros, frases, figuras/tabelas a preencher
+% apos rodar as analises finais). Uso inline: \tofill{valor ou frase}.
+% Uso em bloco (paragrafo, lista ou instrucao mais longa): ambiente fillblock.
+% NOTA: nao usar o nome \fill -- e o registrador de "glue" nativo do LaTeX,
+% usado em \extracolsep\fill nas tabelas deste documento; redefini-lo quebraria
+% todas as tabelas.
+\newcommand{\tofill}[1]{\textcolor{red}{#1}}
+\newenvironment{fillblock}{\color{red}}{\color{black}}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{orcidlink}
+%\usepackage{orcidlink}
+\usepackage[title]{appendix}
+\usepackage{mathrsfs}
+\usepackage{amsfonts}
+\usepackage{array}          % >{...} nas colunas, tipo m{} e \arraybackslash
+\usepackage{booktabs}       % For \toprule, \midrule, \botrule
+\usepackage{threeparttable} % For table footnotes
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{enumitem}
+\IfFileExists{chngcntr.sty}{\usepackage{chngcntr}}{}
+\usepackage{lipsum}
+\usepackage{subcaption}
+\IfFileExists{authblk.sty}{\usepackage{authblk}}{}
+\usepackage[T1]{fontenc}    % Font encoding
+\usepackage{csquotes}       % Include csquotes
+\IfFileExists{diagbox.sty}{\usepackage{diagbox}}{}
+\IfFileExists{comment.sty}{\usepackage{comment}}{}
+\usepackage{url}
+
+%\usepackage[justification=raggedright, singlelinecheck=false]{caption}
+\IfFileExists{helvet.sty}{\usepackage{helvet}}{}  % Load Helvetica (Arial-like)
+\IfFileExists{lmodern.sty}{\usepackage{lmodern}}{}  % Ensures default LaTeX font is available
+
+% label format: capital, centering, and parens
+\renewcommand{\thesubfigure}{\Alph{subfigure}}
+
+% Customize line spacing
+\IfFileExists{setspace.sty}{%
+  \usepackage{setspace}
+  \onehalfspacing
+}{%
+  \linespread{1.25} % Fallback close to 1.5 line spacing
+}
+
+% Redefine section and subsection numbering format
+\IfFileExists{titlesec.sty}{%
+  \usepackage{titlesec}
+  \titleformat{\section} % Redefine section numbering format
+    {\normalfont\Large\bfseries}{\thesection.}{1em}{}
+}{}
+  
+% Customize line numbering format to right-align line numbers
+%\usepackage{lineno} % Add the lineno package
+%\renewcommand\linenumberfont{\normalfont\scriptsize\sffamily\color{blue}}
+%\rightlinenumbers % Right-align line numbers
+
+%\linenumbers % Enable line numbering
+
+% Define a new command for the fourth-level title.
+\newcommand{\subsubsubsection}[1]{%
+  \vspace{\baselineskip}% Add some space
+  \noindent\textbf{#1\\}\quad% Adjust formatting as needed
+}
+% Change the position of the table caption above the table
+\usepackage{float}   % for customizing caption position
+\usepackage{caption}
+\captionsetup[table]{position=top} % caption position for tables
+\captionsetup[table]{labelfont=bf} % caption label
+\captionsetup[figure]{labelfont=bf} % caption label
+\captionsetup{skip=6pt} % espaço reduzido entre float e legenda (era 10pt)
+
+% Aperta o espaço em branco reservado para figuras/tabelas: os padrões do LaTeX
+% (textfloatsep=20pt, floatsep/intextsep=12pt) são generosos demais para um
+% artigo com ~20 floats.
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+
+% Aperta o espaçamento antes/depois dos títulos de seção (o \titleformat acima
+% só mudou a numeração, o espaçamento continuava o padrão do LaTeX).
+\IfFileExists{titlesec.sty}{%
+  \titlespacing*{\section}{0pt}{2.0ex plus 0.5ex minus 0.2ex}{1.2ex plus 0.2ex}
+  \titlespacing*{\subsection}{0pt}{1.6ex plus 0.4ex minus 0.2ex}{0.8ex plus 0.2ex}
+  \titlespacing*{\subsubsection}{0pt}{1.4ex plus 0.4ex minus 0.2ex}{0.6ex plus 0.2ex}
+}{}
+
+% Aperta levemente a altura das linhas de tabela (era o padrão 1.0).
+\renewcommand{\arraystretch}{0.9}
+
+% Aperta o espaçamento vertical de itemize/enumerate (ex.: lista de objetivos).
+\setlist{noitemsep, topsep=4pt}
+
+% Define the unnumbered list
+\makeatletter
+\newenvironment{unlist}{%
+  \begin{list}{}{%
+    \setlength{\labelwidth}{0pt}%
+    \setlength{\labelsep}{0pt}%
+    \setlength{\leftmargin}{2em}%
+    \setlength{\itemindent}{-2em}%
+    \setlength{\topsep}{\medskipamount}%
+    \setlength{\itemsep}{3pt}%
+  }%
+}{%
+  \end{list}%
+}
+\makeatother
+
+% Suppress the warning about \@parboxrestore
+\pdfsuppresswarningpagegroup=1
+
+\date{}  % Remove date
+
+% Keep the template compilable when example image files are not uploaded yet.
+\makeatletter
+\let\template@orig@includegraphics\includegraphics
+\renewcommand{\includegraphics}[2][]{%
+  \IfFileExists{#2}{%
+    \template@orig@includegraphics[#1]{#2}%
+  }{%
+    \fbox{\parbox[c][0.22\textheight][c]{0.75\linewidth}{%
+      \centering\small Missing figure: \texttt{\detokenize{#2}}%
+    }}%
+  }%
+}
+\makeatother

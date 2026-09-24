@@ -1,0 +1,46 @@
+\section{Introduction}\label{sec:introducao}
+
+Timber has accompanied the history of construction since the earliest structural systems and remains relevant owing to its eco-efficiency, the low energy consumption of its production and its high strength-to-weight ratio \parencite{FRAGA2025}.
+In buildings, the embodied energy of timber structures is, on average, 28\% and 47\% lower than that of equivalent concrete and steel structures, respectively \parencite{Schenk2022}.
+Its combination with concrete and steel enables composite structural systems that exploit the properties of each material, widening the range of applications of timber and improving structural performance \parencite{PASTORI2022}.
+In view of the global decarbonization targets of the construction sector \parencite{Li2025}, timber re-emerges as a promising structural alternative for small and medium-span bridges, particularly on low-traffic rural roads, where spans are short and the demand for economical and sustainable solutions is high \parencite{Milani2020}.
+In many of these contexts, concrete and steel solutions are hindered by the lack of local production and by the logistical difficulty of transporting these materials to the site, which makes timber, frequently available in the region itself, the most viable structural alternative.
+
+In this scenario, computational structural optimization has become established as a tool to reconcile performance and environmental targets, and has already been employed in several fields of engineering design. \textcite{Moraes2022}, for instance, employed metaheuristic optimization to reduce the CO\textsubscript{2} emissions associated with the design of precast prestressed concrete beams, whereas \textcite{FRAGA2025} applied optimization concepts to the design of timber members in Fink trusses.
+
+Historically, the structural design process has evolved from manual calculations and semi-automated computer-aided drafting procedures towards approaches that integrate parametric modelling, automated structural analysis and data-driven optimization techniques.
+This paradigm has already been applied successfully to bridge design. By coupling three-dimensional parametric modelling with global and local optimization routines, \textcite{deMoraes2025} automated the design of prestressed concrete girders for highway bridges.
+At industrial scale, \textcite{Rajic2026} developed a parametric toolbox that automates the generation of finite element models and the code checks of prestressed concrete bridges, successfully applied to large infrastructure projects.
+Platforms of this kind have also been employed for the structural assessment and diagnosis of bridges \parencite{Garbowski2023, Alseid2025, Miluccio2026}.
+
+This literature, however, focuses predominantly on concrete bridges.
+Parametric frameworks for timber structures, such as that of \textcite{Jiang2023}, are restricted to building components.
+Their extension to roundwood timber bridges remains little explored, especially regarding the dimensional variability of the members and its influence on the structural behaviour.
+The available studies on timber bridges focus mostly on field surveys and pre-sizing tables based on manual checks, such as that of \textcite{Criado2024}, or on dynamic testing and numerical modelling of existing bridges, such as that of \textcite{BERGENUDD2023115429}, without incorporating parametric modelling, structural optimization or robustness treatment.
+A recent systematic review on the structural optimization of timber components further points out that the lack of open-source codes is one of the main barriers to transferring this research to practical applications \parencite{Belz2025}.
+The literature on bridge optimization therefore remains dominated by other materials, and for roundwood timber highway bridges the integrated investigation of geometry, strength properties, dimensional variability, material efficiency and governing limit states is still limited.
+This is the gap that the parametric robust optimization framework proposed in this work seeks to fill, with the open-access computational platform serving as an instrument for implementing and transferring the results.
+In this paradigm, design ceases to be a linear procedure and is treated as an iterative and integrated process, in which the geometric model, the internal force analysis and the design decision are coupled within a single optimization routine.
+This transition reduces design time, improves the quality of the solutions and allows the space of feasible alternatives to be explored systematically.
+
+In this context, the design of timber bridges can be formulated as an optimization problem in which conflicting objectives must be considered simultaneously, such as minimizing material consumption, satisfying the ultimate and serviceability limit states and ensuring the overall structural performance.
+Metaheuristic-based multi-objective optimization emerges as a suitable tool to handle this complexity, since it yields a set of efficient solutions represented by a Pareto front \parencite{DEB2009}, giving the designer greater flexibility in decision-making and favouring the rational use of resources.
+
+However, deterministic optimization frequently leads to solutions located exactly on the constraint boundary, where small variations in the design variables, arising from manufacturing tolerances, the dimensional variability of roundwood or assembly inaccuracies, may lead to the violation of safety criteria.
+This aspect is particularly critical for roundwood, whose diameter exhibits significant natural variability and whose load-bearing capacity is directly conditioned by this dimensional variability \parencite{Morgado2017}.
+It is therefore necessary to incorporate the concept of robustness into the optimization process, so that the solutions obtained remain safe even under deviations around their nominal values.
+
+\subsection{Objectives and contributions}\label{sec:objetivos_contribuicoes}
+
+This work proposes a parametric robust multi-objective optimization framework for the design of roundwood timber bridges, in which the parametric modelling of the structural members is coupled to an evolutionary search routine, in accordance with the criteria of \textcite{NBR7190-1:2022}.
+Unlike approaches that design the deck and the girder in sequential and independent steps, the formulation adopted here couples both members in a single evaluation, detailed in Section~\ref{sec:metodologia}.
+
+The specific objectives of this work are as follows.
+\begin{enumerate}[label=(\roman*)]
+    \item To formulate the design of the structural members of timber bridges as a multi-objective optimization problem, defining objective functions and constraints consistent with the safety and performance criteria of the code.
+    \item To implement the NSGA-II algorithm coupled to the parametric structural model, ensuring the convergence and diversity of the solutions.
+    \item To incorporate robustness analysis into the search process, evaluating the effect of a 5\% deviation applied to the nominal girder diameter on the constraints.
+    \item To investigate the parametric matrix of single-lane rural road bridges, covering four design spans and the five timber strength classes of the code, in order to identify the trends in material consumption, structural performance and governing limit states across the investigated domain.
+\end{enumerate}
+
+The main contributions of this work fall into three categories, namely methodological, structural and applied. To the best of the authors' knowledge, the methodological contribution is the first approach to integrate parametric modelling, multi-objective optimization and robustness analysis in the design of roundwood timber bridges. The structural contribution stems from the investigation of the parametric matrix, which identifies the relationships between span, strength class, dimensional variability, material consumption and governing limit states. The applied contribution results from the evaluated case matrix, which yields preliminary design charts and a closed-form pre-sizing equation, made available through an open-access computational platform that implements and transfers these results to the designer.

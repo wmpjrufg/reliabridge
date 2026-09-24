@@ -1,0 +1,24 @@
+\section{Conclusions}\label{sec:conclusoes}
+
+This work investigated, by means of a parametric robust multi-objective optimization framework in accordance with \textcite{NBR7190-1:2022}, how span, strength class and dimensional variability control material consumption, structural performance and the governing limit states of roundwood timber bridges on rural roads.
+The design is obtained without an initial assumption of cross-sections. The designer provides the span, roadway width, design vehicle and material properties, and receives the complete set of trade-off solutions, instead of checking a section previously chosen by experience or analogy.
+The framework covered the twenty cells of the matrix without manual intervention and without individual tuning of the algorithm parameters, with converged and uniformly distributed fronts in all of them, at a computational cost of about 2~min for the complete matrix on a personal computer.
+
+The incorporation of robustness has a real but modest cost.
+In the reference cell, the minimum volume solution of the front became 6.0\% more expensive at $\rho = 5\%$ with respect to the deterministic case, and this increase grew monotonically up to 26.9\% at $\rho = 20\%$, in exchange for protection against limit state violation under the natural dimensional deviation of roundwood.
+
+Timber consumption grows with span according to a power law with exponent between 1.64 and 1.73, weakly dependent on the class, and the first class upgrade is the most effective. Moving from D20 to D30 reduces consumption by 17 to 21\%, against 4 to 12\% for each subsequent upgrade, because the increased density of the higher classes consumes part of the strength gain.
+These results were condensed into preliminary design charts and a pre-sizing equation $V(L, f_{c0,k}) = a\,L^{b}\,f_{c0,k}^{c}$, fitted with $R^2 = 0.999$ and a mean relative error of 1.3\% within the investigated range of spans and classes, and made available through the open-access computational platform, which allow the timber volume and the girder diameter to be estimated without running a complete optimization.
+
+In the 3 to 6~m range under the TB-240 vehicle, bending governs the entire matrix, fifteen cells through the deck and five through the girder, and shear remains far from its limit, with a maximum utilization of 60.2\%.
+The deck is therefore not a secondary element of the design and deserves the same design attention as the girders.
+Girder deflection, however, already approaches its limit in the cells with the most severe span and class, a sign that the transition from strength to stiffness governance begins to emerge within the studied range itself.
+
+The global sensitivity analysis showed that the diameter of the roundwood members and the girder spacing concentrate practically all the variability of the limit state functions, the former in the girder checks and the latter in deck bending.
+In rural road construction, where quality control is necessarily limited, this directs strict control to log selection and girder positioning, whereas the deck plank dimensions admit looser execution tolerances.
+
+\subsection*{Limitations and future work}
+
+The scope is restricted to the superstructure of simply supported single-span bridges, under the TB-240 design vehicle and the code strength classes, without the design of connections, abutments and foundations.
+The robustness treated is geometric in nature, restricted to the girder diameter, and the cost of robustness was based on a single NSGA-II run per $\rho$ level.
+Future work includes repeating these runs with multiple seeds, incorporating the variability of the mechanical properties and of the actions through reliability analyses (FORM or Monte Carlo simulation), using experimental properties of specific native species and validating the framework against the design of an actually built rural road bridge.

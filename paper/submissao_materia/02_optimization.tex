@@ -73,12 +73,12 @@ O Algoritmo~\ref{alg:nsga2} resume a lógica evolutiva e o fluxo de avaliações
  \Ensure Fronteira eficiente $\mathcal{F}_1$
  \State Inicializar população $P_0$ por amostragem aleatória em $[x_i^{(L)}, x_i^{(U)}]$
  \For{cada geração $t = 0$ até $N_{gen}-1$}
-   \For{cada indivíduo $\mathbf{x} = (d, b_w, h, n_{long}, n_{tab}) \in P_t$}
+   \For{cada indivíduo $\mathbf{x} = (d, b_w, h, esp_{long}, esp_{tab}) \in P_t$}
      \State $(\mathbf{F}, \cdot) \gets$ \Call{AvaliarModelo}{$\mathbf{x}$} \Comment{objetivos no ponto nominal, sem agregação}
      \State $\mathbf{G} \gets -\boldsymbol{\infty}$
      \For{cada $\lambda \in \Lambda$} \Comment{grade de robustez, aplicada só a $d$}
        \State $\tilde{d} \gets d\,(1 + \rho\,\lambda)$
-       \State $\tilde{\mathbf{x}} \gets (\tilde{d},\,b_w,\,h,\,n_{long},\,n_{tab})$
+       \State $\tilde{\mathbf{x}} \gets (\tilde{d},\,b_w,\,h,\,esp_{long},\,esp_{tab})$
        \State $(\cdot, \mathbf{g}) \gets$ \Call{AvaliarModelo}{$\tilde{\mathbf{x}}$}
        \State $\mathbf{G} \gets \max(\mathbf{G}, \mathbf{g})$ \Comment{componente a componente, pior caso}
      \EndFor
@@ -125,7 +125,7 @@ Para mitigar esse efeito, o conceito de robustez deve ser incorporado de forma n
 A estratégia adotada consiste em manter as funções objetivo no valor nominal de projeto, mas avaliar a viabilidade de cada solução candidata também sob a influência de um conjunto de perturbações controladas.
 
 A perturbação é aplicada exclusivamente ao diâmetro da longarina, $d$. Tal condição é explicada pelo fato de que a madeira roliça possui variabilidade natural de diâmetro relevante para o comportamento estrutural. Em vez de amostrar $\xi$ aleatoriamente, a perturbação segue uma grade determinística de cinco pontos, $\Lambda = \{-1,\,-\tfrac{1}{2},\,0,\,\tfrac{1}{2},\,1\}$: essa escolha elimina o viés de semente que uma amostragem aleatória de poucos pontos introduziria, ao mesmo tempo em que os cinco níveis bastam para capturar eventuais degraus de viabilidade dentro do intervalo $[-\rho,\,\rho]$, sem depender de a resposta ser monotônica.
-Para um dado indivíduo $\mathbf{x} = (d, b_w, h, n_{long}, n_{tab})$, são geradas $N_c = |\Lambda| = 5$ realizações perturbadas, denotadas por $\tilde{\mathbf{x}}^{(c)}$, conforme definido na Equação~\eqref{eq:perturbacao}.
+Para um dado indivíduo $\mathbf{x} = (d,\allowbreak b_w,\allowbreak h,\allowbreak esp_{long},\allowbreak esp_{tab})$, são geradas $N_c = |\Lambda| = 5$ realizações perturbadas, denotadas por $\tilde{\mathbf{x}}^{(c)}$, conforme definido na Equação~\eqref{eq:perturbacao}.
 
  \begin{equation}\tilde{d}^{(c)} = d\left(1 + \rho\,\lambda^{(c)}\right),\qquad \lambda^{(c)} \in \Lambda,\qquad \tilde{x}_i^{(c)} = x_i \ \text{para}\ i \neq d\label{eq:perturbacao}
  \end{equation}

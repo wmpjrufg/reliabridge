@@ -256,8 +256,8 @@ O valor $\rho = 5\%$ permanece adotado como padrão em toda a matriz (Seção~\r
 
 \subsubsection{Análise de sensibilidade global por índices de Sobol}\label{sec:sobol}
 
-Para identificar quais variáveis de projeto mais influenciam a violação de cada restrição sob perturbação, realizou-se uma análise de sensibilidade global pelo método de Sobol \parencite{Sobol2001}, implementado na biblioteca \texttt{UQpy} \parencite{Olivier2020}.
-Os índices de efeito total $S_{T_i}$ das cinco variáveis de projeto foram estimados em relação às seis funções limite, a partir de uma amostragem independente de $N = 20\,000$ pontos no domínio de cada variável (Tabela~\ref{tab:intervalos}).
+Para identificar quais variáveis de projeto mais influenciam a violação de cada restrição sob perturbação, realizou-se uma análise de sensibilidade global pelo método de Sobol \parencite{Sobol2001}, implementado 
+na biblioteca \texttt{UQpy} \parencite{Olivier2020}. Os índices de efeito total $S_{T_i}$ das cinco variáveis de projeto foram estimados em relação às seis funções limite, a partir de uma amostragem independente de $N = 20\,000$ pontos no domínio de cada variável (Tabela~\ref{tab:intervalos}). Esse tamanho de amostra foi definido a partir de testes preliminares de convergência, nos quais a variação dos índices de Sobol foi inferior a 1\% ao se dobrar o tamanho da amostra.
 
 \begin{figure}[!ht]
     \centering
@@ -427,6 +427,9 @@ As duas verificações de flexão alternam-se ao longo da matriz sem um padrão 
 A verificação de flecha da longarina ($g_3$), embora nunca governe, chega extremamente perto do limite em três células de vão e classe mais severos, com utilização de 99{,}21\% na C-15 ($L = 5{,}0$~m, D60), 99{,}90\% na C-19 ($L = 6{,}0$~m, D50) e 99{,}97\% na C-20 ($L = 6{,}0$~m, D60), sempre a poucos centésimos de ponto percentual atrás da flexão do tabuleiro.
 O quase-empate mais estreito ocorre na C-20, em que a flexão do tabuleiro ($g_4 = -0{,}0000$, utilização de 100{,}00\%) e a flecha da longarina (99{,}97\%) diferem por menos de três centésimos de ponto percentual; a C-19 repete o padrão, com o tabuleiro a 99{,}92\% contra a flecha a 99{,}90\%, decidido pela quarta casa decimal.
 
+A predominância do tabuleiro tem origem mecânica no acoplamento pelo espaçamento entre longarinas.
+Como a seção circular é mais eficiente em volume quanto maior o diâmetro, o algoritmo concentra o material em poucas longarinas e as afasta até que o momento sob a roda, que cresce com o vão local da prancha (Equação~\eqref{eq:mqktab}), esgote a capacidade do tabuleiro.
+
 A consequência prática permanece, em essência, a mesma, com uma ressalva relevante nas classes e vãos mais severos da matriz.
 Em pontes de madeira roliça nesta faixa de vãos, sob o TB-240, a resistência à flexão governa a totalidade da matriz, e não a rigidez. O índice quase permanente $\delta_{\mathrm{tot}}/(L/350)$ permanece abaixo de 39{,}3\% em todas as vinte células (máximo de 0{,}392 na C-19).
 A combinação rara ($L/500$, sem redução por fluência), contudo, já se aproxima do limite nas classes de maior resistência e vãos maiores, tornando-se quase ativa na C-15, na C-19 e na C-20, um alerta de que, para vãos ou classes além dos aqui estudados, a migração de resistência para rigidez pode ocorrer antes do que a leitura isolada do índice quase permanente sugeriria.
@@ -498,3 +501,29 @@ O erro relativo médio em módulo é de 1{,}31\%, com máximo de 5{,}32\% na cé
 O erro não se concentra em nenhum subconjunto identificável da matriz: como a Seção~\ref{sec:varredura} mostrou que nenhuma das vinte células satura no piso dimensional do domínio de busca, a Equação~\eqref{eq:pre_dimensionamento} não sofre aqui a limitação, comum a ajustes desse tipo, de ignorar uma restrição lateral do algoritmo: os 5{,}32\% de erro máximo, na célula C-08, refletem apenas o resíduo esperado de um ajuste de três parâmetros sobre vinte observações, sem relação discernível com o vão ou a classe da célula.
 Os sinais dos expoentes ajustados têm leitura física direta e reforçam a consistência do modelo com a Seção~\ref{sec:varredura}: $b = 1{,}683 > 1$ reproduz a mesma realimentação entre peso próprio e seção que ali produz expoentes $n$ entre 1{,}64 e 1{,}73 por classe, e $c = -0{,}518 < 0$ expressa que o aumento de $f_{c0,k}$ reduz o volume necessário, como esperado.
 O expoente $b$ da equação conjunta situa-se, de fato, dentro da própria faixa de expoentes $n$ observada classe a classe, o que indica que amarrar as cinco curvas por uma única superfície contínua em $f_{c0,k}$ não distorce o comportamento já identificado em cada classe isoladamente.
+
+Para verificar a capacidade de interpolação da Equação~\eqref{eq:pre_dimensionamento} fora do conjunto de ajuste, foram otimizadas duas configurações adicionais com vãos intermediários não pertencentes à matriz, $L = 4{,}5$~m com a classe D30 e $L = 5{,}5$~m com a classe D50, mantidos todos os demais parâmetros da Tabela~\ref{tab:parametros} e do algoritmo (Tabela~\ref{tab:nsga2}).
+Nenhuma dessas duas soluções participou do ajuste dos coeficientes $a$, $b$ e $c$.
+A Tabela~\ref{tab:validacao_equacao} compara o volume da solução de menor volume obtida pela otimização com o volume previsto pela equação.
+
+\begin{table}[!ht]
+\caption{Verificação da equação de pré-dimensionamento em vãos intermediários não utilizados no ajuste.\label{tab:validacao_equacao}}
+\begin{threeparttable}
+\begin{tabular*}{\columnwidth}{@{\extracolsep\fill}ccccc@{\extracolsep\fill}}
+\toprule
+$L$ (m) & Classe & $V$ otimização (m\textsuperscript{3}) & $\hat{V}$ equação (m\textsuperscript{3}) & Erro relativo \\
+\midrule
+4{,}5 & D30 & 4{,}969 & 4{,}944 & $-0{,}52\%$ \\
+5{,}5 & D50 & 5{,}395 & 5{,}319 & $-1{,}42\%$ \\
+\bottomrule
+\end{tabular*}
+\begin{tablenotes}
+\footnotesize
+\item Otimizações com $\rho = 5\%$ e os mesmos parâmetros das vinte células da matriz. O erro relativo é $(\hat{V} - V)/V$.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Os dois erros, de $-0{,}52\%$ e $-1{,}42\%$, situam-se na mesma ordem de grandeza do erro médio obtido sobre as células de ajuste, e os volumes otimizados ficam contidos entre os das células vizinhas da matriz de mesma classe (4{,}076 e 6{,}001~m\textsuperscript{3} para D30 entre 4 e 5~m, e 4{,}562 e 6{,}015~m\textsuperscript{3} para D50 entre 5 e 6~m).
+Nas duas configurações a flexão da longarina é a verificação governante, em linha com o comportamento observado na Seção~\ref{sec:varredura}.
+Esse resultado indica que a equação interpola de forma consistente entre os vãos tabulados, sem, contudo, autorizar seu uso fora do domínio investigado.
